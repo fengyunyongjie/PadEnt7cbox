@@ -1,0 +1,2169 @@
+//
+//  FileListViewController.m
+//  ndspro
+//
+//  Created by fengyongning on 13-9-26.
+//  Copyright (c) 2013年 fengyongning. All rights reserved.
+//
+
+#import "FileListViewController.h"
+#import "SCBFileManager.h"
+#import "MBProgressHUD.h"
+#import "YNFunctions.h"
+#import "IconDownloader.h"
+#import "SelectFileListViewController.h"
+#import "MainViewController.h"
+#import "SendEmailViewController.h"
+#import "DownManager.h"
+#import "AppDelegate.h"
+#import "DownList.h"
+#import "PhotoLookViewController.h"
+#import "OtherBrowserViewController.h"
+#import "SCBSession.h"
+#import "CustomViewController.h"
+#import "UIBarButtonItem+Yn.h"
+#import "MyTabBarViewController.h"
+#import "YNNavigationController.h"
+#import "SharedEmailViewController.h"
+
+#define KCOVERTag 888
+
+typedef enum{
+    kAlertTagDeleteOne,
+    kAlertTagDeleteMore,
+    kAlertTagRename,
+    kAlertTagNewFinder,
+    kAlertTagMailAddr,
+}AlertTag;
+typedef enum{
+    kActionSheetTagShare,
+    kActionSheetTagMore,
+    kActionSheetTagDeleteOne,
+    kActionSheetTagDeleteMore,
+    kActionSheetTagPhoto,
+    kActionSheetTagSend,
+    kActionSheetTagSort,
+    kActionSheetTagUpload,
+}ActionSheetTag;
+
+@interface FileListViewController ()<SCBFileManagerDelegate,IconDownloaderDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate>
+@property (strong,nonatomic) SCBFileManager *fm;
+@property (strong,nonatomic) SCBFileManager *fm_move;
+@property (strong,nonatomic) MBProgressHUD *hud;
+
+@property (strong,nonatomic) UIToolbar *singleEditBar;
+@property (strong,nonatomic) UIToolbar *moreEditBar;
+@property (strong,nonatomic) UIControl *menuView;
+@property (strong,nonatomic) UIControl *singleBg;
+@property (strong,nonatomic) UIBarButtonItem *titleRightBtn;
+@property (strong,nonatomic) NSArray *rightItems;
+@property (strong,nonatomic) UIBarButtonItem *backBarButtonItem;
+@end
+
+@implementation FileListViewController
+
+//<ios 6.0
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return NO;
+}
+
+//>ios 6.0
+- (BOOL)shouldAutorotate{
+    return NO;
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    if (!self.tableView.isEditing) {
+        [self updateFileList];
+    }
+}
+- (void)viewDidAppear:(BOOL)animated
+{
+    CGRect r=self.view.frame;
+    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
+    self.view.frame=r;
+    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49);
+    }else
+    {
+        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49-64);
+    }
+    
+    BOOL isHideTabBar = NO;
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIApplication *app = [UIApplication sharedApplication];
+    if(isHideTabBar || app.applicationIconBadgeNumber==0)
+    {
+        [appleDate.myTabBarVC.imageView setHidden:YES];
+    }
+    else
+    {
+        [appleDate.myTabBarVC.imageView setHidden:NO];
+    }
+    
+    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
+    NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
+    
+}
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+        [self setEdgesForExtendedLayout:UIRectEdgeNone];
+    }
+    
+    self.tableView=[[UITableView alloc] init];
+    self.tableView.delegate=self;
+    self.tableView.dataSource=self;
+    [self.view addSubview:self.tableView];
+    self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    NSMutableArray *items=[NSMutableArray array];
+    
+    UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,40,40)];
+    [rightButton1 setImage:[UIImage imageNamed:@"title_more.png"] forState:UIControlStateNormal];
+    [rightButton1 setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
+    [rightButton1 addTarget:self action:@selector(menuAction:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
+    [items addObject:rightItem1];
+    
+    if (![self.roletype isEqualToString:@"1"] && ![self.roletype isEqualToString:@"2"])
+    {
+        UIButton*rightButton2 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,30,40)];
+        [rightButton2 setImage:[UIImage imageNamed:@"title_upload_nor@2x.png"] forState:UIControlStateNormal];
+        [rightButton2 setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
+        [rightButton2 addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithCustomView:rightButton2];
+        [items addObject:rightItem2];
+    }
+    self.rightItems=items;
+    self.navigationItem.rightBarButtonItems = items;
+
+    //初始化返回按钮
+    UIButton*backButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,35,29)];
+    [backButton setImage:[UIImage imageNamed:@"title_back.png"] forState:UIControlStateNormal];
+    [backButton addTarget:self.navigationController action:@selector(popViewControllerAnimated:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.backBarButtonItem=backItem;
+    
+    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+        UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
+        temporaryBarButtonItem.title = @"";
+        self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
+    }else
+    {
+        self.navigationItem.leftBarButtonItem = backItem;
+    }
+    
+    if (_refreshHeaderView==nil) {
+        EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
+		view.delegate = self;
+		[self.tableView addSubview:view];
+		_refreshHeaderView = view;
+    }
+    [_refreshHeaderView refreshLastUpdatedDate];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+
+- (void)reloadTableViewDataSource{
+	
+	//  should be calling your tableviews data source model to reload
+	//  put here just for demo
+	_reloading = YES;
+    [self updateFileList];
+}
+
+- (void)doneLoadingTableViewData{
+	
+	//  model should call this when its done loading
+	_reloading = NO;
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+	
+}
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	
+	[self reloadTableViewDataSource];
+//	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+	
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	
+	return _reloading; // should return if data source model is reloading
+	
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	
+	return [NSDate date]; // should return date data source was last changed
+	
+}
+#pragma mark - 操作方法
+- (void)updateFileList
+{
+    //加载本地缓存文件
+    NSString *dataFilePath=[YNFunctions getDataCachePath];
+    dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:[NSString stringWithFormat:@"%@_%@",self.spid,self.f_id]]];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:dataFilePath])
+    {
+        NSError *jsonParsingError=nil;
+        NSData *data=[NSData dataWithContentsOfFile:dataFilePath];
+        self.dataDic=[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
+        if (self.dataDic) {
+            self.listArray=self.listArray=(NSArray *)[self.dataDic objectForKey:@"files"];
+            
+            if (self.listArray) {
+                [self.tableView reloadData];
+            }
+        }
+    }
+    [self.fm cancelAllTask];
+    self.fm=nil;
+    self.fm=[[SCBFileManager alloc] init];
+    [self.fm setDelegate:self];
+    [self.fm openFinderWithID:self.f_id sID:self.spid];
+}
+- (void)operateUpdate
+{
+    [self.fm cancelAllTask];
+    self.fm=nil;
+    self.fm=[[SCBFileManager alloc] init];
+    [self.fm setDelegate:self];
+    [self.fm operateUpdateWithID:self.f_id sID:self.spid];
+}
+-(void)handelSingleTap:(UITapGestureRecognizer*)gestureRecognizer{
+    [self hideMenu];
+    [self hideSingleBar];
+}
+-(void)hideMenu
+{
+    [self.menuView setHidden:YES];
+}
+-(void)hideSingleBar
+{
+    [self.singleBg setHidden:YES];
+    [self.singleEditBar setHidden:YES];
+    if (self.selectedIndexPath) {
+        
+        UITableViewCell *cell=[self.tableView cellForRowAtIndexPath:self.selectedIndexPath];
+        UIButton *button=(UIButton *) cell.accessoryView;
+        [button setSelected:NO];
+    }
+}
+-(void)menuAction:(id)sender
+{
+    [self hideSingleBar];
+    if (!self.menuView) {
+        self.menuView =[[UIControl alloc] initWithFrame:self.tableView.frame];
+        const float scale=1.4f;
+        UIView * mView=[[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-(120*scale)-15, 0, 120*scale, 47*scale)];
+        UIImageView *bgView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"title_menu3.png"]];
+        [mView addSubview:bgView];
+        UIButton *btnNewFinder,*btnEdit,*btnSort;
+        btnNewFinder=[[UIButton alloc] initWithFrame:CGRectMake(0*scale, 6*scale, 40*scale, 41*scale)];
+        [btnNewFinder setImage:[UIImage imageNamed:@"title_bt_new_nor.png"] forState:UIControlStateHighlighted];
+        [btnNewFinder setImage:[UIImage imageNamed:@"title_bt_new_se.png"] forState:UIControlStateNormal];
+        [btnNewFinder setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
+        [btnNewFinder addTarget:self action:@selector(newFinder:) forControlEvents:UIControlEventTouchUpInside];
+        btnEdit=[[UIButton alloc] initWithFrame:CGRectMake(40*scale, 6*scale, 40*scale, 41*scale)];
+        [btnEdit setImage:[UIImage imageNamed:@"title_bt_edit_nor.png"] forState:UIControlStateHighlighted];
+        [btnEdit setImage:[UIImage imageNamed:@"title_bt_edit_se.png"] forState:UIControlStateNormal];
+        [btnEdit setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
+        [btnEdit addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
+        btnSort=[[UIButton alloc] initWithFrame:CGRectMake(80*scale, 6*scale, 40*scale, 41*scale)];
+        [btnSort setImage:[UIImage imageNamed:@"title_bt_sort_nor.png"] forState:UIControlStateHighlighted];
+        [btnSort setImage:[UIImage imageNamed:@"title_bt_sort_se.png"] forState:UIControlStateNormal];
+        [btnSort setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
+        [btnSort addTarget:self action:@selector(sortAction:) forControlEvents:UIControlEventTouchUpInside];
+        [mView addSubview:btnNewFinder];
+        [mView addSubview:btnEdit];
+        [mView addSubview:btnSort];
+        [self.menuView addSubview:mView];
+        [self.menuView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:self.menuView];
+        if ([self.roletype isEqualToString:@"1"]||[self.roletype isEqualToString:@"2"])
+        {
+            [bgView setImage:[UIImage imageNamed:@"title_menu2.png"]];
+            //可提交 或 可查看
+            [btnNewFinder setHidden:YES];
+            [bgView setFrame:CGRectMake(40*scale, 0, 80*scale, 47*scale)];
+        }else
+        {
+            [bgView setFrame:CGRectMake(0, 0, 120*scale, 47*scale)];
+        }
+        [self.menuView setHidden:YES];
+    }
+    [self.menuView setHidden:!self.menuView.hidden];
+}
+-(void)uploadAction:(id)sender
+{
+    [self hideMenu];
+    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍摄照片并上传",@"从手机相册选择", nil];
+    [actionSheet setTag:kActionSheetTagUpload];
+    [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    
+//    QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
+//    AppDelegate *app_delegate = [[UIApplication sharedApplication] delegate];
+//    app_delegate.file_url = [NSString formatNSStringForOjbect:app_delegate.old_file_url];
+//    imagePickerController.delegate = self;
+//    imagePickerController.allowsMultipleSelection = YES;
+//    imagePickerController.f_id  = self.f_id;
+//    imagePickerController.f_name = self.title;
+//    imagePickerController.space_id = self.spid;
+//    [imagePickerController requestFileDetail];
+//    [imagePickerController setHidesBottomBarWhenPushed:YES];
+//    [self.navigationController pushViewController:imagePickerController animated:NO];
+}
+
+-(void)changeUpload:(NSMutableOrderedSet *)array_ changeDeviceName:(NSString *)device_name changeFileId:(NSString *)f_id changeSpaceId:(NSString *)s_id
+{
+    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    [delegate.uploadmanage changeUpload:array_ changeDeviceName:device_name changeFileId:f_id changeSpaceId:s_id];
+}
+-(NSArray *)selectedIndexPaths
+{
+    NSArray *retVal=nil;
+    retVal=self.tableView.indexPathsForSelectedRows;
+    return retVal;
+}
+-(NSArray *)selectedIDs
+{
+    NSMutableArray *ids=[[NSMutableArray alloc] init];
+    for (NSIndexPath *indexpath in [self selectedIndexPaths]) {
+        NSDictionary *dic=[self.listArray objectAtIndex:indexpath.row];
+        NSString *fid=[dic objectForKey:@"fid"];
+        [ids addObject:fid];
+    }
+    return ids;
+}
+-(void)newFinder:(id)sender
+{
+    [self hideMenu];
+    NSLog(@"点击新建文件夹");
+    UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"新建文件夹" message:@"" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    //[[alert textFieldAtIndex:0] setText:@"新建文件夹"];
+    [[alert textFieldAtIndex:0] setDelegate:self];
+    [[alert textFieldAtIndex:0] setPlaceholder:@"请输入名称"];
+    [alert setTag:kAlertTagNewFinder];
+    [alert show];
+}
+-(void)selectAllCell:(id)sender
+{
+    if (self.listArray) {
+        for (int i=0; i<self.listArray.count; i++) {
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+        }
+    }
+    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消全选" style:UIBarButtonItemStylePlain target:self action:@selector(deselectAllCell:)]];
+}
+-(void)deselectAllCell:(id)sender
+{
+    if (self.listArray) {
+        for (int i=0; i<self.listArray.count; i++) {
+            [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES];
+        }
+    }
+    
+//    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+//        [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAllCell:)]];
+//    }else
+//    {
+//        UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(0,0,71,33)];
+//        [button setTitle:@"全选" forState:UIControlStateNormal];
+//        button.titleLabel.font=[UIFont systemFontOfSize:12];
+//        [button addTarget:self action:@selector(selectAllCell:) forControlEvents:UIControlEventTouchUpInside];
+//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+//    }
+    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAllCell:)]];
+}
+-(void)editFinished;
+{
+    if (self.tableView.isEditing) {
+        [self editAction:nil];
+    }
+}
+-(void)editAction:(id)sender
+{
+    //文件列表为空时你，编辑按钮无效！
+    if (!self.tableView.isEditing&&self.listArray.count==0) {
+        return;
+    }
+    
+    CGRect r=self.view.frame;
+    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
+    self.view.frame=r;
+    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49);
+    }else
+    {
+        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49-64);
+    }
+    
+    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
+    NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
+    
+    
+    [self hideMenu];
+    [self.tableView setEditing:!self.tableView.editing animated:YES];
+    BOOL isHideTabBar=self.tableView.editing;
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIApplication *app = [UIApplication sharedApplication];
+    if(isHideTabBar || app.applicationIconBadgeNumber==0)
+    {
+        [appleDate.myTabBarVC.imageView setHidden:YES];
+    }
+    else
+    {
+        [appleDate.myTabBarVC.imageView setHidden:NO];
+    }
+    //isHideTabBar=!isHideTabBar;
+    
+    DDLogCInfo(@"当前TabBar的坐标:%@",NSStringFromCGRect(self.tabBarController.tabBar.frame));
+    
+    for(UIView *view in self.tabBarController.view.subviews)
+    {
+        if([view isKindOfClass:[UITabBar class]])
+        {
+            if (isHideTabBar) { //if hidden tabBar
+                [view setFrame:CGRectMake(view.frame.origin.x,[[UIScreen mainScreen]bounds].size.height+10, view.frame.size.width, view.frame.size.height)];
+            }else {
+                [view setFrame:CGRectMake(view.frame.origin.x, [[UIScreen mainScreen]bounds].size.height-49, view.frame.size.width, view.frame.size.height)];
+            }
+            DDLogCInfo(@"改变后的TabBar坐标:%@",NSStringFromCGRect(self.tabBarController.tabBar.frame));
+        }else
+        {
+            if (isHideTabBar) {
+                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, [[UIScreen mainScreen]bounds].size.height)];
+            }else {
+                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width,[[UIScreen mainScreen]bounds].size.height-49)];
+            }
+            DDLogCInfo(@"改变后的其他坐标:%@",NSStringFromCGRect(self.tabBarController.tabBar.frame));
+        }
+    }
+    
+    //隐藏返回按钮
+    if (isHideTabBar) {
+//        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+//            [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)]];
+//            [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAllCell:)]];
+//        }else
+//        {
+//            UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(0,0,71,33)];
+//            [button setTitle:@"全选" forState:UIControlStateNormal];
+//            button.titleLabel.font=[UIFont systemFontOfSize:12];
+//            [button addTarget:self action:@selector(selectAllCell:) forControlEvents:UIControlEventTouchUpInside];
+//            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+//            
+//            UIButton *leftButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,71,33)];
+//            [leftButton setTitle:@"取消" forState:UIControlStateNormal];
+//            leftButton.titleLabel.font=[UIFont systemFontOfSize:12];
+//            [leftButton addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
+//            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
+//        }
+            [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)]];
+            [self.navigationItem setRightBarButtonItems:@[]];
+            [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAllCell:)]];
+    }else
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            [self.navigationItem setLeftBarButtonItem:nil];
+        }else
+        {
+            [self.navigationItem setLeftBarButtonItem:self.backBarButtonItem];
+        }
+        [self.navigationItem setRightBarButtonItems:self.rightItems];
+    }
+    
+    if (!self.moreEditBar) {
+        self.moreEditBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0, ([[UIScreen mainScreen] bounds].size.height-49)-self.view.frame.origin.y, 320, 49)];
+        if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.moreEditBar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
+        }
+        [self.moreEditBar setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            [self.moreEditBar setBarTintColor:[UIColor blueColor]];
+        }else
+        {
+            [self.moreEditBar setTintColor:[UIColor blueColor]];
+        }
+        [self.view addSubview:self.moreEditBar];
+        //发送 删除 提交 移动 全选
+        UIButton *btn_send, *btn_commit ,*btn_del ,*btn_more,*btn_download ,*btn_resave;
+        UIBarButtonItem *item_send, *item_commit ,*item_del ,*item_more, *item_download, *item_resave,*item_flexible;
+        int btnWidth=40;
+        btn_send =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+        [btn_send setImage:[UIImage imageNamed:@"share_nor.png"] forState:UIControlStateNormal];
+        [btn_send setImage:[UIImage imageNamed:@"share_se.png"] forState:UIControlStateHighlighted];
+        [btn_send setImage:[UIImage imageNamed:@"share_locked"] forState:UIControlStateDisabled];
+        [btn_send addTarget:self action:@selector(toSend:) forControlEvents:UIControlEventTouchUpInside];
+        item_send=[[UIBarButtonItem alloc] initWithCustomView:btn_send];
+        
+        btn_commit =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+        [btn_commit setImage:[UIImage imageNamed:@"tj_nor.png"] forState:UIControlStateNormal];
+        [btn_commit setImage:[UIImage imageNamed:@"tj_se.png"] forState:UIControlStateHighlighted];
+        [btn_commit addTarget:self action:@selector(toCommitOrResave:) forControlEvents:UIControlEventTouchUpInside];
+        item_commit=[[UIBarButtonItem alloc] initWithCustomView:btn_commit];
+        
+        btn_resave =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+        [btn_resave setImage:[UIImage imageNamed:@"zc_nor.png"] forState:UIControlStateNormal];
+        [btn_resave setImage:[UIImage imageNamed:@"zc_se.png"] forState:UIControlStateHighlighted];
+        [btn_resave addTarget:self action:@selector(toCommitOrResave:) forControlEvents:UIControlEventTouchUpInside];
+        item_resave=[[UIBarButtonItem alloc] initWithCustomView:btn_resave];
+        
+        btn_del =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+        [btn_del setImage:[UIImage imageNamed:@"del_nor.png"] forState:UIControlStateNormal];
+        [btn_del setImage:[UIImage imageNamed:@"del_se.png"] forState:UIControlStateHighlighted];
+        [btn_del addTarget:self action:@selector(toDelete:) forControlEvents:UIControlEventTouchUpInside];
+        item_del=[[UIBarButtonItem alloc] initWithCustomView:btn_del];
+        
+        btn_more =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+        [btn_more setImage:[UIImage imageNamed:@"move_nor.png"] forState:UIControlStateNormal];
+        [btn_more setImage:[UIImage imageNamed:@"move_se.png"] forState:UIControlStateHighlighted];
+        [btn_more addTarget:self action:@selector(toMove:) forControlEvents:UIControlEventTouchUpInside];
+        item_more=[[UIBarButtonItem alloc] initWithCustomView:btn_more];
+        
+        btn_download =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+        [btn_download setImage:[UIImage imageNamed:@"download_nor.png"] forState:UIControlStateNormal];
+        [btn_download setImage:[UIImage imageNamed:@"download_se.png"] forState:UIControlStateHighlighted];
+        [btn_download addTarget:self action:@selector(toDownload:) forControlEvents:UIControlEventTouchUpInside];
+        item_download=[[UIBarButtonItem alloc] initWithCustomView:btn_download];
+        
+        item_flexible=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        //    for (NSString *str in buttons) {
+        //        UIButton *button=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 29, 39)];
+        //        [button setImage:[UIImage imageNamed:@"rename_nor.png"] forState:UIControlStateNormal];
+        //        [button setImage:[UIImage imageNamed:@"rename_se.png"] forState:UIControlStateHighlighted];
+        //        //UIBarButtonItem *item1=[[UIBarButtonItem alloc] initWithTitle:str style:UIBarButtonItemStylePlain target:nil action:nil];
+        //        UIBarButtonItem *item1=[[UIBarButtonItem alloc] initWithCustomView:button];
+        //        [barItems addObject:item1];
+        //    }
+        
+        if ([self.roletype isEqualToString:@"9999"]) {
+            //个人空间
+            [self.moreEditBar setItems:@[item_send,item_flexible,item_more,item_flexible,item_download,item_flexible,item_del]];
+        }else if ([self.roletype isEqualToString:@"0"])
+        {
+            //管理员
+            [self.moreEditBar setItems:@[item_send,item_flexible,item_resave,item_flexible,item_more,item_flexible,item_download,item_flexible,item_del]];
+        }else if ([self.roletype isEqualToString:@"1"])
+        {
+            //可提交
+            [self.moreEditBar setItems:@[item_send,item_flexible,item_resave,item_flexible,item_download]];
+        }else if ([self.roletype isEqualToString:@"2"])
+        {
+            //可查看
+            [self.moreEditBar setItems:@[item_send,item_flexible,item_resave,item_flexible,item_download]];
+        }
+        
+    }
+}
+-(void)sortAction:(id)sender
+{
+    [self hideMenu];
+    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"排序" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"按时间排序",@"按名称排序",@"按大小排序", nil];
+    [actionSheet setTag:kActionSheetTagSort];
+    [actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
+    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+}
+-(void)toMore:(id)sender
+{
+    [self hideSingleBar];
+    if ([self.roletype isEqualToString:@"9999"]) {
+        //个人空间
+        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"更多" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"移动",@"重命名", nil];
+        [actionSheet setTag:kActionSheetTagMore];
+        [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }else if ([self.roletype isEqualToString:@"0"])
+    {
+        //管理员
+        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"更多" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"转存",@"移动",@"重命名", nil];
+        [actionSheet setTag:kActionSheetTagMore];
+        [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }
+//    else if ([self.roletype isEqualToString:@"1"])
+//    {
+//        //可提交
+//    }else if ([self.roletype isEqualToString:@"2"])
+//    {
+//        //可查看
+//    }
+}
+-(void)toRename:(id)sender
+{
+    [self hideSingleBar];
+    NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
+    NSString *name=[dic objectForKey:@"fname"];
+    UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"重命名" message:@"" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    [[alert textFieldAtIndex:0] setText:name];
+    [alert setTag:kAlertTagRename];
+    [alert show];
+}
+-(void)toDelete:(id)sender
+{
+    [self hideSingleBar];
+    if (self.tableView.editing) {
+        NSArray *array=[self selectedIDs];
+        NSLog(@"%@",array);
+        if (array.count==0) {
+            if (self.hud) {
+                [self.hud removeFromSuperview];
+            }
+            self.hud=nil;
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view.superview addSubview:self.hud];
+            [self.hud show:NO];
+            self.hud.labelText=@"未选中任何文件（夹）";
+            self.hud.mode=MBProgressHUDModeText;
+            self.hud.margin=10.f;
+            [self.hud show:YES];
+            [self.hud hide:YES afterDelay:1.0f];
+            return;
+        }
+    }
+
+    //    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"是否要删除文件" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    //    [alertView show];
+    //    [alertView setTag:kAlertTagDeleteOne];
+    //    [alertView release];
+    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"是否要删除选中的内容" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles: nil];
+    [actionSheet setTag:kActionSheetTagDeleteOne];
+    [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+}
+-(void)toCommitOrResave:(id)sender
+{
+    [self hideSingleBar];
+    if (self.tableView.editing) {
+        NSArray *array=[self selectedIDs];
+        NSLog(@"%@",array);
+        if (array.count==0) {
+            if (self.hud) {
+                [self.hud removeFromSuperview];
+            }
+            self.hud=nil;
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view.superview addSubview:self.hud];
+            [self.hud show:NO];
+            self.hud.labelText=@"未选中任何文件（夹）";
+            self.hud.mode=MBProgressHUDModeText;
+            self.hud.margin=10.f;
+            [self.hud show:YES];
+            [self.hud hide:YES afterDelay:1.0f];
+            return;
+        }
+    }
+    
+    NSLog(@"提交或转存！！！");
+    if ([self.roletype isEqualToString:@"9999"]) {
+        NSLog(@"提交");
+        MainViewController *flvc=[[MainViewController alloc] init];
+        flvc.title=@"选择提交的位置";
+        flvc.delegate=self;
+        flvc.type=kTypeCommit;
+        YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flvc];
+        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+        //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+        [self presentViewController:nav animated:YES completion:nil];
+
+    }else
+    {
+        NSLog(@"转存");
+        MainViewController *flvc=[[MainViewController alloc] init];
+        flvc.title=@"选择转存的位置";
+        flvc.delegate=self;
+        flvc.type=kTypeResave;
+        YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flvc];
+        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+        //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+        [self presentViewController:nav animated:YES completion:nil];
+    }
+}
+-(void)toSend:(id)sender
+{
+    [self hideSingleBar];
+    if (self.tableView.editing) {
+        NSArray *array=[self selectedIDs];
+        NSLog(@"%@",array);
+        if (array.count==0) {
+            if (self.hud) {
+                [self.hud removeFromSuperview];
+            }
+            self.hud=nil;
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view.superview addSubview:self.hud];
+            [self.hud show:NO];
+            self.hud.labelText=@"未选中任何文件";
+            self.hud.mode=MBProgressHUDModeText;
+            self.hud.margin=10.f;
+            [self.hud show:YES];
+            [self.hud hide:YES afterDelay:1.0f];
+            return;
+        }else if(array.count>50)
+        {
+            UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"一次最多只能分享50个文件" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [av setTag:234];
+            [av show];
+//
+//            if (self.hud) {
+//                [self.hud removeFromSuperview];
+//            }
+//            self.hud=nil;
+//            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+//            [self.view.superview addSubview:self.hud];
+//            [self.hud show:NO];
+//            self.hud.labelText=@"一次最多只能分享50个文件";
+//            self.hud.mode=MBProgressHUDModeText;
+//            self.hud.margin=10.f;
+//            [self.hud show:YES];
+//            [self.hud hide:YES afterDelay:1.0f];
+            return;
+        }
+    }
+    
+    NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
+    NSString *fid=[dic objectForKey:@"fid"];
+    SharedEmailViewController *sevc=[[SharedEmailViewController alloc] init];
+    sevc.title=@"新邮件";
+    if (self.tableView.isEditing) {
+        sevc.fids=[self selectedIDs];
+        NSMutableArray *fileDatas=[NSMutableArray array];
+        NSArray *indexs=[self selectedIndexPaths];
+        for (NSIndexPath *indexpath in indexs) {
+            NSDictionary *dic=[self.listArray objectAtIndex:indexpath.row];
+            [fileDatas addObject:dic];
+        }
+        sevc.fileArray=fileDatas;
+    }else
+    {
+        sevc.fids=@[fid];
+        sevc.fileArray=@[dic];
+    }
+    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:sevc];
+    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+    [self presentViewController:nav animated:YES completion:nil];
+    [self editFinished];
+
+    
+//    NSLog(@"发送");
+//    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"发送" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"站内发送",@"站外发送",nil];
+//    [actionSheet setTag:kActionSheetTagSend];
+//    [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+//    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+}
+-(void)toMove:(id)sender
+{
+
+    [self hideSingleBar];
+    if (self.tableView.editing) {
+        NSArray *array=[self selectedIDs];
+        NSLog(@"%@",array);
+        if (array.count==0) {
+            if (self.hud) {
+                [self.hud removeFromSuperview];
+            }
+            self.hud=nil;
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view.superview addSubview:self.hud];
+            [self.hud show:NO];
+            self.hud.labelText=@"未选中任何文件（夹）";
+            self.hud.mode=MBProgressHUDModeText;
+            self.hud.margin=10.f;
+            [self.hud show:YES];
+            [self.hud hide:YES afterDelay:1.0f];
+            return;
+        }
+    }
+
+    NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
+    NSString *fid=[dic objectForKey:@"fid"];
+
+    
+    SelectFileListViewController *flvc=[[SelectFileListViewController alloc] init];
+    flvc.f_id=@"0";
+    flvc.roletype=self.roletype;
+    flvc.spid=self.spid;
+    flvc.title=@"选择移动的位置";
+    flvc.delegate=self;
+    flvc.type=kSelectTypeMove;
+    if (self.tableView.isEditing) {
+        flvc.targetsArray=[self selectedIDs];
+    }else
+    {
+        flvc.targetsArray=@[fid];
+    }
+    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flvc];
+    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+-(void)toDownload:(id)sender
+{
+    [self hideSingleBar];
+    if (self.tableView.isEditing) {
+        NSArray *selectArray=[self selectedIndexPaths];
+        for (NSIndexPath *indexPath in selectArray) {
+            NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
+            BOOL isDir=[[dic objectForKey:@"fisdir"] boolValue];
+            if (!isDir) {
+                if (self.hud)
+                {
+                    [self.hud removeFromSuperview];
+                }
+                self.hud=nil;
+                self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+                [self.view.superview addSubview:self.hud];
+                [self.hud show:NO];
+                self.hud.labelText=@"不能下载文件夹";
+                self.hud.mode=MBProgressHUDModeText;
+                self.hud.margin=10.f;
+                [self.hud show:YES];
+                [self.hud hide:YES afterDelay:1.0f];
+                return;
+            }
+        }
+        if (selectArray.count==0) {
+            if (self.hud)
+            {
+                [self.hud removeFromSuperview];
+            }
+            self.hud=nil;
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view.superview addSubview:self.hud];
+            [self.hud show:NO];
+            self.hud.labelText=@"未选中任何文件";
+            self.hud.mode=MBProgressHUDModeText;
+            self.hud.margin=10.f;
+            [self.hud show:YES];
+            [self.hud hide:YES afterDelay:1.0f];
+            return;
+        }
+        NSMutableArray *tableArray = [[NSMutableArray alloc] init];
+        for (NSIndexPath *indexPath in selectArray) {
+            NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
+            NSString *file_id = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
+            NSString *thumb = [NSString formatNSStringForOjbect:[dic objectForKey:@"fthumb"]];
+            if([thumb length]==0)
+            {
+                thumb = @"0";
+            }
+            NSString *name = [NSString formatNSStringForOjbect:[dic objectForKey:@"fname"]];
+            NSInteger fsize = [[dic objectForKey:@"fsize"] integerValue];
+            
+            DownList *list = [[DownList alloc] init];
+            list.d_name = name;
+            list.d_downSize = fsize;
+            list.d_thumbUrl = thumb;
+            list.d_file_id = file_id;
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+            [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+            [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            NSDate *todayDate = [NSDate date];
+            list.d_datetime = [dateFormatter stringFromDate:todayDate];
+            list.d_ure_id = [NSString formatNSStringForOjbect:[[SCBSession sharedSession] userId]];
+            [tableArray addObject:list];
+        }
+        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [delegate.downmange addDownLists:tableArray];
+        [self editFinished];
+    }else
+    {
+        NSLog(@"下载");
+        NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
+        BOOL isDir = [[dic objectForKey:@"fisdir"] boolValue];
+        if(!isDir)
+        {
+            if (self.hud)
+            {
+                [self.hud removeFromSuperview];
+            }
+            self.hud=nil;
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view.superview addSubview:self.hud];
+            [self.hud show:NO];
+            self.hud.labelText=@"不能下载文件夹";
+            self.hud.mode=MBProgressHUDModeText;
+            self.hud.margin=10.f;
+            [self.hud show:YES];
+            [self.hud hide:YES afterDelay:1.0f];
+            return;
+        }
+        NSString *file_id = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
+        NSString *thumb = [NSString formatNSStringForOjbect:[dic objectForKey:@"fthumb"]];
+        if([thumb length]==0)
+        {
+            thumb = @"0";
+        }
+        NSString *name = [NSString formatNSStringForOjbect:[dic objectForKey:@"fname"]];
+        NSInteger fsize = [[dic objectForKey:@"fsize"] integerValue];
+        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        NSMutableArray *tableArray = [[NSMutableArray alloc] init];
+        DownList *list = [[DownList alloc] init];
+        list.d_name = name;
+        list.d_downSize = fsize;
+        list.d_thumbUrl = thumb;
+        list.d_file_id = file_id;
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSDate *todayDate = [NSDate date];
+        list.d_datetime = [dateFormatter stringFromDate:todayDate];
+        list.d_ure_id = [NSString formatNSStringForOjbect:[[SCBSession sharedSession] userId]];
+        [tableArray addObject:list];
+        [delegate.downmange addDownLists:tableArray];
+    }
+}
+-(void)commitFileToID:(NSString *)f_id sID:(NSString *)s_pid
+{
+    NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
+    NSString *fid=[dic objectForKey:@"fid"];
+    if (self.fm_move) {
+        [self.fm_move cancelAllTask];
+    }else
+    {
+        self.fm_move=[[SCBFileManager alloc] init];
+    }
+    self.fm_move.delegate=self;
+    if (self.tableView.isEditing) {
+        [self.fm_move commitFileIDs:[self selectedIDs] toPID:f_id sID:s_pid];
+    }else
+    {
+        [self.fm_move commitFileIDs:@[fid] toPID:f_id sID:s_pid];
+    }
+    [self editFinished];
+
+}
+-(void)resaveFileToID:(NSString *)f_id
+{
+    NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
+    NSString *fid=[dic objectForKey:@"fid"];
+    if (self.fm_move) {
+        [self.fm_move cancelAllTask];
+    }else
+    {
+        self.fm_move=[[SCBFileManager alloc] init];
+    }
+    self.fm_move.delegate=self;
+    if (self.tableView.isEditing) {
+        
+         [self.fm_move resaveFileIDs:[self selectedIDs] toPID:f_id];
+        
+    }else
+    {
+         [self.fm_move resaveFileIDs:@[fid] toPID:f_id];
+    }
+   [self editFinished];
+}
+-(void)moveFileToID:(NSString *)f_id
+{
+    NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
+    NSString *fid=[dic objectForKey:@"fid"];
+    if (self.fm_move) {
+        [self.fm_move cancelAllTask];
+    }else
+    {
+        self.fm_move=[[SCBFileManager alloc] init];
+    }
+    self.fm_move.delegate=self;
+    if (self.tableView.isEditing) {
+        [self.fm_move moveFileIDs:[self selectedIDs] toPID:f_id sID:self.spid];
+    }else
+    {
+        [self.fm_move moveFileIDs:@[fid] toPID:f_id sID:self.spid];
+    }
+    [self editFinished];
+}
+#pragma mark - Table view data source
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (self.listArray) {
+        return self.listArray.count;
+    }
+    return 0;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"Cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                      reuseIdentifier:CellIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        
+        NSString *osVersion = [[UIDevice currentDevice] systemVersion];
+        NSString *versionWithoutRotation = @"7.0";
+        BOOL noRotationNeeded = ([versionWithoutRotation compare:osVersion options:NSNumericSearch] != NSOrderedDescending);
+        if (noRotationNeeded) {
+            cell.accessoryType=UITableViewCellAccessoryDetailButton;
+        }else
+        {
+            cell.accessoryType=UITableViewCellAccessoryDetailDisclosureButton;
+        }
+        [cell.detailTextLabel setTextColor:[UIColor grayColor]];
+        
+        UIImageView *imageView=[[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 50, 50)];
+        UILabel *textLabel=[[UILabel alloc] initWithFrame:CGRectMake(80, 5, 200, 21)];
+        UILabel *detailTextLabel=[[UILabel alloc] initWithFrame:CGRectMake(80, 30, 200, 21)];
+        [cell.contentView addSubview:imageView];
+        [cell.contentView addSubview:textLabel];
+        [cell.contentView addSubview:detailTextLabel];
+        imageView.tag=1;
+        textLabel.tag=2;
+        detailTextLabel.tag=3;
+        [textLabel setFont:[UIFont systemFontOfSize:16]];
+        [detailTextLabel setFont:[UIFont systemFontOfSize:13]];
+        [detailTextLabel setTextColor:[UIColor grayColor]];
+        
+        UIView *tagView = [cell viewWithTag:KCOVERTag];
+        if(tagView == nil)
+        {
+            tagView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Ico_CoverF@2x.png"]];
+            CGRect rect = CGRectMake(53, 40, 15, 15);
+            [tagView setFrame:rect];
+            [tagView setTag:KCOVERTag];
+            [cell addSubview:tagView];
+            [tagView setHidden:YES];
+        }
+    }
+    
+    //修改accessoryType
+    UIButton *accessory=[[UIButton alloc] init];
+    [accessory setFrame:CGRectMake(5, 5, 40, 40)];
+    [accessory setTag:indexPath.row];
+    [accessory setImage:[UIImage imageNamed:@"sel_nor.png"] forState:UIControlStateNormal];
+    [accessory setImage:[UIImage imageNamed:@"sel_se.png"] forState:UIControlStateHighlighted];
+    [accessory setImage:[UIImage imageNamed:@"sel_se.png"] forState:UIControlStateSelected];
+    [accessory  addTarget:self action:@selector(accessoryButtonPressedAction:) forControlEvents:UIControlEventTouchUpInside];
+    cell.accessoryView=accessory;
+    
+    UIImageView *imageView=(UIImageView *)[cell.contentView viewWithTag:1];
+    UILabel *textLabel=(UILabel *)[cell.contentView viewWithTag:2];
+    UILabel *detailTextLabel=(UILabel *)[cell.contentView viewWithTag:3];
+    
+    if (self.listArray) {
+        NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
+        cell.imageView.transform=CGAffineTransformMakeScale(1.0f,1.0f);
+        if (dic) {
+            textLabel.text=[dic objectForKey:@"fname"];
+            NSString *fisdir=[dic objectForKey:@"fisdir"];
+            if ([fisdir isEqualToString:@"0"]) {
+                detailTextLabel.text=[NSString stringWithFormat:@"%@",[dic objectForKey:@"fmodify"]];
+                imageView.image=[UIImage imageNamed:@"file_folder.png"];
+            }else
+            {
+                imageView.image=[UIImage imageNamed:@"file_other.png"];
+                NSString *filesize=[dic objectForKey:@"filesize"];
+                if (filesize==nil) {
+                    detailTextLabel.text=[NSString stringWithFormat:@"%@   %@",[dic objectForKey:@"fmodify"],[YNFunctions convertSize1:[dic objectForKey:@"fsize"]]];
+                }else
+                {
+                    detailTextLabel.text=[NSString stringWithFormat:@"%@   %@",[dic objectForKey:@"fmodify"],filesize];
+                }
+                
+                NSString *fname=[dic objectForKey:@"fname"];
+                NSString *fmime=[[fname pathExtension] lowercaseString];
+//                NSString *fmime=[[dic objectForKey:@"fmime"] lowercaseString];
+                NSLog(@"fmime:%@",fmime);
+                if ([fmime isEqualToString:@"png"]||
+                    [fmime isEqualToString:@"jpg"]||
+                    [fmime isEqualToString:@"jpeg"]||
+                    [fmime isEqualToString:@"bmp"]||
+                    [fmime isEqualToString:@"gif"])
+                {
+                    NSString *fthumb=[dic objectForKey:@"fthumb"];
+                    NSString *localThumbPath=[YNFunctions getIconCachePath];
+                    fthumb =[YNFunctions picFileNameFromURL:fthumb];
+                    localThumbPath=[localThumbPath stringByAppendingPathComponent:fthumb];
+                    NSLog(@"是否存在文件：%@",localThumbPath);
+                    if ([[NSFileManager defaultManager] fileExistsAtPath:localThumbPath]&&[UIImage imageWithContentsOfFile:localThumbPath]!=nil) {
+                        NSLog(@"存在文件：%@",localThumbPath);
+                        UIImage *icon=[UIImage imageWithContentsOfFile:localThumbPath];
+                        CGSize itemSize = CGSizeMake(100, 100);
+                        UIGraphicsBeginImageContext(itemSize);
+                        CGRect theR=CGRectMake(0, 0, itemSize.width, itemSize.height);
+                        if (icon.size.width>icon.size.height) {
+                            theR.size.width=icon.size.width/(icon.size.height/itemSize.height);
+                            theR.origin.x=-(theR.size.width/2)-itemSize.width;
+                        }else
+                        {
+                            theR.size.height=icon.size.height/(icon.size.width/itemSize.width);
+                            theR.origin.y=-(theR.size.height/2)-itemSize.height;
+                        }
+                        CGRect imageRect = CGRectMake(0, 0, 100, 100);
+//                        CGSize size=icon.size;
+//                        if (size.width>size.height) {
+//                            imageRect.size.height=size.height*(30.0f/imageRect.size.width);
+//                            imageRect.origin.y+=(30-imageRect.size.height)/2;
+//                        }else{
+//                            imageRect.size.width=size.width*(30.0f/imageRect.size.height);
+//                            imageRect.origin.x+=(30-imageRect.size.width)/2;
+//                        }
+                        [icon drawInRect:imageRect];
+                        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+                        UIGraphicsEndImageContext();
+                        imageView.image = image;
+//                        CGRect r=cell.imageView.frame;
+//                        r.size.width=r.size.height=30;
+//                        cell.imageView.frame=r;
+                        //cell.imageView.transform=CGAffineTransformMakeScale(0.5f,0.5f);
+
+                    }else{
+                        imageView.image = [UIImage imageNamed:@"file_pic.png"];
+                        NSLog(@"将要下载的文件：%@",localThumbPath);
+                        [self startIconDownload:dic forIndexPath:indexPath];
+                    }
+                }else if ([fmime isEqualToString:@"doc"]||
+                          [fmime isEqualToString:@"docx"])
+                {
+                    imageView.image = [UIImage imageNamed:@"file_doc.png"];
+                }else if ([fmime isEqualToString:@"mp3"])
+                {
+                    imageView.image = [UIImage imageNamed:@"file_music.png"];
+                }else if ([fmime isEqualToString:@"mov"])
+                {
+                    imageView.image = [UIImage imageNamed:@"file_moving.png"];
+                }else if ([fmime isEqualToString:@"ppt"])
+                {
+                    imageView.image = [UIImage imageNamed:@"file_other.png"];
+                }else
+                {
+                    imageView.image = [UIImage imageNamed:@"file_other.png"];
+                }
+
+            }
+        }
+        //判断文件是否已经下载
+        UIImageView *tagView = (UIImageView *)[cell viewWithTag:KCOVERTag];
+        //获取数据
+        NSString *fileName = [NSString formatNSStringForOjbect:[dic objectForKey:@"fname"]];
+        NSString *file_id = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
+        NSInteger fileSize = [[dic objectForKey:@"fsize"] integerValue];
+        
+        NSString *documentDir = [YNFunctions getFMCachePath];
+        NSArray *array=[fileName componentsSeparatedByString:@"/"];
+        NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
+        [NSString CreatePath:createPath];
+        NSString *file_path = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+        //查询本地是否已经有该图片
+        BOOL bl = [NSString image_exists_FM_file_path:file_path];
+        if(bl)
+        {
+            NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:file_path];
+            bl = fileSize==[[handle availableData] length];
+        }
+        if(bl)
+        {
+            [tagView setHidden:NO];
+        }
+        else
+        {
+            [tagView setHidden:YES];
+        }
+    }
+    return cell;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60;
+}
+
+#pragma mark - Table view delegate
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete | UITableViewCellEditingStyleInsert;
+}
+- (void)accessoryButtonPressedAction: (id)sender
+{
+    UIButton *button = (UIButton *)sender;
+    [button setSelected:YES];
+//    UITableViewCell *cell = (UITableViewCell *)[button superview];
+//    NSIndexPath *indexPath=[self.tableView indexPathForCell:cell];
+    NSIndexPath *indexPath=[NSIndexPath indexPathForRow:button.tag inSection:0];
+    [self tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+}
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+    [self hideMenu];
+    self.selectedIndexPath=indexPath;
+    if (!self.singleBg) {
+
+        self.singleBg=[[UIControl alloc] initWithFrame:CGRectMake(0, 0,self.tableView.contentSize.width, self.tableView.contentSize.height)];
+        [self.singleBg addTarget:self action:@selector(hideSingleBar) forControlEvents:UIControlEventTouchUpInside];
+        [self.tableView addSubview:self.singleBg];
+    }
+    [self.singleBg setHidden:NO];
+
+    self.singleBg.frame=CGRectMake(0, 0,self.tableView.contentSize.width, self.tableView.contentSize.height);
+    //显示单选操作菜单
+    int CellHeight=60;
+    if (!self.singleEditBar) {
+        self.singleEditBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, CellHeight)];
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            [self.singleEditBar setBarTintColor:[UIColor blueColor]];
+        }else
+        {
+            [self.singleEditBar setTintColor:[UIColor blueColor]];
+        }
+        [self.singleEditBar setBackgroundImage:[UIImage imageNamed:@"bk_select.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+        [self.singleEditBar setBarStyle:UIBarStyleBlackOpaque];
+        [self.tableView addSubview:self.singleEditBar];
+        [self.tableView bringSubviewToFront:self.singleEditBar];
+        UIImageView *jiantou=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bk_selectTop.png"]];
+        [jiantou setFrame:CGRectMake(280, -6, 10, 6)];
+        [jiantou setTag:2012];
+        [self.singleEditBar addSubview:jiantou];
+    }
+    [self.tableView bringSubviewToFront:self.singleEditBar];
+    [self.singleEditBar setHidden:NO];
+    CGRect r=self.singleEditBar.frame;
+    
+    r.origin.y=(indexPath.row+1) * CellHeight;
+    if (r.origin.y+r.size.height>self.tableView.frame.size.height &&r.origin.y+r.size.height > self.tableView.contentSize.height) {
+        r.origin.y=(indexPath.row+1)*CellHeight-(r.size.height *2);
+        UIImageView *imageView=(UIImageView *)[self.singleEditBar viewWithTag:2012];
+        imageView.transform=CGAffineTransformMakeScale(1.0, -1.0);
+        imageView.frame=CGRectMake(280, CellHeight, 10, 6);
+    }else
+    {
+        UIImageView *imageView=(UIImageView *)[self.singleEditBar viewWithTag:2012];
+        imageView.transform=CGAffineTransformMakeScale(1.0, 1.0);
+        imageView.frame=CGRectMake(280, -6, 10, 6);
+        CGRect rectInTableView = [tableView rectForRowAtIndexPath:indexPath];
+        CGRect rectInSuperview = [tableView convertRect:rectInTableView toView:[tableView superview]];
+        NSLog(@"Rect:%@\n SuperView:%@",NSStringFromCGRect(rectInSuperview),NSStringFromCGRect([tableView.superview frame]));
+        if (rectInSuperview.origin.y+(rectInSuperview.size.height*2)>([tableView superview].frame.size.height+[tableView superview].frame.origin.y)-49-64) {
+            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+        }
+        
+    }
+    self.singleEditBar.frame=r;
+    
+//    NSArray *buttons=@[@"移动",@"重命名",@"删除",@"下载",@"发送",@"提交/转存"];
+    //发送 提交 删除 更多
+//    NSMutableArray *barItems=[NSMutableArray array];
+    UIButton *btn_send, *btn_commit ,*btn_del ,*btn_more ,*btn_resave ,*btn_download ,*btn_rename ,*btn_move;
+    UIBarButtonItem *item_send, *item_commit ,*item_del ,*item_more, *item_flexible ,*item_resave ,*item_download ,*item_rename ,*item_move;
+    int btnWidth=40;
+    btn_send =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+    [btn_send setImage:[UIImage imageNamed:@"share_nor.png"] forState:UIControlStateNormal];
+    [btn_send setImage:[UIImage imageNamed:@"share_se.png"] forState:UIControlStateHighlighted];
+    [btn_send setImage:[UIImage imageNamed:@"share_locked"] forState:UIControlStateDisabled];
+    [btn_send addTarget:self action:@selector(toSend:) forControlEvents:UIControlEventTouchUpInside];
+    item_send=[[UIBarButtonItem alloc] initWithCustomView:btn_send];
+    
+    btn_commit =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+    [btn_commit setImage:[UIImage imageNamed:@"tj_nor.png"] forState:UIControlStateNormal];
+    [btn_commit setImage:[UIImage imageNamed:@"tj_se.png"] forState:UIControlStateHighlighted];
+    [btn_commit addTarget:self action:@selector(toCommitOrResave:) forControlEvents:UIControlEventTouchUpInside];
+    item_commit=[[UIBarButtonItem alloc] initWithCustomView:btn_commit];
+    
+    btn_resave =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+    [btn_resave setImage:[UIImage imageNamed:@"zc_nor.png"] forState:UIControlStateNormal];
+    [btn_resave setImage:[UIImage imageNamed:@"zc_se.png"] forState:UIControlStateHighlighted];
+    [btn_resave addTarget:self action:@selector(toCommitOrResave:) forControlEvents:UIControlEventTouchUpInside];
+    item_resave=[[UIBarButtonItem alloc] initWithCustomView:btn_resave];
+    
+    btn_del =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+    [btn_del setImage:[UIImage imageNamed:@"del_nor.png"] forState:UIControlStateNormal];
+    [btn_del setImage:[UIImage imageNamed:@"del_se.png"] forState:UIControlStateHighlighted];
+    [btn_del addTarget:self action:@selector(toDelete:) forControlEvents:UIControlEventTouchUpInside];
+    item_del=[[UIBarButtonItem alloc] initWithCustomView:btn_del];
+    
+    btn_more =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+    [btn_more setImage:[UIImage imageNamed:@"more_nor.png"] forState:UIControlStateNormal];
+    [btn_more setImage:[UIImage imageNamed:@"more_se.png"] forState:UIControlStateHighlighted];
+    [btn_more addTarget:self action:@selector(toMore:) forControlEvents:UIControlEventTouchUpInside];
+    item_more=[[UIBarButtonItem alloc] initWithCustomView:btn_more];
+    
+    btn_download =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+    [btn_download setImage:[UIImage imageNamed:@"download_nor.png"] forState:UIControlStateNormal];
+    [btn_download setImage:[UIImage imageNamed:@"download_se.png"] forState:UIControlStateHighlighted];
+    [btn_download addTarget:self action:@selector(toDownload:) forControlEvents:UIControlEventTouchUpInside];
+    item_download=[[UIBarButtonItem alloc] initWithCustomView:btn_download];
+    
+    btn_rename =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+    [btn_rename setImage:[UIImage imageNamed:@"rename_nor.png"] forState:UIControlStateNormal];
+    [btn_rename setImage:[UIImage imageNamed:@"rename_se.png"] forState:UIControlStateHighlighted];
+    [btn_rename addTarget:self action:@selector(toRename:) forControlEvents:UIControlEventTouchUpInside];
+    item_rename=[[UIBarButtonItem alloc] initWithCustomView:btn_rename];
+    
+    btn_move =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
+    [btn_move setImage:[UIImage imageNamed:@"move_nor.png"] forState:UIControlStateNormal];
+    [btn_move setImage:[UIImage imageNamed:@"move_se.png"] forState:UIControlStateHighlighted];
+    [btn_move addTarget:self action:@selector(toMove:) forControlEvents:UIControlEventTouchUpInside];
+    item_move=[[UIBarButtonItem alloc] initWithCustomView:btn_move];
+    
+    item_flexible=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+//    for (NSString *str in buttons) {
+//        UIButton *button=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 29, 39)];
+//        [button setImage:[UIImage imageNamed:@"rename_nor.png"] forState:UIControlStateNormal];
+//        [button setImage:[UIImage imageNamed:@"rename_se.png"] forState:UIControlStateHighlighted];
+//        //UIBarButtonItem *item1=[[UIBarButtonItem alloc] initWithTitle:str style:UIBarButtonItemStylePlain target:nil action:nil];
+//        UIBarButtonItem *item1=[[UIBarButtonItem alloc] initWithCustomView:button];
+//        [barItems addObject:item1];
+//    }
+    //2013年10月29日去提交和发送功能;by FengYN
+    
+    NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
+    NSString *fisdir=[dic objectForKey:@"fisdir"];
+
+    if ([self.roletype isEqualToString:@"9999"]) {
+        //个人空间
+        if ([fisdir isEqualToString:@"0"])
+        {
+            [self.singleEditBar setItems:@[item_move,item_flexible,item_rename,item_flexible,item_del]];
+        }else
+        {
+            [self.singleEditBar setItems:@[item_download,item_flexible,item_send,item_flexible,item_del,item_flexible,item_more]];
+        }
+        //[self.singleEditBar setItems:@[item_send,item_flexible,item_commit,item_flexible,item_del,item_flexible,item_more]];
+    }else if ([self.roletype isEqualToString:@"0"])
+    {
+        //管理员
+        if ([fisdir isEqualToString:@"0"])
+        {
+            [self.singleEditBar setItems:@[item_resave,item_flexible,item_move,item_flexible,item_rename,item_flexible,item_del]];
+        }else
+        {
+            [self.singleEditBar setItems:@[item_download,item_flexible,item_send,item_flexible,item_del,item_flexible,item_more]];
+        }
+//        [self.singleEditBar setItems:@[item_send,item_flexible,item_resave,item_flexible,item_del,item_flexible,item_more]];
+    }else if ([self.roletype isEqualToString:@"1"])
+    {
+        //可提交
+        
+        if ([fisdir isEqualToString:@"0"]) {
+            [self.singleEditBar setItems:@[item_flexible,item_resave,item_flexible]];
+        }else
+        {
+            [self.singleEditBar setItems:@[item_send,item_flexible,item_resave,item_flexible,item_download]];
+        }
+    }else if ([self.roletype isEqualToString:@"2"])
+    {
+        //可查看
+        
+        if ([fisdir isEqualToString:@"0"]) {
+            [self.singleEditBar setItems:@[item_flexible,item_resave,item_flexible]];
+        }else
+        {
+            [self.singleEditBar setItems:@[item_send,item_flexible,item_resave,item_flexible,item_download]];
+        }
+    }
+
+ //   [self toMore:self];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.tableView.editing) {
+        NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
+        NSString *fisdir=[dic objectForKey:@"fisdir"];
+        if ([fisdir isEqualToString:@"0"]) {
+            //选中了文件夹，禁用分享;
+            UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
+            [item setEnabled:NO];
+        }
+        return;
+    }
+    if (self.listArray) {
+        NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
+        if (dic) {
+            NSString *fisdir=[dic objectForKey:@"fisdir"];
+            NSString *fname = [dic objectForKey:@"fname"];
+            NSString *fmime=[[fname pathExtension] lowercaseString];
+            if ([fisdir isEqualToString:@"0"]) {
+                FileListViewController *flVC=[[FileListViewController alloc] init];
+                flVC.spid=self.spid;
+                flVC.roletype=self.roletype;
+                flVC.f_id=[dic objectForKey:@"fid"];
+                flVC.title=[dic objectForKey:@"fname"];
+                [self.navigationController pushViewController:flVC animated:YES];
+            }
+            else if ([fmime isEqualToString:@"png"]||
+                     [fmime isEqualToString:@"jpg"]||
+                     [fmime isEqualToString:@"jpeg"]||
+                     [fmime isEqualToString:@"bmp"]||
+                     [fmime isEqualToString:@"gif"])
+            {
+                int row = 0;
+                if(indexPath.row<[self.listArray count])
+                {
+                    NSMutableArray *tableArray = [[NSMutableArray alloc] init];
+                    for(int i=0;i<[self.listArray count];i++) {
+                        NSDictionary *diction = [self.listArray objectAtIndex:i];
+                        NSString *fname_ = [diction objectForKey:@"fname"];
+                        NSString *fmime_=[[fname pathExtension] lowercaseString];
+                        if([[diction objectForKey:@"fisdir"] boolValue] && ([fmime_ isEqualToString:@"png"]||
+                           [fmime_ isEqualToString:@"jpg"]||
+                           [fmime_ isEqualToString:@"jpeg"]||
+                           [fmime_ isEqualToString:@"bmp"]||
+                           [fmime_ isEqualToString:@"gif"]))
+                        {
+                            DownList *list = [[DownList alloc] init];
+                            list.d_file_id = [NSString formatNSStringForOjbect:[diction objectForKey:@"fid"]];
+                            list.d_thumbUrl = [NSString formatNSStringForOjbect:[diction objectForKey:@"fthumb"]];
+                            if([list.d_thumbUrl length]==0)
+                            {
+                                list.d_thumbUrl = @"0";
+                            }
+                            list.d_name = [NSString formatNSStringForOjbect:[diction objectForKey:@"fname"]];
+                            list.d_baseUrl = [NSString get_image_save_file_path:list.d_name];
+                            list.d_downSize = [[diction objectForKey:@"fsize"] integerValue];
+                            [tableArray addObject:list];
+                            if(row==0 && [fname isEqualToString:fname_])
+                            {
+                                row = [tableArray count]-1;
+                            }
+                        }
+                    }
+                    if([tableArray count]>0)
+                    {
+                        PhotoLookViewController *look = [[PhotoLookViewController alloc] init];
+                        [look setCurrPage:row];
+                        [look setTableArray:tableArray];
+                        if ([self.roletype isEqualToString:@"9999"] || [self.roletype isEqualToString:@"0"]) {
+                             look.isHaveDelete = YES;
+                        }else if ([self.roletype isEqualToString:@"1"] || [self.roletype isEqualToString:@"2"])
+                        {
+                            look.isHaveDelete = NO;
+                        }
+                        [self presentViewController:look animated:YES completion:nil];
+                    }
+                }
+            }
+            else
+            {
+                NSString *file_id=[dic objectForKey:@"fid"];
+                NSString *f_name=[dic objectForKey:@"fname"];
+                NSString *documentDir = [YNFunctions getFMCachePath];
+                NSArray *array=[f_name componentsSeparatedByString:@"/"];
+                NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
+                [NSString CreatePath:createPath];
+                NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+                if ([[NSFileManager defaultManager] fileExistsAtPath:savedPath]) {
+                    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
+                    browser.dataSource=browser;
+                    browser.delegate=browser;
+                    browser.currentPreviewItemIndex=0;
+                    browser.title=f_name;
+                    browser.filePath=savedPath;
+                    browser.fileName=f_name;
+                    [self presentViewController:browser animated:YES completion:nil];
+                }else
+                {
+                    OtherBrowserViewController *otherBrowser=[[OtherBrowserViewController alloc] initWithNibName:@"OtherBrowser" bundle:nil];
+                    otherBrowser.dataDic=dic;
+                    NSString *f_name=[dic objectForKey:@"fname"];
+                    otherBrowser.title=f_name;
+                    [self presentViewController:otherBrowser animated:YES completion:nil];
+                }
+            }
+        }
+    }
+}
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (self.tableView.editing) {
+        BOOL isDis=NO;
+        for (NSIndexPath *newIP in [self selectedIndexPaths]) {
+            NSDictionary *dic=[self.listArray objectAtIndex:newIP.row];
+            NSString *fisdir=[dic objectForKey:@"fisdir"];
+            if ([fisdir isEqualToString:@"0"]) {
+                //选中了文件夹，禁用分享;
+                isDis=YES;
+                return;
+            }
+        }
+        UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
+        if (isDis) {
+            [item setEnabled:NO];
+        }else
+        {
+            [item setEnabled:YES];
+        }
+        return;
+    }
+}
+#pragma mark - SCBFileManagerDelegate
+-(void)networkError
+{
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    
+    [self.hud show:NO];
+    self.hud.labelText=@"链接失败，请检查网络";
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
+    [self doneLoadingTableViewData];
+}
+-(void)openFinderSucess:(NSDictionary *)datadic
+{
+    self.dataDic=datadic;
+    if (self.dataDic) {
+        self.listArray=self.listArray=(NSArray *)[self.dataDic objectForKey:@"files"];
+        if (self.listArray) {
+            [self.tableView reloadData];
+        }
+        NSString *dataFilePath=[YNFunctions getDataCachePath];
+        dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:[NSString stringWithFormat:@"%@_%@",self.spid,self.f_id]]];
+        
+        NSError *jsonParsingError=nil;
+        NSData *data=[NSJSONSerialization dataWithJSONObject:self.dataDic options:0 error:&jsonParsingError];
+        BOOL isWrite=[data writeToFile:dataFilePath atomically:YES];
+        if (isWrite) {
+            NSLog(@"写入文件成功：%@",dataFilePath);
+        }else
+        {
+            NSLog(@"写入文件失败：%@",dataFilePath);
+        }
+    }else
+    {
+        //[self updateFileList];
+    }
+    [self doneLoadingTableViewData];
+    NSLog(@"openFinderSucess:");
+    if (self.dataDic)
+    {
+        NSString *dataFilePath=[YNFunctions getDataCachePath];
+        dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:self.f_id]];
+        
+        NSError *jsonParsingError=nil;
+        NSData *data=[NSJSONSerialization dataWithJSONObject:self.dataDic options:0 error:&jsonParsingError];
+        BOOL isWrite=[data writeToFile:dataFilePath atomically:YES];
+        if (isWrite) {
+            NSLog(@"写入文件成功：%@",dataFilePath);
+        }else
+        {
+            NSLog(@"写入文件失败：%@",dataFilePath);
+        }
+    }
+    
+}
+-(void)newFinderSucess
+{
+    [self operateUpdate];
+}
+-(void)newFinderUnsucess;
+{
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    
+    [self.hud show:NO];
+    self.hud.labelText=@"操作失败";
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
+}
+-(void)operateSucess:(NSDictionary *)datadic
+{
+    [self openFinderSucess:datadic];
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=@"操作成功";
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
+}
+-(void)renameSucess
+{
+    [self operateUpdate];
+}
+-(void)renameUnsucess
+{
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    
+    [self.hud show:NO];
+    self.hud.labelText=@"操作失败";
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
+}
+-(void)removeSucess
+{
+//    if (self.willDeleteObjects) {
+//        [self removeFromDicWithObjects:self.willDeleteObjects];
+//        [self.tableView reloadData];
+//    }
+    
+    //[self.tableView reloadData];
+    [self operateUpdate];
+//    if (self.hud) {
+//        [self.hud removeFromSuperview];
+//    }
+//    self.hud=nil;
+//    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+//    [self.view.superview addSubview:self.hud];    [self.hud show:NO];
+//    self.hud.labelText=@"操作成功";
+//    self.hud.mode=MBProgressHUDModeText;
+//    self.hud.margin=10.f;
+//    [self.hud show:YES];
+//    [self.hud hide:YES afterDelay:1.0f];
+}
+-(void)removeUnsucess
+{
+    NSLog(@"openFinderUnsucess: 网络连接失败!!");
+    [self updateFileList];
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=@"操作失败";
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
+}
+-(void)Unsucess:(NSString *)strError
+{
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    [self.hud show:NO];
+    if (strError==nil||[strError isEqualToString:@""]) {
+        self.hud.labelText=@"操作失败";
+    }else
+    {
+        self.hud.labelText=strError;
+    }
+    
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
+}
+-(void)moveUnsucess
+{
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=@"操作失败";
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
+}
+-(void)moveSucess
+{
+    [self operateUpdate];
+}
+#pragma mark - Deferred image loading (UIScrollViewDelegate)
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+	
+	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    
+}
+
+// Load images for all onscreen rows when scrolling is finished
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+ //   [self.ctrlView setHidden:YES];
+}
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate)
+	{
+//        if (self.selectedIndexPath) {
+//            //[self hideOptionCell];
+//            return;
+//        }
+        [self loadImagesForOnscreenRows];
+    }
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+//    if (self.selectedIndexPath) {
+//        //[self hideOptionCell];
+//        return;
+//    }
+    [self loadImagesForOnscreenRows];
+}
+
+// this method is used in case the user scrolled into a set of cells that don't have their app icons yet
+- (void)loadImagesForOnscreenRows
+{
+    if ([self.listArray count] > 0)
+    {
+        NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
+        for (NSIndexPath *indexPath in visiblePaths)
+        {
+            NSDictionary *dic = [self.listArray objectAtIndex:indexPath.row];
+            if (dic==nil) {
+                break;
+            }
+            NSString *fmime=[[dic objectForKey:@"f_mime"] lowercaseString];
+            if ([fmime isEqualToString:@"png"]||
+                [fmime isEqualToString:@"jpg"]||
+                [fmime isEqualToString:@"jpeg"]||
+                [fmime isEqualToString:@"bmp"]||
+                [fmime isEqualToString:@"gif"]){
+                
+                NSString *compressaddr=[dic objectForKey:@"fthumb"];
+                assert(compressaddr!=nil);
+                compressaddr =[YNFunctions picFileNameFromURL:compressaddr];
+                NSString *path=[YNFunctions getIconCachePath];
+                path=[path stringByAppendingPathComponent:compressaddr];
+                
+                //"compressaddr":"cimage/cs860183fc-81bd-40c2-817a-59653d0dc513.jpg"
+                if (![[NSFileManager defaultManager] fileExistsAtPath:path]) // avoid the app icon download if the app already has an icon
+                {
+                    NSLog(@"将要下载的文件：%@",path);
+                    [self startIconDownload:dic forIndexPath:indexPath];
+                }
+            }
+        }
+    }
+}
+- (void)startIconDownload:(NSDictionary *)dic forIndexPath:(NSIndexPath *)indexPath
+{
+    if (!self.imageDownloadsInProgress) {
+        self.imageDownloadsInProgress=[NSMutableDictionary dictionary];
+    }
+    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader == nil)
+    {
+        iconDownloader = [[IconDownloader alloc] init];
+        iconDownloader.data_dic=dic;
+        iconDownloader.indexPathInTableView = indexPath;
+        iconDownloader.delegate = self;
+        [self.imageDownloadsInProgress setObject:iconDownloader forKey:indexPath];
+        [iconDownloader startDownload];
+    }
+}
+- (void)appImageDidLoad:(NSIndexPath *)indexPath;
+{
+    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader != nil)
+    {
+        [self.tableView reloadRowsAtIndexPaths:@[iconDownloader.indexPathInTableView] withRowAnimation:UITableViewRowAnimationNone];
+    }
+    
+    // Remove the IconDownloader from the in progress list.
+    // This will result in it being deallocated.
+    [self.imageDownloadsInProgress removeObjectForKey:indexPath];
+}
+#pragma mark - UIAlertViewDelegate Methods
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (alertView.tag) {
+        case kAlertTagDeleteOne:
+        {
+        }
+        case kAlertTagRename:
+        {
+            if (buttonIndex==1) {
+                NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
+                NSString *name=[dic objectForKey:@"fname"];
+                NSString *f_id=[dic objectForKey:@"fid"];
+                NSString *fildtext=[[alertView textFieldAtIndex:0] text];
+                if (![fildtext isEqualToString:name]) {
+                    NSLog(@"重命名");
+                    [self.fm cancelAllTask];
+                    self.fm=[[SCBFileManager alloc] init];
+                    [self.fm renameWithID:f_id newName:fildtext sID:self.spid];
+                    [self.fm setDelegate:self];
+                }
+                NSLog(@"点击确定");
+            }else
+            {
+                NSLog(@"点击其它");
+            }
+            //[self hideOptionCell];
+            break;
+        }
+        case kAlertTagMailAddr:
+        {
+//            if (buttonIndex==1) {
+//                NSString *fildtext=[[alertView textFieldAtIndex:0] text];
+//                if (![self checkIsEmail:fildtext])
+//                {
+//                    if (self.hud) {
+//                        [self.hud removeFromSuperview];
+//                    }
+//                    self.hud=nil;
+//                    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+//                    [self.view.superview addSubview:self.hud];
+//                    [self.hud show:NO];
+//                    self.hud.labelText=@"输入的邮箱地址非法";
+//                    //self.hud.labelText=error_info;
+//                    self.hud.mode=MBProgressHUDModeText;
+//                    self.hud.margin=10.f;
+//                    [self.hud show:YES];
+//                    [self.hud hide:YES afterDelay:1.0f];
+//                    return;
+//                }
+//                if (self.tableView.editing) {
+//                    NSMutableArray *f_ids=[NSMutableArray array];
+//                    BOOL hasDir=NO;
+//                    for (int i=0;i<self.m_fileItems.count;i++) {
+//                        FileItem *fileItem=[self.m_fileItems objectAtIndex:i];
+//                        if (fileItem.checked) {
+//                            NSDictionary *dic=[self.listArray objectAtIndex:i];
+//                            NSString *f_id=[dic objectForKey:@"f_id"];
+//                            NSString *f_mime=[[dic objectForKey:@"f_mime"] lowercaseString];
+//                            if (![f_mime isEqualToString:@"directory"]) {
+//                                [f_ids addObject:f_id];
+//                            }else
+//                            {
+//                                hasDir=YES;
+//                            }
+//                        }
+//                    }
+//                    SCBLinkManager *lm_temp=[[[SCBLinkManager alloc] init] autorelease];
+//                    [lm_temp setDelegate:self];
+//                    [lm_temp releaseLinkEmail:f_ids l_pwd:@"a1b2" receiver:@[fildtext]];
+//                    
+//                }else
+//                {
+//                    if (self.selectedIndexPath) {
+//                        NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row-1];
+//                        NSString *f_id=[dic objectForKey:@"f_id"];
+//                        
+//                        SCBLinkManager *lm_temp=[[[SCBLinkManager alloc] init] autorelease];
+//                        [lm_temp setDelegate:self];
+//                        //                        [lm_temp linkWithIDs:@[f_id]];
+//                        [lm_temp releaseLinkEmail:@[f_id] l_pwd:@"a1b2" receiver:@[fildtext]];
+//                        [self hideOptionCell];
+//                    }
+//                }
+//                
+//                NSLog(@"点击确定");
+//            }else
+//            {
+//                NSLog(@"点击其它");
+//            }
+//            [self hideOptionCell];
+            break;
+        }
+        case kAlertTagDeleteMore:
+        {
+            break;
+        }
+        case kAlertTagNewFinder:
+        {
+            if (buttonIndex==1) {
+                NSString *fildtext=[[alertView textFieldAtIndex:0] text];
+                if (![fildtext isEqualToString:@""]) {
+                    NSLog(@"重命名");
+                    [self.fm cancelAllTask];
+                    self.fm=[[SCBFileManager alloc] init];
+                    [self.fm newFinderWithName:fildtext pID:self.f_id sID:self.spid];
+                    [self.fm setDelegate:self];
+                }
+            }else
+            {
+                NSLog(@"点击其它");
+            }
+            //[self hideOptionCell];
+            break;
+        }
+        default:
+            break;
+    }
+}
+#pragma mark - UIActionSheetDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch ([actionSheet tag]) {
+        case kActionSheetTagSort:
+        {
+            if (buttonIndex==0) {
+                //时间排序
+                [YNFunctions setDesc:@"time"];
+                [self updateFileList];
+            }else if(buttonIndex==1)
+            {
+                //名称排序
+                [YNFunctions setDesc:@"name"];
+                [self updateFileList];
+            }else if (buttonIndex==2)
+            {
+                //大小排序
+                [YNFunctions setDesc:@"size"];
+                [self updateFileList];
+            }
+        }
+            break;
+        case kActionSheetTagSend:
+        {
+            NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
+            NSString *fid=[dic objectForKey:@"fid"];
+            SendEmailViewController *sevc=[[SendEmailViewController alloc] init];
+            sevc.title=@"新邮件";
+            if (self.tableView.isEditing) {
+                sevc.fids=[self selectedIDs];
+                NSMutableArray *fileDatas=[NSMutableArray array];
+                NSArray *indexs=[self selectedIndexPaths];
+                for (NSIndexPath *indexpath in indexs) {
+                    NSDictionary *dic=[self.listArray objectAtIndex:indexpath.row];
+                    [fileDatas addObject:dic];
+                }
+                sevc.fileArray=fileDatas;
+            }else
+            {
+                sevc.fids=@[fid];
+                sevc.fileArray=@[dic];
+            }
+            if (buttonIndex==0) {
+                //站内发送
+                sevc.tyle=kTypeSentIn;
+            }else if(buttonIndex==1)
+            {
+                //站外发送
+                sevc.tyle=kTypeSendEx;
+            }else
+            {
+                return;
+            }
+            YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:sevc];
+            [self presentViewController:nav animated:YES completion:nil];
+            [self editFinished];
+        }
+            break;
+        case kActionSheetTagDeleteOne:
+        {
+            if (buttonIndex==0) {
+                NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
+                NSString *f_id=[dic objectForKey:@"fid"];
+                [self.fm cancelAllTask];
+                self.fm=[[SCBFileManager alloc] init];
+                self.fm.delegate=self;
+                
+                NSMutableArray *ids=[[NSMutableArray alloc] init];
+                if (self.tableView.isEditing) {
+                    [self.fm removeFileWithIDs:[self selectedIDs]];
+                    for (NSIndexPath *indexpath in [self selectedIndexPaths]) {
+                        NSDictionary *dic=[self.listArray objectAtIndex:indexpath.row];
+                        [ids addObject:dic];
+                    }
+                }else
+                {
+                    [self.fm removeFileWithIDs:@[f_id]];
+                    [ids addObject:dic];
+                }
+                [self removesBaseFile:ids];
+                [self editFinished];
+            }
+//            [self hideOptionCell];
+            break;
+        }
+        case kActionSheetTagDeleteMore:
+        {
+            break;
+        }
+        case kActionSheetTagMore:
+            if ([self.roletype isEqualToString:@"9999"]) {
+                //个人空间
+                if (buttonIndex==0) {
+                    [self toMove:nil];
+                }else if(buttonIndex==1)
+                {
+                    [self toRename:nil];
+                }
+            }else if ([self.roletype isEqualToString:@"0"])
+            {
+                //管理员空间
+                if (buttonIndex==0) {
+                    [self toCommitOrResave:nil];
+                }else if(buttonIndex==1)
+                {
+                    [self toMove:nil];
+                }else if(buttonIndex==2)
+                {
+                    [self toRename:nil];
+                }
+            }
+            break;
+        case kActionSheetTagShare:
+            {
+            }
+            break;
+        case kActionSheetTagPhoto:
+        {
+        }
+            break;
+        case kActionSheetTagUpload:
+        {
+            if (buttonIndex==0)
+            {
+                //拍照上传
+                UIImagePickerController *imagePicker=[[UIImagePickerController alloc] init];
+                imagePicker.sourceType=UIImagePickerControllerSourceTypeCamera;
+                
+                //imagePicker.mediaTypes=[NSArray arrayWithObject:@"public.photo"];
+                imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModePhoto;
+                
+                imagePicker.allowsEditing=NO;
+                imagePicker.showsCameraControls=YES;
+                imagePicker.cameraViewTransform=CGAffineTransformIdentity;
+                
+                // not all devices have two cameras or a flash so just check here
+                if ( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceRear] ) {
+                    imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
+                    if ( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceFront] ) {
+                        //                        cameraSelectionButton.alpha = 1.0;
+                        //                        showCameraSelection = YES;
+                    }
+                } else {
+                    imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+                }
+                if ( [UIImagePickerController isFlashAvailableForCameraDevice:imagePicker.cameraDevice] ) {
+                    imagePicker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
+                    //                    flashModeButton.alpha = 1.0;
+                    //                    showFlashMode = YES;
+                }
+                
+                //                imagePicker.videoQuality = UIImagePickerControllerQualityType640x480;
+                
+                imagePicker.delegate = self;
+                imagePicker.wantsFullScreenLayout = YES;
+                [self presentViewController:imagePicker animated:YES completion:nil];
+            }else if(buttonIndex==1)
+            {
+                //手机相册
+                QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
+                AppDelegate *app_delegate = [[UIApplication sharedApplication] delegate];
+                app_delegate.file_url = [NSString formatNSStringForOjbect:app_delegate.old_file_url];
+                imagePickerController.delegate = self;
+                imagePickerController.allowsMultipleSelection = YES;
+                imagePickerController.f_id  = self.f_id;
+                imagePickerController.f_name = self.title;
+                imagePickerController.space_id = self.spid;
+                [imagePickerController requestFileDetail];
+                [imagePickerController setHidesBottomBarWhenPushed:YES];
+                [self.navigationController pushViewController:imagePickerController animated:NO];
+            }
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+-(void)removesBaseFile:(NSMutableArray *)removesArray
+{
+    for(int i=0;i<removesArray.count;i++)
+    {
+        NSDictionary *dic = [removesArray objectAtIndex:i];
+        //获取数据
+        NSString *fileName = [NSString formatNSStringForOjbect:[dic objectForKey:@"fname"]];
+        NSString *file_id = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
+        NSString *documentDir = [YNFunctions getFMCachePath];
+        NSArray *array=[fileName componentsSeparatedByString:@"/"];
+        NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
+        NSString *file_path = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+        //查询本地是否已经有该图片
+        BOOL bl = [NSString image_exists_FM_file_path:file_path];
+        if(bl)
+        {
+            NSFileManager *filemgr = [NSFileManager defaultManager];
+            if([filemgr fileExistsAtPath:file_path])
+            {
+                BOOL isDelete = [filemgr removeItemAtPath:file_path error:nil];
+                DDLogCInfo(@"删除文件是否成功：%i",isDelete);
+            }
+        }
+    }
+}
+#pragma mark - UIImagePickerControllerDelegate
+// The picker does not dismiss itself; the client dismisses it in these callbacks.
+// The delegate will receive one or the other, but not both, depending whether the user
+// confirms or cancels.
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        NSLog(@"%@",info);
+        UIImage *image=[info objectForKey:UIImagePickerControllerOriginalImage];
+        if (image) {
+            NSString *filePath=[YNFunctions getTempCachePath];
+            NSDateFormatter *dateFormate=[[NSDateFormatter alloc] init];
+            [dateFormate setDateFormat:@"yy-MM-dd HH mm ss"];
+            
+            NSString *fileName=[NSString stringWithFormat:@"%@.jpg",[dateFormate stringFromDate:[NSDate date]]];
+            filePath=[filePath stringByAppendingPathComponent:fileName];
+            BOOL result=[UIImageJPEGRepresentation(image, 1) writeToFile:filePath atomically:YES];
+            if (result) {
+                NSLog(@"文件保存成功");
+                AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+                [delegate.uploadmanage uploadFilePath:filePath toFileID:self.f_id withSpaceID:self.spid];
+            }else
+            {
+                NSLog(@"文件保存失败");
+            }
+        }
+    });
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+@end

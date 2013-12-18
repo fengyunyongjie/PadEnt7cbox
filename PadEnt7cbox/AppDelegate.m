@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "LoginViewController.h"
+#import "MySplitViewController.h"
 
 @implementation AppDelegate
 
@@ -18,6 +20,14 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    if ([self isLogin]) {
+        [self finishLogin];
+    }else
+    {
+        [self finishLogout];
+    }
+    
     return YES;
 }
 
@@ -47,5 +57,23 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
+-(BOOL)isLogin
+{
+    NSString *userName = [[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"];
+    NSString *userPwd  = [[NSUserDefaults standardUserDefaults] objectForKey:@"usr_pwd"];
+    if (userName==nil&&userPwd==nil) {
+        return NO;
+    }
+    return YES;
+}
+-(void)finishLogin
+{
+    self.splitVC=[[MySplitViewController alloc] initWithNibName:@"MySplitViewController" bundle:nil];
+    self.window.rootViewController=self.splitVC;
+}
+-(void)finishLogout
+{
+    self.loginVC=[[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+    self.window.rootViewController=self.loginVC;
+}
 @end

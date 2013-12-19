@@ -33,6 +33,7 @@
     DetailViewController *detailVC=[[DetailViewController alloc] init];
     UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:detailVC];
     self.viewControllers=@[myTabVC,nav];
+    self.delegate=detailVC;
 }
 
 - (void)didReceiveMemoryWarning

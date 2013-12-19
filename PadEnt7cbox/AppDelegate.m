@@ -11,6 +11,7 @@
 #import "MySplitViewController.h"
 
 @implementation AppDelegate
+@synthesize password_controller;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -27,7 +28,9 @@
     {
         [self finishLogout];
     }
-    
+    self.password_controller = [[PasswordController alloc] init];
+    [self.window addSubview:self.password_controller.view];
+//    self.password_controller.view.hidden = YES;
     return YES;
 }
 

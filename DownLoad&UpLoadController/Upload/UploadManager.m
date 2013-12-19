@@ -386,7 +386,7 @@
 //文件大小超过1GB
 -(void)upNotSizeTooBig
 {
-    DDLogCInfo(@"文件大小超过1GB..................................");
+    NSLog(@"文件大小超过1GB..................................");
     isStopCurrUpload = YES;
     if([uploadArray count]>0)
     {

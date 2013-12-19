@@ -230,7 +230,7 @@
 // returns the item that the preview controller should preview
 - (id)previewController:(QLPreviewController *)previewController previewItemAtIndex:(NSInteger)idx
 {
-    DDLogCInfo(@"previewController ----------");
+    NSLog(@"previewController ----------");
     NSURL *fileURL = nil;
     fileURL=[NSURL fileURLWithPath:self.savePath];
     return fileURL;

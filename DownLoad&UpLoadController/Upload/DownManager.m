@@ -137,7 +137,7 @@
             list.d_id = endList.d_id;
         }
     }
-    DDLogError(@"downingArray:%i",downingArray.count);
+    NSLog(@"downingArray:%i",downingArray.count);
     [downingArray addObjectsFromArray:[list selectDowningAll]];
 }
 
@@ -175,7 +175,7 @@
     if([downingArray count]>0 && isStart)
     {
         DownList *list = [downingArray objectAtIndex:0];
-        DDLogInfo(@"下载的文件大小:%i",list.d_downSize);
+        NSLog(@"下载的文件大小:%i",list.d_downSize);
         //开始下载
         self.file = [[DwonFile alloc] init];
         self.file.fileSize = list.d_downSize;
@@ -417,7 +417,7 @@
                 if([filemgr fileExistsAtPath:list.d_baseUrl])
                 {
                     BOOL isDelete = [filemgr removeItemAtPath:list.d_baseUrl error:nil];
-                    DDLogCInfo(@"删除文件是否成功：%i",isDelete);
+                    NSLog(@"删除文件是否成功：%i",isDelete);
                 }
             }
         });

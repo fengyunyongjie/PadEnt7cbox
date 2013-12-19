@@ -9,6 +9,8 @@
 #import "UploadManager.h"
 #import "MusicPlayerViewController.h"
 #import "Reachability.h"
+#import "PasswordController.h"
+
 
 #import <UIKit/UIKit.h>
 
@@ -31,6 +33,7 @@
 @property (strong, nonatomic) NSString *space_id;
 @property (strong, nonatomic) NSString *space_name;
 @property (strong, nonatomic) NSString *old_file_url;
+@property (strong, nonatomic) PasswordController *password_controller;
 -(void)finishLogin;
 -(void)finishLogout;
 @end

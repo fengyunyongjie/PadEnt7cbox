@@ -328,7 +328,7 @@
             }
             
             //向右滑动
-            DDLogCInfo(@"向右滑动:%i",[imageScrollView.subviews count]);
+            NSLog(@"向右滑动:%i",[imageScrollView.subviews count]);
             //加载数据
             self.page = imageScrollView.contentOffset.x/currWidth;
             int page = self.page;
@@ -354,7 +354,7 @@
                 }
             }
             //向左滑动
-            DDLogCInfo(@"向左滑动:%i",[imageScrollView.subviews count]);
+            NSLog(@"向左滑动:%i",[imageScrollView.subviews count]);
             //加载数据
             self.page = imageScrollView.contentOffset.x/currWidth;
             int page = self.page;
@@ -422,7 +422,7 @@
             {
                 break;
             }
-            DDLogCInfo(@"重新加载：%i",i);
+            NSLog(@"重新加载：%i",i);
             [self loadPageColoumn:i];
         }
     }
@@ -434,7 +434,7 @@
             {
                 break;
             }
-            DDLogCInfo(@"重新加载：%i",i);
+            NSLog(@"重新加载：%i",i);
             [self loadPageColoumn:i];
         }
     }
@@ -447,7 +447,7 @@
             {
                 break;
             }
-            DDLogCInfo(@"重新加载：%i",i);
+            NSLog(@"重新加载：%i",i);
             [self loadPageColoumn:i];
         }
     }
@@ -459,7 +459,7 @@
             {
                 break;
             }
-            DDLogCInfo(@"重新加载：%i",i);
+            NSLog(@"重新加载：%i",i);
             [self loadPageColoumn:i];
         }
     }

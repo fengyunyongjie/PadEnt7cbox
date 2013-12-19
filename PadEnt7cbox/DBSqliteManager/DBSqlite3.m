@@ -30,7 +30,7 @@
     self.databasePath=[self.databasePath stringByAppendingPathComponent:@"hongPanShangYe.sqlite"];
     NSFileManager *filemgr = [NSFileManager defaultManager];
     BOOL bl = [filemgr removeItemAtPath:self.databasePath error:nil];
-    DDLogCInfo(@"--------------------------------------------------\n删除所有数据库文件:%i\n--------------------------------------------------",bl);
+    NSLog(@"--------------------------------------------------\n删除所有数据库文件:%i\n--------------------------------------------------",bl);
 }
 
 -(id)init
@@ -42,30 +42,30 @@
     {
         char *errMsg;
         //        if (sqlite3_exec(contactDB, [CreateTaskTable UTF8String], NULL, NULL, &errMsg)!=SQLITE_OK) {
-        //            DDLogCError(@"errMsg:%s",errMsg);
+        //            NSLog(@"errMsg:%s",errMsg);
         //        }
         //        if (sqlite3_exec(contactDB, (const char *)[CreatePhotoFileTable UTF8String], NULL, NULL, &errMsg)!=SQLITE_OK) {
-        //            DDLogCError(@"errMsg:%s",errMsg);
+        //            NSLog(@"errMsg:%s",errMsg);
         //        }
         if (sqlite3_exec(contactDB, (const char *)[CreateUserinfoTable UTF8String], NULL, NULL, &errMsg)!=SQLITE_OK) {
-            DDLogCError(@"errMsg:%s",errMsg);
+            NSLog(@"errMsg:%s",errMsg);
         }
         //        //新代码
         if (sqlite3_exec(contactDB, (const char *)[CreateUploadList UTF8String], NULL, NULL, &errMsg)!=SQLITE_OK) {
-            DDLogCError(@"errMsg:%s",errMsg);
+            NSLog(@"errMsg:%s",errMsg);
         }
         //        if (sqlite3_exec(contactDB, (const char *)[CreateAutoUploadList UTF8String], NULL, NULL, &errMsg)!=SQLITE_OK) {
-        //            DDLogCError(@"errMsg:%s",errMsg);
+        //            NSLog(@"errMsg:%s",errMsg);
         //        }
         //商业版新代码
         if (sqlite3_exec(contactDB, (const char *)[CreateDownList UTF8String], NULL, NULL, &errMsg)!=SQLITE_OK) {
-            DDLogCError(@"errMsg:%s",errMsg);
+            NSLog(@"errMsg:%s",errMsg);
         }
         sqlite3_close(contactDB);
     }
     else
     {
-        DDLogCError(@"创建/打开数据库失败");
+        NSLog(@"创建/打开数据库失败");
     }
     
     
@@ -114,7 +114,7 @@
         {
             bl = TRUE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }

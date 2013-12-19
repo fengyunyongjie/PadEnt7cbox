@@ -40,7 +40,7 @@
         if (success == SQLITE_ERROR) {
             bl = FALSE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -69,7 +69,7 @@
         if (success == SQLITE_ERROR) {
             bl = FALSE;
         }
-        DDLogCInfo(@"updateUserinfo:%i",success);
+        NSLog(@"updateUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }

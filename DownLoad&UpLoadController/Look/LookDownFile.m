@@ -74,7 +74,7 @@
         assert(self.fileStream!=nil);
         [self.fileStream open];
         NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@?pic=1&fid=%@",SERVER_URL,FM_DOWNLOAD_Look,file_id]];
-        DDLogInfo(@"url:%@",s_url);
+        NSLog(@"url:%@",s_url);
         NSMutableURLRequest *request=[[NSMutableURLRequest alloc] initWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
         [request setHTTPMethod:@"GET"];
         [request setValue:[[SCBSession sharedSession] userId] forHTTPHeaderField:@"ent_uid"];
@@ -98,10 +98,10 @@
     if(isStop)
     {
         [imageConnection cancel];
-        DDLogCInfo(@"取消下载");
+        NSLog(@"取消下载");
         return;
     }
-    DDLogInfo(@"下载的大小:%i",[data length]);
+    NSLog(@"下载的大小:%i",[data length]);
     downsize += [data length];
 #pragma unused(connection)
     NSInteger       dataLength;
@@ -145,7 +145,7 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    DDLogInfo(@"eeor:%@",error);
+    NSLog(@"eeor:%@",error);
     if(delegate && [delegate respondsToSelector:@selector(didFailWithError)])
     {
         [delegate didFailWithError];
@@ -163,7 +163,7 @@
 
 - (void)connection:(NSURLConnection *)theConnection didReceiveResponse:(NSURLResponse *)response
 {
-    DDLogInfo(@"response:%@",response);
+    NSLog(@"response:%@",response);
     NSHTTPURLResponse *ponse = (NSHTTPURLResponse *)response;
     if(ponse.statusCode == 404)
     {

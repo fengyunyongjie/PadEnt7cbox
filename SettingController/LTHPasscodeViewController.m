@@ -446,7 +446,7 @@ static CGFloat const kSlideAnimationDuration = 0.0f;
 		_isCurrentlyOnScreen = YES;
 	}
     self.navigationController.navigationBar.frame = CGRectMake(0, 0, 320, 44);
-    DDLogCInfo(@"frame:%@",NSStringFromCGRect(self.navigationController.navigationBar.frame));
+    NSLog(@"frame:%@",NSStringFromCGRect(self.navigationController.navigationBar.frame));
 }
 
 

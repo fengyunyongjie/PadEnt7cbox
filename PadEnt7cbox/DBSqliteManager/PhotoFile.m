@@ -30,14 +30,14 @@
         const char *insert_stmt = [InsertPhotoFileTable UTF8String];
         int success = sqlite3_prepare_v2(contactDB, insert_stmt, -1, &statement, NULL);
         if (success != SQLITE_OK) {
-            DDLogError(@"Error: failed to insert:TASKTable");
+            NSLog(@"Error: failed to insert:TASKTable");
         }
         sqlite3_bind_int(statement, 1, f_id);
         sqlite3_bind_text(statement, 2, [f_date UTF8String], -1, SQLITE_TRANSIENT);
         sqlite3_bind_double(statement, 3, f_time);
         success = sqlite3_step(statement);
         if (success == SQLITE_ERROR) {
-            DDLogError(@"Error: failed to insert into the database with message.");
+            NSLog(@"Error: failed to insert into the database with message.");
         }
         if(success == 101)
         {
@@ -58,14 +58,14 @@
         const char *insert_stmt = [DeletePhotoFileTable UTF8String];
         int success = sqlite3_prepare_v2(contactDB, insert_stmt, -1, &statement, NULL);
         if (success != SQLITE_OK) {
-            DDLogError(@"Error: failed to insert:TASKTable");
+            NSLog(@"Error: failed to insert:TASKTable");
         }
         sqlite3_bind_int(statement, 1, f_id);
         success = sqlite3_step(statement);
         if (success == SQLITE_ERROR) {
-            DDLogError(@"Error: failed to insert into the database with message.");
+            NSLog(@"Error: failed to insert into the database with message.");
         }
-        DDLogError(@"success:%i",success);
+        NSLog(@"success:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -80,14 +80,14 @@
         const char *insert_stmt = [DeleteAllPhotoFileTable UTF8String];
         int success = sqlite3_prepare_v2(contactDB, insert_stmt, -1, &statement, NULL);
         if (success != SQLITE_OK) {
-            DDLogError(@"Error: failed to insert:TASKTable");
+            NSLog(@"Error: failed to insert:TASKTable");
         }
         sqlite3_bind_int(statement, 1, f_id);
         success = sqlite3_step(statement);
         if (success == SQLITE_ERROR) {
-            DDLogError(@"Error: failed to insert into the database with message.");
+            NSLog(@"Error: failed to insert into the database with message.");
         }
-        DDLogError(@"success:%i",success);
+        NSLog(@"success:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -102,14 +102,14 @@
         const char *insert_stmt = [UpdatePhotoFileTable UTF8String];
         int success = sqlite3_prepare_v2(contactDB, insert_stmt, -1, &statement, NULL);
         if (success != SQLITE_OK) {
-            DDLogError(@"Error: failed to insert:TASKTable");
+            NSLog(@"Error: failed to insert:TASKTable");
         }
         sqlite3_bind_text(statement, 1, [f_date UTF8String], -1, SQLITE_TRANSIENT);
         sqlite3_bind_int(statement, 2, f_time);
         sqlite3_bind_double(statement, 3, f_id);
         success = sqlite3_step(statement);
         if (success == SQLITE_ERROR) {
-            DDLogError(@"Error: failed to insert into the database with message.");
+            NSLog(@"Error: failed to insert into the database with message.");
         }
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
@@ -154,7 +154,7 @@
     double sDoubel = [[dateFormatter dateFromString:sDate] timeIntervalSince1970];
     double eDoubel = [[dateFormatter dateFromString:eDate] timeIntervalSince1970];
     
-    DDLogCInfo(@"SELECT * FROM PhotoFile WHERE F_TIME>%f and F_TIME<=%f order by desc F_TIME",sDoubel,eDoubel);
+    NSLog(@"SELECT * FROM PhotoFile WHERE F_TIME>%f and F_TIME<=%f order by desc F_TIME",sDoubel,eDoubel);
     if (sqlite3_open(dbpath, &contactDB)==SQLITE_OK) {
         const char *insert_stmt = [SelectMorePhotoFileTable UTF8String];
         sqlite3_prepare_v2(contactDB, insert_stmt, -1, &statement, NULL);

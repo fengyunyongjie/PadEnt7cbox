@@ -103,7 +103,7 @@
         {
             bl = TRUE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -137,7 +137,7 @@
         if([filemgr fileExistsAtPath:self.d_baseUrl])
         {
             BOOL isDelete = [filemgr removeItemAtPath:self.d_baseUrl error:nil];
-            DDLogCInfo(@"删除文件是否成功：%i",isDelete);
+            NSLog(@"删除文件是否成功：%i",isDelete);
         }
     }
     });
@@ -161,7 +161,7 @@
         {
             bl = TRUE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -202,7 +202,7 @@
         {
             bl = TRUE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -243,7 +243,7 @@
         {
             bl = TRUE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -313,7 +313,7 @@
         {
             bl = TRUE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -359,7 +359,7 @@
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
-    DDLogError(@"自动上传的个数:%i",[tableArray count]);
+    NSLog(@"自动上传的个数:%i",[tableArray count]);
     return tableArray;
 }
 //查询所有上传完成的历史记录
@@ -389,7 +389,7 @@
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
-    DDLogError(@"自动上传的个数:%i",[tableArray count]);
+    NSLog(@"自动上传的个数:%i",[tableArray count]);
     return tableArray;
 }
 
@@ -414,7 +414,7 @@
         {
             bl = TRUE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }

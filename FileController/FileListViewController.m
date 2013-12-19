@@ -440,7 +440,7 @@ typedef enum{
     }
     //isHideTabBar=!isHideTabBar;
     
-    DDLogCInfo(@"当前TabBar的坐标:%@",NSStringFromCGRect(self.tabBarController.tabBar.frame));
+    NSLog(@"当前TabBar的坐标:%@",NSStringFromCGRect(self.tabBarController.tabBar.frame));
     
     for(UIView *view in self.tabBarController.view.subviews)
     {
@@ -451,7 +451,7 @@ typedef enum{
             }else {
                 [view setFrame:CGRectMake(view.frame.origin.x, [[UIScreen mainScreen]bounds].size.height-49, view.frame.size.width, view.frame.size.height)];
             }
-            DDLogCInfo(@"改变后的TabBar坐标:%@",NSStringFromCGRect(self.tabBarController.tabBar.frame));
+            NSLog(@"改变后的TabBar坐标:%@",NSStringFromCGRect(self.tabBarController.tabBar.frame));
         }else
         {
             if (isHideTabBar) {
@@ -459,7 +459,7 @@ typedef enum{
             }else {
                 [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width,[[UIScreen mainScreen]bounds].size.height-49)];
             }
-            DDLogCInfo(@"改变后的其他坐标:%@",NSStringFromCGRect(self.tabBarController.tabBar.frame));
+            NSLog(@"改变后的其他坐标:%@",NSStringFromCGRect(self.tabBarController.tabBar.frame));
         }
     }
     
@@ -2128,7 +2128,7 @@ typedef enum{
             if([filemgr fileExistsAtPath:file_path])
             {
                 BOOL isDelete = [filemgr removeItemAtPath:file_path error:nil];
-                DDLogCInfo(@"删除文件是否成功：%i",isDelete);
+                NSLog(@"删除文件是否成功：%i",isDelete);
             }
         }
     }

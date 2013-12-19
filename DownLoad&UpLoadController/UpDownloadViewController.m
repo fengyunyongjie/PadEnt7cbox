@@ -157,7 +157,7 @@
         [self.menuView setHidden:!self.menuView.hidden];
     }
     
-    DDLogCInfo(@"self.menuView.hidden:%i",self.menuView.hidden);
+    NSLog(@"self.menuView.hidden:%i",self.menuView.hidden);
     
     AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
     
@@ -426,7 +426,7 @@
 
 - (void)selectRowAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(UITableViewScrollPosition)scrollPosition
 {
-    DDLogCInfo(@"进来");
+    NSLog(@"进来");
 }
 
 -(void)updateSelectIndexPath
@@ -675,7 +675,7 @@
 
 -(void)isSelectedLeft:(BOOL)bl
 {
-    DDLogCInfo(@"滑动：%i",bl);
+    NSLog(@"滑动：%i",bl);
     if(self.table_view.editing && bl!=isShowUpload)
     {
         [self editAction:nil];
@@ -930,7 +930,7 @@
             }
         }
     }
-    DDLogInfo(@"count:%i",count);
+    NSLog(@"count:%i",count);
     return count;
 }
 

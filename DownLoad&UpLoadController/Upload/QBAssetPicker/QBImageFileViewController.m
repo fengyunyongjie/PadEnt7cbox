@@ -191,7 +191,7 @@
     }
     //添加底部试图
     self.moreEditBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0,mY, 320, 49)];
-    DDLogCInfo(@"moreEditBar:%@",NSStringFromCGRect(self.moreEditBar.frame));
+    NSLog(@"moreEditBar:%@",NSStringFromCGRect(self.moreEditBar.frame));
     [self.moreEditBar setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
     
     
@@ -392,7 +392,7 @@
 -(void)operateSucess:(NSDictionary *)datadic{}
 -(void)openFinderSucess:(NSDictionary *)datadic
 {
-    DDLogCInfo(@"打开文件：%@",datadic);
+    NSLog(@"打开文件：%@",datadic);
     if(self.fileArray)
     {
         [self.fileArray removeAllObjects];

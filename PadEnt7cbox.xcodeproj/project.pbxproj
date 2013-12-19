@@ -101,14 +101,6 @@
 		2982E0C61861536C009CB82D /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0C51861536C009CB82D /* WelcomeViewController.m */; };
 		2982E0E1186153C6009CB82D /* CustomSelectButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0CB186153C6009CB82D /* CustomSelectButton.m */; };
 		2982E0E2186153C6009CB82D /* CustomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0CD186153C6009CB82D /* CustomViewController.m */; };
-		2982E0E3186153C6009CB82D /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0D0186153C6009CB82D /* DDAbstractDatabaseLogger.m */; };
-		2982E0E4186153C6009CB82D /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0D2186153C6009CB82D /* DDASLLogger.m */; };
-		2982E0E5186153C6009CB82D /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0D4186153C6009CB82D /* DDFileLogger.m */; };
-		2982E0E6186153C6009CB82D /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0D6186153C6009CB82D /* DDLog.m */; };
-		2982E0E7186153C6009CB82D /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0D8186153C6009CB82D /* DDTTYLogger.m */; };
-		2982E0E8186153C6009CB82D /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0DB186153C6009CB82D /* ContextFilterLogFormatter.m */; };
-		2982E0E9186153C6009CB82D /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0DD186153C6009CB82D /* DispatchQueueLogFormatter.m */; };
-		2982E0EA186153C6009CB82D /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2982E0DE186153C6009CB82D /* README.txt */; };
 		2982E0EB186153C6009CB82D /* NSString+Format.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0E0186153C6009CB82D /* NSString+Format.m */; };
 		2982E0EE186153E0009CB82D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0ED186153E0009CB82D /* Reachability.m */; };
 		2982E0FD186154A3009CB82D /* DBSqlite3.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982E0F2186154A3009CB82D /* DBSqlite3.m */; };
@@ -243,6 +235,7 @@
 		2984241B185ED500002AC1D0 /* PadEnt7cbox-config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 29842411185ED500002AC1D0 /* PadEnt7cbox-config.plist */; };
 		2984241C185ED500002AC1D0 /* PadEnt7cbox-LanguageExtract.plist in Resources */ = {isa = PBXBuildFile; fileRef = 29842412185ED500002AC1D0 /* PadEnt7cbox-LanguageExtract.plist */; };
 		29842424185ED680002AC1D0 /* Configuratioin.m in Sources */ = {isa = PBXBuildFile; fileRef = 29842423185ED680002AC1D0 /* Configuratioin.m */; };
+		29CE22351862E5BB0030EC86 /* InputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29CE22341862E5BB0030EC86 /* InputViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -412,21 +405,6 @@
 		2982E0CB186153C6009CB82D /* CustomSelectButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomSelectButton.m; sourceTree = "<group>"; };
 		2982E0CC186153C6009CB82D /* CustomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomViewController.h; sourceTree = "<group>"; };
 		2982E0CD186153C6009CB82D /* CustomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomViewController.m; sourceTree = "<group>"; };
-		2982E0CF186153C6009CB82D /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
-		2982E0D0186153C6009CB82D /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
-		2982E0D1186153C6009CB82D /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
-		2982E0D2186153C6009CB82D /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDASLLogger.m; sourceTree = "<group>"; };
-		2982E0D3186153C6009CB82D /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDFileLogger.h; sourceTree = "<group>"; };
-		2982E0D4186153C6009CB82D /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDFileLogger.m; sourceTree = "<group>"; };
-		2982E0D5186153C6009CB82D /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLog.h; sourceTree = "<group>"; };
-		2982E0D6186153C6009CB82D /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLog.m; sourceTree = "<group>"; };
-		2982E0D7186153C6009CB82D /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTTYLogger.h; sourceTree = "<group>"; };
-		2982E0D8186153C6009CB82D /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTTYLogger.m; sourceTree = "<group>"; };
-		2982E0DA186153C6009CB82D /* ContextFilterLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextFilterLogFormatter.h; sourceTree = "<group>"; };
-		2982E0DB186153C6009CB82D /* ContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextFilterLogFormatter.m; sourceTree = "<group>"; };
-		2982E0DC186153C6009CB82D /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchQueueLogFormatter.h; sourceTree = "<group>"; };
-		2982E0DD186153C6009CB82D /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchQueueLogFormatter.m; sourceTree = "<group>"; };
-		2982E0DE186153C6009CB82D /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		2982E0DF186153C6009CB82D /* NSString+Format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Format.h"; sourceTree = "<group>"; };
 		2982E0E0186153C6009CB82D /* NSString+Format.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Format.m"; sourceTree = "<group>"; };
 		2982E0EC186153E0009CB82D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -576,6 +554,8 @@
 		29842412185ED500002AC1D0 /* PadEnt7cbox-LanguageExtract.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "PadEnt7cbox-LanguageExtract.plist"; sourceTree = "<group>"; };
 		29842422185ED680002AC1D0 /* Configuratioin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configuratioin.h; sourceTree = "<group>"; };
 		29842423185ED680002AC1D0 /* Configuratioin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Configuratioin.m; sourceTree = "<group>"; };
+		29CE22331862E5BB0030EC86 /* InputViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputViewController.h; sourceTree = "<group>"; };
+		29CE22341862E5BB0030EC86 /* InputViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -609,6 +589,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		290216D11862CE2300D7D2C7 /* Password */ = {
+			isa = PBXGroup;
+			children = (
+				29CE22331862E5BB0030EC86 /* InputViewController.h */,
+				29CE22341862E5BB0030EC86 /* InputViewController.m */,
+			);
+			path = Password;
+			sourceTree = "<group>";
+		};
 		294EB50018604F7A006E6E96 /* MBProgressHUD */ = {
 			isa = PBXGroup;
 			children = (
@@ -836,41 +825,10 @@
 				2982E0CB186153C6009CB82D /* CustomSelectButton.m */,
 				2982E0CC186153C6009CB82D /* CustomViewController.h */,
 				2982E0CD186153C6009CB82D /* CustomViewController.m */,
-				2982E0CE186153C6009CB82D /* Lumberjack */,
 				2982E0DF186153C6009CB82D /* NSString+Format.h */,
 				2982E0E0186153C6009CB82D /* NSString+Format.m */,
 			);
 			path = BasicSdk;
-			sourceTree = "<group>";
-		};
-		2982E0CE186153C6009CB82D /* Lumberjack */ = {
-			isa = PBXGroup;
-			children = (
-				2982E0CF186153C6009CB82D /* DDAbstractDatabaseLogger.h */,
-				2982E0D0186153C6009CB82D /* DDAbstractDatabaseLogger.m */,
-				2982E0D1186153C6009CB82D /* DDASLLogger.h */,
-				2982E0D2186153C6009CB82D /* DDASLLogger.m */,
-				2982E0D3186153C6009CB82D /* DDFileLogger.h */,
-				2982E0D4186153C6009CB82D /* DDFileLogger.m */,
-				2982E0D5186153C6009CB82D /* DDLog.h */,
-				2982E0D6186153C6009CB82D /* DDLog.m */,
-				2982E0D7186153C6009CB82D /* DDTTYLogger.h */,
-				2982E0D8186153C6009CB82D /* DDTTYLogger.m */,
-				2982E0D9186153C6009CB82D /* Extensions */,
-			);
-			path = Lumberjack;
-			sourceTree = "<group>";
-		};
-		2982E0D9186153C6009CB82D /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				2982E0DA186153C6009CB82D /* ContextFilterLogFormatter.h */,
-				2982E0DB186153C6009CB82D /* ContextFilterLogFormatter.m */,
-				2982E0DC186153C6009CB82D /* DispatchQueueLogFormatter.h */,
-				2982E0DD186153C6009CB82D /* DispatchQueueLogFormatter.m */,
-				2982E0DE186153C6009CB82D /* README.txt */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 		2982E0EF186153E7009CB82D /* Reachability */ = {
@@ -1125,6 +1083,7 @@
 		2984240E185ED500002AC1D0 /* AllSDK */ = {
 			isa = PBXGroup;
 			children = (
+				290216D11862CE2300D7D2C7 /* Password */,
 				2982E0EF186153E7009CB82D /* Reachability */,
 				2982E0C9186153C6009CB82D /* BasicSdk */,
 				294EB51B18604FD2006E6E96 /* JPushLib */,
@@ -1376,7 +1335,6 @@
 				2982E1D018618584009CB82D /* title_bt_pause_nor.png in Resources */,
 				2982E17E18618584009CB82D /* Bk_Start.png in Resources */,
 				2982E18218618584009CB82D /* del.png in Resources */,
-				2982E0EA186153C6009CB82D /* README.txt in Resources */,
 				2982E0AF186152FE009CB82D /* Bt_UploadCancleCh.png in Resources */,
 				2982E0A5186152FE009CB82D /* video@2x.png in Resources */,
 				2982E19F18618584009CB82D /* mail_unread@2x.png in Resources */,
@@ -1510,19 +1468,16 @@
 				2982DFD3186150BC009CB82D /* MainViewController.m in Sources */,
 				2982DFDF186150D6009CB82D /* FileItemTableCell.m in Sources */,
 				2982E0E1186153C6009CB82D /* CustomSelectButton.m in Sources */,
-				2982E0E4186153C6009CB82D /* DDASLLogger.m in Sources */,
 				294EB4F318604E68006E6E96 /* SCBSession.m in Sources */,
 				2982E0B2186152FE009CB82D /* UploadFile.m in Sources */,
 				294EB4F218604E68006E6E96 /* SCBLinkManager.m in Sources */,
-				2982E0E3186153C6009CB82D /* DDAbstractDatabaseLogger.m in Sources */,
 				294EB4F118604E68006E6E96 /* SCBEmailManager.m in Sources */,
 				2982E102186154A3009CB82D /* UserInfo.m in Sources */,
-				2982E0E7186153C6009CB82D /* DDTTYLogger.m in Sources */,
 				2982E061186152F5009CB82D /* QLBrowserViewController.m in Sources */,
-				2982E0E9186153C6009CB82D /* DispatchQueueLogFormatter.m in Sources */,
 				2982DFF81861518D009CB82D /* UserListViewController.m in Sources */,
 				2982E0AB186152FE009CB82D /* QBImagePickerFooterView.m in Sources */,
 				2982E05D186152F5009CB82D /* LookDownFile.m in Sources */,
+				29CE22351862E5BB0030EC86 /* InputViewController.m in Sources */,
 				294EB51218604FB1006E6E96 /* EGORefreshTableHeaderView.m in Sources */,
 				2982E0E2186153C6009CB82D /* CustomViewController.m in Sources */,
 				2982DFBD18614507009CB82D /* LoginViewController.m in Sources */,
@@ -1546,7 +1501,6 @@
 				2982DFE918615169009CB82D /* TITokenField.m in Sources */,
 				294EB4FF18604F64006E6E96 /* MF_Base64Additions.m in Sources */,
 				2982E10818618089009CB82D /* DetailViewController.m in Sources */,
-				2982E0E6186153C6009CB82D /* DDLog.m in Sources */,
 				2982DFF218615183009CB82D /* SendEmailViewController.m in Sources */,
 				294EB4EE18604E68006E6E96 /* SCBDownloader.m in Sources */,
 				294EB4F018604E68006E6E96 /* SCBFileManager.m in Sources */,
@@ -1554,7 +1508,6 @@
 				2982E10718618089009CB82D /* MasterViewController.m in Sources */,
 				2982E0AA186152FE009CB82D /* QBImagePickerController.m in Sources */,
 				2982E0EE186153E0009CB82D /* Reachability.m in Sources */,
-				2982E0E8186153C6009CB82D /* ContextFilterLogFormatter.m in Sources */,
 				294EB4EF18604E68006E6E96 /* SCBUploader.m in Sources */,
 				2982DFE718615169009CB82D /* Names.m in Sources */,
 				2982E0FD186154A3009CB82D /* DBSqlite3.m in Sources */,
@@ -1562,7 +1515,6 @@
 				294EB50318604F7A006E6E96 /* MBProgressHUD.m in Sources */,
 				2982E0FE186154A3009CB82D /* DownList.m in Sources */,
 				2982E0B3186152FE009CB82D /* UploadManager.m in Sources */,
-				2982E0E5186153C6009CB82D /* DDFileLogger.m in Sources */,
 				2982E0A8186152FE009CB82D /* QBImagePickerAssetCell.m in Sources */,
 				2982E05F186152F5009CB82D /* OtherBrowserViewController.m in Sources */,
 				2982E101186154A3009CB82D /* UpLoadList.m in Sources */,
@@ -1619,7 +1571,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1650,7 +1602,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos7.0;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
@@ -1659,7 +1611,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1683,7 +1635,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos7.0;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1706,6 +1658,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 2;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1727,6 +1680,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 2;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

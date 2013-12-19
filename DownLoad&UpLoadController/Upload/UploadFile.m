@@ -144,12 +144,12 @@
         return;
     }
     NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,FM_URI]];
-    DDLogCInfo(@"%@",s_url);
+    NSLog(@"%@",s_url);
     NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
     NSMutableString *body=[[NSMutableString alloc] init];
     NSString *desc=[YNFunctions getDesc];
     [body appendFormat:@"fpid=%@&cursor=%d&offset=%d&spid=%@&order=%@&desc=%@",fId,0,0,list.spaceId,desc,@"desc"];
-    DDLogCInfo(@"%@",body);
+    NSLog(@"%@",body);
     NSMutableData *myRequestData=[NSMutableData data];
     [myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
     [request setHTTPBody:myRequestData];
@@ -426,7 +426,7 @@
                  Byte *byte_data = malloc(total);
                  [result.defaultRepresentation getBytes:byte_data fromOffset:list.upload_size length:SomeDataSize error:&error];
                  file_data = [NSData dataWithBytesNoCopy:byte_data length:SomeDataSize];
-                 DDLogCError(@"文件大小：%i",[file_data length]);
+                 NSLog(@"文件大小：%i",[file_data length]);
                  dispatch_async(dispatch_get_main_queue(), ^{
                      connection = [uploderDemo requestUploadFile:finishName startSkip:[NSString stringWithFormat:@"%i",list.upload_size] skip:[NSString stringWithFormat:@"%i",SomeDataSize] Image:file_data];
                  });
@@ -437,15 +437,15 @@
                  Byte *byte_data = malloc(total);
                  [result.defaultRepresentation getBytes:byte_data fromOffset:list.upload_size length:list.t_lenght-list.upload_size error:&error];
                  file_data = [NSData dataWithBytesNoCopy:byte_data length:list.t_lenght-list.upload_size];
-                 DDLogCError(@"这次上传了多少:%i",total);
-                 DDLogCError(@"文件大小：%i",[file_data length]);
+                 NSLog(@"这次上传了多少:%i",total);
+                 NSLog(@"文件大小：%i",[file_data length]);
                  dispatch_async(dispatch_get_main_queue(), ^{
                      connection = [uploderDemo requestUploadFile:finishName startSkip:[NSString stringWithFormat:@"%i",list.upload_size] skip:[NSString stringWithFormat:@"%i",list.t_lenght-list.upload_size] Image:file_data];
                  });
              }
          } failureBlock:^(NSError *error)
          {
-             DDLogCError(@"error:%@",error);
+             NSLog(@"error:%@",error);
          }];
     }
 }
@@ -506,7 +506,7 @@
                  //获得照片图像数据
                  [result.defaultRepresentation getBytes:byte_data fromOffset:0 length:(long)result.defaultRepresentation.size error:&error];
                  file_data = [[NSData alloc] initWithData:[NSData dataWithBytesNoCopy:byte_data length:(long)result.defaultRepresentation.size]];
-                 DDLogCInfo(@"1:申请效验:%i",[file_data length]);
+                 NSLog(@"1:申请效验:%i",[file_data length]);
                  connection = [uploderDemo requestUploadFile:finishName startSkip:@"0" skip:[NSString stringWithFormat:@"%i",list.upload_size] Image:[NSData dataWithBytesNoCopy:byte_data length:(long)result.defaultRepresentation.size]];
              } failureBlock:^(NSError *error)
              {

@@ -151,7 +151,7 @@
         {
             bl = TRUE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -192,7 +192,7 @@
         {
             bl = TRUE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -232,7 +232,7 @@
         {
             bl = TRUE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -273,7 +273,7 @@
         {
             bl = TRUE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -319,7 +319,7 @@
         {
             bl = TRUE;
         }
-        DDLogCInfo(@"insertUserinfo:%i",success);
+        NSLog(@"insertUserinfo:%i",success);
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
@@ -394,7 +394,7 @@
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
-    DDLogCInfo(@"自动上传的个数:%i",[tableArray count]);
+    NSLog(@"自动上传的个数:%i",[tableArray count]);
     return tableArray;
 }
 
@@ -432,7 +432,7 @@
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
-    DDLogCInfo(@"手动上传的个数:%i",[tableArray count]);
+    NSLog(@"手动上传的个数:%i",[tableArray count]);
     return tableArray;
 }
 
@@ -470,7 +470,7 @@
         sqlite3_finalize(statement);
         sqlite3_close(contactDB);
     }
-    DDLogCInfo(@"完成上传的个数:%i",[tableArray count]);
+    NSLog(@"完成上传的个数:%i",[tableArray count]);
     return tableArray;
 }
 

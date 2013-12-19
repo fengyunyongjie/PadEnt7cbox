@@ -13,7 +13,6 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
-    #import "DDLog.h"
     #import "NSString+Format.h"
 #endif
 
@@ -22,10 +21,4 @@
 #define NSLog(...) {NSLog(__VA_ARGS__);}
 #else
 #define NSLog(...) {}
-#endif
-
-#ifdef DEBUG
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
-#else
-static const int ddLogLevel = LOG_LEVEL_WARN;
 #endif

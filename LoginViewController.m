@@ -24,6 +24,7 @@ enum{
 @interface LoginViewController ()<SCBAccountManagerDelegate>
 @property(strong,nonatomic) SCBAccountManager *am;
 @property(strong,nonatomic) MBProgressHUD *hud;
+@property(strong,nonatomic) NSArray *priorConstraints;
 @end
 
 @implementation LoginViewController
@@ -43,6 +44,32 @@ enum{
     // Do any additional setup after loading the view from its nib.
     self.userNameTextField.delegate=self;
     self.passwordTextField.delegate=self;
+    
+    // observe keyboard hide and show notifications to resize the text view appropriately
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    int W=1024;
+    int H=768;
+    
+    if (self.view.bounds.size.width>=1000)
+    {
+        CGRect r1=self.logoView.frame;
+        CGRect r2=self.loginView.frame;
+        self.logoView.frame=CGRectMake((W-r2.size.width-r1.size.width)/3, (H-r1.size.height)/2, r1.size.width, r1.size.height);
+        self.loginView.frame=CGRectMake((W-r2.size.width-r1.size.width)/3*2+r1.size.width, (H-r2.size.height)/2, r2.size.width, r2.size.height);
+    }else
+    {
+        CGRect r1=self.logoView.frame;
+        CGRect r2=self.loginView.frame;
+        self.logoView.frame=CGRectMake((H-r1.size.width)/2, (W-r2.size.height-r1.size.height)/3, r1.size.width, r1.size.height);
+        self.loginView.frame=CGRectMake((H-r2.size.width)/2, (W-r2.size.height-r1.size.height)/3*2+r1.size.height, r2.size.width, r2.size.height);
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -348,5 +375,102 @@ enum{
             break;
     }
     
+}
+
+#pragma mark - WillAnimateRotation
+// makes "subview" match the width and height of "superview" by adding the proper auto layout constraints
+//
+- (NSArray *)constrainSubview1:(UIView *)subview1 subview2:(UIView *)subview2 toMatchWithSuperview:(UIView *)superview orientation:(int)orientation
+{
+    subview1.translatesAutoresizingMaskIntoConstraints = NO;
+    subview2.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(subview1,subview2);
+    NSString *vfl=@"V:|-100-[subview1]-100-[subview2]-100-|";
+    if (orientation==0) {
+        vfl=@"V:|-100-[subview1]-100-[subview2]-100-|";
+    }else
+    {
+        vfl=@"H:|-100-[subview1]-100-[subview2]-100-|";
+    }
+    
+    NSArray *constraints = [NSLayoutConstraint
+                            constraintsWithVisualFormat:vfl
+                            options:0
+                            metrics:nil
+                            views:viewsDictionary];
+    constraints = [constraints arrayByAddingObjectsFromArray:
+                   [NSLayoutConstraint
+                    constraintsWithVisualFormat:vfl
+                    options:0
+                    metrics:nil
+                    views:viewsDictionary]];
+    [superview addConstraints:constraints];
+    
+    return constraints;
+}
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                                         duration:(NSTimeInterval)duration
+{
+    int W=1024;
+    int H=768;
+    
+    if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft
+        ||  toInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
+    {
+        CGRect r1=self.logoView.frame;
+        CGRect r2=self.loginView.frame;
+        self.logoView.frame=CGRectMake((W-r2.size.width-r1.size.width)/3, (H-r1.size.height)/2, r1.size.width, r1.size.height);
+        self.loginView.frame=CGRectMake((W-r2.size.width-r1.size.width)/3*2+r1.size.width, (H-r2.size.height)/2, r2.size.width, r2.size.height);
+    }else
+    {   
+        CGRect r1=self.logoView.frame;
+        CGRect r2=self.loginView.frame;
+        self.logoView.frame=CGRectMake((H-r1.size.width)/2, (W-r2.size.height-r1.size.height)/3, r1.size.width, r1.size.height);
+        self.loginView.frame=CGRectMake((H-r2.size.width)/2, (W-r2.size.height-r1.size.height)/3*2+r1.size.height, r2.size.width, r2.size.height);
+    }
+}
+#pragma mark - Responding to keyboard events
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    
+    /*
+     Reduce the size of the text view so that it's not obscured by the keyboard.
+     Animate the resize so that it's in sync with the appearance of the keyboard.
+     */
+    
+    [UIView beginAnimations:@"MoveUp" context:nil];
+    [UIView setAnimationDuration:0.2f];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    CGRect r=self.view.frame;
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    switch (toInterfaceOrientation) {
+        case UIInterfaceOrientationLandscapeRight:
+            r.origin.x=100;
+            break;
+        case UIInterfaceOrientationLandscapeLeft:
+            r.origin.x=-100;
+            break;
+        case UIInterfaceOrientationPortrait:
+            r.origin.y=-100;
+            break;
+        case UIInterfaceOrientationPortraitUpsideDown:
+            r.origin.y=100;
+            break;
+        default:
+            break;
+    }
+    [self.view setFrame:r];
+    [UIView commitAnimations];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    [UIView beginAnimations:@"MoveDown" context:nil];
+    [UIView setAnimationDuration:0.2f];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    CGRect r=self.view.frame;
+    r.origin.y=0;
+    r.origin.x=0;
+    [self.view setFrame:r];
+    [UIView commitAnimations];
 }
 @end

@@ -236,6 +236,14 @@
 		2984241C185ED500002AC1D0 /* PadEnt7cbox-LanguageExtract.plist in Resources */ = {isa = PBXBuildFile; fileRef = 29842412185ED500002AC1D0 /* PadEnt7cbox-LanguageExtract.plist */; };
 		29842424185ED680002AC1D0 /* Configuratioin.m in Sources */ = {isa = PBXBuildFile; fileRef = 29842423185ED680002AC1D0 /* Configuratioin.m */; };
 		29CE22351862E5BB0030EC86 /* InputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29CE22341862E5BB0030EC86 /* InputViewController.m */; };
+		29FBD5FF1863D27A005F03AC /* login_bt.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5F71863D27A005F03AC /* login_bt.png */; };
+		29FBD6001863D27A005F03AC /* login_bt1.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5F81863D27A005F03AC /* login_bt1.png */; };
+		29FBD6011863D27A005F03AC /* login_bt1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5F91863D27A005F03AC /* login_bt1@2x.png */; };
+		29FBD6021863D27A005F03AC /* login_bt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5FA1863D27A005F03AC /* login_bt@2x.png */; };
+		29FBD6031863D27A005F03AC /* Login_ico.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5FB1863D27A005F03AC /* Login_ico.png */; };
+		29FBD6041863D27A005F03AC /* Login_ico@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5FC1863D27A005F03AC /* Login_ico@2x.png */; };
+		29FBD6051863D27A005F03AC /* login_input.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5FD1863D27A005F03AC /* login_input.png */; };
+		29FBD6061863D27A005F03AC /* login_input@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5FE1863D27A005F03AC /* login_input@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -556,6 +564,14 @@
 		29842423185ED680002AC1D0 /* Configuratioin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Configuratioin.m; sourceTree = "<group>"; };
 		29CE22331862E5BB0030EC86 /* InputViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputViewController.h; sourceTree = "<group>"; };
 		29CE22341862E5BB0030EC86 /* InputViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputViewController.m; sourceTree = "<group>"; };
+		29FBD5F71863D27A005F03AC /* login_bt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_bt.png; sourceTree = "<group>"; };
+		29FBD5F81863D27A005F03AC /* login_bt1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_bt1.png; sourceTree = "<group>"; };
+		29FBD5F91863D27A005F03AC /* login_bt1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_bt1@2x.png"; sourceTree = "<group>"; };
+		29FBD5FA1863D27A005F03AC /* login_bt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_bt@2x.png"; sourceTree = "<group>"; };
+		29FBD5FB1863D27A005F03AC /* Login_ico.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Login_ico.png; sourceTree = "<group>"; };
+		29FBD5FC1863D27A005F03AC /* Login_ico@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Login_ico@2x.png"; sourceTree = "<group>"; };
+		29FBD5FD1863D27A005F03AC /* login_input.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_input.png; sourceTree = "<group>"; };
+		29FBD5FE1863D27A005F03AC /* login_input@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_input@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1187,6 +1203,7 @@
 		29842418185ED500002AC1D0 /* Others */ = {
 			isa = PBXGroup;
 			children = (
+				29FBD5F61863D27A005F03AC /* iPadLogin */,
 				2982E10918618584009CB82D /* iPhone */,
 			);
 			path = Others;
@@ -1214,6 +1231,21 @@
 			);
 			name = SettingController;
 			path = ../SettingController;
+			sourceTree = "<group>";
+		};
+		29FBD5F61863D27A005F03AC /* iPadLogin */ = {
+			isa = PBXGroup;
+			children = (
+				29FBD5F71863D27A005F03AC /* login_bt.png */,
+				29FBD5F81863D27A005F03AC /* login_bt1.png */,
+				29FBD5F91863D27A005F03AC /* login_bt1@2x.png */,
+				29FBD5FA1863D27A005F03AC /* login_bt@2x.png */,
+				29FBD5FB1863D27A005F03AC /* Login_ico.png */,
+				29FBD5FC1863D27A005F03AC /* Login_ico@2x.png */,
+				29FBD5FD1863D27A005F03AC /* login_input.png */,
+				29FBD5FE1863D27A005F03AC /* login_input@2x.png */,
+			);
+			path = iPadLogin;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1332,19 +1364,24 @@
 				2982E18618618584009CB82D /* download_se@2x.png in Resources */,
 				2982E17A18618584009CB82D /* bk_nabottom.png in Resources */,
 				2982E1D218618584009CB82D /* title_bt_sort_nor@2x.png in Resources */,
+				29FBD6021863D27A005F03AC /* login_bt@2x.png in Resources */,
 				2982E1D018618584009CB82D /* title_bt_pause_nor.png in Resources */,
+				29FBD6041863D27A005F03AC /* Login_ico@2x.png in Resources */,
 				2982E17E18618584009CB82D /* Bk_Start.png in Resources */,
 				2982E18218618584009CB82D /* del.png in Resources */,
 				2982E0AF186152FE009CB82D /* Bt_UploadCancleCh.png in Resources */,
+				29FBD6031863D27A005F03AC /* Login_ico.png in Resources */,
 				2982E0A5186152FE009CB82D /* video@2x.png in Resources */,
 				2982E19F18618584009CB82D /* mail_unread@2x.png in Resources */,
 				294EB51718604FB1006E6E96 /* grayArrow.png in Resources */,
+				29FBD6051863D27A005F03AC /* login_input.png in Resources */,
 				2982E1AD18618584009CB82D /* nav_trans_nor@2x.png in Resources */,
 				2982E19018618584009CB82D /* guide_2@iPhone5.png in Resources */,
 				2982E18318618584009CB82D /* del_nor@2x.png in Resources */,
 				2982E1A418618584009CB82D /* nav_file_nor@2x.png in Resources */,
 				2982E19D18618584009CB82D /* mail_readed@2x.png in Resources */,
 				2982E1B618618584009CB82D /* sel@2x.png in Resources */,
+				29FBD5FF1863D27A005F03AC /* login_bt.png in Resources */,
 				2982E17718618584009CB82D /* bizfiles@2x.png in Resources */,
 				2982E1A718618584009CB82D /* nav_more_se@2x.png in Resources */,
 				294EB51318604FB1006E6E96 /* blackArrow.png in Resources */,
@@ -1386,6 +1423,7 @@
 				2982E1C618618584009CB82D /* share_locked@2x.png in Resources */,
 				2982E17818618584009CB82D /* Bk_Login.png in Resources */,
 				2982E1C818618584009CB82D /* share_se@2x.png in Resources */,
+				29FBD6011863D27A005F03AC /* login_bt1@2x.png in Resources */,
 				2982E1D818618584009CB82D /* title_menu2@2x.png in Resources */,
 				2982E1A018618584009CB82D /* more_nor@2x.png in Resources */,
 				2982E18918618584009CB82D /* file_moving@2x.png in Resources */,
@@ -1399,6 +1437,7 @@
 				2982E18018618584009CB82D /* Bt_LoginClick.png in Resources */,
 				2982E19518618584009CB82D /* guide_gray.png in Resources */,
 				2982E1C118618584009CB82D /* set_bk_3@2x.png in Resources */,
+				29FBD6061863D27A005F03AC /* login_input@2x.png in Resources */,
 				2982E1CE18618584009CB82D /* title_bt_new_nor@2x.png in Resources */,
 				2982E18B18618584009CB82D /* file_other@2x.png in Resources */,
 				2982E17D18618584009CB82D /* bk_selectTop.png in Resources */,
@@ -1434,6 +1473,7 @@
 				2982E1B118618584009CB82D /* oper_bt_se.png in Resources */,
 				2982E1E018618584009CB82D /* tj_nor@2x.png in Resources */,
 				2982E1AC18618584009CB82D /* nav_set_se@2x.png in Resources */,
+				29FBD6001863D27A005F03AC /* login_bt1.png in Resources */,
 				2982E19218618584009CB82D /* guide_3@iPhone5.png in Resources */,
 				2982E18F18618584009CB82D /* guide_2.png in Resources */,
 				2982E1C918618584009CB82D /* title_back@2x.png in Resources */,

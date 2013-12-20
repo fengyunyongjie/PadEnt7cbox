@@ -12,6 +12,8 @@
 @property (strong,nonatomic)IBOutlet UITextField *userNameTextField;
 @property (strong,nonatomic)IBOutlet UITextField *passwordTextField;
 @property (strong,nonatomic)IBOutlet UIImageView *bgview;
+@property (strong,nonatomic)IBOutlet UIView *loginView;
+@property (strong,nonatomic)IBOutlet UIImageView *logoView;
 - (IBAction)login:(id)sender;
 - (IBAction)endEdit:(id)sender;
 @end

@@ -18,8 +18,9 @@
     NSLog(@"打印Log");
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [self.window setBackgroundColor:[UIColor blackColor]];
     // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
+    //self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
     if ([self isLogin]) {
@@ -28,8 +29,8 @@
     {
         [self finishLogout];
     }
-    self.password_controller = [[PasswordController alloc] init];
-    [self.window addSubview:self.password_controller.view];
+//    self.password_controller = [[PasswordController alloc] init];
+//    [self.window addSubview:self.password_controller.view];
 //    self.password_controller.view.hidden = YES;
     return YES;
 }

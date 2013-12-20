@@ -43,7 +43,7 @@ static SCBAccountManager *_sharedAccountManager;
     NSURL *s_url= [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,VERSION_CHECK_URI]];
     NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
     NSMutableString *body=[[NSMutableString alloc] init];
-    [body appendFormat:@"version=%@&type=%@",version,CLIENT_TAG];
+    [body appendFormat:@"version=%@&type=%@",version,@"1"];
     NSMutableData *myRequestData=[NSMutableData data];
     [myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
     //[request setValue:CLIENT_TAG forHTTPHeaderField:@"client_tag"];

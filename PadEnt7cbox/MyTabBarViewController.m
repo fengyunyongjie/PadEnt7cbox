@@ -43,6 +43,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    UIColor *itemSeColor=[UIColor colorWithRed:0/255.0f green:47/255.0f blue:167/255.0f alpha:1];
+    UIColor *itemNorColor=[UIColor colorWithRed:170/255.0f green:170/255.0f blue:170/255.0f alpha:1];
+    
     
     UINavigationController *vc1=[[UINavigationController alloc] init];
     [vc1.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
@@ -56,8 +59,8 @@
     //vc1.tabBarItem=[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemBookmarks tag:0];
     [vc1.tabBarItem setFinishedSelectedImage:[UIImage imageNamed:@"nav_file_se.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"nav_file_nor.png"]];
 //    [vc1.tabBarItem setSelectedImage:[UIImage imageNamed:@"nav_selected.png"]];
-    [vc1.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor] forState:UIControlStateSelected];
-    [vc1.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithRed:35/255.0f green:73/255.0f blue:127/255.0f alpha:1] forKey:UITextAttributeTextColor] forState:UIControlStateNormal];
+    [vc1.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemSeColor forKey:UITextAttributeTextColor] forState:UIControlStateSelected];
+    [vc1.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemNorColor forKey:UITextAttributeTextColor] forState:UIControlStateNormal];
     //[vc1.tabBarItem setImage:[UIImage imageNamed: @"nav_selected.png"]];
     UINavigationController *vc2=[[UINavigationController alloc] init];
     UpDownloadViewController *vc22=[[UpDownloadViewController alloc] init];
@@ -70,8 +73,8 @@
      [vc2.navigationBar setTintColor:[UIColor whiteColor]];
     //vc2.tabBarItem=[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemContacts tag:0];
     [vc2.tabBarItem setFinishedSelectedImage:[UIImage imageNamed:@"nav_trans_se.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"nav_trans_nor.png"]];
-    [vc2.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor] forState:UIControlStateSelected];
-    [vc2.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithRed:35/255.0f green:73/255.0f blue:127/255.0f alpha:1] forKey:UITextAttributeTextColor] forState:UIControlStateNormal];
+    [vc2.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemSeColor forKey:UITextAttributeTextColor] forState:UIControlStateSelected];
+    [vc2.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemNorColor forKey:UITextAttributeTextColor] forState:UIControlStateNormal];
     UINavigationController *vc3=[[UINavigationController alloc] init];
     EmailListViewController * vc33=[[EmailListViewController alloc] init];
     [vc3 pushViewController:vc33 animated:YES];
@@ -82,8 +85,8 @@
      [vc3.navigationBar setTintColor:[UIColor whiteColor]];
     //vc3.tabBarItem=[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemDownloads tag:0];
     [vc3.tabBarItem setFinishedSelectedImage:[UIImage imageNamed:@"nav_send_se.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"nav_send_nor.png"]];
-    [vc3.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor] forState:UIControlStateSelected];
-    [vc3.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithRed:35/255.0f green:73/255.0f blue:127/255.0f alpha:1] forKey:UITextAttributeTextColor] forState:UIControlStateNormal];
+    [vc3.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemSeColor forKey:UITextAttributeTextColor] forState:UIControlStateSelected];
+    [vc3.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemNorColor forKey:UITextAttributeTextColor] forState:UIControlStateNormal];
     SettingViewController *vc44=[[SettingViewController alloc] init];
     UINavigationController *vc4=[[UINavigationController alloc] initWithRootViewController:vc44];
     vc44.title=@"更多";
@@ -94,13 +97,15 @@
     //vc4.tabBarItem=[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemFeatured tag:0];
     //[vc4.tabBarItem setImage:[UIImage imageNamed:@"Bt_UsercentreCh.png"]];
     [vc4.tabBarItem setFinishedSelectedImage:[UIImage imageNamed:@"nav_more_se.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"nav_more_nor.png"]];
-    [vc4.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor] forState:UIControlStateSelected];
-    [vc4.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor colorWithRed:35/255.0f green:73/255.0f blue:127/255.0f alpha:1] forKey:UITextAttributeTextColor] forState:UIControlStateNormal];
+    [vc4.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemSeColor forKey:UITextAttributeTextColor] forState:UIControlStateSelected];
+    [vc4.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemNorColor forKey:UITextAttributeTextColor] forState:UIControlStateNormal];
     //2013年10月29日，隐掉“文件收发”模块; by FengYN
     self.viewControllers=@[vc1,vc2,vc4];
     self.selectedIndex=0;
     
-    [self.tabBar setBackgroundImage:[UIImage imageNamed:@"bk_nav.png"]];
+    //[self.tabBar setBackgroundImage:[UIImage imageNamed:@"nav_bk.png"]];
+    //[self.tabBar setBarStyle:UIBarStyleBlack];
+    //[self.tabBar setAlpha:0.65f];
     //[self.tabBar setTranslucent:NO];
 }
 

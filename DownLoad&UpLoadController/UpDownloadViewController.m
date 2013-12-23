@@ -70,10 +70,14 @@
     self.navigationItem.rightBarButtonItems = items;
     
     isShowUpload = YES;
-    CGRect customRect = CGRectMake(0, 0, 320, 30);
+    UIColor *stbgColor=[UIColor whiteColor]; //[UIColor colorWithRed:229/255.0f green:229/255.0f blue:229/255.0f alpha:1]; //[UIColor lightGrayColor]
+    UIColor *stTextColor=[UIColor colorWithRed:85/255.0f green:103/255.0f blue:126/255.0f alpha:1];
+    CGRect customRect = CGRectMake(0, 0, 320, 40);
     self.customSelectButton = [[CustomSelectButton alloc] initWithFrame:customRect leftText:@"正在上传" rightText:@"正在下载" isShowLeft:isShowUpload];
     [self.customSelectButton setDelegate:self];
-    [self.customSelectButton setBackgroundColor:[UIColor lightGrayColor]];
+    [self.customSelectButton setBackgroundColor:stbgColor];
+    [self.customSelectButton.left_button setTitleColor:stTextColor forState:UIControlStateNormal];
+    [self.customSelectButton.right_button setTitleColor:stTextColor forState:UIControlStateNormal];
     [self.view addSubview:self.customSelectButton];
     CGRect table_rect = CGRectMake(0, customRect.origin.y+customRect.size.height, 320, self.view.frame.size.height-(customRect.origin.y+customRect.size.height)-TabBarHeight+10);
     if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)

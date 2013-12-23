@@ -32,10 +32,18 @@
     MyTabBarViewController *myTabVC=[[MyTabBarViewController alloc] init];
     DetailViewController *detailVC=[[DetailViewController alloc] init];
     UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:detailVC];
+    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
     self.viewControllers=@[myTabVC,nav];
     self.delegate=detailVC;
 }
-
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+- (BOOL)prefersStatusBarHidden
+{
+    return NO;
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

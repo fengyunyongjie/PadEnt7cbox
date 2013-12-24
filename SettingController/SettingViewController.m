@@ -23,6 +23,8 @@
 #import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>
 #import "QLBrowserViewController.h"
+#import "PasswordManager.h"
+#import "PasswordList.h"
 
 typedef enum{
     kAlertTypeNewVersion,
@@ -633,16 +635,8 @@ typedef enum{
                     //bgView.image=[UIImage imageNamed:@"set_bk_3.png"];
                     titleLabel.text =@"密码锁";
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    if ([LTHPasscodeViewController passcodeExistsInKeychain]) {
-                        [LTHPasscodeViewController saveTimerStartTime];
-                        if ([LTHPasscodeViewController timerDuration] == 1)
-                        {
-                            ocLabel.text = @"关闭";
-                        }
-                        else
-                        {
-                            ocLabel.text = @"开启";
-                        }
+                    if ([self isOpenLock]) {
+                        ocLabel.text = @"开启";
                     }
                     else
                     {
@@ -1395,4 +1389,19 @@ typedef enum{
     
     return list;
 }
+
+-(BOOL)isOpenLock
+{
+    PasswordManager *manager = [[PasswordManager alloc] init];
+    PasswordList *list = [[PasswordList alloc] init];
+    list.is_open = YES;
+    list.p_ure_id = [[SCBSession sharedSession] userId];
+    NSArray *array = [manager selectPasswordListIsHave:list];
+    if([array count]>0)
+    {
+        return YES;
+    }
+    return NO;
+}
+
 @end

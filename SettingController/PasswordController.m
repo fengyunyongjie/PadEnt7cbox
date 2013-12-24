@@ -7,10 +7,13 @@
 //
 
 #import "PasswordController.h"
-#import "LTHPasscodeViewController.h"
 #import "APService.h"
 #import "AppDelegate.h"
 #import "YNFunctions.h"
+#import "InputViewController.h"
+#import "PasswordList.h"
+#import "PasswordManager.h"
+#import "SCBSession.h"
 
 @interface PasswordController ()
 @property (strong,nonatomic) UIBarButtonItem *backBarButtonItem;
@@ -28,6 +31,20 @@
     return self;
 }
 
+-(BOOL)isOpenLock
+{
+    PasswordManager *manager = [[PasswordManager alloc] init];
+    PasswordList *list = [[PasswordList alloc] init];
+    list.is_open = YES;
+    list.p_ure_id = [[SCBSession sharedSession] userId];
+    NSArray *array = [manager selectPasswordListIsHave:list];
+    if([array count]>0)
+    {
+        return YES;
+    }
+    return NO;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -37,16 +54,8 @@
     self.table_view.delegate = self;
     [self.view addSubview:self.table_view];
     
-    if ([LTHPasscodeViewController passcodeExistsInKeychain]) {
-        [LTHPasscodeViewController saveTimerStartTime];
-        if ([LTHPasscodeViewController timerDuration] == 1)
-        {
-            [[LTHPasscodeViewController sharedUser] showForEnablingPasscodeInViewController: self];
-        }
-    }
-    else
-    {
-        [[LTHPasscodeViewController sharedUser] showForEnablingPasscodeInViewController: self];
+    if (![self isOpenLock]) {
+        [self showLockSetting:PasswordEditTypeStart];
     }
     
     //初始化返回按钮
@@ -64,6 +73,19 @@
     {
         self.navigationItem.leftBarButtonItem = backItem;
     }
+}
+
+-(void)showLockSetting:(PasswordEditType)editType
+{
+    InputViewController *lockScreen = [[InputViewController alloc] init];
+    lockScreen.passwordType = editType;
+//    [[[UIApplication sharedApplication].windows firstObject] addSubview:lockScreen.view];
+    [self presentViewController:lockScreen animated:NO completion:^{}];
+}
+
+-(void)hiddenLockSetting
+{
+    [self dismissViewControllerAnimated:NO completion:^{}];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -100,16 +122,8 @@
     switch (row) {
         case 0:
         {
-            if ([LTHPasscodeViewController passcodeExistsInKeychain]) {
-                [LTHPasscodeViewController saveTimerStartTime];
-                if ([LTHPasscodeViewController timerDuration] == 1)
-                {
-                    [cell.textLabel setText:@"开启密码锁"];
-                }
-                else
-                {
-                    [cell.textLabel setText:@"关闭密码锁"];
-                }
+            if ([self isOpenLock]) {
+                [cell.textLabel setText:@"关闭密码锁"];
             }
             else
             {
@@ -120,16 +134,8 @@
         case 1:
         {
             [cell.textLabel setText:@"修改密码"];
-            if ([LTHPasscodeViewController passcodeExistsInKeychain]) {
-                [LTHPasscodeViewController saveTimerStartTime];
-                if ([LTHPasscodeViewController timerDuration] == 1)
-                {
-                    [cell.textLabel setEnabled:NO];
-                }
-                else
-                {
-                    [cell.textLabel setEnabled:YES];
-                }
+            if ([self isOpenLock]) {
+                [cell.textLabel setEnabled:YES];
             }
             else
             {
@@ -152,11 +158,11 @@
             UITableViewCell *cell = [self.table_view cellForRowAtIndexPath:indexPath];
             if([cell.textLabel.text isEqualToString:@"开启密码锁"])
             {
-                [[LTHPasscodeViewController sharedUser] showForEnablingPasscodeInViewController: self];
+                [self showLockSetting:PasswordEditTypeStart];
             }
             else
             {
-                [[LTHPasscodeViewController sharedUser] showForTurningOffPasscodeInViewController: self];
+                [self showLockSetting:PasswordEditTypeClose];
             }
         }
             break;
@@ -165,7 +171,7 @@
             UITableViewCell *cell = [self.table_view cellForRowAtIndexPath:indexPath];
             if(cell.textLabel.enabled)
             {
-                [[LTHPasscodeViewController sharedUser] showForChangingPasscodeInViewController: self];
+                [self showLockSetting:PasswordEditTypeUpdate];
             }
         }
             break;
@@ -197,5 +203,68 @@
         [appDelegate finishLogout];
     }
 }
+
+#pragma mark - ABPadLockScreen Delegate methods
+- (void)unlockWasSuccessful
+{
+    //Perform any action needed when the unlock was successfull (usually remove the lock view and then load another view)
+    [self dismissModalViewControllerAnimated:YES];
+    
+}
+
+- (void)unlockWasUnsuccessful:(int)falseEntryCode afterAttemptNumber:(int)attemptNumber
+{
+    //Tells you that the user performed an unsuccessfull unlock and tells you the incorrect code and the attempt number. ABLockScreen will display an error if you have
+    //set an attempt limit through the datasource method, but you may wish to make a record of the failed attempt.
+    
+    
+}
+
+- (void)unlockWasCancelled
+{
+    //This is a good place to remove the ABLockScreen
+    [self dismissModalViewControllerAnimated:YES];
+    
+}
+
+-(void)attemptsExpired
+{
+    //If you want to perform any action when the user has failed all their attempts, do so here. ABLockPad will automatically lock them from entering in any more
+    //pins.
+    
+}
+
+#pragma mark - ABPadLockScreen DataSource methods
+- (int)unlockPasscode
+{
+    //Provide the ABLockScreen with a code to verify against
+    return 1234;
+}
+
+- (NSString *)padLockScreenTitleText
+{
+    //Provide the text for the lock screen title here
+    return @"Enter passcode";
+    
+}
+
+- (NSString *)padLockScreenSubtitleText
+{
+    //Provide the text for the lock screen subtitle here
+    return @"Please enter passcode";
+}
+
+-(BOOL)hasAttemptLimit
+{
+    //If the lock screen only allows a limited number of attempts, return YES. Otherwise, return NO
+    return YES;
+}
+
+- (int)attemptLimit
+{
+    //If the lock screen only allows a limited number of attempts, return the number of allowed attempts here You must return higher than 0 (Recomended more than 1).
+    return 3;
+}
+
 
 @end

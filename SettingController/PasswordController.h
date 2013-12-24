@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "InputViewController.h"
 
-@interface PasswordController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate>
+@interface PasswordController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,PasswordDelegate>
 
 @property(nonatomic,retain) UITableView *table_view;
-
+@property(nonatomic,strong) InputViewController *lockScreen;
+@property(nonatomic,strong) UIView *localV;
 @end

@@ -13,12 +13,15 @@
 #import "SCBSession.h"
 #import "APService.h"
 
+#define degreesToRadinas(x) (M_PI * (x)/180.0)
+#define TextFiledColor [UIColor colorWithRed:31.0/255.0 green:58.0/255.0 blue:125.0/255.0 alpha:1.0]
+#define TextViewColor [UIColor colorWithRed:238.0/255.0 green:238.0/255.0 blue:238.0/255.0 alpha:1.0]
 @interface InputViewController ()
 
 @end
 
 @implementation InputViewController
-@synthesize passwordType,password_view,top_view,back_button,title_label,update_button,state_label,password_textfield1,password_textfield2,password_textfield3,password_textfield4,password_error,password_button1,password_button2,password_button3,password_button4,password_button5,password_button6,password_button7,password_button8,password_button9,password_button0,password_return,botton_view,one_password,second_password,old_password,news_password,localView,password_delete;
+@synthesize passwordType,password_view,top_view,back_button,title_label,update_button,state_label,password_textfield1,password_textfield2,password_textfield3,password_textfield4,password_error,password_button1,password_button2,password_button3,password_button4,password_button5,password_button6,password_button7,password_button8,password_button9,password_button0,password_return,botton_view,one_password,second_password,old_password,news_password,localView,password_delete,bgView,passwordDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -29,26 +32,57 @@
     return self;
 }
 
+-(void)addBackGroundImage:(UIView *)bg
+{
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    self.localView = [[UIImageView alloc] initWithFrame:app.window.frame];
+    [self.localView setImage:[self getImageFromView:bg]];
+    [self.localView setAlpha:0.3];
+    [self.view addSubview:self.localView];
+}
+
+//将UIView转成UIImage
+-(UIImage *)getImageFromView:(UIView *)theView
+{
+    UIGraphicsBeginImageContextWithOptions(theView.frame.size, YES, theView.layer.contentsScale);
+    [theView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image=UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 - (void)viewDidLoad
 {
-    
     [super viewDidLoad];
     
-//    AppDelegate *app = [[UIApplication sharedApplication] delegate];
-//    self.localView = [[UIView alloc] initWithFrame:app.window.frame];
-//    [self.localView setBackgroundColor:[UIColor blackColor]];
-//    [app.window addSubview:self.localView];
-//    [localView setAlpha:0.6];
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    
+    
+    NSLog(@"rect:%@",NSStringFromCGRect(self.view.frame));
+    self.view.autoresizesSubviews = YES;
+//    [self addBackGroundImage:bgView];
     self.one_password = @"";
     self.second_password = @"";
     int x = self.view.frame.size.width/2-320/2;
     int y = self.view.frame.size.height/2-480/2;
+    
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        x = self.view.frame.size.height/2-320/2;
+        y = self.view.frame.size.width/2-480/2;
+    }
+    else
+    {
+        x = self.view.frame.size.width/2-320/2;
+        y = self.view.frame.size.height/2-480/2;
+    }
+    
     CGRect view_rect = CGRectMake(x, y, 320, 480);
     self.password_view = [[UIView alloc] initWithFrame:view_rect];
     [self.password_view setBackgroundColor:[UIColor whiteColor]];
     CGRect top_rect = CGRectMake(0, 0, 320, 44);
 	self.top_view = [[UIImageView alloc] initWithFrame:top_rect];
-    self.top_view.backgroundColor = [UIColor blueColor];
+    self.top_view.backgroundColor = TextFiledColor;
     [self.password_view addSubview:self.top_view];
     
     CGRect back_rect = CGRectMake(5, 0, 50, 44);
@@ -64,14 +98,14 @@
     [self.title_label setTextAlignment:NSTextAlignmentCenter];
     [self.title_label setText:@"设置密码"];
     [self.title_label setTextColor:[UIColor whiteColor]];
-    [self.title_label setFont:[UIFont systemFontOfSize:14]];
+    [self.title_label setFont:[UIFont systemFontOfSize:16]];
     [self.password_view addSubview:self.title_label];
     
     CGRect update_rect = CGRectMake(320-100-5, 0, 100, 44);
     self.update_button = [[UIButton alloc] initWithFrame:update_rect];
     [self.update_button setTitle:@"忘记密码" forState:UIControlStateNormal];
     [self.update_button.titleLabel setTextColor:[UIColor whiteColor]];
-    [self.update_button.titleLabel setFont:[UIFont systemFontOfSize:14]];
+    [self.update_button.titleLabel setFont:[UIFont systemFontOfSize:16]];
     [self.update_button addTarget:self action:@selector(closePassword) forControlEvents:UIControlEventTouchUpInside];
     [self.password_view addSubview:self.update_button];
     
@@ -79,7 +113,7 @@
     self.state_label = [[UILabel alloc] initWithFrame:state_rect];
     [self.state_label setTextAlignment:NSTextAlignmentCenter];
     [self.state_label setText:@"请输入密码"];
-    [self.state_label setTextColor:[UIColor blackColor]];
+    [self.state_label setTextColor:TextFiledColor];
     [self.state_label setFont:[UIFont systemFontOfSize:14]];
     [self.password_view addSubview:self.state_label];
     
@@ -88,7 +122,7 @@
     self.password_textfield1 = [[UITextField alloc] initWithFrame:textfield1_rect];
     [self.password_textfield1 setSecureTextEntry:YES];
     [self.password_textfield1 setTextAlignment:NSTextAlignmentCenter];
-    [self.password_textfield1 setBackgroundColor:[UIColor grayColor]];
+    [self.password_textfield1 setBackgroundColor:TextViewColor];
     [self.password_textfield1 setEnabled:NO];
     [self.password_view addSubview:self.password_textfield1];
     
@@ -96,7 +130,7 @@
     self.password_textfield2 = [[UITextField alloc] initWithFrame:textfield2_rect];
     [self.password_textfield2 setSecureTextEntry:YES];
     [self.password_textfield2 setTextAlignment:NSTextAlignmentCenter];
-    [self.password_textfield2 setBackgroundColor:[UIColor grayColor]];
+    [self.password_textfield2 setBackgroundColor:TextViewColor];
     [self.password_textfield2 setEnabled:NO];
     [self.password_view addSubview:self.password_textfield2];
     
@@ -104,7 +138,7 @@
     self.password_textfield3 = [[UITextField alloc] initWithFrame:textfield3_rect];
     [self.password_textfield3 setSecureTextEntry:YES];
     [self.password_textfield3 setTextAlignment:NSTextAlignmentCenter];
-    [self.password_textfield3 setBackgroundColor:[UIColor grayColor]];
+    [self.password_textfield3 setBackgroundColor:TextViewColor];
     [self.password_textfield3 setEnabled:NO];
     [self.password_view addSubview:self.password_textfield3];
     
@@ -112,7 +146,7 @@
     self.password_textfield4 = [[UITextField alloc] initWithFrame:textfield4_rect];
     [self.password_textfield4 setSecureTextEntry:YES];
     [self.password_textfield4 setTextAlignment:NSTextAlignmentCenter];
-    [self.password_textfield4 setBackgroundColor:[UIColor grayColor]];
+    [self.password_textfield4 setBackgroundColor:TextViewColor];
     [self.password_textfield4 setEnabled:NO];
     [self.password_view addSubview:self.password_textfield4];
     CGRect error_rect = CGRectMake(0, textfield4_rect.origin.y+textfield4_rect.size.height+10, 320, 44);
@@ -124,7 +158,7 @@
     
     CGRect botton_rect = CGRectMake(0, error_rect.origin.y+error_rect.size.height+20, 320, 480-(error_rect.origin.y+error_rect.size.height+20));
     self.botton_view = [[UIImageView alloc] initWithFrame:botton_rect];
-    [self.botton_view setBackgroundColor:[UIColor grayColor]];
+    [self.botton_view setBackgroundColor:TextViewColor];
     [self.password_view addSubview:self.botton_view];
     
     int button_width = (320-2)/3;
@@ -132,6 +166,7 @@
     
     CGRect button1_rect = CGRectMake(0, error_rect.origin.y+error_rect.size.height+21, button_width, button_height);
     self.password_button1 = [[PasswordButton alloc] initWithFrame:button1_rect];
+    [self.password_button1 setTitleColor:TextFiledColor forState:UIControlStateNormal];
     [self.password_button1 setTitle:@"1" forState:UIControlStateNormal];
     [self.password_button1 addTarget:self action:@selector(clickedTouch:) forControlEvents:UIControlEventTouchDown];
     [self.password_button1 addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -139,6 +174,7 @@
     
     CGRect button2_rect = CGRectMake(button_width+1, error_rect.origin.y+error_rect.size.height+21, button_width, button_height);
     self.password_button2 = [[PasswordButton alloc] initWithFrame:button2_rect];
+    [self.password_button2 setTitleColor:TextFiledColor forState:UIControlStateNormal];
     [self.password_button2 setTitle:@"2" forState:UIControlStateNormal];
     [self.password_button2 addTarget:self action:@selector(clickedTouch:) forControlEvents:UIControlEventTouchDown];
     [self.password_button2 addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -146,6 +182,7 @@
     
     CGRect button3_rect = CGRectMake(button_width*2+2, error_rect.origin.y+error_rect.size.height+21, button_width, button_height);
     self.password_button3 = [[PasswordButton alloc] initWithFrame:button3_rect];
+    [self.password_button3 setTitleColor:TextFiledColor forState:UIControlStateNormal];
     [self.password_button3 setTitle:@"3" forState:UIControlStateNormal];
     [self.password_button3 addTarget:self action:@selector(clickedTouch:) forControlEvents:UIControlEventTouchDown];
     [self.password_button3 addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -153,6 +190,7 @@
     
     CGRect button4_rect = CGRectMake(0, button3_rect.origin.y+button3_rect.size.height+1, button_width, button_height);
     self.password_button4 = [[PasswordButton alloc] initWithFrame:button4_rect];
+    [self.password_button4 setTitleColor:TextFiledColor forState:UIControlStateNormal];
     [self.password_button4 setTitle:@"4" forState:UIControlStateNormal];
     [self.password_button4 addTarget:self action:@selector(clickedTouch:) forControlEvents:UIControlEventTouchDown];
     [self.password_button4 addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -160,6 +198,7 @@
     
     CGRect button5_rect = CGRectMake(button_width+1, button3_rect.origin.y+button3_rect.size.height+1, button_width, button_height);
     self.password_button5 = [[PasswordButton alloc] initWithFrame:button5_rect];
+    [self.password_button5 setTitleColor:TextFiledColor forState:UIControlStateNormal];
     [self.password_button5 setTitle:@"5" forState:UIControlStateNormal];
     [self.password_button5 addTarget:self action:@selector(clickedTouch:) forControlEvents:UIControlEventTouchDown];
     [self.password_button5 addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -167,6 +206,7 @@
     
     CGRect button6_rect = CGRectMake(button_width*2+2, button3_rect.origin.y+button3_rect.size.height+1, button_width, button_height);
     self.password_button6 = [[PasswordButton alloc] initWithFrame:button6_rect];
+    [self.password_button6 setTitleColor:TextFiledColor forState:UIControlStateNormal];
     [self.password_button6 setTitle:@"6" forState:UIControlStateNormal];
     [self.password_button6 addTarget:self action:@selector(clickedTouch:) forControlEvents:UIControlEventTouchDown];
     [self.password_button6 addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -174,6 +214,7 @@
     
     CGRect button7_rect = CGRectMake(0, button6_rect.origin.y+button6_rect.size.height+1, button_width, button_height);
     self.password_button7 = [[PasswordButton alloc] initWithFrame:button7_rect];
+    [self.password_button7 setTitleColor:TextFiledColor forState:UIControlStateNormal];
     [self.password_button7 setTitle:@"7" forState:UIControlStateNormal];
     [self.password_button7 addTarget:self action:@selector(clickedTouch:) forControlEvents:UIControlEventTouchDown];
     [self.password_button7 addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -181,6 +222,7 @@
     
     CGRect button8_rect = CGRectMake(button_width+1, button6_rect.origin.y+button6_rect.size.height+1, button_width, button_height);
     self.password_button8 = [[PasswordButton alloc] initWithFrame:button8_rect];
+    [self.password_button8 setTitleColor:TextFiledColor forState:UIControlStateNormal];
     [self.password_button8 setTitle:@"8" forState:UIControlStateNormal];
     [self.password_button8 addTarget:self action:@selector(clickedTouch:) forControlEvents:UIControlEventTouchDown];
     [self.password_button8 addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -188,6 +230,7 @@
     
     CGRect button9_rect = CGRectMake(button_width*2+2, button6_rect.origin.y+button6_rect.size.height+1, button_width, button_height);
     self.password_button9 = [[PasswordButton alloc] initWithFrame:button9_rect];
+    [self.password_button9 setTitleColor:TextFiledColor forState:UIControlStateNormal];
     [self.password_button9 setTitle:@"9" forState:UIControlStateNormal];
     [self.password_button9 addTarget:self action:@selector(clickedTouch:) forControlEvents:UIControlEventTouchDown];
     [self.password_button9 addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -195,6 +238,7 @@
     
     CGRect button0_rect = CGRectMake(button_width+1, button9_rect.origin.y+button9_rect.size.height+1, button_width, button_height);
     self.password_button0 = [[PasswordButton alloc] initWithFrame:button0_rect];
+    [self.password_button0 setTitleColor:TextFiledColor forState:UIControlStateNormal];
     [self.password_button0 setTitle:@"0" forState:UIControlStateNormal];
     [self.password_button0 addTarget:self action:@selector(clickedTouch:) forControlEvents:UIControlEventTouchDown];
     [self.password_button0 addTarget:self action:@selector(clicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -202,11 +246,14 @@
     
     CGRect delete_rect = CGRectMake(button_width*2+2, button9_rect.origin.y+button9_rect.size.height+1, button_width, button_height);
     self.password_delete = [[PasswordButton alloc] initWithFrame:delete_rect];
+    [self.password_delete setTitleColor:TextFiledColor forState:UIControlStateNormal];
     [self.password_delete setTitle:@"删除" forState:UIControlStateNormal];
-//    [self.password_delete addTarget:self action:@selector(clickedTouch:) forControlEvents:UIControlEventTouchDown];
     [self.password_delete addTarget:self action:@selector(deleteClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.password_view addSubview:self.password_delete];
     
+    self.password_view.layer.masksToBounds = YES;
+    self.password_view.layer.cornerRadius = 8;
+    self.view.autoresizesSubviews = YES;
     [self.view addSubview:self.password_view];
     
     
@@ -230,6 +277,9 @@
     {
         [self showTypeClose];
     }
+    
+    [self.password_view bringSubviewToFront:self.view];
+    [self.localView sendSubviewToBack:self.view];
 }
 
 /*
@@ -432,7 +482,7 @@
 
 -(void)back_clicked
 {
-    [self dismissViewControllerAnimated:NO completion:^{}];
+    [passwordDelegate deleteView];
 }
 
 -(void)clickedTouch:(id)sender
@@ -738,6 +788,17 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+//<ios 6.0
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return YES;
+}
+
+//>ios 6.0
+- (BOOL)shouldAutorotate{
+    return YES;
 }
 
 @end

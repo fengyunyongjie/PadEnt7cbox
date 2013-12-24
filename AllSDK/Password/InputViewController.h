@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "PasswordButton.h"
 
+@protocol PasswordDelegate <NSObject>
+
+-(void)deleteView;
+
+@end
+
 typedef enum {
     PasswordEditTypeDefault, //默认是PasswordEditTypeStart
     PasswordEditTypeStart, //要求输入两次密码，第二次输入的时候判断是否和第一次相同，如果不相同，提示再尝试一次第二次输入，如果还是错误，重置密码输入（从头开始再来）
@@ -49,6 +55,11 @@ typedef enum {
 @property(nonatomic,strong) NSString *second_password;
 @property(nonatomic,strong) NSString *old_password;
 @property(nonatomic,strong) NSString *news_password;
-@property(nonatomic,strong) UIView *localView;
+@property(nonatomic,strong) UIImageView *localView;
+
+@property(nonatomic,strong) UIView *bgView;
+@property(nonatomic,assign) id<PasswordDelegate> passwordDelegate;
+
+-(void)addBackGroundImage:(UIView *)bg;
 
 @end

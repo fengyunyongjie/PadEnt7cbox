@@ -10,7 +10,6 @@
 #import "APService.h"
 #import "AppDelegate.h"
 #import "YNFunctions.h"
-#import "InputViewController.h"
 #import "PasswordList.h"
 #import "PasswordManager.h"
 #import "SCBSession.h"
@@ -20,7 +19,7 @@
 @end
 
 @implementation PasswordController
-@synthesize table_view;
+@synthesize table_view,lockScreen,localV;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -77,15 +76,27 @@
 
 -(void)showLockSetting:(PasswordEditType)editType
 {
-    InputViewController *lockScreen = [[InputViewController alloc] init];
-    lockScreen.passwordType = editType;
-//    [[[UIApplication sharedApplication].windows firstObject] addSubview:lockScreen.view];
-    [self presentViewController:lockScreen animated:NO completion:^{}];
-}
-
--(void)hiddenLockSetting
-{
-    [self dismissViewControllerAnimated:NO completion:^{}];
+    if(self.lockScreen)
+    {
+        [self.lockScreen removeFromParentViewController];
+        self.lockScreen = nil;
+    }
+    self.lockScreen = [[InputViewController alloc] init];
+    [self.lockScreen setPasswordDelegate:self];
+    self.lockScreen.passwordType = editType;
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [self.lockScreen setBgView:app.window];
+    self.lockScreen.view.autoresizesSubviews = YES;
+    if(self.localV)
+    {
+        [self.localV removeFromSuperview];
+        self.localV = nil;
+    }
+    self.localV = [[UIView alloc] initWithFrame:app.window.frame];
+    [self.localV setBackgroundColor:[UIColor blackColor]];
+    [self.localV setAlpha:0.4];
+    [app.window addSubview:self.localV];
+    [app.window addSubview:self.lockScreen.view];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -264,6 +275,22 @@
 {
     //If the lock screen only allows a limited number of attempts, return the number of allowed attempts here You must return higher than 0 (Recomended more than 1).
     return 3;
+}
+
+#pragma mark PasswordDelegate -----------
+
+-(void)deleteView
+{
+    if(self.lockScreen)
+    {
+        [self.lockScreen.view removeFromSuperview];
+        self.lockScreen = nil;
+    }
+    if(self.localV)
+    {
+        [self.localV removeFromSuperview];
+        self.localV = nil;
+    }
 }
 
 

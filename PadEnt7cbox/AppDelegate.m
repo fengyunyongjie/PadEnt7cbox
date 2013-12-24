@@ -11,18 +11,16 @@
 #import "MySplitViewController.h"
 #import "PasswordManager.h"
 #import "SCBSession.h"
-#import "InputViewController.h"
 
 @implementation AppDelegate
+@synthesize lockScreen,localV;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     NSLog(@"打印Log");
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-//    [self.window setBackgroundColor:[UIColor blackColor]];
-    // Override point for customization after application launch.
-    //self.window.backgroundColor = [UIColor whiteColor];
+    
     self.window.alpha = 1.0;
     [self.window makeKeyAndVisible];
     
@@ -105,9 +103,40 @@
 }
 -(void)showLoceView
 {
-    InputViewController *input = [[InputViewController alloc] init];
-    input.passwordType = PasswordEditTypeDefault;
-    [self.window.rootViewController presentViewController:input animated:NO completion:^{}];
+    if(self.lockScreen)
+    {
+        [self.lockScreen.view removeFromSuperview];
+        self.lockScreen = nil;
+    }
+    self.lockScreen = [[InputViewController alloc] init];
+    [self.lockScreen setPasswordDelegate:self];
+    self.lockScreen.view.autoresizesSubviews = YES;
+    if(self.localV)
+    {
+        [self.localV removeFromSuperview];
+        self.localV = nil;
+    }
+    self.localV = [[UIView alloc] initWithFrame:self.window.frame];
+    [self.localV setBackgroundColor:[UIColor blackColor]];
+    [self.localV setAlpha:0.4];
+    [self.window addSubview:self.localV];
+    [self.window addSubview:self.lockScreen.view];
+}
+
+#pragma mark PasswordDelegate -----------
+
+-(void)deleteView
+{
+    if(self.lockScreen)
+    {
+        [self.lockScreen.view removeFromSuperview];
+        self.lockScreen = nil;
+    }
+    if(self.localV)
+    {
+        [self.localV removeFromSuperview];
+        self.localV = nil;
+    }
 }
 
 @end

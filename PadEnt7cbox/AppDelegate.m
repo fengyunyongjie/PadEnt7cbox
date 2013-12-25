@@ -22,6 +22,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     self.window.alpha = 1.0;
+    [self.window setAutoresizesSubviews:YES];
     [self.window makeKeyAndVisible];
     
     if ([self isLogin]) {
@@ -103,40 +104,57 @@
 }
 -(void)showLoceView
 {
-    if(self.lockScreen)
-    {
-        [self.lockScreen.view removeFromSuperview];
-        self.lockScreen = nil;
-    }
     self.lockScreen = [[InputViewController alloc] init];
     [self.lockScreen setPasswordDelegate:self];
+    [self.lockScreen setBgView:self.window];
     self.lockScreen.view.autoresizesSubviews = YES;
-    if(self.localV)
-    {
-        [self.localV removeFromSuperview];
-        self.localV = nil;
-    }
-    self.localV = [[UIView alloc] initWithFrame:self.window.frame];
-    [self.localV setBackgroundColor:[UIColor blackColor]];
-    [self.localV setAlpha:0.4];
-    [self.window addSubview:self.localV];
-    [self.window addSubview:self.lockScreen.view];
+    [self.window.rootViewController presentViewController:self.lockScreen animated:NO completion:^{}];
+//    if(self.lockScreen)
+//    {
+//        [self.lockScreen.view removeFromSuperview];
+//        self.lockScreen = nil;
+//    }
+//    self.lockScreen = [[InputViewController alloc] init];
+//    [self.lockScreen setPasswordDelegate:self];
+//    self.lockScreen.view.autoresizesSubviews = YES;
+//    if(self.localV)
+//    {
+//        [self.localV removeFromSuperview];
+//        self.localV = nil;
+//    }
+//    self.localV = [[UIView alloc] initWithFrame:self.window.frame];
+//    [self.localV setBackgroundColor:[UIColor blackColor]];
+//    [self.localV setAlpha:0.4];
+//    [self.window addSubview:self.localV];
+//    [self.window addSubview:self.lockScreen.view];
 }
 
 #pragma mark PasswordDelegate -----------
 
 -(void)deleteView
 {
-    if(self.lockScreen)
-    {
-        [self.lockScreen.view removeFromSuperview];
-        self.lockScreen = nil;
-    }
-    if(self.localV)
-    {
-        [self.localV removeFromSuperview];
-        self.localV = nil;
-    }
+    [self.window.rootViewController dismissViewControllerAnimated:NO completion:^{}];
+//    if(self.lockScreen)
+//    {
+//        [self.lockScreen.view removeFromSuperview];
+//        self.lockScreen = nil;
+//    }
+//    if(self.localV)
+//    {
+//        [self.localV removeFromSuperview];
+//        self.localV = nil;
+//    }
+}
+
+//<ios 6.0
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return YES;
+}
+
+//>ios 6.0
+- (BOOL)shouldAutorotate{
+    return YES;
 }
 
 @end

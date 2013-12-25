@@ -76,27 +76,28 @@
 
 -(void)showLockSetting:(PasswordEditType)editType
 {
-    if(self.lockScreen)
-    {
-        [self.lockScreen removeFromParentViewController];
-        self.lockScreen = nil;
-    }
+//    if(self.lockScreen)
+//    {
+//        [self.lockScreen removeFromParentViewController];
+//        self.lockScreen = nil;
+//    }
     self.lockScreen = [[InputViewController alloc] init];
     [self.lockScreen setPasswordDelegate:self];
     self.lockScreen.passwordType = editType;
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [self.lockScreen setBgView:app.window];
     self.lockScreen.view.autoresizesSubviews = YES;
-    if(self.localV)
-    {
-        [self.localV removeFromSuperview];
-        self.localV = nil;
-    }
-    self.localV = [[UIView alloc] initWithFrame:app.window.frame];
-    [self.localV setBackgroundColor:[UIColor blackColor]];
-    [self.localV setAlpha:0.4];
-    [app.window addSubview:self.localV];
-    [app.window addSubview:self.lockScreen.view];
+    [self presentViewController:self.lockScreen animated:NO completion:^{}];
+//    if(self.localV)
+//    {
+//        [self.localV removeFromSuperview];
+//        self.localV = nil;
+//    }
+//    self.localV = [[UIView alloc] initWithFrame:app.window.frame];
+//    [self.localV setBackgroundColor:[UIColor blackColor]];
+//    [self.localV setAlpha:0.4];
+//    [app.window addSubview:self.localV];
+//    [app.window addSubview:self.lockScreen.view];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -281,16 +282,17 @@
 
 -(void)deleteView
 {
-    if(self.lockScreen)
-    {
-        [self.lockScreen.view removeFromSuperview];
-        self.lockScreen = nil;
-    }
-    if(self.localV)
-    {
-        [self.localV removeFromSuperview];
-        self.localV = nil;
-    }
+    [self dismissViewControllerAnimated:NO completion:^{}];
+//    if(self.lockScreen)
+//    {
+//        [self.lockScreen.view removeFromSuperview];
+//        self.lockScreen = nil;
+//    }
+//    if(self.localV)
+//    {
+//        [self.localV removeFromSuperview];
+//        self.localV = nil;
+//    }
 }
 
 

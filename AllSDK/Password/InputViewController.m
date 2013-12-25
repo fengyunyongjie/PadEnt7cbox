@@ -34,8 +34,9 @@
 
 -(void)addBackGroundImage:(UIView *)bg
 {
-    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     self.localView = [[UIImageView alloc] initWithFrame:app.window.frame];
+    [app.window setBackgroundColor:[UIColor blackColor]];
     [self.localView setImage:[self getImageFromView:bg]];
     [self.localView setAlpha:0.3];
     [self.view addSubview:self.localView];
@@ -60,12 +61,12 @@
     
     NSLog(@"rect:%@",NSStringFromCGRect(self.view.frame));
     self.view.autoresizesSubviews = YES;
-//    [self addBackGroundImage:bgView];
+    [self addBackGroundImage:bgView];
     self.one_password = @"";
     self.second_password = @"";
     int x = self.view.frame.size.width/2-320/2;
     int y = self.view.frame.size.height/2-480/2;
-    
+    NSLog(@"frame:%@",NSStringFromCGRect(self.view.frame));
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
         x = self.view.frame.size.height/2-320/2;
@@ -76,6 +77,33 @@
         x = self.view.frame.size.width/2-320/2;
         y = self.view.frame.size.height/2-480/2;
     }
+    
+    CGRect localRect = self.localView.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(90));
+        localRect.origin.x = 0;
+        localRect.origin.y = 0;
+        localRect.size.width = self.view.frame.size.height;
+        localRect.size.height = self.view.frame.size.width;
+    }
+    else if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
+    {
+        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-90));
+        localRect.origin.x = 0;
+        localRect.origin.y = 0;
+        localRect.size.width = self.view.frame.size.height;
+        localRect.size.height = self.view.frame.size.width;
+    }
+    else if(toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
+    {
+        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-180));
+        localRect.origin.x = 0;
+        localRect.origin.y = 0;
+        localRect.size.width = self.view.frame.size.width;
+        localRect.size.height = self.view.frame.size.height;
+    }
+    [self.localView setFrame:localRect];
     
     CGRect view_rect = CGRectMake(x, y, 320, 480);
     self.password_view = [[UIView alloc] initWithFrame:view_rect];
@@ -739,7 +767,7 @@
 
 -(void)closePassword
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"继续操作将推出当前账号，是否继续？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"继续", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"继续操作将退出当前账号，是否继续？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"继续", nil];
     [alert show];
 }
 
@@ -793,12 +821,12 @@
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    return YES;
+    return NO;
 }
 
 //>ios 6.0
 - (BOOL)shouldAutorotate{
-    return YES;
+    return NO;
 }
 
 @end

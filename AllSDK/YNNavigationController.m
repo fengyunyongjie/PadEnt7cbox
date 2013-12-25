@@ -16,12 +16,12 @@
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    return NO;
+    return YES;
 }
 
 //>ios 6.0
 - (BOOL)shouldAutorotate{
-    return NO;
+    return YES;
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

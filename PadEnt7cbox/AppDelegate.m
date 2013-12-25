@@ -11,16 +11,41 @@
 #import "MySplitViewController.h"
 #import "PasswordManager.h"
 #import "SCBSession.h"
+#import "WelcomeViewController.h"
+#import "PConfig.h"
+#import "YNFunctions.h"
 
 @implementation AppDelegate
 @synthesize lockScreen,localV;
+@synthesize downmange,myTabBarVC,loginVC,uploadmanage,isStopUpload,musicPlayer,file_url,isConnection,space_id,space_name,old_file_url;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSLog(@"打印Log");
+    isConnection = YES;
+    
+    //初始化数据
+    downmange = [[DownManager alloc] init];
+    uploadmanage = [[UploadManager alloc] init];
+    UIApplication *app = [UIApplication sharedApplication];
+    app.applicationIconBadgeNumber = [uploadmanage.uploadArray count];
+    
+    //监听网络
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+    hostReach = [Reachability reachabilityWithHostName:@"www.baidu.com"];
+    [hostReach startNotifier];
+    
+    [[DBSqlite3 alloc] updateVersion];
+    
+    NSString *vinfo=[[NSUserDefaults standardUserDefaults]objectForKey:VERSION];
+    if (!vinfo) {
+        [[WelcomeViewController sharedUser] showWelCome];
+        //        [[NSUserDefaults standardUserDefaults] setObject:VERSION forKey:VERSION];
+    }
+    //设置背景音乐
+    musicPlayer = [[MusicPlayerViewController alloc] init];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
     self.window.alpha = 1.0;
     [self.window setAutoresizesSubviews:YES];
     [self.window makeKeyAndVisible];
@@ -155,6 +180,55 @@
 //>ios 6.0
 - (BOOL)shouldAutorotate{
     return YES;
+}
+
+//网络链接改变时会调用的方法
+-(void)reachabilityChanged:(NSNotification *)note
+{
+    Reachability *currReach = [note object];
+    NSParameterAssert([currReach isKindOfClass:[Reachability class]]);
+    
+    //对连接改变做出响应处理动作
+    NetworkStatus status = [currReach currentReachabilityStatus];
+    NSLog(@"status:%i",status);
+    switch (status) {
+        case 0://无网络
+        {
+            
+        }
+            break;
+        case 1://WLAN
+        {
+            isConnection = YES;
+            if(![YNFunctions isOnlyWifi])
+            {
+                if([self.uploadmanage isAutoStart])
+                {
+                    [self.uploadmanage start];
+                }
+                if([self.downmange isAutoStart])
+                {
+                    [self.downmange start];
+                }
+            }
+        }
+            break;
+        case 2://WiFi
+        {
+            isConnection = YES;
+            if([self.uploadmanage isAutoStart])
+            {
+                [self.uploadmanage start];
+            }
+            if([self.downmange isAutoStart])
+            {
+                [self.downmange start];
+            }
+        }
+            break;
+        default:
+            break;
+    }
 }
 
 @end

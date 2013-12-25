@@ -15,6 +15,9 @@
 #import "AppDelegate.h"
 #import "SCBSession.h"
 #import <QuartzCore/QuartzCore.h>
+#import "MySplitViewController.h"
+#import "MyTabBarViewController.h"
+#import "UpDownloadViewController.h"
 
 #define AUTHOR_MENU @"AuthorMenus"
 @interface MainViewController()<SCBFileManagerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
@@ -24,16 +27,7 @@
 @end
 
 @implementation MainViewController
-//<ios 6.0
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    return NO;
-}
 
-//>ios 6.0
-- (BOOL)shouldAutorotate{
-    return NO;
-}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -44,7 +38,9 @@
 }
 - (void)viewDidAppear:(BOOL)animated
 {
-    CGSize winSize=[UIScreen mainScreen].bounds.size;
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    CGSize winSize=tabbar.view.frame.size;
     //self.view.frame=CGRectMake(0, 64, winSize.width,winSize.height-64 );
     self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height);
 }
@@ -59,7 +55,10 @@
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
     [self.view addSubview:self.tableView];
-    self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, tabbar.view.frame.size.height);
     if (self.type==kTypeCommit||self.type==kTypeResave||self.type==kTypeUpload) {
         [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dissmissSelf:)]];
     }else
@@ -108,7 +107,7 @@
 
 -(void)changeUpload:(NSMutableOrderedSet *)array_ changeDeviceName:(NSString *)device_name changeFileId:(NSString *)f_id changeSpaceId:(NSString *)s_id
 {
-    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [delegate.uploadmanage changeUpload:array_ changeDeviceName:device_name changeFileId:f_id changeSpaceId:s_id];
 }
 
@@ -155,7 +154,8 @@
 }
 -(void)dissmissSelf:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:Nil];
+//    [self dismissViewControllerAnimated:YES completion:Nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods
@@ -510,4 +510,16 @@
 {
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
+
+//<ios 6.0
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return NO;
+}
+
+//>ios 6.0
+- (BOOL)shouldAutorotate{
+    return NO;
+}
+
 @end

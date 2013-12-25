@@ -10,4 +10,6 @@
 
 @interface MySplitViewController : UISplitViewController
 
+@property(nonatomic,assign)BOOL isFileChange;
+
 @end

@@ -17,6 +17,9 @@
 
 @class LoginViewController,MySplitViewController,MyTabBarViewController;
 @interface AppDelegate : UIResponder <UIApplicationDelegate,PasswordDelegate>
+{
+    Reachability *hostReach;
+}
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) LoginViewController *loginVC;

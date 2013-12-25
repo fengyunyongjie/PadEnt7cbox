@@ -13,6 +13,7 @@
 #import "UpDownloadViewController.h"
 #import "MyTabBarViewController.h"
 #import "FileListViewController.h"
+#import "MySplitViewController.h"
 
 @implementation DownManager
 @synthesize downingArray,isOpenedDown,isStart,isStopCurrDown,file,isAutoStart;
@@ -36,7 +37,8 @@
 {
     [self updateDownList];
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UINavigationController *NavigationController = [[appleDate.myTabBarVC viewControllers] objectAtIndex:1];
+    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
     UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
     if([uploadView isKindOfClass:[UpDownloadViewController class]])
     {
@@ -68,7 +70,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        UINavigationController *NavigationController = [[appleDate.myTabBarVC viewControllers] objectAtIndex:1];
+        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
         {
@@ -80,7 +83,8 @@
     [list insertsDownList:tableArray];
     
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UINavigationController *NavigationController = [[appleDate.myTabBarVC viewControllers] objectAtIndex:1];
+    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
     UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
     if([uploadView isKindOfClass:[UpDownloadViewController class]])
     {
@@ -288,7 +292,8 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        UINavigationController *NavigationController = [[appleDate.myTabBarVC viewControllers] objectAtIndex:1];
+        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
         {
@@ -297,7 +302,7 @@
         }
         UIApplication *app = [UIApplication sharedApplication];
         app.applicationIconBadgeNumber = [self.downingArray count]+[appleDate.uploadmanage.uploadArray count];
-        [appleDate.myTabBarVC addUploadNumber:app.applicationIconBadgeNumber];
+        [tabbar addUploadNumber:app.applicationIconBadgeNumber];
         
         if (appleDate.myTabBarVC.selectedIndex==0) {
             UINavigationController *nc_0=[[appleDate.myTabBarVC viewControllers] objectAtIndex:0];

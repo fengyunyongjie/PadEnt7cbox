@@ -18,6 +18,7 @@
 #define kAlertTagMailAddr 72
 #define kActionSheetTagShare 74
 #define kActionSheetTagDelete 77
+#define iPadWidth 768
 
 @interface PhotoLookViewController ()
 @property float scale_;
@@ -100,7 +101,7 @@
     imageScrollView.pagingEnabled = YES;
     imageScrollView.showsHorizontalScrollIndicator = NO;
     imageScrollView.delegate = self;
-    imageScrollView.contentSize = CGSizeMake(320*[tableArray count], ScollviewHeight);
+    imageScrollView.contentSize = CGSizeMake(iPadWidth*[tableArray count], ScollviewHeight);
     
     if(currPage==0&&[tableArray count]>=3)
     {
@@ -168,12 +169,12 @@
         }
     }
     
-    [imageScrollView setContentOffset:CGPointMake(320*currPage, 0) animated:NO];
+    [imageScrollView setContentOffset:CGPointMake(iPadWidth*currPage, 0) animated:NO];
     [self.view addSubview:imageScrollView];
     
     
     //添加头部试图
-    CGRect topRect = CGRectMake(0, 0, 320, 44);
+    CGRect topRect = CGRectMake(0, 0, iPadWidth, 44);
     self.topToolBar = [[UIToolbar alloc] initWithFrame:topRect];
     [self.topToolBar setBarStyle:UIBarStyleBlackTranslucent];
     CGRect topLeftRect = CGRectMake(2, 7, 48, 30);
@@ -188,7 +189,7 @@
     self.topLeftButton.showsTouchWhenHighlighted = YES;
     [self.topToolBar addSubview:self.topLeftButton];
     
-    CGRect topTitleRect = CGRectMake(0, 0, 320, 44);
+    CGRect topTitleRect = CGRectMake(0, 0, iPadWidth, 44);
     self.topTitleLabel = [[UILabel alloc] initWithFrame:topTitleRect];
     [self.topTitleLabel setTextColor:[UIColor whiteColor]];
     [self.topTitleLabel setBackgroundColor:[UIColor clearColor]];
@@ -199,7 +200,7 @@
     [self.view addSubview:self.topToolBar];
     
     //添加底部试图
-    CGRect bottonRect = CGRectMake(0, ScollviewHeight-44, 320, 44);
+    CGRect bottonRect = CGRectMake(0, ScollviewHeight-44, iPadWidth, 44);
     self.bottonToolBar = [[UIToolbar alloc] initWithFrame:bottonRect];
     [self.bottonToolBar setBarStyle:UIBarStyleBlackTranslucent];
     
@@ -248,6 +249,10 @@
     
     [self.topToolBar setHidden:YES];
     [self.bottonToolBar setHidden:YES];
+    
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    [self isScapeLeftOrRight:self.isScape];
 }
 
 -(void)backClick
@@ -545,7 +550,7 @@
         CGSize size = [self getSacpeImageSize:oldImge];
         imageview.image = oldImge;
         
-        [s setFrame:CGRectMake(currWidth*i, 0, currWidth, 320)];
+        [s setFrame:CGRectMake(currWidth*i, 0, currWidth, iPadWidth)];
         CGRect imageFrame = imageview.frame;
         imageFrame.origin = CGPointMake((currWidth-size.width)/2, (currHeight-size.height)/2);
         imageFrame.size = size;
@@ -668,10 +673,10 @@
     {
         return size;
     }
-    if(size.width>320)
+    if(size.width>iPadWidth)
     {
         size.height = [self GetHeight:size]; //GetHeight(size);
-        size.width = 320;
+        size.width = iPadWidth;
     }
     
     if(size.height>ScollviewHeight)
@@ -1522,11 +1527,11 @@
         [imageScrollView setContentSize:CGSizeMake(currWidth*[self.tableArray count], currWidth)];
         
         //头部视图大小调整
-        CGSize size = CGSizeMake(320, self.bottonToolBar.frame.size.height);
+        CGSize size = CGSizeMake(iPadWidth, self.bottonToolBar.frame.size.height);
         CGRect rect = self.topToolBar.frame;
         rect.size = size;
         [self.topToolBar setFrame:rect];
-        [self.topTitleLabel setFrame:CGRectMake(0, 0, 320, 44)];
+        [self.topTitleLabel setFrame:CGRectMake(0, 0, iPadWidth, 44)];
         
         //滚动视图大小调整
         for(int i=0;i<[imageScrollView.subviews count];i++)
@@ -1547,7 +1552,7 @@
             }
         }
         [imageScrollView reloadInputViews];
-        [imageScrollView setContentOffset:CGPointMake(320*currPage, 0) animated:NO];
+        [imageScrollView setContentOffset:CGPointMake(iPadWidth*currPage, 0) animated:NO];
         
         //底部视图大小调整
         size = CGSizeMake(currWidth, self.bottonToolBar.frame.size.height);
@@ -1591,30 +1596,42 @@
 //每个UIScrollView的大小
 -(CGSize)ImageContentSize
 {
-    return CGSizeMake(320,ScollviewHeight);
+    return CGSizeMake(iPadWidth,ScollviewHeight);
 }
 
 //每个UIScrollView的坐标
 -(CGRect)ScrollRect:(int)index size:(CGSize)size
 {
-    return CGRectMake(320*index, 0, 320, ScollviewHeight);
+    return CGRectMake(iPadWidth*index, 0, iPadWidth, ScollviewHeight);
 }
 
 //imageview的起始点
 -(CGPoint)ImagePoint:(CGSize)size
 {
-    return CGPointMake((320-size.width)/2, (ScollviewHeight-size.height)/2);
+    return CGPointMake((iPadWidth-size.width)/2, (ScollviewHeight-size.height)/2);
 }
 
 //获取等比例高度
 -(CGFloat)GetHeight:(CGSize)size
 {
-    return 320*size.height/size.width;
+    return iPadWidth*size.height/size.width;
 }
 
 -(CGFloat)GetWidth:(CGSize)size
 {
     return ScollviewHeight*size.width/size.height;
+}
+
+-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        self.isScape = YES;
+    }
+    else
+    {
+        self.isScape = NO;
+    }
 }
 
 @end

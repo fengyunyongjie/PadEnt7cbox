@@ -9,12 +9,15 @@
 #import "MySplitViewController.h"
 #import "MyTabBarViewController.h"
 #import "DetailViewController.h"
+#import "MainViewController.h"
+#import "YNNavigationController.h"
 
 @interface MySplitViewController ()
 
 @end
 
 @implementation MySplitViewController
+@synthesize isFileChange;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -29,12 +32,33 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    MyTabBarViewController *myTabVC=[[MyTabBarViewController alloc] init];
-    DetailViewController *detailVC=[[DetailViewController alloc] init];
-    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:detailVC];
-    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-    self.viewControllers=@[myTabVC,nav];
-    self.delegate=detailVC;
+    if(!isFileChange)
+    {
+        MyTabBarViewController *myTabVC=[[MyTabBarViewController alloc] init];
+        DetailViewController *detailVC=[[DetailViewController alloc] init];
+        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:detailVC];
+        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+        self.viewControllers=@[myTabVC,nav];
+        self.delegate=detailVC;
+    }
+    else
+    {
+        MainViewController *viewController=[[MainViewController alloc] init];
+        viewController.delegate=self;
+        viewController.type=kTypeUpload;
+        //[self.navigationController pushViewController:viewController animated:YES];
+        YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:viewController];
+        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+        //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+        
+        DetailViewController *detailVC=[[DetailViewController alloc] init];
+        UINavigationController *nav2=[[UINavigationController alloc] initWithRootViewController:detailVC];
+        [nav2.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+        self.viewControllers=@[nav,nav2];
+        self.delegate=detailVC;
+    }
 }
 - (UIStatusBarStyle)preferredStatusBarStyle
 {

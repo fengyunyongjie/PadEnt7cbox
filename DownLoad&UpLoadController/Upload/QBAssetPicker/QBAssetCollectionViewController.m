@@ -26,6 +26,7 @@
 #import "UpDownloadViewController.h"
 #import "MainViewController.h"
 #import "YNNavigationController.h"
+#import "MySplitViewController.h"
 
 #define QBY 20
 #define TabBarHeight 88
@@ -162,6 +163,8 @@
     
     //添加底部试图
     self.moreEditBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0,mY, 320, TabBarHeight+10)];
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
     CGRect bg_rect = CGRectMake(0, 0, 320, TabBarHeight+10);
     UIImageView *bg_image = [[UIImageView alloc] initWithFrame:bg_rect];
     [bg_image setImage:[UIImage imageNamed:@"oper_bk.png"]];
@@ -335,12 +338,14 @@
     viewController.delegate=self;
     viewController.type=kTypeUpload;
     //[self.navigationController pushViewController:viewController animated:YES];
-    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:viewController];
-    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+//    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:viewController];
+//    nav.shouldGroupAccessibilityChildren = YES;
+//    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+//    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
     //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
-    [nav.navigationBar setTintColor:[UIColor whiteColor]];
-    [self presentViewController:nav animated:YES completion:Nil];
+//    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.tabBarController.tabBar setHidden:YES];
+    [self.navigationController pushViewController:viewController animated:YES];
     
 //    CustomViewController *nagation = [[CustomViewController alloc] initWithRootViewController:qbImage_fileView];
 //    [nagation setNavigationBarHidden:YES];
@@ -799,6 +804,29 @@
     } else {
         [self.delegate assetCollectionViewController:self didFinishPickingAsset:asset];
     }
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+
+-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    
+    CGRect moreEditBar_rect = self.moreEditBar.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        moreEditBar_rect.origin.y = 768-155;
+    }
+    else
+    {
+        moreEditBar_rect.origin.y = 1024-155;
+    }
+    if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
+    {
+        moreEditBar_rect.origin.y = moreEditBar_rect.origin.y+20;
+    }
+    [self.moreEditBar setFrame:moreEditBar_rect];
 }
 
 @end

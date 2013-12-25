@@ -14,6 +14,10 @@
 #import "UIBarButtonItem+Yn.h"
 #import "QBAssetCollectionViewController.h"
 #import "AppDelegate.h"
+#import "MySplitViewController.h"
+#import "MyTabBarViewController.h"
+#import "QBAssetCollectionViewController.h"
+
 @interface SelectFileListViewController ()<SCBFileManagerDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate,QBImageFileViewDelegate>
 @property (strong,nonatomic) SCBFileManager *fm;
 @property(strong,nonatomic) MBProgressHUD *hud;
@@ -47,17 +51,21 @@
     CGRect r=self.view.frame;
     r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
     self.view.frame=r;
+    
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    
     if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49);
+        self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, self.view.frame.size.height-49);
     }else
     {
-        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49-64);
+        self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, self.view.frame.size.height-49-64);
     }
     if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.toolbar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
+        self.toolbar.frame=CGRectMake(0, tabbar.view.frame.size.height-64-49, 320, 49);
     }else
     {
-        self.toolbar.frame=CGRectMake(0, ([[UIScreen mainScreen] bounds].size.height-49)-self.view.frame.origin.y, 320, 49);
+        self.toolbar.frame=CGRectMake(0, (tabbar.view.frame.size.height-49)-self.view.frame.origin.y, 320, 49);
     }
     
     NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
@@ -114,7 +122,11 @@
     UIBarButtonItem *fix=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     [self.toolbar setItems:@[fix,item_download,fix,item_resave,fix]];
     //self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-toolbarHeight);
-    self.tableView.frame=CGRectMake(0, 64, self.view.frame.size.width, [[UIScreen mainScreen] bounds].size.height-49-64);
+    
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    
+    self.tableView.frame=CGRectMake(0, 64, tabbar.view.frame.size.width, [[UIScreen mainScreen] bounds].size.height-49-64);
     
     //初始化返回按钮
     UIButton*backButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,35,29)];
@@ -227,11 +239,39 @@
         default:
             break;
     }
-    [self dismissViewControllerAnimated:YES completion:nil];
+//    [self dismissViewControllerAnimated:YES completion:nil];
+    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
+    {
+        UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
+        if([viewController isKindOfClass:[QBAssetCollectionViewController class]])
+        {
+            [self.navigationController popToViewController:viewController animated:NO];
+            break;
+        }
+        else if([viewController isKindOfClass:[FileListViewController class]])
+        {
+            [self.navigationController popToViewController:viewController animated:NO];
+            break;
+        }
+    }
 }
 - (void)moveCancel:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+//    [self dismissViewControllerAnimated:YES completion:nil];
+    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
+    {
+        UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
+        if([viewController isKindOfClass:[QBAssetCollectionViewController class]])
+        {
+            [self.navigationController popToViewController:viewController animated:NO];
+            break;
+        }
+        else if([viewController isKindOfClass:[FileListViewController class]])
+        {
+            [self.navigationController popToViewController:viewController animated:NO];
+            break;
+        }
+    }
 }
 -(void)newFinder:(id)sender
 {

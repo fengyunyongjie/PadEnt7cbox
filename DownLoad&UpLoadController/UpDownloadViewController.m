@@ -14,6 +14,7 @@
 #import "OtherBrowserViewController.h"
 #import "UIBarButtonItem+Yn.h"
 #import "MyTabBarViewController.h"
+#import "MySplitViewController.h"
 
 #define UpTabBarHeight (49+20+44)
 #define kActionSheetTagDelete 77
@@ -25,7 +26,7 @@
 @end
 
 @implementation UpDownloadViewController
-@synthesize table_view,upLoading_array,upLoaded_array,downLoading_array,downLoaded_array,customSelectButton,isShowUpload,deleteObject,menuView,editView,rightItem,hud,btnStart,selectAllIds,notingLabel;
+@synthesize table_view,upLoading_array,upLoaded_array,downLoading_array,downLoaded_array,customSelectButton,isShowUpload,deleteObject,menuView,editView,rightItem,hud,btnStart,selectAllIds,notingLabel,btn_del;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -241,43 +242,47 @@
     {
         [appleDate.myTabBarVC.imageView setHidden:NO];
     }
-    
-    for(UIView *view in self.tabBarController.view.subviews)
-    {
-        if([view isKindOfClass:[UITabBar class]])
-        {
-            if (isHideTabBar) { //if hidden tabBar
-                [view setFrame:CGRectMake(view.frame.origin.x,[[UIScreen mainScreen]bounds].size.height+10, view.frame.size.width, view.frame.size.height)];
-            }else {
-                NSLog(@"isHideTabBar %@",NSStringFromCGRect(view.frame));
-                [view setFrame:CGRectMake(view.frame.origin.x, [[UIScreen mainScreen]bounds].size.height-49, view.frame.size.width, view.frame.size.height)];
-            }
-        }else
-        {
-            if (isHideTabBar) {
-                NSLog(@"%@",NSStringFromCGRect(view.frame));
-                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, [[UIScreen mainScreen]bounds].size.height)];
-                NSLog(@"%@",NSStringFromCGRect(view.frame));
-            }else {
-                NSLog(@"%@",NSStringFromCGRect(view.frame));
-                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width,[[UIScreen mainScreen]bounds].size.height-49)];
-            }
-        }
-    }
+    [self.tabBarController.tabBar setHidden:isHideTabBar];
+//    for(UIView *view in self.tabBarController.view.subviews)
+//    {
+//        if([view isKindOfClass:[UITabBar class]])
+//        {
+//            if (isHideTabBar) { //if hidden tabBar
+//                [view setFrame:CGRectMake(view.frame.origin.x,[[UIScreen mainScreen]bounds].size.height+10, view.frame.size.width, view.frame.size.height)];
+//            }else {
+//                NSLog(@"isHideTabBar %@",NSStringFromCGRect(view.frame));
+//                [view setFrame:CGRectMake(view.frame.origin.x, [[UIScreen mainScreen]bounds].size.height-49, view.frame.size.width, view.frame.size.height)];
+//            }
+//        }else
+//        {
+//            if (isHideTabBar) {
+//                NSLog(@"%@",NSStringFromCGRect(view.frame));
+//                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, [[UIScreen mainScreen]bounds].size.height)];
+//                NSLog(@"%@",NSStringFromCGRect(view.frame));
+//            }else {
+//                NSLog(@"%@",NSStringFromCGRect(view.frame));
+//                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width,[[UIScreen mainScreen]bounds].size.height-49)];
+//            }
+//        }
+//    }
     if(self.editView == nil)
     {
-        self.editView = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-49, 320, 60)];
+        self.editView = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-49, 320, 49)];
         [self.editView setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forState:UIControlStateNormal];
         [self.editView addTarget:self action:@selector(deleteAll:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.editView];
         //删除
-        UIButton *btn_del=[[UIButton alloc] initWithFrame:CGRectMake((320-29)/2, 5, 29, 39)];
-        [btn_del setImage:[UIImage imageNamed:@"del_nor.png"] forState:UIControlStateNormal];
-        [btn_del setImage:[UIImage imageNamed:@"del_se.png"] forState:UIControlStateHighlighted];
-        [btn_del setUserInteractionEnabled:NO];
-        [self.editView addSubview:btn_del];
+        self.btn_del=[[UIButton alloc] initWithFrame:CGRectMake((320-29)/2, 5, 29, 39)];
+        [self.btn_del setImage:[UIImage imageNamed:@"del_nor.png"] forState:UIControlStateNormal];
+        [self.btn_del setImage:[UIImage imageNamed:@"del_se.png"] forState:UIControlStateHighlighted];
+        [self.btn_del setUserInteractionEnabled:NO];
+        [self.editView addSubview:self.btn_del];
         
     }
+    
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    
     //隐藏按钮
     if (isHideTabBar) {
         [self.editView setHidden:NO];
@@ -635,7 +640,8 @@
     
     UIApplication *app = [UIApplication sharedApplication];
     app.applicationIconBadgeNumber = [delegate.uploadmanage.uploadArray count]+[delegate.downmange.downingArray count];
-    [delegate.myTabBarVC addUploadNumber:app.applicationIconBadgeNumber];
+    MyTabBarViewController *tabbar = [delegate.splitVC.viewControllers firstObject];
+    [tabbar addUploadNumber:app.applicationIconBadgeNumber];
     
     NSString *leftTitle;
     if([upLoading_array count]>0)
@@ -1496,29 +1502,29 @@
     {
         [appleDate.myTabBarVC.imageView setHidden:NO];
     }
-    
-    for(UIView *view in self.tabBarController.view.subviews)
-    {
-        if([view isKindOfClass:[UITabBar class]])
-        {
-            if (isHideTabBar) { //if hidden tabBar
-                [view setFrame:CGRectMake(view.frame.origin.x,[[UIScreen mainScreen]bounds].size.height+2, view.frame.size.width, view.frame.size.height)];
-            }else {
-                NSLog(@"isHideTabBar %@",NSStringFromCGRect(view.frame));
-                [view setFrame:CGRectMake(view.frame.origin.x, [[UIScreen mainScreen]bounds].size.height-49, view.frame.size.width, view.frame.size.height)];
-            }
-        }else
-        {
-            if (isHideTabBar) {
-                NSLog(@"%@",NSStringFromCGRect(view.frame));
-                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, [[UIScreen mainScreen]bounds].size.height)];
-                NSLog(@"%@",NSStringFromCGRect(view.frame));
-            }else {
-                NSLog(@"%@",NSStringFromCGRect(view.frame));
-                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width,[[UIScreen mainScreen]bounds].size.height-49)];
-            }
-        }
-    }
+    [self.tabBarController.tabBar setHidden:isHideTabBar];
+//    for(UIView *view in self.tabBarController.view.subviews)
+//    {
+//        if([view isKindOfClass:[UITabBar class]])
+//        {
+//            if (isHideTabBar) { //if hidden tabBar
+//                [view setFrame:CGRectMake(view.frame.origin.x,[[UIScreen mainScreen]bounds].size.height+2, view.frame.size.width, view.frame.size.height)];
+//            }else {
+//                NSLog(@"isHideTabBar %@",NSStringFromCGRect(view.frame));
+//                [view setFrame:CGRectMake(view.frame.origin.x, [[UIScreen mainScreen]bounds].size.height-49, view.frame.size.width, view.frame.size.height)];
+//            }
+//        }else
+//        {
+//            if (isHideTabBar) {
+//                NSLog(@"%@",NSStringFromCGRect(view.frame));
+//                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, [[UIScreen mainScreen]bounds].size.height)];
+//                NSLog(@"%@",NSStringFromCGRect(view.frame));
+//            }else {
+//                NSLog(@"%@",NSStringFromCGRect(view.frame));
+//                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width,[[UIScreen mainScreen]bounds].size.height-49)];
+//            }
+//        }
+//    }
 }
 
 //type ,0:没有数据，1：准备数据，2：完成数据，3：1、2都有
@@ -1661,5 +1667,22 @@
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     [picker dismissViewControllerAnimated:YES completion:nil];
+}
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+
+-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    CGRect editView_rect = self.editView.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        editView_rect.origin.y = 768-49-44-20;
+    }
+    else
+    {
+        editView_rect.origin.y = 1024-49-44-20;
+    }
+    [self.editView setFrame:editView_rect];
 }
 @end

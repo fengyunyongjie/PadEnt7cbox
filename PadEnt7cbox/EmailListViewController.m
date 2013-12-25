@@ -354,29 +354,30 @@ enum{
     {
         [appleDate.myTabBarVC.imageView setHidden:NO];
     }
-    //isHideTabBar=!isHideTabBar;
-    for(UIView *view in self.tabBarController.view.subviews)
-    {
-        if([view isKindOfClass:[UITabBar class]])
-        {
-            if (isHideTabBar) { //if hidden tabBar
-                [view setFrame:CGRectMake(view.frame.origin.x,[[UIScreen mainScreen]bounds].size.height+10, view.frame.size.width, view.frame.size.height)];
-            }else {
-                NSLog(@"isHideTabBar %@",NSStringFromCGRect(view.frame));
-                [view setFrame:CGRectMake(view.frame.origin.x, [[UIScreen mainScreen]bounds].size.height-49, view.frame.size.width, view.frame.size.height)];
-            }
-        }else
-        {
-            if (isHideTabBar) {
-                NSLog(@"%@",NSStringFromCGRect(view.frame));
-                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, [[UIScreen mainScreen]bounds].size.height)];
-                NSLog(@"%@",NSStringFromCGRect(view.frame));
-            }else {
-                NSLog(@"%@",NSStringFromCGRect(view.frame));
-                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width,[[UIScreen mainScreen]bounds].size.height-49)];
-            }
-        }
-    }
+    [self.tabBarController.tabBar setHidden:isHideTabBar];
+//    //isHideTabBar=!isHideTabBar;
+//    for(UIView *view in self.tabBarController.view.subviews)
+//    {
+//        if([view isKindOfClass:[UITabBar class]])
+//        {
+//            if (isHideTabBar) { //if hidden tabBar
+//                [view setFrame:CGRectMake(view.frame.origin.x,[[UIScreen mainScreen]bounds].size.height+10, view.frame.size.width, view.frame.size.height)];
+//            }else {
+//                NSLog(@"isHideTabBar %@",NSStringFromCGRect(view.frame));
+//                [view setFrame:CGRectMake(view.frame.origin.x, [[UIScreen mainScreen]bounds].size.height-49, view.frame.size.width, view.frame.size.height)];
+//            }
+//        }else
+//        {
+//            if (isHideTabBar) {
+//                NSLog(@"%@",NSStringFromCGRect(view.frame));
+//                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, [[UIScreen mainScreen]bounds].size.height)];
+//                NSLog(@"%@",NSStringFromCGRect(view.frame));
+//            }else {
+//                NSLog(@"%@",NSStringFromCGRect(view.frame));
+//                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width,[[UIScreen mainScreen]bounds].size.height-49)];
+//            }
+//        }
+//    }
     
     //隐藏返回按钮
     if (isHideTabBar) {

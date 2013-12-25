@@ -83,6 +83,10 @@ typedef enum{
 }
 - (void)viewWillAppear:(BOOL)animated
 {
+    if(self.tabBarController.tabBar.hidden)
+    {
+        [self.tabBarController.tabBar setHidden:NO];
+    }
     if (!self.tableView.isEditing) {
         [self updateFileList];
     }
@@ -338,7 +342,7 @@ typedef enum{
 
 -(void)changeUpload:(NSMutableOrderedSet *)array_ changeDeviceName:(NSString *)device_name changeFileId:(NSString *)f_id changeSpaceId:(NSString *)s_id
 {
-    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [delegate.uploadmanage changeUpload:array_ changeDeviceName:device_name changeFileId:f_id changeSpaceId:s_id];
 }
 -(NSArray *)selectedIndexPaths
@@ -439,52 +443,17 @@ typedef enum{
         [appleDate.myTabBarVC.imageView setHidden:NO];
     }
     //isHideTabBar=!isHideTabBar;
-    
-    NSLog(@"当前TabBar的坐标:%@",NSStringFromCGRect(self.tabBarController.tabBar.frame));
-    
-    for(UIView *view in self.tabBarController.view.subviews)
-    {
-        if([view isKindOfClass:[UITabBar class]])
-        {
-            if (isHideTabBar) { //if hidden tabBar
-                [view setFrame:CGRectMake(view.frame.origin.x,[[UIScreen mainScreen]bounds].size.height+10, view.frame.size.width, view.frame.size.height)];
-            }else {
-                [view setFrame:CGRectMake(view.frame.origin.x, [[UIScreen mainScreen]bounds].size.height-49, view.frame.size.width, view.frame.size.height)];
-            }
-            NSLog(@"改变后的TabBar坐标:%@",NSStringFromCGRect(self.tabBarController.tabBar.frame));
-        }else
-        {
-            if (isHideTabBar) {
-                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, [[UIScreen mainScreen]bounds].size.height)];
-            }else {
-                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width,[[UIScreen mainScreen]bounds].size.height-49)];
-            }
-            NSLog(@"改变后的其他坐标:%@",NSStringFromCGRect(self.tabBarController.tabBar.frame));
-        }
-    }
+    [self.tabBarController.tabBar setHidden:isHideTabBar];
     
     //隐藏返回按钮
     if (isHideTabBar) {
-//        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-//            [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)]];
-//            [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAllCell:)]];
-//        }else
-//        {
-//            UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(0,0,71,33)];
-//            [button setTitle:@"全选" forState:UIControlStateNormal];
-//            button.titleLabel.font=[UIFont systemFontOfSize:12];
-//            [button addTarget:self action:@selector(selectAllCell:) forControlEvents:UIControlEventTouchUpInside];
-//            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-//            
-//            UIButton *leftButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,71,33)];
-//            [leftButton setTitle:@"取消" forState:UIControlStateNormal];
-//            leftButton.titleLabel.font=[UIFont systemFontOfSize:12];
-//            [leftButton addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
-//            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
-//        }
             [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)]];
             [self.navigationItem setRightBarButtonItems:@[]];
             [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAllCell:)]];
+        if(self.moreEditBar)
+        {
+            [self.moreEditBar setHidden:NO];
+        }
     }else
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
@@ -494,6 +463,10 @@ typedef enum{
             [self.navigationItem setLeftBarButtonItem:self.backBarButtonItem];
         }
         [self.navigationItem setRightBarButtonItems:self.rightItems];
+        if(self.moreEditBar)
+        {
+            [self.moreEditBar setHidden:YES];
+        }
     }
     
     if (!self.moreEditBar) {
@@ -578,6 +551,8 @@ typedef enum{
         }
         
     }
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 -(void)sortAction:(id)sender
 {
@@ -823,12 +798,13 @@ typedef enum{
     {
         flvc.targetsArray=@[fid];
     }
-    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flvc];
-    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
-    //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
-    [nav.navigationBar setTintColor:[UIColor whiteColor]];
-    [self presentViewController:nav animated:YES completion:nil];
+//    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flvc];
+//    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+//    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+//    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.tabBarController.tabBar setHidden:YES];
+    [self.navigationController pushViewController:flvc animated:YES];
+//    [self presentViewController:nav animated:YES completion:nil];
 }
 -(void)toDownload:(id)sender
 {
@@ -2166,4 +2142,25 @@ typedef enum{
 {
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+
+-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    CGRect editView_rect = self.moreEditBar.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        editView_rect.origin.y = 768-49-44-20;
+    }
+    else
+    {
+        editView_rect.origin.y = 1024-49-44-20;
+    }
+    [self.moreEditBar setFrame:editView_rect];
+    
+    
+}
+
 @end

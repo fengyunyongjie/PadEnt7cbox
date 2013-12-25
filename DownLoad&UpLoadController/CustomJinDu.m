@@ -9,6 +9,9 @@
 #import "CustomJinDu.h"
 
 #import <QuartzCore/QuartzCore.h>
+#define BWidth 1
+#define RWidth 1
+#define BX 1
 
 @implementation CustomJinDu
 @synthesize backColor,currColor,currFloat,customSize,backLabel,currLabel;
@@ -19,11 +22,11 @@
     if (self) {
         CGRect backLabelRect = CGRectMake(0, 0, frame.size.width, frame.size.height);
         backLabel = [[UILabel alloc] initWithFrame:backLabelRect];
-        backLabel.layer.borderWidth = 0.5;
+        backLabel.layer.borderWidth = BWidth;
         backLabel.layer.borderColor = [[UIColor blackColor] CGColor];
         [backLabel setTextColor:[UIColor colorWithRed:180.0/255.0 green:181.0/255.0 blue:181.0/255.0 alpha:1]];
         [backLabel setFont:[UIFont systemFontOfSize:12]];
-        CGRect currLabelRect = CGRectMake(0.1f, 0.1f, 0, frame.size.height-0.2f);
+        CGRect currLabelRect = CGRectMake(BX, BX, 0, frame.size.height-RWidth);
         [self addSubview:backLabel];
         
         currLabel = [[UIImageView alloc] initWithFrame:currLabelRect];
@@ -61,15 +64,15 @@
     [backLabel setFrame:backLabelRect];
     [backLabel setHidden:NO];
     [backLabel setText:nil];
-    backLabel.layer.borderWidth = 0.5;
+    backLabel.layer.borderWidth = BWidth;
     backLabel.layer.borderColor = [[UIColor blackColor] CGColor];
     [currLabel setHidden:NO];
-    float width = currFloat_*self.frame.size.width-0.2;
-    if(width>(self.frame.size.width-0.2))
+    float width = currFloat_*self.frame.size.width-RWidth;
+    if(width>(self.frame.size.width-RWidth))
     {
-        width = self.frame.size.width-0.2;
+        width = self.frame.size.width-RWidth;
     }
-    CGRect currLabelRect = CGRectMake(0.1f, 0.1f, width, self.frame.size.height-0.2);
+    CGRect currLabelRect = CGRectMake(BX, BX, width, self.frame.size.height-RWidth);
     [currLabel setFrame:currLabelRect];
 }
 

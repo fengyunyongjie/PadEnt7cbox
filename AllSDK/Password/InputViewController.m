@@ -38,7 +38,7 @@
     self.localView = [[UIImageView alloc] initWithFrame:app.window.frame];
     [app.window setBackgroundColor:[UIColor blackColor]];
     [self.localView setImage:[self getImageFromView:bg]];
-    [self.localView setAlpha:0.3];
+    [self.localView setAlpha:0.6];
     [self.view addSubview:self.localView];
 }
 
@@ -64,49 +64,12 @@
     [self addBackGroundImage:bgView];
     self.one_password = @"";
     self.second_password = @"";
-    int x = self.view.frame.size.width/2-320/2;
-    int y = self.view.frame.size.height/2-480/2;
-    NSLog(@"frame:%@",NSStringFromCGRect(self.view.frame));
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        x = self.view.frame.size.height/2-320/2;
-        y = self.view.frame.size.width/2-480/2;
-    }
-    else
-    {
-        x = self.view.frame.size.width/2-320/2;
-        y = self.view.frame.size.height/2-480/2;
-    }
     
-    CGRect localRect = self.localView.frame;
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(90));
-        localRect.origin.x = 0;
-        localRect.origin.y = 0;
-        localRect.size.width = self.view.frame.size.height;
-        localRect.size.height = self.view.frame.size.width;
-    }
-    else if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
-    {
-        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-90));
-        localRect.origin.x = 0;
-        localRect.origin.y = 0;
-        localRect.size.width = self.view.frame.size.height;
-        localRect.size.height = self.view.frame.size.width;
-    }
-    else if(toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
-    {
-        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-180));
-        localRect.origin.x = 0;
-        localRect.origin.y = 0;
-        localRect.size.width = self.view.frame.size.width;
-        localRect.size.height = self.view.frame.size.height;
-    }
-    [self.localView setFrame:localRect];
-    
-    CGRect view_rect = CGRectMake(x, y, 320, 480);
+    CGRect view_rect = CGRectMake(0, 0, 320, 480);
     self.password_view = [[UIView alloc] initWithFrame:view_rect];
+    
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    
     [self.password_view setBackgroundColor:[UIColor whiteColor]];
     CGRect top_rect = CGRectMake(0, 0, 320, 44);
 	self.top_view = [[UIImageView alloc] initWithFrame:top_rect];
@@ -827,6 +790,53 @@
 //>ios 6.0
 - (BOOL)shouldAutorotate{
     return NO;
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+
+-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    CGRect password_rect = self.password_view.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        password_rect.origin.x = self.view.frame.size.height/2-320/2;
+        password_rect.origin.y = self.view.frame.size.width/2-480/2;
+    }
+    else
+    {
+        password_rect.origin.x = self.view.frame.size.width/2-320/2;
+        password_rect.origin.y = self.view.frame.size.height/2-480/2;
+    }
+    [self.password_view setFrame:password_rect];
+    
+    CGRect localRect = self.localView.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(90));
+        localRect.origin.x = 0;
+        localRect.origin.y = 0;
+        localRect.size.width = self.view.frame.size.height;
+        localRect.size.height = self.view.frame.size.width;
+    }
+    else if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
+    {
+        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-90));
+        localRect.origin.x = 0;
+        localRect.origin.y = 0;
+        localRect.size.width = self.view.frame.size.height;
+        localRect.size.height = self.view.frame.size.width;
+    }
+    else if(toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
+    {
+        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-180));
+        localRect.origin.x = 0;
+        localRect.origin.y = 0;
+        localRect.size.width = self.view.frame.size.width;
+        localRect.size.height = self.view.frame.size.height;
+    }
+    [self.localView setFrame:localRect];
 }
 
 @end

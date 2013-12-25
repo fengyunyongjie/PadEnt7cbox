@@ -32,6 +32,7 @@
 @property(strong,nonatomic) NSMutableArray *selectAllIds;
 @property(strong,nonatomic) NSMutableDictionary *imageDownloadsInProgress;
 @property(strong,nonatomic) UILabel *notingLabel;
+@property(strong,nonatomic) UIButton *btn_del;
 
 -(void)isSelectedLeft:(BOOL)bl;
 -(void)updateCount:(NSString *)upload_count downCount:(NSString *)down_count;

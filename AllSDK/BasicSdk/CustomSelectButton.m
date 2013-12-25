@@ -7,6 +7,7 @@
 //
 
 #import "CustomSelectButton.h"
+#define CustomHeigth self.frame.size.width/2
 
 @implementation CustomSelectButton
 @synthesize left_backimage,left_button,left_botton_image,right_backimage,right_button,right_botton_image,delegate,boderImageView;
@@ -34,7 +35,7 @@
         [self.right_button.titleLabel setFont:[UIFont systemFontOfSize:16]];
         [self.right_botton_image setHidden:YES];
         [UIView animateWithDuration:0.3 animations:^{
-            CGRect boderRect = CGRectMake(30, self.frame.size.height-5, 100, 5);
+            CGRect boderRect = CGRectMake(0, self.frame.size.height-5, CustomHeigth, 5);
             [self.boderImageView setFrame:boderRect];
         }];
     }
@@ -45,7 +46,7 @@
         [self.right_button.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
         [self.right_botton_image setHidden:NO];
         [UIView animateWithDuration:0.3 animations:^{
-            CGRect boderRect = CGRectMake(190, self.frame.size.height-5, 100, 5);
+            CGRect boderRect = CGRectMake(CustomHeigth, self.frame.size.height-5, CustomHeigth, 5);
             [self.boderImageView setFrame:boderRect];
         }];
     }
@@ -91,7 +92,7 @@
         [self.right_botton_image setHidden:YES];
         [self addSubview:self.right_botton_image];
         
-        CGRect boderRect = CGRectMake(30, rect.size.height-5, 100, 5);
+        CGRect boderRect = CGRectMake(0, rect.size.height-5, CustomHeigth, 5);
         self.boderImageView = [[UIImageView alloc] initWithFrame:boderRect];
         //[self.boderImageView setBackgroundColor:[UIColor colorWithRed:54.0/255.0 green:116.0/255.0 blue:176.0/255.0 alpha:1.0]];
         self.boderImageView.backgroundColor=boderColor;

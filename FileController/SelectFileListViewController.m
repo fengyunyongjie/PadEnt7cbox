@@ -48,28 +48,8 @@
 }
 - (void)viewDidAppear:(BOOL)animated
 {
-    CGRect r=self.view.frame;
-    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
-    self.view.frame=r;
-    
-    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-    
-    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, self.view.frame.size.height-49);
-    }else
-    {
-        self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, self.view.frame.size.height-49-64);
-    }
-    if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.toolbar.frame=CGRectMake(0, tabbar.view.frame.size.height-64-49, 320, 49);
-    }else
-    {
-        self.toolbar.frame=CGRectMake(0, (tabbar.view.frame.size.height-49)-self.view.frame.origin.y, 320, 49);
-    }
-    
-    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
-    NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 - (void)viewDidLoad
 {
@@ -488,4 +468,46 @@
     }
 
 }
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+
+-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49);
+        }else
+        {
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49-64);
+        }
+        if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.toolbar.frame=CGRectMake(0, 768-64-49, 320, 49);
+        }else
+        {
+            self.toolbar.frame=CGRectMake(0, (768-49)-self.view.frame.origin.y, 320, 49);
+        }
+    }
+    else
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49);
+        }else
+        {
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49-64);
+        }
+        if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.toolbar.frame=CGRectMake(0, 1024-64-49, 320, 49);
+        }else
+        {
+            self.toolbar.frame=CGRectMake(0, (1024-49)-self.view.frame.origin.y, 320, 49);
+        }
+    }
+}
+
 @end

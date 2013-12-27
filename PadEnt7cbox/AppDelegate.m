@@ -75,7 +75,14 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    
+    if(self.downmange.isStart || self.uploadmanage.isStart)
+    {
+        [musicPlayer startPlay];
+    }
+    else
+    {
+        [musicPlayer stopPlay];
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application

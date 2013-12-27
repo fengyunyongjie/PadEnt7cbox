@@ -11,7 +11,6 @@
 #import "AppDelegate.h"
 #import "DownList.h"
 #import "SCBSession.h"
-#import "PhotoLookViewController.h"
 
 #define ACTNUMBER 400000
 #define ScrollViewTag 100000
@@ -68,8 +67,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    [self.navigationController.navigationItem setLeftBarButtonItem:nil];
     
     if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
     {
@@ -206,9 +203,8 @@
     
     if(isHaveDelete)
     {
-        int width = (currWidth-36*3)/2;
-        
-        CGRect leftRect = CGRectMake(36, 5, width, 33);
+        int width = 50;
+        CGRect leftRect = CGRectMake(0, 5, width, 33);
         self.leftButton = [[UIButton alloc] initWithFrame:leftRect];
         [self.leftButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
         [self.leftButton.titleLabel setTextColor:[UIColor blackColor]];
@@ -216,10 +212,12 @@
         [self.leftButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.leftButton addTarget:self action:@selector(clipClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.leftButton setBackgroundColor:[UIColor clearColor]];
-        [self.bottonToolBar addSubview:self.leftButton];
         self.leftButton.showsTouchWhenHighlighted = YES;
+//        [self.bottonToolBar addSubview:self.leftButton];
+        UIBarButtonItem *leftItem=[[UIBarButtonItem alloc] initWithCustomView:self.leftButton];
+        self.navigationItem.leftBarButtonItem = leftItem;
         
-        CGRect rightRect = CGRectMake(width*1+36*2, 5, width, 33);
+        CGRect rightRect = CGRectMake(0, 5, width, 33);
         self.rightButton = [[UIButton alloc] initWithFrame:rightRect];
         [self.rightButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
         [self.rightButton.titleLabel setTextColor:[UIColor blackColor]];
@@ -228,7 +226,9 @@
         [self.rightButton addTarget:self action:@selector(deleteClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.rightButton setBackgroundColor:[UIColor clearColor]];
         self.rightButton.showsTouchWhenHighlighted = YES;
-        [self.bottonToolBar addSubview:self.rightButton];
+//        [self.bottonToolBar addSubview:self.rightButton];
+        UIBarButtonItem *rightItem=[[UIBarButtonItem alloc] initWithCustomView:self.rightButton];
+        self.navigationItem.rightBarButtonItem = rightItem;
     }
     else
     {
@@ -242,8 +242,10 @@
         [self.leftButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.leftButton addTarget:self action:@selector(clipClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.leftButton setBackgroundColor:[UIColor clearColor]];
-        [self.bottonToolBar addSubview:self.leftButton];
         self.leftButton.showsTouchWhenHighlighted = YES;
+//        [self.bottonToolBar addSubview:self.leftButton];
+        UIBarButtonItem *leftItem=[[UIBarButtonItem alloc] initWithCustomView:self.leftButton];
+        self.navigationItem.leftBarButtonItem = leftItem;
     }
     [self.view addSubview:self.bottonToolBar];
     
@@ -260,7 +262,7 @@
     {
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
     }
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
     for(int i=0;i<[downArray count];i++)
     {
         LookDownFile *down = [downArray objectAtIndex:i];
@@ -745,8 +747,12 @@
 //        [self.topToolBar setHidden:YES];
 //        [self.bottonToolBar setHidden:YES];
 //    }
+    
+    CGFloat x = imageScrollView.contentOffset.x;
+    self.page = x/currWidth;
     PhotoLookViewController *look = [[PhotoLookViewController alloc] init];
-    [look setCurrPage:currPage];
+    look.photoDelegate = self;
+    [look setCurrPage:self.page];
     [look setTableArray:tableArray];
     look.isHaveDelete = self.isHaveDelete;
     [self presentViewController:look animated:NO completion:nil];
@@ -770,7 +776,7 @@
 #pragma mark 收藏按钮事件
 -(void)clipClicked:(id)sender
 {
-    int page = [[[self.topTitleLabel.text componentsSeparatedByString:@"/"] objectAtIndex:0] intValue]-1;
+    int page = self.page;
     DownList *demo = nil;
     if([[tableArray objectAtIndex:page] isKindOfClass:[DownList class]])
     {
@@ -812,7 +818,7 @@
 {
     if(actionSheet.tag == kActionSheetTagShare)
     {
-        int page = [[[self.topTitleLabel.text componentsSeparatedByString:@"/"] objectAtIndex:0] intValue]-1;
+        int page = self.page;
         DownList *demo = nil;
         if([[tableArray objectAtIndex:page] isKindOfClass:[DownList class]])
         {
@@ -844,8 +850,8 @@
     {
         if(buttonIndex == 0)
         {
-            int page = [[[self.topTitleLabel.text componentsSeparatedByString:@"/"] objectAtIndex:0] intValue]-1;
-            deletePage = page;
+            int page = self.page;
+            deletePage = self.page;
             DownList *demo = nil;
             if([[tableArray objectAtIndex:page] isKindOfClass:[DownList class]])
             {
@@ -1272,11 +1278,6 @@
         [activityDic removeAllObjects];
     }
     
-    if([tableArray count]==0)
-    {
-        [self dismissModalViewControllerAnimated:YES];
-    }
-    
     self.offset = 0.0;
     scale_ = 1.0;
     if(deletePage==[tableArray count])
@@ -1374,7 +1375,6 @@
     
     imageScrollView.contentSize = CGSizeMake(currWidth*[tableArray count], currHeight);
     [imageScrollView setContentOffset:CGPointMake(currWidth*currPage, 0) animated:NO];
-    [self handleOnceTap:nil];
     
     hud.labelText=@"删除成功";
     hud.mode=MBProgressHUDModeText;
@@ -1662,6 +1662,18 @@
             ScollviewWidth = 768-320;
         }
     }
+}
+
+#pragma mark PhotoLookViewDelegate ----------
+
+-(void)updateCurrpage:(int)_currPage
+{
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    currWidth = ScollviewWidth;
+    currHeight = ScollviewHeight;
+    currPage = _currPage;
+    [self isScapeLeftOrRight:self.isScape];
 }
 
 @end

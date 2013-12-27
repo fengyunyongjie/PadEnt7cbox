@@ -32,6 +32,7 @@
 @synthesize linkManager;
 @synthesize selected_id;
 @synthesize hud;
+@synthesize photoDelegate;
 
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -261,7 +262,7 @@
     {
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
     }
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:NO completion:nil];
     for(int i=0;i<[downArray count];i++)
     {
         LookDownFile *down = [downArray objectAtIndex:i];
@@ -731,22 +732,25 @@
 }
 
 -(void)handleOnceTap:(UIGestureRecognizer *)gesture{
-    //单击头部和底部出现
-    if(self.bottonToolBar.hidden)
-    {
-        CGFloat x = imageScrollView.contentOffset.x;
-        self.page = x/currWidth;
-        currPage = self.page;
-        self.topTitleLabel.text = [NSString stringWithFormat:@"%i/%i",self.page+1,[self.tableArray count]];
-        [self.topToolBar setHidden:NO];
-        [self.bottonToolBar setHidden:NO];
-    }
-    else
-    {
-        [self.topToolBar setHidden:YES];
-        [self.bottonToolBar setHidden:YES];
-    }
-    
+//    //单击头部和底部出现
+//    if(self.bottonToolBar.hidden)
+//    {
+//        CGFloat x = imageScrollView.contentOffset.x;
+//        self.page = x/currWidth;
+//        currPage = self.page;
+//        self.topTitleLabel.text = [NSString stringWithFormat:@"%i/%i",self.page+1,[self.tableArray count]];
+//        [self.topToolBar setHidden:NO];
+//        [self.bottonToolBar setHidden:NO];
+//    }
+//    else
+//    {
+//        [self.topToolBar setHidden:YES];
+//        [self.bottonToolBar setHidden:YES];
+//    }
+    CGFloat x = imageScrollView.contentOffset.x;
+    self.page = x/currWidth;
+    [self.photoDelegate updateCurrpage:self.page];
+    [self backClick];
 }
 
 #pragma mark - Utility methods

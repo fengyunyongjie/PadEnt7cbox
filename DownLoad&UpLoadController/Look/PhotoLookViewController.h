@@ -13,6 +13,12 @@
 #import "LookDownFile.h"
 #import "SCBFileManager.h"
 
+@protocol PhotoLookViewDelegate <NSObject>
+
+-(void)updateCurrpage:(int)_currPage;
+
+@end
+
 @interface PhotoLookViewController : UIViewController<UIScrollViewDelegate,UIActionSheetDelegate,SCBLinkManagerDelegate,MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate,UIActionSheetDelegate,LookDownDelegate,SCBFileManagerDelegate>{
     /*
      缩放代码
@@ -83,7 +89,8 @@
 @property(nonatomic,retain) SCBLinkManager *linkManager;
 @property(nonatomic,retain) NSString *selected_id;
 @property(nonatomic,retain) MBProgressHUD *hud;
-@property (strong,nonatomic) SCBFileManager *fm;
+@property(strong,nonatomic) SCBFileManager *fm;
+@property(nonatomic,strong) id<PhotoLookViewDelegate> photoDelegate;
 
 -(CGRect)zoomRectForScale:(float)scale inView:(UIScrollView*)scrollView withCenter:(CGPoint)center;
 

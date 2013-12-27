@@ -49,51 +49,51 @@
     [self.openItem setEnabled:NO];
     self.isFinished=NO;
 	// Do any additional setup after loading the view.
-    //顶视图
-    float topHeigth = 20;
-    if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
-    {
-        topHeigth = 0;
-    }
-    UIView *nbar=[[UIView alloc] initWithFrame:CGRectMake(0, topHeigth, self.view.frame.size.width, 44)];
-    UIImageView *niv=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Bk_Title.png"]];
-    niv.frame=nbar.frame;
-    [nbar addSubview:niv];
-    [self.view addSubview: nbar];
+//    //顶视图
+//    float topHeigth = 20;
+//    if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
+//    {
+//        topHeigth = 0;
+//    }
+//    UIView *nbar=[[UIView alloc] initWithFrame:CGRectMake(0, topHeigth, self.view.frame.size.width, 44)];
+//    UIImageView *niv=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Bk_Title.png"]];
+//    niv.frame=nbar.frame;
+//    [nbar addSubview:niv];
+//    [self.view addSubview: nbar];
 //    //标题按钮
 //    UIButton *btnTitle=[UIButton buttonWithType:UIButtonTypeCustom];
 //    btnTitle.frame=CGRectMake(60, 0, 200, 44);
 //    [btnTitle setBackgroundImage:[UIImage imageNamed:@"Bt_Title.png"] forState:UIControlStateNormal];
 //    [btnTitle addTarget:self action:@selector(showTitleMenu:) forControlEvents:UIControlEventTouchUpInside];
 //    [nbar addSubview:btnTitle];
-    //标题
-    self.titleLabel=[[UILabel alloc] init];
-    self.titleLabel.text=self.title;
-    self.titleLabel.font=[UIFont boldSystemFontOfSize:18];
-    self.titleLabel.textAlignment=UITextAlignmentCenter;
-    self.titleLabel.backgroundColor=[UIColor clearColor];
-    self.titleLabel.frame=CGRectMake(80, topHeigth, 160, 44);
-    [nbar addSubview:self.titleLabel];
-    //把色值转换成图片
-    CGRect rect_image = CGRectMake(0, 0, ChangeTabWidth, 44);
-    UIGraphicsBeginImageContext(rect_image.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context,
-                                   [hilighted_color CGColor]);
-    CGContextFillRect(context, rect_image);
-    UIImage * imge = [[UIImage alloc] init];
-    imge = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    //返回按钮
-    if(1)
-    {
-        UIImage *back_image = [UIImage imageNamed:@"Bt_Back.png"];
-        UIButton *back_button = [[UIButton alloc] initWithFrame:CGRectMake(RightButtonBoderWidth, topHeigth+(44-back_image.size.height/2)/2, back_image.size.width/2, back_image.size.height/2)];
-        [back_button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-        [back_button setBackgroundImage:imge forState:UIControlStateHighlighted];
-        [back_button setImage:back_image forState:UIControlStateNormal];
-        [nbar addSubview:back_button];
-    }
+//    //标题
+//    self.titleLabel=[[UILabel alloc] init];
+//    self.titleLabel.text=self.title;
+//    self.titleLabel.font=[UIFont boldSystemFontOfSize:18];
+//    self.titleLabel.textAlignment=UITextAlignmentCenter;
+//    self.titleLabel.backgroundColor=[UIColor clearColor];
+//    self.titleLabel.frame=CGRectMake(80, topHeigth, 160, 44);
+//    [nbar addSubview:self.titleLabel];
+//    //把色值转换成图片
+//    CGRect rect_image = CGRectMake(0, 0, ChangeTabWidth, 44);
+//    UIGraphicsBeginImageContext(rect_image.size);
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//    CGContextSetFillColorWithColor(context,
+//                                   [hilighted_color CGColor]);
+//    CGContextFillRect(context, rect_image);
+//    UIImage * imge = [[UIImage alloc] init];
+//    imge = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    //返回按钮
+//    if(1)
+//    {
+//        UIImage *back_image = [UIImage imageNamed:@"Bt_Back.png"];
+//        UIButton *back_button = [[UIButton alloc] initWithFrame:CGRectMake(RightButtonBoderWidth, topHeigth+(44-back_image.size.height/2)/2, back_image.size.width/2, back_image.size.height/2)];
+//        [back_button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+//        [back_button setBackgroundImage:imge forState:UIControlStateHighlighted];
+//        [back_button setImage:back_image forState:UIControlStateNormal];
+//        [nbar addSubview:back_button];
+//    }
 //    //更多按钮
 //    self.more_button = [[UIButton alloc] init];
 //    UIImage *moreImage = [UIImage imageNamed:@"Bt_More.png"];
@@ -111,19 +111,24 @@
 {
     NSString *file_id=[self.dataDic objectForKey:@"fid"];
     NSString *f_name=[self.dataDic objectForKey:@"fname"];
+    NSInteger fileSize = [[self.dataDic objectForKey:@"fsize"] integerValue];
     NSString *documentDir = [YNFunctions getFMCachePath];
     NSArray *array=[f_name componentsSeparatedByString:@"/"];
     NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
     [NSString CreatePath:createPath];
     self.savePath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
     if ([[NSFileManager defaultManager] fileExistsAtPath:self.savePath]) {
-        [self.downloadProgress setHidden:YES];
-        [self.downloadLabel setText:@"下载完成"];
-        [self.downloadLabel setHidden:NO];
-        [self.downloadBtn setHidden:YES];
-        [self.alertLabel setHidden:YES];
-        [self.openItem setEnabled:YES];
-        [self performSelector:@selector(showNewView) withObject:self afterDelay:1];
+        NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:self.savePath];
+        if(fileSize==[[handle availableData] length])
+        {
+            [self.downloadProgress setHidden:YES];
+            [self.downloadLabel setText:@"下载完成"];
+            [self.downloadLabel setHidden:NO];
+            [self.downloadBtn setHidden:YES];
+            [self.alertLabel setHidden:YES];
+            [self.openItem setEnabled:YES];
+            [self performSelector:@selector(showNewView) withObject:self afterDelay:1];
+        }
     }
 }
 
@@ -160,7 +165,8 @@
     [self.downloadProgress setHidden:NO];
     [self.downloadLabel setHidden:NO];
     [self.downloadProgress setProgress:0.01f];
-    [self.downloadLabel setText:@"正在下载...(0M/29M)"];
+    NSString *fileSize = [self.dataDic objectForKey:@"filesize"];
+    [self.downloadLabel setText:[NSString stringWithFormat:@"正在下载...(0M/%@)",fileSize]];
     [self toDownloading];
 }
 -(void)toDownloading
@@ -180,12 +186,11 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
+
 -(void)back:(id)sender
 {
     [self.downImage cancelDownload];
-    [self dismissModalViewControllerAnimated:YES];
 }
 #pragma mark - SCBDownloaderDelegate Methods
 -(void)appImageDidLoad:(NSInteger)indexTag urlImage:(NSString *)path index:(NSIndexPath *)indexPath

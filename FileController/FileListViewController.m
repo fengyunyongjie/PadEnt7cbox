@@ -1446,7 +1446,11 @@ typedef enum{
                         UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
                         if([detailView isKindOfClass:[DetailViewController class]])
                         {
-                            [detailView.navigationController pushViewController:look animated:NO];
+                            DetailViewController *viewCon = (DetailViewController *)detailView;
+                            [viewCon removeAllView];
+                            [viewCon showPhotoView:look.isHaveDelete];
+                            [viewCon.view addSubview:look.view];
+                            [viewCon addChildViewController:look];
                         }
                     }
                 }
@@ -1455,28 +1459,53 @@ typedef enum{
             {
                 NSString *file_id=[dic objectForKey:@"fid"];
                 NSString *f_name=[dic objectForKey:@"fname"];
+                NSInteger fileSize = [[dic objectForKey:@"fsize"] integerValue];
                 NSString *documentDir = [YNFunctions getFMCachePath];
                 NSArray *array=[f_name componentsSeparatedByString:@"/"];
                 NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
                 [NSString CreatePath:createPath];
                 NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+                
                 if ([[NSFileManager defaultManager] fileExistsAtPath:savedPath]) {
-                    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
-                    browser.dataSource=browser;
-                    browser.delegate=browser;
-                    browser.currentPreviewItemIndex=0;
-                    browser.title=f_name;
-                    browser.filePath=savedPath;
-                    browser.fileName=f_name;
-                    [self presentViewController:browser animated:YES completion:nil];
-                }else
-                {
-                    OtherBrowserViewController *otherBrowser=[[OtherBrowserViewController alloc] initWithNibName:@"OtherBrowser" bundle:nil];
-                    otherBrowser.dataDic=dic;
-                    NSString *f_name=[dic objectForKey:@"fname"];
-                    otherBrowser.title=f_name;
-                    [self presentViewController:otherBrowser animated:YES completion:nil];
+                    NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:savedPath];
+                    if(fileSize==[[handle availableData] length])
+                    {
+                        QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
+                        browser.dataSource=browser;
+                        browser.delegate=browser;
+                        browser.currentPreviewItemIndex=0;
+                        browser.title=f_name;
+                        browser.filePath=savedPath;
+                        browser.fileName=f_name;
+                        
+                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                        if([detailView isKindOfClass:[DetailViewController class]])
+                        {
+                            DetailViewController *viewCon = (DetailViewController *)detailView;
+                            [viewCon removeAllView];
+                        }
+                        [self presentViewController:browser animated:YES completion:nil];
+                        return;
+                    }
                 }
+                OtherBrowserViewController *otherBrowser=[[OtherBrowserViewController alloc] initWithNibName:@"OtherBrowser" bundle:nil];
+                otherBrowser.dataDic=dic;
+                otherBrowser.title=f_name;
+                
+                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+                UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                if([detailView isKindOfClass:[DetailViewController class]])
+                {
+                    DetailViewController *viewCon = (DetailViewController *)detailView;
+                    [viewCon removeAllView];
+                    [viewCon showOtherView:otherBrowser.title];
+                    [viewCon.view addSubview:otherBrowser.view];
+                    [viewCon addChildViewController:otherBrowser];
+                }
+//                  [self presentViewController:otherBrowser animated:YES completion:nil];
             }
         }
     }

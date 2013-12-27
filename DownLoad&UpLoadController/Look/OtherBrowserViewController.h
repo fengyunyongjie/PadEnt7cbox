@@ -26,4 +26,5 @@
 -(IBAction)openWithOthersApp:(id)sender;
 -(IBAction)shared:(id)sender;
 -(IBAction)download:(id)sender;
+-(void)back:(id)sender;
 @end

@@ -12,8 +12,9 @@
 #import <MessageUI/MessageUI.h>
 #import "LookDownFile.h"
 #import "SCBFileManager.h"
+#import "PhotoLookViewController.h"
 
-@interface PartitionViewController : UIViewController<UIScrollViewDelegate,UIActionSheetDelegate,SCBLinkManagerDelegate,MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate,UIActionSheetDelegate,LookDownDelegate,SCBFileManagerDelegate>{
+@interface PartitionViewController : UIViewController<UIScrollViewDelegate,UIActionSheetDelegate,SCBLinkManagerDelegate,MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate,UIActionSheetDelegate,LookDownDelegate,SCBFileManagerDelegate,PhotoLookViewDelegate>{
     /*
      缩放代码
      */
@@ -87,5 +88,8 @@
 
 -(CGRect)zoomRectForScale:(float)scale inView:(UIScrollView*)scrollView withCenter:(CGPoint)center;
 
+-(void)clipClicked:(id)sender;
+
+-(void)deleteClicked:(id)sender;
 
 @end

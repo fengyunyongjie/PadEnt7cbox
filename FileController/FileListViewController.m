@@ -25,6 +25,9 @@
 #import "MyTabBarViewController.h"
 #import "YNNavigationController.h"
 #import "SharedEmailViewController.h"
+#import "DetailViewController.h"
+#import "MySplitViewController.h"
+#import "PartitionViewController.h"
 
 #define KCOVERTag 888
 
@@ -1429,7 +1432,7 @@ typedef enum{
                     }
                     if([tableArray count]>0)
                     {
-                        PhotoLookViewController *look = [[PhotoLookViewController alloc] init];
+                        PartitionViewController *look = [[PartitionViewController alloc] init];
                         [look setCurrPage:row];
                         [look setTableArray:tableArray];
                         if ([self.roletype isEqualToString:@"9999"] || [self.roletype isEqualToString:@"0"]) {
@@ -1438,7 +1441,13 @@ typedef enum{
                         {
                             look.isHaveDelete = NO;
                         }
-                        [self presentViewController:look animated:YES completion:nil];
+                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                        if([detailView isKindOfClass:[DetailViewController class]])
+                        {
+                            [detailView.navigationController pushViewController:look animated:NO];
+                        }
                     }
                 }
             }

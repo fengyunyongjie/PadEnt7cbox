@@ -394,7 +394,7 @@
     assetCollectionViewController.assetsGroup = assetsGroup;
     assetCollectionViewController.filterType = self.filterType;
     assetCollectionViewController.showsCancelButton = self.showsCancelButton;
-    assetCollectionViewController.fullScreenLayoutEnabled = self.fullScreenLayoutEnabled;
+    assetCollectionViewController.fullScreenLayoutEnabled = NO;
     assetCollectionViewController.showsHeaderButton = showsHeaderButton;
     assetCollectionViewController.showsFooterDescription = showsFooterDescription;
     

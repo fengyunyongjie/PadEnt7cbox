@@ -54,22 +54,28 @@ enum{
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-    int W=1024;
-    int H=768;
-    
-    if (self.view.bounds.size.width>=1000)
-    {
-        CGRect r1=self.logoView.frame;
-        CGRect r2=self.loginView.frame;
-        self.logoView.frame=CGRectMake((W-r2.size.width-r1.size.width)/3, (H-r1.size.height)/2, r1.size.width, r1.size.height);
-        self.loginView.frame=CGRectMake((W-r2.size.width-r1.size.width)/3*2+r1.size.width, (H-r2.size.height)/2, r2.size.width, r2.size.height);
-    }else
-    {
-        CGRect r1=self.logoView.frame;
-        CGRect r2=self.loginView.frame;
-        self.logoView.frame=CGRectMake((H-r1.size.width)/2, (W-r2.size.height-r1.size.height)/3, r1.size.width, r1.size.height);
-        self.loginView.frame=CGRectMake((H-r2.size.width)/2, (W-r2.size.height-r1.size.height)/3*2+r1.size.height, r2.size.width, r2.size.height);
-    }
+//    int W=1024;
+//    int H=768;
+//    
+//    if (self.view.bounds.size.width>=1000)
+//    {
+//        CGRect r1=self.logoView.frame;
+//        CGRect r2=self.loginView.frame;
+//        self.logoView.frame=CGRectMake((W-r2.size.width-r1.size.width)/3, (H-r1.size.height)/2, r1.size.width, r1.size.height);
+//        self.loginView.frame=CGRectMake((W-r2.size.width-r1.size.width)/3*2+r1.size.width, (H-r2.size.height)/2, r2.size.width, r2.size.height);
+//    }else
+//    {
+//        CGRect r1=self.logoView.frame;
+//        CGRect r2=self.loginView.frame;
+//        self.logoView.frame=CGRectMake((H-r1.size.width)/2, (W-r2.size.height-r1.size.height)/3, r1.size.width, r1.size.height);
+//        self.loginView.frame=CGRectMake((H-r2.size.width)/2, (W-r2.size.height-r1.size.height)/3*2+r1.size.height, r2.size.width, r2.size.height);
+//    }
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:0];
 }
 
 - (void)didReceiveMemoryWarning

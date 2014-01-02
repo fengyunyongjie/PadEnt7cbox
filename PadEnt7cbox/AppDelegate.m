@@ -37,11 +37,6 @@
     
     [[DBSqlite3 alloc] updateVersion];
     
-    NSString *vinfo=[[NSUserDefaults standardUserDefaults]objectForKey:VERSION];
-    if (!vinfo) {
-        [[WelcomeViewController sharedUser] showWelCome];
-        //        [[NSUserDefaults standardUserDefaults] setObject:VERSION forKey:VERSION];
-    }
     //设置背景音乐
     musicPlayer = [[MusicPlayerViewController alloc] init];
     
@@ -60,6 +55,14 @@
     if([self isOpenLock])
     {
         [self showLoceView];
+    }
+    
+    NSString *vinfo=[[NSUserDefaults standardUserDefaults]objectForKey:VERSION];
+    if (!vinfo) {
+        WelcomeViewController *welcomeView = [[WelcomeViewController alloc] init];
+        [self.window.rootViewController presentViewController:welcomeView animated:NO completion:nil];
+//        [[WelcomeViewController sharedUser] showWelCome];
+        //        [[NSUserDefaults standardUserDefaults] setObject:VERSION forKey:VERSION];
     }
     
     return YES;

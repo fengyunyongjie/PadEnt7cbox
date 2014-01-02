@@ -10,20 +10,58 @@
 #import "PConfig.h"
 __strong static WelcomeViewController *_welcommeVC;
 @interface WelcomeViewController ()<UIScrollViewDelegate>
-@property (strong,nonatomic) UIScrollView *scrollView;
-@property (strong,nonatomic) UIPageControl *pageCtrl;
 @end
 
 @implementation WelcomeViewController
+@synthesize scroll_view,pageCtrl,imageView1,imageView2,imageView3,hidden_button;
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    return NO;
+    return YES;
 }
 
 //>ios 6.0
 - (BOOL)shouldAutorotate{
-    return NO;
+    return YES;
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    [self updateLoadView];
+}
+
+-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        imageWidth = 1024;
+        imageHeigth = 768;
+    }
+    else
+    {
+        imageWidth = 768;
+        imageHeigth = 1024;
+    }
+}
+
+-(void)updateLoadView
+{
+    CGRect self_rect = CGRectMake(0, 0, imageWidth, imageHeigth);
+    [self.view setFrame:self_rect];
+    CGRect scroll_rect = CGRectMake(0, 0, imageWidth, imageHeigth);
+    [scroll_view setFrame:scroll_rect];
+    [scroll_view setContentSize:CGSizeMake(imageWidth*3, imageHeigth)];
+    for (int i=0; i<3; i++)
+    {
+        imageView1.frame=CGRectMake(0, 0, imageWidth, imageHeigth);
+        imageView2.frame=CGRectMake(imageWidth, 0, imageWidth, imageHeigth);
+        imageView3.frame=CGRectMake(2*imageWidth, 0, imageWidth, imageHeigth);
+    }
+    
+    [scroll_view setContentOffset:CGPointMake(imageWidth * pageCtrl.currentPage, 0) animated:YES];
+    
+    CGRect hidden_rect = CGRectMake(imageWidth*3-41, imageHeigth-41, 41, 41);
+    [hidden_button setFrame:hidden_rect];
 }
 
 +(WelcomeViewController *)sharedUser
@@ -52,11 +90,17 @@ __strong static WelcomeViewController *_welcommeVC;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    self.view.frame=[[UIScreen mainScreen] bounds];
+    
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    
+    CGRect self_rect = CGRectMake(0, 0, imageWidth, imageHeigth);
+    [self.view setFrame:self_rect];
+    
     [self.view setBackgroundColor:[UIColor whiteColor]];
-    UIScrollView *scroll_view=[[UIScrollView alloc] initWithFrame:self.view.frame];
-    [scroll_view setContentSize:CGSizeMake(self.view.frame.size.width*3, self.view.frame.size.height)];
+    CGRect scroll_rect = CGRectMake(0, 0, imageWidth, imageHeigth);
+    scroll_view=[[UIScrollView alloc] initWithFrame:scroll_rect];
+    [scroll_view setContentSize:CGSizeMake(imageWidth*3, imageHeigth)];
     [scroll_view setPagingEnabled:YES];
     [scroll_view setDelegate:self];
     [scroll_view setShowsHorizontalScrollIndicator:NO];
@@ -68,32 +112,57 @@ __strong static WelcomeViewController *_welcommeVC;
             //iphone5
             NSString *fileName=[NSString stringWithFormat:@"guide_%d@iPhone5.png",i];
             UIImageView *imageView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:fileName]];
-            imageView.frame=CGRectMake((i-1)*self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
-            [scroll_view addSubview:imageView];
+            imageView.frame=CGRectMake((i-1)*imageWidth, 0, imageWidth, imageHeigth);
+            if(i==1)
+            {
+                imageView1 = imageView;
+                [scroll_view addSubview:imageView1];
+            }
+            else if(i==2)
+            {
+                imageView2 = imageView;
+                [scroll_view addSubview:imageView2];
+            }
+            else
+            {
+                imageView3 = imageView;
+                [scroll_view addSubview:imageView3];
+            }
         }else
         {
             NSString *fileName=[NSString stringWithFormat:@"guide_%d.png",i];
             UIImageView *imageView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:fileName]];
-            imageView.frame=CGRectMake((i-1)*self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
-            [scroll_view addSubview:imageView];
+            imageView.frame=CGRectMake((i-1)*imageWidth, 0, imageWidth, imageHeigth);
+            if(i==1)
+            {
+                imageView1 = imageView;
+                [scroll_view addSubview:imageView1];
+            }
+            else if(i==2)
+            {
+                imageView2 = imageView;
+                [scroll_view addSubview:imageView2];
+            }
+            else
+            {
+                imageView3 = imageView;
+                [scroll_view addSubview:imageView3];
+            }
         }
     }
-//    UIImageView *pageBg=[[UIImageView alloc] initWithFrame:CGRectMake((self.view.frame.size.width-200)/2, self.view.frame.size.height-100, 200, 49)];
-//    pageBg.image=[UIImage imageNamed:@"guide_gray.png"];
-//    [self.view addSubview:pageBg];
-    UIPageControl *pageCtrl=[[UIPageControl alloc] initWithFrame:CGRectMake((self.view.frame.size.width-200)/2, 10, 200, 49)];
     
-    [pageCtrl setNumberOfPages:3];
-    [pageCtrl addTarget:self action:@selector(clicked_page:) forControlEvents:UIControlEventTouchUpInside];
+    UIPageControl *_pageCtrl=[[UIPageControl alloc] initWithFrame:CGRectMake((imageWidth-200)/2, 10, 200, 49)];
+    [_pageCtrl setNumberOfPages:3];
+    [_pageCtrl addTarget:self action:@selector(clicked_page:) forControlEvents:UIControlEventTouchUpInside];
+    pageCtrl = _pageCtrl;
     [self.view addSubview:pageCtrl];
-    self.pageCtrl=pageCtrl;
-    self.scrollView=scroll_view;
     
-    UIButton *button=[[UIButton alloc] initWithFrame:CGRectMake(320*3-41, self.view.frame.size.height-41, 41, 41)];
+    UIButton *button=[[UIButton alloc] initWithFrame:CGRectMake(imageWidth*3-41, imageHeigth-41, 41, 41)];
     [button setBackgroundImage:[UIImage imageNamed:@"guide_bt_nor.png"] forState:UIControlStateNormal];
     [button setBackgroundImage:[UIImage imageNamed:@"guide_bt_se.png"] forState:UIControlStateHighlighted];
     [button addTarget:self action:@selector(toHideView) forControlEvents:UIControlEventTouchUpInside];
-    [self.scrollView addSubview:button];
+    hidden_button = button;
+    [scroll_view addSubview:hidden_button];
 }
 
 - (void)didReceiveMemoryWarning
@@ -106,18 +175,19 @@ __strong static WelcomeViewController *_welcommeVC;
     UIPageControl *page = sender;
     if([page isKindOfClass:[UIPageControl class]])
     {
-        [self.scrollView setContentOffset:CGPointMake(self.view.frame.size.width * page.currentPage, 0) animated:YES];
+        [scroll_view setContentOffset:CGPointMake(imageWidth * page.currentPage, 0) animated:YES];
     }
 }
 -(void)toHideView
 {
     [[NSUserDefaults standardUserDefaults] setObject:VERSION forKey:VERSION];
-    [self.view removeFromSuperview];
+//    [self.view removeFromSuperview];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    NSInteger page = scrollView.contentOffset.x/self.view.frame.size.width;
-    if(scrollView.contentOffset.x > self.view.frame.size.width * 2 )
+    NSInteger page = scrollView.contentOffset.x/imageWidth;
+    if(scrollView.contentOffset.x > imageWidth * 2 )
     {
         [self.pageCtrl setHidden:YES];
     }

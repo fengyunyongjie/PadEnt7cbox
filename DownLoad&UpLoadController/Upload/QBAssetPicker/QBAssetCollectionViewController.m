@@ -75,7 +75,6 @@
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         tableView.allowsSelection = YES;
         tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
         [self.view addSubview:tableView];
         self.tableView = tableView;
     }
@@ -240,10 +239,6 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     CGRect rect = CGRectMake(0, 0, 320, TableViewHeight);
-//    if([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0)
-//    {
-//        rect.size.height = rect.size.height +44;
-//    }
     [self.tableView setFrame:rect];
     
 //    CGRect more_rect = self.moreEditBar.frame;

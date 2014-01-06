@@ -1321,18 +1321,31 @@ typedef enum{
                         [self startIconDownload:dic forIndexPath:indexPath];
                     }
                 }else if ([fmime isEqualToString:@"doc"]||
-                          [fmime isEqualToString:@"docx"])
+                          [fmime isEqualToString:@"docx"]||
+                          [fmime isEqualToString:@"rtf"])
                 {
-                    imageView.image = [UIImage imageNamed:@"file_doc.png"];
+                    imageView.image = [UIImage imageNamed:@"file_word.png"];
+                }
+                else if ([fmime isEqualToString:@"xls"]||
+                         [fmime isEqualToString:@"xlsx"])
+                {
+                    imageView.image = [UIImage imageNamed:@"file_excel.png"];
                 }else if ([fmime isEqualToString:@"mp3"])
                 {
                     imageView.image = [UIImage imageNamed:@"file_music.png"];
-                }else if ([fmime isEqualToString:@"mov"])
+                }else if ([fmime isEqualToString:@"mov"]||
+                          [fmime isEqualToString:@"mp4"]||
+                          [fmime isEqualToString:@"avi"]||
+                          [fmime isEqualToString:@"rmvb"])
                 {
                     imageView.image = [UIImage imageNamed:@"file_moving.png"];
-                }else if ([fmime isEqualToString:@"ppt"])
+                }else if ([fmime isEqualToString:@"pdf"])
                 {
-                    imageView.image = [UIImage imageNamed:@"file_other.png"];
+                    imageView.image = [UIImage imageNamed:@"file_pdf.png"];
+                }else if ([fmime isEqualToString:@"ppt"]||
+                          [fmime isEqualToString:@"pptx"])
+                {
+                    imageView.image = [UIImage imageNamed:@"file_ppt.png"];
                 }else
                 {
                     imageView.image = [UIImage imageNamed:@"file_other.png"];

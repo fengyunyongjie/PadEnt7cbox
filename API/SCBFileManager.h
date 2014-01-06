@@ -20,7 +20,9 @@ typedef enum {
     kFMTypeSearch,
     kFMTypeFamily,
     kFMTypeAuthorMenus,
-    kFMTypeFileInfo
+    kFMTypeFileInfo,
+    kFMTypeNodeList,
+    kFMTypeNodeListOperate,
 }kFMType;
 @protocol SCBFileManagerDelegate;
 @interface SCBFileManager : NSObject
@@ -35,8 +37,10 @@ typedef enum {
 //获取工作区列表  子账号空间权限列表/ent/author/menus
 -(void)authorMenus;
 //打开网盘/fm
--(void)openFinderWithID:(NSString *)f_id sID:(NSString *)s_id;      //无分页：所以cursor=0,offset=-1;
--(void)operateUpdateWithID:(NSString *)f_id sID:(NSString *)s_id;
+-(void)openFinderWithID:(NSString *)f_id sID:(NSString *)s_id authModelId:(NSString *)authModelId;   //无分页：所以cursor=0,offset=-1;
+-(void)operateUpdateWithID:(NSString *)f_id sID:(NSString *)s_id authModelId:(NSString *)authModelId;
+-(void)nodeListWithID:(NSString *)f_id sID:(NSString *)s_id targetFIDS:(NSArray *)f_ids itemType:(NSString *)item;
+-(void)operateUpdateWithID:(NSString *)f_id sID:(NSString *)s_id targetFIDS:(NSArray *)f_ids itemType:(NSString *)item;
 //打开移动目录
 -(void)requestMoveFile:(NSString *)f_pid fIds:(NSArray *)f_ids;
 //新建/fm/mkdir
@@ -50,7 +54,7 @@ typedef enum {
 //文件提交/ent/file/commit
 -(void)commitFileIDs:(NSArray *)f_ids toPID:(NSString *)f_pid sID:(NSString *)s_id;
 //文件转存/ent/file/resave
--(void)resaveFileIDs:(NSArray *)f_ids toPID:(NSString *)f_pid;
+-(void)resaveFileIDs:(NSArray *)f_ids toPID:(NSString *)f_pid sID:(NSString *)s_id;
 //移除/fm/rm
 -(void)removeFileWithIDs:(NSArray*)f_ids;
 //搜索/fm/search

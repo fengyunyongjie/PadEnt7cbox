@@ -342,7 +342,7 @@
     _isDetail=!_isDetail;
     [self.tableView reloadData];
 }
--(void)resaveFileToID:(NSString *)f_id
+-(void)resaveFileToID:(NSString *)f_id spid:(NSString *)spid
 {
     NSDictionary *dic=[self.fileArray objectAtIndex:self.selectedIndexPath.row];
     NSString *fid=[dic objectForKey:@"fid"];
@@ -355,11 +355,11 @@
     self.fm_move.delegate=self;
     if (self.tableView.isEditing) {
         
-        [self.fm_move resaveFileIDs:[self selectedIDs] toPID:f_id];
+        [self.fm_move resaveFileIDs:[self selectedIDs] toPID:f_id sID:spid];
         
     }else
     {
-        [self.fm_move resaveFileIDs:@[fid] toPID:f_id];
+        [self.fm_move resaveFileIDs:@[fid] toPID:f_id  sID:spid];
     }
     
 }

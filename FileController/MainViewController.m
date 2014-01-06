@@ -15,9 +15,6 @@
 #import "AppDelegate.h"
 #import "SCBSession.h"
 #import <QuartzCore/QuartzCore.h>
-#import "MySplitViewController.h"
-#import "MyTabBarViewController.h"
-#import "UpDownloadViewController.h"
 
 #define AUTHOR_MENU @"AuthorMenus"
 @interface MainViewController()<SCBFileManagerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
@@ -27,7 +24,16 @@
 @end
 
 @implementation MainViewController
+//<ios 6.0
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return NO;
+}
 
+//>ios 6.0
+- (BOOL)shouldAutorotate{
+    return NO;
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -38,11 +44,18 @@
 }
 - (void)viewDidAppear:(BOOL)animated
 {
-    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-    CGSize winSize=tabbar.view.frame.size;
+    CGSize winSize=[UIScreen mainScreen].bounds.size;
     //self.view.frame=CGRectMake(0, 64, winSize.width,winSize.height-64 );
     self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height);
+}
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+- (BOOL)prefersStatusBarHidden
+{
+    return NO;
+    
 }
 - (void)viewDidLoad
 {
@@ -55,20 +68,17 @@
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
     [self.view addSubview:self.tableView];
-    
-    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-    self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, tabbar.view.frame.size.height);
-    if (self.type==kTypeCommit||self.type==kTypeResave||self.type==kTypeUpload) {
+    self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    if (self.type==kTypeCommit||self.type==kTypeResave||self.type==kTypeUpload||self.type==kTypeMove||self.type==kTypeCopy) {
         [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dissmissSelf:)]];
     }else
     {
-        UIButton*rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,30,40)];
-        [rightButton setImage:[UIImage imageNamed:@"title_upload_nor@2x.png"] forState:UIControlStateNormal];
-        [rightButton setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
-        [rightButton addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
-        UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
-        self.navigationItem.rightBarButtonItem=rightItem;
+        //        UIButton*rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,30,40)];
+        //        [rightButton setImage:[UIImage imageNamed:@"title_upload_nor@2x.png"] forState:UIControlStateNormal];
+        //        [rightButton setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
+        //        [rightButton addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
+        //        UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+        //        self.navigationItem.rightBarButtonItem=rightItem;
     }
     if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
         UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
@@ -92,22 +102,22 @@
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
     
-//    QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
-//    imagePickerController.delegate = self;
-//    imagePickerController.allowsMultipleSelection = YES;
-//    AppDelegate *app_delegate = [[UIApplication sharedApplication] delegate];
-//    app_delegate.file_url = [NSString formatNSStringForOjbect:app_delegate.space_name];
-//    imagePickerController.f_id = @"0";
-//    imagePickerController.f_name = [NSString formatNSStringForOjbect:app_delegate.space_name];
-//    imagePickerController.space_id = [NSString formatNSStringForOjbect:app_delegate.space_id];
-//    [imagePickerController requestFileDetail];
-//    [imagePickerController setHidesBottomBarWhenPushed:YES];
-//    [self.navigationController pushViewController:imagePickerController animated:NO];
+    //    QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
+    //    imagePickerController.delegate = self;
+    //    imagePickerController.allowsMultipleSelection = YES;
+    //    AppDelegate *app_delegate = [[UIApplication sharedApplication] delegate];
+    //    app_delegate.file_url = [NSString formatNSStringForOjbect:app_delegate.space_name];
+    //    imagePickerController.f_id = @"0";
+    //    imagePickerController.f_name = [NSString formatNSStringForOjbect:app_delegate.space_name];
+    //    imagePickerController.space_id = [NSString formatNSStringForOjbect:app_delegate.space_id];
+    //    [imagePickerController requestFileDetail];
+    //    [imagePickerController setHidesBottomBarWhenPushed:YES];
+    //    [self.navigationController pushViewController:imagePickerController animated:NO];
 }
 
 -(void)changeUpload:(NSMutableOrderedSet *)array_ changeDeviceName:(NSString *)device_name changeFileId:(NSString *)f_id changeSpaceId:(NSString *)s_id
 {
-    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
     [delegate.uploadmanage changeUpload:array_ changeDeviceName:device_name changeFileId:f_id changeSpaceId:s_id];
 }
 
@@ -154,8 +164,7 @@
 }
 -(void)dissmissSelf:(id)sender
 {
-//    [self dismissViewControllerAnimated:YES completion:Nil];
-    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:Nil];
 }
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods
@@ -209,6 +218,11 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (self.listArray) {
+        if (self.dirType==kTypeRoot) {
+            return 2;
+        }else if(self.dirType==kTypeEnt){
+            return self.listArray.count-1;
+        }
         if (self.type==kTypeCommit) {
             NSMutableArray *array=[NSMutableArray array];
             for (NSDictionary *dic in self.listArray) {
@@ -237,8 +251,14 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
         UIImageView *imageView=[[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 40, 40)];
-        UILabel *textLabel=[[UILabel alloc] initWithFrame:CGRectMake(70, 10, 200, 21)];
-        UILabel *detailTextLabel=[[UILabel alloc] initWithFrame:CGRectMake(70, 35, 200, 21)];
+        CGRect titleRect=CGRectMake(70, 10, 200, 21);
+        CGRect detailRect=CGRectMake(70, 30, 200, 21);
+        if (self.dirType==kTypeRoot) {
+            titleRect=CGRectMake(70, 20, 200, 21);
+            detailRect=CGRectMake(170, 20, 200, 21);
+        }
+        UILabel *textLabel=[[UILabel alloc] initWithFrame:titleRect];
+        UILabel *detailTextLabel=[[UILabel alloc] initWithFrame:detailRect];
         [cell.contentView addSubview:imageView];
         [cell.contentView addSubview:textLabel];
         [cell.contentView addSubview:detailTextLabel];
@@ -253,21 +273,29 @@
     UILabel *textLabel=(UILabel *)[cell.contentView viewWithTag:2];
     UILabel *detailTextLabel=(UILabel *)[cell.contentView viewWithTag:3];
     if (self.listArray) {
+        if(self.dirType==kTypeRoot&&indexPath.row==1){
+            imageView.image=[UIImage imageNamed:@"bizfiles.png"];
+            textLabel.text=@"公司文件";
+            detailTextLabel.text=nil;
+            return cell;
+        }
         NSDictionary *dic;
         if (self.type==kTypeCommit) {
             dic=[self.commitList objectAtIndex:indexPath.row];
         }else{
             dic=[self.listArray objectAtIndex:indexPath.row];
         }
+        if (self.dirType==kTypeEnt)
+        {
+            dic=[self.listArray objectAtIndex:indexPath.row+1];
+        }
         if (dic) {
             textLabel.text=[dic objectForKey:@"spname"];
             //加载工作区图标
-            NSString *roleType=[dic objectForKey:@"roletype"];;
-            if ([roleType isEqualToString:@"9999"]) {
-                imageView.image=[UIImage imageNamed:@"ownerfiles.png"];
-            }else
+            imageView.image=[UIImage imageNamed:@"ownerfiles.png"];
+            if (self.dirType==kTypeEnt)
             {
-                imageView.image=[UIImage imageNamed:@"bizfiles.png"];
+                imageView.image=[UIImage imageNamed:@"bizlib.png"];
             }
             //显示工作区大小
             NSString *totalspace=[dic objectForKey:@"totalspace"];
@@ -299,6 +327,18 @@
 #pragma mark - Table view delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.dirType==kTypeRoot&&indexPath.row==1) {
+        MainViewController *vc=[[MainViewController alloc] init];
+        vc.title=@"公司文件";
+        vc.dirType=kTypeEnt;
+        vc.delegate=self.delegate;
+        vc.type=self.type;
+        vc.targetsArray=self.targetsArray;
+        [self.navigationController pushViewController:vc animated:YES];
+        return;
+    }
+    
+    
     if (self.listArray) {
         NSDictionary *dic;
         if (self.type==kTypeCommit) {
@@ -329,25 +369,90 @@
         }else if(self.type==kTypeUpload)
         {
             dic=[self.listArray objectAtIndex:indexPath.row];
+            if (self.dirType==kTypeEnt)
+            {
+                dic=[self.listArray objectAtIndex:indexPath.row+1];
+            }
             if (dic) {
                 SelectFileListViewController *flVC=[[SelectFileListViewController alloc] init];
                 flVC.spid=[dic objectForKey:@"spid"];
                 flVC.f_id=@"0";
                 flVC.title=[dic objectForKey:@"spname"];
-                flVC.roletype=[dic objectForKey:@"roletype"];
+                flVC.roletype=@"2"; //2为我的文件夹 1为企业文件夹
+                if (self.dirType==kTypeEnt)
+                {
+                    flVC.roletype=@"1";
+                }
                 flVC.delegate=self.delegate;
                 flVC.type=kSelectTypeUpload;
                 flVC.rootName=[dic objectForKey:@"spname"];
                 [self.navigationController pushViewController:flVC animated:YES];
             }
-        }else{
+        }else if(self.type==kTypeMove)
+        {
             dic=[self.listArray objectAtIndex:indexPath.row];
+            if (self.dirType==kTypeEnt)
+            {
+                dic=[self.listArray objectAtIndex:indexPath.row+1];
+            }
+            if (dic) {
+                SelectFileListViewController *flVC=[[SelectFileListViewController alloc] init];
+                flVC.spid=[dic objectForKey:@"spid"];
+                flVC.f_id=@"0";
+                flVC.title=[dic objectForKey:@"spname"];
+                flVC.delegate=self.delegate;
+                flVC.type=kSelectTypeMove;
+                flVC.targetsArray=self.targetsArray;
+                flVC.rootName=[dic objectForKey:@"spname"];
+                flVC.roletype=@"2"; //2为我的文件夹 1为企业文件夹
+                if (self.dirType==kTypeEnt)
+                {
+                    flVC.roletype=@"1";
+                }
+                [self.navigationController pushViewController:flVC animated:YES];
+            }
+            
+        }else if(self.type==kTypeCopy)
+        {
+            dic=[self.listArray objectAtIndex:indexPath.row];
+            if (self.dirType==kTypeEnt)
+            {
+                dic=[self.listArray objectAtIndex:indexPath.row+1];
+            }
+            if (dic) {
+                SelectFileListViewController *flVC=[[SelectFileListViewController alloc] init];
+                flVC.spid=[dic objectForKey:@"spid"];
+                flVC.f_id=@"0";
+                flVC.title=[dic objectForKey:@"spname"];
+                flVC.delegate=self.delegate;
+                flVC.type=kSelectTypeCopy;
+                flVC.targetsArray=self.targetsArray;
+                flVC.rootName=[dic objectForKey:@"spname"];
+                flVC.roletype=@"2"; //2为我的文件夹 1为企业文件夹
+                if (self.dirType==kTypeEnt)
+                {
+                    flVC.roletype=@"1";
+                }
+                [self.navigationController pushViewController:flVC animated:YES];
+            }
+            
+        }else
+        {
+            dic=[self.listArray objectAtIndex:indexPath.row];
+            if (self.dirType==kTypeEnt)
+            {
+                dic=[self.listArray objectAtIndex:indexPath.row+1];
+            }
             if (dic) {
                 FileListViewController *flVC=[[FileListViewController alloc] init];
                 flVC.spid=[dic objectForKey:@"spid"];
                 flVC.f_id=@"0";
                 flVC.title=[dic objectForKey:@"spname"];
-                flVC.roletype=[dic objectForKey:@"roletype"];
+                flVC.roletype=@"2"; //2为我的文件夹 1为企业文件夹
+                if (self.dirType==kTypeEnt)
+                {
+                    flVC.roletype=@"1";
+                }
                 AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
                 appDelegate.file_url = flVC.title;
                 appDelegate.old_file_url = flVC.title;
@@ -441,19 +546,19 @@
                 if ( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceRear] ) {
                     imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
                     if ( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceFront] ) {
-//                        cameraSelectionButton.alpha = 1.0;
-//                        showCameraSelection = YES;
+                        //                        cameraSelectionButton.alpha = 1.0;
+                        //                        showCameraSelection = YES;
                     }
                 } else {
                     imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
                 }
                 if ( [UIImagePickerController isFlashAvailableForCameraDevice:imagePicker.cameraDevice] ) {
                     imagePicker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
-//                    flashModeButton.alpha = 1.0;
-//                    showFlashMode = YES;
+                    //                    flashModeButton.alpha = 1.0;
+                    //                    showFlashMode = YES;
                 }
                 
-//                imagePicker.videoQuality = UIImagePickerControllerQualityType640x480;
+                //                imagePicker.videoQuality = UIImagePickerControllerQualityType640x480;
                 
                 imagePicker.delegate = self;
                 imagePicker.wantsFullScreenLayout = YES;
@@ -510,16 +615,4 @@
 {
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
-
-//<ios 6.0
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    return NO;
-}
-
-//>ios 6.0
-- (BOOL)shouldAutorotate{
-    return NO;
-}
-
 @end

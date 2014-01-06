@@ -15,8 +15,15 @@ typedef enum {
     kTypeDefault,
     kTypeCommit,
     kTypeResave,
+    kTypeCopy,
+    kTypeMove,
     kTypeUpload,
 } MainType;
+typedef enum {
+    kTypeRoot,
+    kTypeEnt,
+}DirType;
+
 @interface MainViewController : UIViewController<EGORefreshTableHeaderDelegate,UITableViewDataSource,UITableViewDelegate,QBImagePickerControllerDelegate>
 {
     EGORefreshTableHeaderView *_refreshHeaderView;
@@ -26,4 +33,6 @@ typedef enum {
 @property(strong,nonatomic) UITableView *tableView;
 @property(weak,nonatomic) id delegate;
 @property(assign,nonatomic) MainType type;
+@property(assign,nonatomic) DirType dirType;
+@property (strong,nonatomic) NSArray *targetsArray;
 @end

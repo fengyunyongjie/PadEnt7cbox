@@ -14,10 +14,6 @@
 #import "UIBarButtonItem+Yn.h"
 #import "QBAssetCollectionViewController.h"
 #import "AppDelegate.h"
-#import "MySplitViewController.h"
-#import "MyTabBarViewController.h"
-#import "QBAssetCollectionViewController.h"
-
 @interface SelectFileListViewController ()<SCBFileManagerDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate,QBImageFileViewDelegate>
 @property (strong,nonatomic) SCBFileManager *fm;
 @property(strong,nonatomic) MBProgressHUD *hud;
@@ -45,11 +41,27 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [self updateFileList];
+    CGRect r=self.view.frame;
+    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
+    self.view.frame=r;
+    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49);
+    }else
+    {
+        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49-64);
+    }
+    if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
+        self.toolbar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
+    }else
+    {
+        self.toolbar.frame=CGRectMake(0, ([[UIScreen mainScreen] bounds].size.height-49)-self.view.frame.origin.y, 320, 49);
+    }
+    
+    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
+    NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
 }
 - (void)viewDidAppear:(BOOL)animated
 {
-    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 - (void)viewDidLoad
 {
@@ -97,16 +109,12 @@
     [btn_download addTarget:self action:@selector(moveCancel:) forControlEvents:UIControlEventTouchUpInside];
     item_download=[[UIBarButtonItem alloc] initWithCustomView:btn_download];
     
-//    UIBarButtonItem *ok_btn=[[UIBarButtonItem alloc] initWithTitleStr:@"    确 定    " style:UIBarButtonItemStyleDone target:self action:@selector(moveFileToHere:)];
-//    UIBarButtonItem *cancel_btn=[[UIBarButtonItem alloc] initWithTitleStr:@"    取 消    " style:UIBarButtonItemStyleBordered target:self action:@selector(moveCancel:)];
+    //    UIBarButtonItem *ok_btn=[[UIBarButtonItem alloc] initWithTitleStr:@"    确 定    " style:UIBarButtonItemStyleDone target:self action:@selector(moveFileToHere:)];
+    //    UIBarButtonItem *cancel_btn=[[UIBarButtonItem alloc] initWithTitleStr:@"    取 消    " style:UIBarButtonItemStyleBordered target:self action:@selector(moveCancel:)];
     UIBarButtonItem *fix=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     [self.toolbar setItems:@[fix,item_download,fix,item_resave,fix]];
     //self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-toolbarHeight);
-    
-    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-    
-    self.tableView.frame=CGRectMake(0, 64, tabbar.view.frame.size.width, [[UIScreen mainScreen] bounds].size.height-49-64);
+    self.tableView.frame=CGRectMake(0, 64, self.view.frame.size.width, [[UIScreen mainScreen] bounds].size.height-49-64);
     
     //初始化返回按钮
     UIButton*backButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,35,29)];
@@ -144,45 +152,70 @@
 - (void)updateFileList
 {
     //加载本地缓存文件
-    NSString *dataFilePath=[YNFunctions getDataCachePath];
-    dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:[NSString stringWithFormat:@"%@_%@",self.spid,self.f_id]]];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:dataFilePath])
-    {
-        NSError *jsonParsingError=nil;
-        NSData *data=[NSData dataWithContentsOfFile:dataFilePath];
-        self.dataDic=[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
-        if (self.dataDic) {
-            self.listArray=self.listArray=(NSArray *)[self.dataDic objectForKey:@"files"];
-            if (self.listArray) {
-                NSMutableArray *array=[[NSMutableArray alloc] init];
-                for (NSDictionary *dic in self.listArray) {
-                    NSString *fisdir=[dic objectForKey:@"fisdir"];
-                    NSString *fid=[dic objectForKey:@"fid"];
-                    BOOL isTarget=NO;
-                    if ((self.type==kSelectTypeMove&&self.targetsArray!=nil)) {
-                        for (NSString *f_id in self.targetsArray) {
-                            NSString *str1=[NSString stringWithFormat:@"%@",f_id];
-                            NSString *str2=[NSString stringWithFormat:@"%@",fid];
-                            if ([str1 isEqualToString:str2]) {
-                                isTarget=YES;
-                                break;
-                            }
-                        }
-                    }
-                    if ([fisdir isEqualToString:@"0"]&&!isTarget) {
-                        [array addObject:dic];
-                    }
-                }
-                self.finderArray=array;
-                [self.tableView reloadData];
-            }
-        }
-    }
+    //    NSString *dataFilePath=[YNFunctions getDataCachePath];
+    //    dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:[NSString stringWithFormat:@"%@_%@",self.spid,self.f_id]]];
+    //    if ([[NSFileManager defaultManager] fileExistsAtPath:dataFilePath])
+    //    {
+    //        NSError *jsonParsingError=nil;
+    //        NSData *data=[NSData dataWithContentsOfFile:dataFilePath];
+    //        self.dataDic=[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
+    //        if (self.dataDic) {
+    //            self.listArray=self.listArray=(NSArray *)[self.dataDic objectForKey:@"files"];
+    //            if (self.listArray) {
+    //                NSMutableArray *array=[[NSMutableArray alloc] init];
+    //                for (NSDictionary *dic in self.listArray) {
+    //                    NSString *fisdir=[dic objectForKey:@"fisdir"];
+    //                    NSString *fid=[dic objectForKey:@"fid"];
+    //                    BOOL isTarget=NO;
+    //                    if ((self.type==kSelectTypeMove&&self.targetsArray!=nil)) {
+    //                        for (NSString *f_id in self.targetsArray) {
+    //                            NSString *str1=[NSString stringWithFormat:@"%@",f_id];
+    //                            NSString *str2=[NSString stringWithFormat:@"%@",fid];
+    //                            if ([str1 isEqualToString:str2]) {
+    //                                isTarget=YES;
+    //                                break;
+    //                            }
+    //                        }
+    //                    }
+    //                    if ([fisdir isEqualToString:@"0"]&&!isTarget) {
+    //                        NSString *fcmd=[dic objectForKey:@"fcmd"];
+    //                        if ([self.roletype isEqualToString:@"1"]&&[self hasCmd:@"upload" InFcmd:fcmd]&&[self hasCmd:@"mkdir" InFcmd:fcmd]) {
+    //                            //[array addObject:dic];
+    //                        }else
+    //                        {
+    //                            [array addObject:dic];
+    //                        }
+    //                    }
+    //                }
+    //                self.finderArray=array;
+    //                [self.tableView reloadData];
+    //            }
+    //        }
+    //    }
     [self.fm cancelAllTask];
     self.fm=nil;
     self.fm=[[SCBFileManager alloc] init];
     [self.fm setDelegate:self];
-    [self.fm openFinderWithID:self.f_id sID:self.spid];
+    //    NSString *authModelID=self.roletype;
+    //    if ([authModelID isEqualToString:@"1"]&&[self.f_id intValue]==0) {
+    //        authModelID=@"0";
+    //    }
+    //    [self.fm openFinderWithID:self.f_id sID:self.spid authModelId:authModelID];
+    NSString *item=@"";
+    switch (self.type) {
+        case kSelectTypeCopy:
+            item=@"copy";
+            break;
+        case kSelectTypeMove:
+            item=@"move";
+            break;
+        case kSelectTypeUpload:
+            item=@"upload";
+            break;
+        default:
+            break;
+    }
+    [self.fm nodeListWithID:self.f_id sID:self.spid targetFIDS:self.targetsArray itemType:item];
 }
 - (void)operateUpdate
 {
@@ -190,28 +223,50 @@
     self.fm=nil;
     self.fm=[[SCBFileManager alloc] init];
     [self.fm setDelegate:self];
-    [self.fm operateUpdateWithID:self.f_id sID:self.spid];
+    //    NSString *authModelID=self.roletype;
+    //    if ([authModelID isEqualToString:@"1"]&&[self.f_id intValue]==0) {
+    //        authModelID=@"0";
+    //    }
+    //    [self.fm operateUpdateWithID:self.f_id sID:self.spid authModelId:authModelID];
+    NSString *item=@"";
+    switch (self.type) {
+        case kSelectTypeCopy:
+            item=@"copy";
+            break;
+        case kSelectTypeMove:
+            item=@"move";
+            break;
+        case kSelectTypeUpload:
+            item=@"upload";
+            break;
+        default:
+            break;
+    }
+    [self.fm nodeListWithID:self.f_id sID:self.spid targetFIDS:self.targetsArray itemType:item];
 }
 - (void)moveFileToHere:(id)sender
 {
     switch (self.type) {
         case kSelectTypeDefault:
         case kSelectTypeMove:
-            [self.delegate moveFileToID:self.f_id];
+            [self.delegate moveFileToID:self.f_id spid:self.spid];
+            break;
+        case kSelectTypeCopy:
+            [self.delegate copyFileToID:self.f_id spid:self.spid];
             break;
         case kSelectTypeCommit:
             [self.delegate commitFileToID:self.f_id sID:self.spid];
             break;
         case kSelectTypeResave:
-            [self.delegate resaveFileToID:self.f_id];
+            [self.delegate resaveFileToID:self.f_id spid:self.spid];
             break;
         case kSelectTypeUpload:
-//            [self.qbDelegate uploadFileder:f_name];
-//            [self.qbDelegate uploadFiledId:f_id];
+            //            [self.qbDelegate uploadFileder:f_name];
+            //            [self.qbDelegate uploadFiledId:f_id];
         {
             AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             appDelegate.file_url = self.rootName;
-
+            
             [self.delegate uploadFileder:self.title];
             [self.delegate uploadSpid:self.spid];
             [self.delegate uploadFiledId:self.f_id];
@@ -219,39 +274,11 @@
         default:
             break;
     }
-//    [self dismissViewControllerAnimated:YES completion:nil];
-    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
-    {
-        UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
-        if([viewController isKindOfClass:[QBAssetCollectionViewController class]])
-        {
-            [self.navigationController popToViewController:viewController animated:NO];
-            break;
-        }
-        else if([viewController isKindOfClass:[FileListViewController class]])
-        {
-            [self.navigationController popToViewController:viewController animated:NO];
-            break;
-        }
-    }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)moveCancel:(id)sender
 {
-//    [self dismissViewControllerAnimated:YES completion:nil];
-    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
-    {
-        UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
-        if([viewController isKindOfClass:[QBAssetCollectionViewController class]])
-        {
-            [self.navigationController popToViewController:viewController animated:NO];
-            break;
-        }
-        else if([viewController isKindOfClass:[FileListViewController class]])
-        {
-            [self.navigationController popToViewController:viewController animated:NO];
-            break;
-        }
-    }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)newFinder:(id)sender
 {
@@ -262,6 +289,68 @@
     [[alert textFieldAtIndex:0] setDelegate:self];
     [[alert textFieldAtIndex:0] setPlaceholder:@"请输入名称"];
     [alert show];
+}
+-(BOOL)hasCmdInFcmd:(NSString *)cmd
+{
+    //  mkdir：新建文件夹
+    //	authz：权限管理
+    //	download：下载
+    //	ren：重命名
+    //	del：删除
+    //	copy：复制
+    //	move：移动
+    //  upload:上传
+    //	edit：编辑
+    //	preview：预览
+    //	publiclink：外链发送
+    //  clear:清空
+    //	restore：还原
+    //  remove:回收站删除
+    if([self.roletype isEqualToString:@"2"])
+    {
+        return YES;
+    }
+    if (!self.fcmd||[self.fcmd isEqualToString:@""]||!cmd) {
+        return NO;
+    }
+    NSArray *array=[self.fcmd componentsSeparatedByString:@","];
+    for (NSString *str in array) {
+        if ([str isEqualToString:cmd]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+-(BOOL)hasCmd:(NSString *) cmd InFcmd:(NSString *)fcmd
+{
+    //  mkdir：新建文件夹
+    //	authz：权限管理
+    //	download：下载
+    //	ren：重命名
+    //	del：删除
+    //	copy：复制
+    //	move：移动
+    //  upload:上传
+    //	edit：编辑
+    //	preview：预览
+    //	publiclink：外链发送
+    //  clear:清空
+    //	restore：还原
+    //  remove:回收站删除
+    if([self.roletype isEqualToString:@"2"])
+    {
+        return YES;
+    }
+    if (!fcmd||[fcmd isEqualToString:@""]||!cmd) {
+        return NO;
+    }
+    NSArray *array=[fcmd componentsSeparatedByString:@","];
+    for (NSString *str in array) {
+        if ([str isEqualToString:cmd]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -318,8 +407,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.listArray) {
-        NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
+    if (self.finderArray) {
+        NSDictionary *dic=[self.finderArray objectAtIndex:indexPath.row];
         if (dic) {
             NSString *fisdir=[dic objectForKey:@"fisdir"];
             if ([fisdir isEqualToString:@"0"]) {
@@ -327,6 +416,7 @@
                 flVC.spid=self.spid;
                 flVC.f_id=[dic objectForKey:@"fid"];
                 flVC.title=[dic objectForKey:@"fname"];
+                flVC.fcmd=[dic objectForKey:@"fcmd"];
                 flVC.delegate=self.delegate;
                 flVC.type=self.type;
                 flVC.targetsArray=self.targetsArray;
@@ -352,67 +442,53 @@
     self.hud.margin=10.f;
     [self.hud show:YES];
     [self.hud hide:YES afterDelay:1.0f];
-//    [self doneLoadingTableViewData];
+    //    [self doneLoadingTableViewData];
 }
 -(void)openFinderSucess:(NSDictionary *)datadic
 {
     self.dataDic=datadic;
     if (self.dataDic) {
-        self.listArray=self.listArray=(NSArray *)[self.dataDic objectForKey:@"files"];
-        NSMutableArray *array=[[NSMutableArray alloc] init];
-        for (NSDictionary *dic in self.listArray) {
-            NSString *fisdir=[dic objectForKey:@"fisdir"];
-            NSString *fid=[dic objectForKey:@"fid"];
-            BOOL isTarget=NO;
-            if ((self.type==kSelectTypeMove&&self.targetsArray!=nil)) {
-                for (NSString *f_id in self.targetsArray) {
-                    NSString *str1=[NSString stringWithFormat:@"%@",f_id];
-                    NSString *str2=[NSString stringWithFormat:@"%@",fid];
-                    if ([str1 isEqualToString:str2]) {
-                        isTarget=YES;
-                        break;
-                    }
-                }
-            }
-            if ([fisdir isEqualToString:@"0"]&&!isTarget) {
-                [array addObject:dic];
-            }
-        }
-        self.finderArray=array;
+        //        self.listArray=(NSArray *)[self.dataDic objectForKey:@"files"];
+        //        NSMutableArray *array=[[NSMutableArray alloc] init];
+        //        for (NSDictionary *dic in self.listArray) {
+        //            NSString *fisdir=[dic objectForKey:@"fisdir"];
+        //            NSString *fid=[dic objectForKey:@"fid"];
+        //            BOOL isTarget=NO;
+        //            if ((self.type==kSelectTypeMove&&self.targetsArray!=nil)) {
+        //                for (NSString *f_id in self.targetsArray) {
+        //                    NSString *str1=[NSString stringWithFormat:@"%@",f_id];
+        //                    NSString *str2=[NSString stringWithFormat:@"%@",fid];
+        //                    if ([str1 isEqualToString:str2]) {
+        //                        isTarget=YES;
+        //                        break;
+        //                    }
+        //                }
+        //            }
+        //            if ([fisdir isEqualToString:@"0"]&&!isTarget) {
+        //                NSString *fcmd=[dic objectForKey:@"fcmd"];
+        //                if ([self.roletype isEqualToString:@"1"]&&[self hasCmd:@"upload" InFcmd:fcmd]&&[self hasCmd:@"mkdir" InFcmd:fcmd]) {
+        //                    //[array addObject:dic];
+        //                }else
+        //                {
+        //                    [array addObject:dic];
+        //                }
+        //            }
+        //        }
+        self.finderArray=self.listArray=(NSArray *)self.dataDic;
         [self.tableView reloadData];
-        NSString *dataFilePath=[YNFunctions getDataCachePath];
-        dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:[NSString stringWithFormat:@"%@_%@",self.spid,self.f_id]]];
-        
-        NSError *jsonParsingError=nil;
-        NSData *data=[NSJSONSerialization dataWithJSONObject:self.dataDic options:0 error:&jsonParsingError];
-        BOOL isWrite=[data writeToFile:dataFilePath atomically:YES];
-        if (isWrite) {
-            NSLog(@"写入文件成功：%@",dataFilePath);
-        }else
-        {
-            NSLog(@"写入文件失败：%@",dataFilePath);
-        }
-    }else
-    {
-        [self updateFileList];
+        //        NSString *dataFilePath=[YNFunctions getDataCachePath];
+        //        dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:[NSString stringWithFormat:@"%@_%@",self.spid,self.f_id]]];
+        //        NSError *jsonParsingError=nil;
+        //        NSData *data=[NSJSONSerialization dataWithJSONObject:self.dataDic options:0 error:&jsonParsingError];
+        //        BOOL isWrite=[data writeToFile:dataFilePath atomically:YES];
+        //        if (isWrite) {
+        //            NSLog(@"写入文件成功：%@",dataFilePath);
+        //        }else
+        //        {
+        //            NSLog(@"写入文件失败：%@",dataFilePath);
+        //        }
     }
     NSLog(@"openFinderSucess:");
-    if (self.dataDic)
-    {
-        NSString *dataFilePath=[YNFunctions getDataCachePath];
-        dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:self.f_id]];
-        
-        NSError *jsonParsingError=nil;
-        NSData *data=[NSJSONSerialization dataWithJSONObject:self.dataDic options:0 error:&jsonParsingError];
-        BOOL isWrite=[data writeToFile:dataFilePath atomically:YES];
-        if (isWrite) {
-            NSLog(@"写入文件成功：%@",dataFilePath);
-        }else
-        {
-            NSLog(@"写入文件失败：%@",dataFilePath);
-        }
-    }
-    
 }
 -(void)operateSucess:(NSDictionary *)datadic
 {
@@ -466,48 +542,6 @@
     {
         NSLog(@"点击其它");
     }
-
-}
-
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
-}
-
--(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
     
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49);
-        }else
-        {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49-64);
-        }
-        if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.toolbar.frame=CGRectMake(0, 768-64-49, 320, 49);
-        }else
-        {
-            self.toolbar.frame=CGRectMake(0, (768-49)-self.view.frame.origin.y, 320, 49);
-        }
-    }
-    else
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49);
-        }else
-        {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49-64);
-        }
-        if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.toolbar.frame=CGRectMake(0, 1024-64-49, 320, 49);
-        }else
-        {
-            self.toolbar.frame=CGRectMake(0, (1024-49)-self.view.frame.origin.y, 320, 49);
-        }
-    }
 }
-
 @end

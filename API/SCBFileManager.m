@@ -189,7 +189,7 @@
     
     _conn=[[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
--(void)operateUpdateWithID:(NSString *)f_id sID:(NSString *)s_id
+-(void)operateUpdateWithID:(NSString *)f_id sID:(NSString *)s_id authModelId:(NSString *)authModelId;
 {
     self.fm_type=kFMTypeOperateUpdate;
     self.activeData=[NSMutableData data];
@@ -202,7 +202,7 @@
     if ([desc isEqualToString:@"time"]) {
         order=@"desc";
     }
-    [body appendFormat:@"fpid=%@&cursor=%d&offset=%d&spid=%@&order=%@&desc=%@",f_id,0,0,s_id,desc,order];
+    [body appendFormat:@"fpid=%@&cursor=%d&offset=%d&spid=%@&order=%@&desc=%@&authModelId=%@",f_id,0,0,s_id,desc,order,authModelId];
     NSLog(@"%@",body);
     NSMutableData *myRequestData=[NSMutableData data];
     [myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
@@ -218,7 +218,57 @@
     NSLog(@"ent_uid:%@",[[SCBSession sharedSession] ent_utype]);
     _conn=[[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
--(void)openFinderWithID:(NSString *)f_id sID:(NSString *)s_id
+-(void)operateUpdateWithID:(NSString *)f_id sID:(NSString *)s_id targetFIDS:(NSArray *)f_ids itemType:(NSString *)item
+{
+    self.fm_type=kFMTypeNodeListOperate;
+    self.activeData=[NSMutableData data];
+    NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,FM_NODELIST]];
+    NSLog(@"%@",s_url);
+    NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
+    NSMutableString *body=[[NSMutableString alloc] init];
+    NSString *fids=[f_ids componentsJoinedByString:@"&fids="];
+    [body appendFormat:@"fpid=%@&spid=%@&item=%@&fids=%@&usrid=%@",f_id,s_id,item,fids,[[SCBSession sharedSession] userId]];
+    NSLog(@"%@",body);
+    NSMutableData *myRequestData=[NSMutableData data];
+    [myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [request setHTTPBody:myRequestData];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:[[SCBSession sharedSession] userId] forHTTPHeaderField:@"ent_uid"];
+    [request setValue:CLIENT_TAG forHTTPHeaderField:@"ent_uclient"];
+    [request setValue:[[SCBSession sharedSession] userToken] forHTTPHeaderField:@"ent_utoken"];
+    [request setValue:[[SCBSession sharedSession] ent_utype] forHTTPHeaderField:@"ent_utype"];
+    NSLog(@"ent_uid:%@",[[SCBSession sharedSession] userId]);
+    NSLog(@"ent_uid:%@",[[SCBSession sharedSession] userToken]);
+    NSLog(@"ent_uid:%@",[[SCBSession sharedSession] ent_utype]);
+    _conn=[[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+-(void)nodeListWithID:(NSString *)f_id sID:(NSString *)s_id targetFIDS:(NSArray *)f_ids itemType:(NSString *)item
+{
+    self.fm_type=kFMTypeNodeList;
+    self.activeData=[NSMutableData data];
+    NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,FM_NODELIST]];
+    NSLog(@"%@",s_url);
+    NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
+    NSMutableString *body=[[NSMutableString alloc] init];
+    NSString *fids=[f_ids componentsJoinedByString:@"&fids="];
+    [body appendFormat:@"fpid=%@&spid=%@&item=%@&fids=%@&usrid=%@",f_id,s_id,item,fids,[[SCBSession sharedSession] userId]];
+    NSLog(@"%@",body);
+    NSMutableData *myRequestData=[NSMutableData data];
+    [myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [request setHTTPBody:myRequestData];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:[[SCBSession sharedSession] userId] forHTTPHeaderField:@"ent_uid"];
+    [request setValue:CLIENT_TAG forHTTPHeaderField:@"ent_uclient"];
+    [request setValue:[[SCBSession sharedSession] userToken] forHTTPHeaderField:@"ent_utoken"];
+    [request setValue:[[SCBSession sharedSession] ent_utype] forHTTPHeaderField:@"ent_utype"];
+    NSLog(@"ent_uid:%@",[[SCBSession sharedSession] userId]);
+    NSLog(@"ent_uid:%@",[[SCBSession sharedSession] userToken]);
+    NSLog(@"ent_uid:%@",[[SCBSession sharedSession] ent_utype]);
+    _conn=[[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+-(void)openFinderWithID:(NSString *)f_id sID:(NSString *)s_id authModelId:(NSString *)authModelId
 {
     self.fm_type=kFMTypeOpenFinder;
     self.activeData=[NSMutableData data];
@@ -231,7 +281,7 @@
     if ([desc isEqualToString:@"time"]) {
         order=@"desc";
     }
-    [body appendFormat:@"fpid=%@&cursor=%d&offset=%d&spid=%@&order=%@&desc=%@",f_id,0,0,s_id,desc,order];
+    [body appendFormat:@"fpid=%@&cursor=%d&offset=%d&spid=%@&order=%@&desc=%@&authModelId=%@",f_id,0,0,s_id,desc,order,authModelId];
     NSLog(@"%@",body);
     NSMutableData *myRequestData=[NSMutableData data];
     [myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
@@ -315,7 +365,7 @@
     _conn=[[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 //文件转存/ent/file/resave
--(void)resaveFileIDs:(NSArray *)f_ids toPID:(NSString *)f_pid
+-(void)resaveFileIDs:(NSArray *)f_ids toPID:(NSString *)f_pid sID:(NSString *)s_id
 {
     self.fm_type=kFMTypeCommitOrResave;
     self.activeData=[NSMutableData data];
@@ -323,7 +373,7 @@
     NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
     NSMutableString *body=[[NSMutableString alloc] init];
     NSString *fids=[f_ids componentsJoinedByString:@"&fids[]="];
-    [body appendFormat:@"fpid=%@&fids[]=%@",f_pid,fids];
+    [body appendFormat:@"fpid=%@&fids[]=%@&spid=%@",f_pid,fids,s_id];
     NSLog(@"move: %@",body);
     NSMutableData *myRequestData=[NSMutableData data];
     [myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
@@ -544,6 +594,15 @@
         @finally {
             NSLog(@"%@",dic);
             NSLog(@"@finally");
+        }
+    }else if(self.fm_type==kFMTypeNodeList||self.fm_type==kFMTypeNodeListOperate)
+    {
+        if(self.fm_type==kFMTypeNodeList)
+        {
+            [self.delegate openFinderSucess:dic];
+        }else
+        {
+            [self.delegate operateSucess:dic];
         }
     }else if ([[dic objectForKey:@"code"] intValue]==0) {
         NSLog(@"操作成功 数据大小：%d",[self.activeData length]);

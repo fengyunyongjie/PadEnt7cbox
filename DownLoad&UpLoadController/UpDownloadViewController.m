@@ -61,12 +61,12 @@
     UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
     [items addObject:rightItem1];
     
-    UIButton*rightButton2 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,30,40)];
-    [rightButton2 setImage:[UIImage imageNamed:@"title_upload_nor@2x.png"] forState:UIControlStateNormal];
-    [rightButton2 setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
-    [rightButton2 addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithCustomView:rightButton2];
-    [items addObject:rightItem2];
+//    UIButton*rightButton2 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,30,40)];
+//    [rightButton2 setImage:[UIImage imageNamed:@"title_upload_nor@2x.png"] forState:UIControlStateNormal];
+//    [rightButton2 setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
+//    [rightButton2 addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
+//    UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithCustomView:rightButton2];
+//    [items addObject:rightItem2];
     
     self.navigationItem.rightBarButtonItems = items;
     
@@ -134,26 +134,43 @@
     if (!self.menuView) {
         const float scale=1.3f;
         self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-        UIView * mView=[[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-(80*scale)-15, 0, 80*scale, 47*scale)];
-        UIImageView *bgView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"title_menu2@2x.png"]];
-        [bgView setFrame:CGRectMake(0, 0, 80*scale, 47*scale)];
-        [mView addSubview:bgView];
-        UIButton *btnEdit;
-        btnEdit=[[UIButton alloc] initWithFrame:CGRectMake(0, 6*scale, 40*scale, 41*scale)];
-        [btnEdit setImage:[UIImage imageNamed:@"title_bt_edit_nor@2x.png"] forState:UIControlStateHighlighted];
-        [btnEdit setImage:[UIImage imageNamed:@"title_bt_edit_se@2x.png"] forState:UIControlStateNormal];
-        [btnEdit setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
+        [self.menuView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
+        CGSize btnSize=CGSizeMake(self.menuView.frame.size.width, 45);
+        UIButton *btnEdit,*btnUpload;
+        
+        UIColor *titleColor=[UIColor colorWithRed:83/255.0f green:113/255.0f blue:190/255.0f alpha:1];
+        
+        //        btnUpload=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnSize.width, btnSize.height)];
+        //        [btnUpload setImage:[UIImage imageNamed:@"title_upload.png"] forState:UIControlStateHighlighted];
+        //        [btnUpload setImage:[UIImage imageNamed:@"title_upload.png"] forState:UIControlStateNormal];
+        //        [btnUpload setBackgroundImage:[UIImage imageNamed:@"menu_1.png"] forState:UIControlStateNormal];
+        //        [btnUpload setTitle:@"  上传" forState:UIControlStateNormal];
+        //        [btnUpload setTitleColor:titleColor forState:UIControlStateNormal];
+        //        [btnUpload setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        //        [btnUpload addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        btnEdit=[[UIButton alloc] initWithFrame:CGRectMake(0, 0*btnSize.height, btnSize.width, btnSize.height)];
+        [btnEdit setImage:[UIImage imageNamed:@"title_edit.png"] forState:UIControlStateHighlighted];
+        [btnEdit setImage:[UIImage imageNamed:@"title_edit.png"] forState:UIControlStateNormal];
+        [btnEdit setBackgroundImage:[UIImage imageNamed:@"menu_1.png"] forState:UIControlStateNormal];
+        [btnEdit setTitle:@"  编辑" forState:UIControlStateNormal];
+        [btnEdit setTitleColor:titleColor forState:UIControlStateNormal];
+        [btnEdit setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         [btnEdit addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
-        [mView addSubview:btnEdit];
         
-        btnStart=[[UIButton alloc] initWithFrame:CGRectMake(40*scale, 6*scale, 40*scale, 41*scale)];
-        [btnStart setImage:[UIImage imageNamed:@"title_bt_start_nor.png"] forState:UIControlStateHighlighted];
-        [btnStart setImage:[UIImage imageNamed:@"title_bt_start_se.png"] forState:UIControlStateNormal];
-        [btnStart setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
+        btnStart=[[UIButton alloc] initWithFrame:CGRectMake(0, 1*btnSize.height, btnSize.width, btnSize.height)];
+        [btnStart setImage:[UIImage imageNamed:@"title_allstart.png"] forState:UIControlStateHighlighted];
+        [btnStart setImage:[UIImage imageNamed:@"title_allstart.png"] forState:UIControlStateNormal];
+        [btnStart setBackgroundImage:[UIImage imageNamed:@"menu_2.png"] forState:UIControlStateNormal];
+        [btnStart setTitle:@"  全部开始" forState:UIControlStateNormal];
+        [btnStart setTitleColor:titleColor forState:UIControlStateNormal];
+        [btnStart setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         [btnStart addTarget:self action:@selector(start:) forControlEvents:UIControlEventTouchUpInside];
-        [mView addSubview:btnStart];
         
-        [self.menuView addSubview:mView];
+        
+        //[self.menuView addSubview:btnUpload];
+        [self.menuView addSubview:btnEdit];
+        [self.menuView addSubview:btnStart];
         [self.menuView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.menuView];
     }
@@ -170,30 +187,34 @@
     {
         if(delegate.uploadmanage.isStart)
         {
-            [btnStart setImage:[UIImage imageNamed:@"title_bt_pause_nor.png"] forState:UIControlStateHighlighted];
-            [btnStart setImage:[UIImage imageNamed:@"title_bt_pause_se.png"] forState:UIControlStateNormal];
-            [btnStart setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
+            [btnStart setImage:[UIImage imageNamed:@"title_allpasue.png"] forState:UIControlStateHighlighted];
+            [btnStart setImage:[UIImage imageNamed:@"title_allpasue.png"] forState:UIControlStateNormal];
+            [btnStart setTitle:@"  全部暂停" forState:UIControlStateNormal];
+            //            [btnStart setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
         }
         else
         {
-            [btnStart setImage:[UIImage imageNamed:@"title_bt_start_nor.png"] forState:UIControlStateHighlighted];
-            [btnStart setImage:[UIImage imageNamed:@"title_bt_start_se.png"] forState:UIControlStateNormal];
-            [btnStart setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
+            [btnStart setImage:[UIImage imageNamed:@"title_allstart.png"] forState:UIControlStateHighlighted];
+            [btnStart setImage:[UIImage imageNamed:@"title_allstart.png"] forState:UIControlStateNormal];
+            [btnStart setTitle:@"  全部开始" forState:UIControlStateNormal];
+            //            [btnStart setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
         }
     }
     else
     {
         if(delegate.downmange.isStart)
         {
-            [btnStart setImage:[UIImage imageNamed:@"title_bt_pause_nor.png"] forState:UIControlStateHighlighted];
-            [btnStart setImage:[UIImage imageNamed:@"title_bt_pause_se.png"] forState:UIControlStateNormal];
-            [btnStart setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
+            [btnStart setImage:[UIImage imageNamed:@"title_allpasue.png"] forState:UIControlStateHighlighted];
+            [btnStart setImage:[UIImage imageNamed:@"title_allpasue.png"] forState:UIControlStateNormal];
+            [btnStart setTitle:@"  全部暂停" forState:UIControlStateNormal];
+            //            [btnStart setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
         }
         else
         {
-            [btnStart setImage:[UIImage imageNamed:@"title_bt_start_nor.png"] forState:UIControlStateHighlighted];
-            [btnStart setImage:[UIImage imageNamed:@"title_bt_start_se.png"] forState:UIControlStateNormal];
-            [btnStart setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
+            [btnStart setImage:[UIImage imageNamed:@"title_allstart.png"] forState:UIControlStateHighlighted];
+            [btnStart setImage:[UIImage imageNamed:@"title_allstart.png"] forState:UIControlStateNormal];
+            [btnStart setTitle:@"  全部开始" forState:UIControlStateNormal];
+            //            [btnStart setBackgroundImage:[UIImage imageNamed:@"title_se.png"] forState:UIControlStateHighlighted];
         }
     }
 }

@@ -31,6 +31,7 @@ typedef enum {
 @property (strong,nonatomic) NSArray *finderArray;
 @property (strong,nonatomic) NSArray *selectArray;
 @property (strong,nonatomic) NSString *f_id;
+@property (strong,nonatomic) NSString *fcmd;
 @property (strong,nonatomic) NSString *spid;
 @property (strong,nonatomic) NSString *roletype;
 @property (assign,nonatomic) FileListType flType;

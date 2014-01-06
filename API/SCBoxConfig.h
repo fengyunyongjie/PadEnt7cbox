@@ -14,9 +14,9 @@
 #define RESPONSE_TIMEOUT 10
 #define CONNECT_MAX 60*3
 //商业版URL
-#define HOST_URL @"http://192.168.1.9/"
+//#define HOST_URL @"http://192.168.1.9/"
 //#define HOST_URL @"http://b.7cbox.cn/"
-//#define HOST_URL @"http://192.168.1.55:8080/"
+#define HOST_URL @"http://192.168.1.55:8080/"
 //#define HOST_URL @"http://xianzhouhe.eicp.net:81/"
 #define SERVER_URL [NSString stringWithFormat:@"%@%@",HOST_URL,@"biz/ent"]
 
@@ -107,6 +107,7 @@
 //打开网盘  文件列表/ent/file/list
 //#define FM_URI @"/fm"
 #define FM_URI @"/file/list"
+#define FM_NODELIST @"/file/nodeList"
 //单个文件请求 /ent/file/info
 #define FM_INFO @"/file/info"
 //新建

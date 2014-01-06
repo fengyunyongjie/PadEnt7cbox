@@ -12,16 +12,19 @@
 typedef enum {
     kSelectTypeDefault,
     kSelectTypeMove,
+    kSelectTypeCopy,
     kSelectTypeResave,
     kSelectTypeCommit,
     kSelectTypeUpload,
 } SelectType;
+@protocol SelectFileListDelegate;
 @interface SelectFileListViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 @property (strong,nonatomic) NSArray *targetsArray;
 @property (strong,nonatomic) NSDictionary *dataDic;
 @property (strong,nonatomic) NSArray *listArray;
 @property (strong,nonatomic) NSArray *finderArray;
 @property (strong,nonatomic) NSString *f_id;
+@property (strong,nonatomic) NSString *fcmd;
 @property (strong,nonatomic) NSString *spid;
 @property (strong,nonatomic) NSString *roletype;
 @property (strong,nonatomic) NSMutableDictionary *imageDownloadsInProgress;
@@ -29,6 +32,17 @@ typedef enum {
 @property (strong,nonatomic) NSIndexPath *selectedIndexPath;
 @property (strong,nonatomic) UIToolbar *toolbar;
 @property (strong,nonatomic) NSString *rootName;
-@property (weak,nonatomic) id delegate;
+@property (weak,nonatomic) id<SelectFileListDelegate> delegate;
 @property (assign,nonatomic) SelectType type;
+@end
+
+@protocol SelectFileListDelegate
+@optional
+-(void)moveFileToID:(NSString *)f_id spid:(NSString *)spid;
+-(void)copyFileToID:(NSString *)f_id spid:(NSString *)spid;
+-(void)commitFileToID:(NSString *)f_id sID:(NSString *)s_pid;
+-(void)resaveFileToID:(NSString *)f_id spid:(NSString *)spid;
+-(void)uploadFileder:(NSString *)deviceName;
+-(void)uploadSpid:(NSString *)s_pid_;
+-(void)uploadFiledId:(NSString *)f_id_;
 @end

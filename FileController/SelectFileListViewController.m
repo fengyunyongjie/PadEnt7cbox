@@ -192,10 +192,10 @@
     NSString *item=@"";
     switch (self.type) {
         case kSelectTypeCopy:
-            item=@"copy";
+            item=@"upload,mkdir";
             break;
         case kSelectTypeMove:
-            item=@"move";
+            item=@"upload,mkdir";
             break;
         case kSelectTypeUpload:
             item=@"upload";
@@ -219,10 +219,10 @@
     NSString *item=@"";
     switch (self.type) {
         case kSelectTypeCopy:
-            item=@"copy";
+            item=@"upload,mkdir";
             break;
         case kSelectTypeMove:
-            item=@"move";
+            item=@"upload,mkdir";
             break;
         case kSelectTypeUpload:
             item=@"upload";
@@ -237,9 +237,41 @@
     switch (self.type) {
         case kSelectTypeDefault:
         case kSelectTypeMove:
+            if (![self.roletype isEqualToString:@"2"]&&[self.f_id intValue]==0&&self.isHasSelectFile) {
+                if (self.hud) {
+                    [self.hud removeFromSuperview];
+                }
+                self.hud=nil;
+                self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+                [self.view.superview addSubview:self.hud];
+                [self.hud show:NO];
+                self.hud.labelText=@"文件库根目录下仅允许文件夹!";
+                self.hud.mode=MBProgressHUDModeText;
+                self.hud.margin=10.f;
+                [self.hud show:YES];
+                [self.hud hide:YES afterDelay:1.0f];
+                return;
+                
+            }
             [self.delegate moveFileToID:self.f_id spid:self.spid];
             break;
         case kSelectTypeCopy:
+            if (![self.roletype isEqualToString:@"2"]&&[self.f_id intValue]==0&&self.isHasSelectFile) {
+                if (self.hud) {
+                    [self.hud removeFromSuperview];
+                }
+                self.hud=nil;
+                self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+                [self.view.superview addSubview:self.hud];
+                [self.hud show:NO];
+                self.hud.labelText=@"文件库根目录下仅允许文件夹!";
+                self.hud.mode=MBProgressHUDModeText;
+                self.hud.margin=10.f;
+                [self.hud show:YES];
+                [self.hud hide:YES afterDelay:1.0f];
+                return;
+                
+            }
             [self.delegate copyFileToID:self.f_id spid:self.spid];
             break;
         case kSelectTypeCommit:
@@ -437,6 +469,7 @@
                 flVC.delegate=self.delegate;
                 flVC.type=self.type;
                 flVC.targetsArray=self.targetsArray;
+                flVC.isHasSelectFile=self.isHasSelectFile;
                 flVC.rootName = self.rootName;
                 [self.navigationController pushViewController:flVC animated:YES];
             }

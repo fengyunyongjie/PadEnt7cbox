@@ -34,6 +34,7 @@ typedef enum {
 @property (strong,nonatomic) NSString *rootName;
 @property (weak,nonatomic) id<SelectFileListDelegate> delegate;
 @property (assign,nonatomic) SelectType type;
+@property (assign,nonatomic) BOOL isHasSelectFile;
 @end
 
 @protocol SelectFileListDelegate

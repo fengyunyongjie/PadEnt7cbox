@@ -337,6 +337,7 @@
         vc.delegate=self.delegate;
         vc.type=self.type;
         vc.targetsArray=self.targetsArray;
+        vc.isHasSelectFile=self.isHasSelectFile;
         [self.navigationController pushViewController:vc animated:YES];
         return;
     }
@@ -408,6 +409,7 @@
                 flVC.targetsArray=self.targetsArray;
                 flVC.rootName=[dic objectForKey:@"spname"];
                 flVC.roletype=@"2"; //2为我的文件夹 1为企业文件夹
+                flVC.isHasSelectFile=self.isHasSelectFile;
                 if (self.dirType==kTypeEnt)
                 {
                     flVC.roletype=@"1";
@@ -432,6 +434,7 @@
                 flVC.targetsArray=self.targetsArray;
                 flVC.rootName=[dic objectForKey:@"spname"];
                 flVC.roletype=@"2"; //2为我的文件夹 1为企业文件夹
+                flVC.isHasSelectFile=self.isHasSelectFile;
                 if (self.dirType==kTypeEnt)
                 {
                     flVC.roletype=@"1";

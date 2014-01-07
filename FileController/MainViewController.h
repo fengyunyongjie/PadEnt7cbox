@@ -35,4 +35,5 @@ typedef enum {
 @property(assign,nonatomic) MainType type;
 @property(assign,nonatomic) DirType dirType;
 @property (strong,nonatomic) NSArray *targetsArray;
+@property (assign,nonatomic) BOOL isHasSelectFile;
 @end

@@ -54,9 +54,9 @@
     [[self view] addGestureRecognizer:recognizer];
     
     NSMutableArray *items=[NSMutableArray array];
-    UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,40,40)];
+    UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,20,40)];
     [rightButton1 setImage:[UIImage imageNamed:@"title_more.png"] forState:UIControlStateNormal];
-    [rightButton1 setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
+    [rightButton1 setBackgroundImage:[UIImage imageNamed:@"title_more_se.png"] forState:UIControlStateHighlighted];
     [rightButton1 addTarget:self action:@selector(menuAction:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
     [items addObject:rightItem1];

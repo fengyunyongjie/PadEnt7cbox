@@ -50,6 +50,9 @@ typedef enum{
 }ActionSheetTag;
 
 @interface FileListViewController ()<SCBFileManagerDelegate,IconDownloaderDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate>
+{
+    UIBarButtonItem *item_send,*item_download;
+}
 @property (strong,nonatomic) SCBFileManager *fm;
 @property (strong,nonatomic) SCBFileManager *fm_move;
 @property (strong,nonatomic) MBProgressHUD *hud;
@@ -137,9 +140,9 @@ typedef enum{
     self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     NSMutableArray *items=[NSMutableArray array];
     
-    UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,40,40)];
+    UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,20,40)];
     [rightButton1 setImage:[UIImage imageNamed:@"title_more.png"] forState:UIControlStateNormal];
-    [rightButton1 setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
+    [rightButton1 setBackgroundImage:[UIImage imageNamed:@"title_more_se.png"] forState:UIControlStateHighlighted];
     [rightButton1 addTarget:self action:@selector(menuAction:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
     [items addObject:rightItem1];
@@ -238,9 +241,10 @@ typedef enum{
         self.dataDic=[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
         if (self.dataDic) {
             self.listArray=self.listArray=(NSArray *)[self.dataDic objectForKey:@"files"];
-            if ([self.f_id intValue]==0) {
-                self.fcmd=[self.dataDic objectForKey:@"cmds"];
-            }
+//            if ([self.f_id intValue]==0) {
+//                self.fcmd=[self.dataDic objectForKey:@"cmds"];
+//            }
+            self.fcmd=[self.dataDic objectForKey:@"cmds"];
             if (self.listArray) {
                 [self.tableView reloadData];
             }
@@ -309,7 +313,7 @@ typedef enum{
         [btnNewFinder setImage:[UIImage imageNamed:@"title_new.png"] forState:UIControlStateHighlighted];
         [btnNewFinder setImage:[UIImage imageNamed:@"title_new.png"] forState:UIControlStateNormal];
         [btnNewFinder setBackgroundImage:[UIImage imageNamed:@"menu_2.png"] forState:UIControlStateNormal];
-        [btnNewFinder setTitle:@"  创建文件夹" forState:UIControlStateNormal];
+        [btnNewFinder setTitle:@"  新建文件夹" forState:UIControlStateNormal];
         [btnNewFinder setTitleColor:titleColor forState:UIControlStateNormal];
         [btnNewFinder setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         [btnNewFinder addTarget:self action:@selector(newFinder:) forControlEvents:UIControlEventTouchUpInside];
@@ -332,8 +336,17 @@ typedef enum{
         [btnSort setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         [btnSort addTarget:self action:@selector(sortAction:) forControlEvents:UIControlEventTouchUpInside];
         NSMutableArray *array=[NSMutableArray array];
-        if ([self hasCmdInFcmd:@"upload"]) {
-            [array addObject:btnUpload];
+        if ([self hasCmdInFcmd:@"upload"])
+        {
+            if ([self.roletype isEqualToString:@"2"]) {
+                [array addObject:btnUpload];
+            }else
+            {
+                if([self.f_id intValue]!=0)
+                {
+                    [array addObject:btnUpload];
+                }
+            }
         }
         if ([self hasCmdInFcmd:@"mkdir"]) {
             [array addObject:btnNewFinder];
@@ -405,6 +418,37 @@ typedef enum{
     }
     return NO;
 }
+-(BOOL)hasCmd:(NSString *) cmd InFcmd:(NSString *)fcmd
+{
+    //  mkdir：新建文件夹
+    //	authz：权限管理
+    //	download：下载
+    //	ren：重命名
+    //	del：删除
+    //	copy：复制
+    //	move：移动
+    //  upload:上传
+    //	edit：编辑
+    //	preview：预览
+    //	publiclink：外链发送
+    //  clear:清空
+    //	restore：还原
+    //  remove:回收站删除
+    if([self.roletype isEqualToString:@"2"])
+    {
+        return YES;
+    }
+    if (!fcmd||[fcmd isEqualToString:@""]||!cmd) {
+        return NO;
+    }
+    NSArray *array=[fcmd componentsSeparatedByString:@","];
+    for (NSString *str in array) {
+        if ([str isEqualToString:cmd]) {
+            return YES;
+        }
+    }
+    return NO;
+}
 -(void)uploadAction:(id)sender
 {
     [self hideMenu];
@@ -436,6 +480,21 @@ typedef enum{
     NSArray *retVal=nil;
     retVal=self.tableView.indexPathsForSelectedRows;
     return retVal;
+}
+-(BOOL)isHasSelectFile
+{
+    BOOL result=NO;
+    NSMutableArray *ids=[[NSMutableArray alloc] init];
+    for (NSIndexPath *indexpath in [self selectedIndexPaths]) {
+        NSDictionary *dic=[self.listArray objectAtIndex:indexpath.row];
+        NSString *fisdir=[dic objectForKey:@"fisdir"];
+        if (![fisdir isEqualToString:@"0"]) {
+            result=YES;
+        }
+        NSString *fid=[dic objectForKey:@"fid"];
+        [ids addObject:fid];
+    }
+    return result;
 }
 -(NSArray *)selectedIDs
 {
@@ -587,7 +646,7 @@ typedef enum{
         [self.view addSubview:self.moreEditBar];
         //发送 删除 提交 移动 全选
         UIButton *btn_send, *btn_commit ,*btn_del ,*btn_move,*btn_download ,*btn_resave ,*btn_copy;
-        UIBarButtonItem *item_send, *item_commit ,*item_del ,*item_move, *item_download, *item_resave,*item_flexible, *item_copy;
+        UIBarButtonItem *item_commit ,*item_del ,*item_move, *item_resave,*item_flexible, *item_copy;
         int btnWidth=40;
         btn_send =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 39)];
         [btn_send setImage:[UIImage imageNamed:@"share_nor.png"] forState:UIControlStateNormal];
@@ -680,7 +739,7 @@ typedef enum{
             
             NSArray *theArray=nil;
             if (array.count>4) {
-                //theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,item_more];
+                theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,[array objectAtIndex:3],item_flexible,[array objectAtIndex:4]];
             }else if(array.count==1)
             {
                 theArray=@[item_flexible,[array objectAtIndex:0],item_flexible];
@@ -923,6 +982,7 @@ typedef enum{
     
     NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
     NSString *fid=[dic objectForKey:@"fid"];
+    NSString *fisdir=[dic objectForKey:@"fisdir"];
     
     MainViewController *flvc=[[MainViewController alloc] init];
     flvc.title=@"选择复制的位置";
@@ -930,9 +990,11 @@ typedef enum{
     flvc.type=kTypeCopy;
     if (self.tableView.isEditing) {
         flvc.targetsArray=[self selectedIDs];
+        flvc.isHasSelectFile=[self isHasSelectFile];
     }else
     {
         flvc.targetsArray=@[fid];
+        flvc.isHasSelectFile=![fisdir isEqualToString:@"0"];
     }
 //    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flvc];
 //    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
@@ -969,6 +1031,7 @@ typedef enum{
 
     NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
     NSString *fid=[dic objectForKey:@"fid"];
+    NSString *fisdir=[dic objectForKey:@"fisdir"];
 
     
     MainViewController *flvc=[[MainViewController alloc] init];
@@ -977,9 +1040,11 @@ typedef enum{
     flvc.type=kTypeMove;
     if (self.tableView.isEditing) {
         flvc.targetsArray=[self selectedIDs];
+        flvc.isHasSelectFile=[self isHasSelectFile];
     }else
     {
         flvc.targetsArray=@[fid];
+        flvc.isHasSelectFile=![fisdir isEqualToString:@"0"];
     }
 //    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flvc];
 //    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
@@ -1322,7 +1387,9 @@ typedef enum{
                     }else{
                         imageView.image = [UIImage imageNamed:@"file_pic.png"];
                         NSLog(@"将要下载的文件：%@",localThumbPath);
-                        [self startIconDownload:dic forIndexPath:indexPath];
+                        if ([self hasCmdInFcmd:@"preview"]) {
+                            [self startIconDownload:dic forIndexPath:indexPath];
+                        }
                     }
                 }else if ([fmime isEqualToString:@"doc"]||
                           [fmime isEqualToString:@"docx"]||
@@ -1355,6 +1422,49 @@ typedef enum{
                     imageView.image = [UIImage imageNamed:@"file_other.png"];
                 }
 
+            }
+            if ([self.roletype isEqualToString:@"2"]) {
+                [cell.accessoryView setHidden:NO];
+            }else if([self.f_id intValue]==0)
+            {
+                NSString *fcmd=[dic objectForKey:@"fcmd"];
+                if ([fisdir isEqualToString:@"0"])
+                {
+                    if ([self hasCmd:@"copy" InFcmd:fcmd]||[self hasCmd:@"move" InFcmd:fcmd]||[self hasCmd:@"ren" InFcmd:fcmd]||[self hasCmd:@"del" InFcmd:fcmd]) {
+                        [cell.accessoryView setHidden:NO];
+                    }else
+                    {
+                        [cell.accessoryView setHidden:YES];
+                    }
+                }else
+                {
+                    if ([self hasCmd:@"download" InFcmd:fcmd]||[self hasCmd:@"publiclink" InFcmd:fcmd]||[self hasCmd:@"del" InFcmd:fcmd]||[self hasCmd:@"copy" InFcmd:fcmd]||[self hasCmd:@"move" InFcmd:fcmd]||[self hasCmd:@"ren" InFcmd:fcmd]) {
+                        [cell.accessoryView setHidden:NO];
+                    }else
+                    {
+                        [cell.accessoryView setHidden:YES];
+                    }
+                }
+            }else
+            {
+                if([fisdir isEqualToString:@"0"])
+                {
+                    if ([self hasCmdInFcmd:@"copy"]||[self hasCmdInFcmd:@"move"]||[self hasCmdInFcmd:@"ren"]||[self hasCmdInFcmd:@"del"]) {
+                        [cell.accessoryView setHidden:NO];
+                    }else
+                    {
+                        [cell.accessoryView setHidden:YES];
+                    }
+                    
+                }else
+                {
+                    if ([self hasCmdInFcmd:@"download"]||[self hasCmdInFcmd:@"publiclink"]||[self hasCmdInFcmd:@"del"]||[self hasCmdInFcmd:@"copy"]||[self hasCmdInFcmd:@"move"]||[self hasCmdInFcmd:@"ren"]) {
+                        [cell.accessoryView setHidden:NO];
+                    }else
+                    {
+                        [cell.accessoryView setHidden:YES];
+                    }
+                }
             }
         }
         //判断文件是否已经下载
@@ -1548,6 +1658,110 @@ typedef enum{
             [self.singleEditBar setItems:@[item_download,item_flexible,item_send,item_flexible,item_del,item_flexible,item_more]];
         }
         //[self.singleEditBar setItems:@[item_send,item_flexible,item_commit,item_flexible,item_del,item_flexible,item_more]];
+    }else if([self.f_id intValue]==0)
+    {
+        NSString *fcmd=[dic objectForKey:@"fcmd"];
+        
+        //管理员
+        if ([fisdir isEqualToString:@"0"])
+        {
+            //            [self.singleEditBar setItems:@[item_resave,item_flexible,item_move,item_flexible,item_rename,item_flexible,item_del]];
+            NSMutableArray *array=[NSMutableArray array];
+            //[array addObject:item_flexible];
+            if([self hasCmd:@"copy" InFcmd:fcmd])
+            {
+                [array addObject:item_copy];
+                //[array addObject:item_flexible];
+            }
+            if([self hasCmd:@"move" InFcmd:fcmd])
+            {
+                [array addObject:item_move];
+                //[array addObject:item_flexible];
+            }
+            if([self hasCmd:@"ren" InFcmd:fcmd])
+            {
+                [array addObject:item_rename];
+                //[array addObject:item_flexible];
+            }
+            if([self hasCmd:@"del" InFcmd:fcmd])
+            {
+                [array addObject:item_del];
+                //[array addObject:item_flexible];
+            }
+            NSArray *theArray=nil;
+            if (array.count>4) {
+                theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,item_more];
+            }else if(array.count==1)
+            {
+                theArray=@[item_flexible,[array objectAtIndex:0],item_flexible];
+            }else if(array.count==2)
+            {
+                theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1]];
+            }
+            else if(array.count==3)
+            {
+                theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2]];
+            }
+            else if(array.count==4)
+            {
+                theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,[array objectAtIndex:3]];
+            }
+            [self.singleEditBar setItems:theArray];
+        }else
+        {
+            //            [self.singleEditBar setItems:@[item_download,item_flexible,item_send,item_flexible,item_del,item_flexible,item_more]];
+            NSMutableArray *array=[NSMutableArray array];
+            //[array addObject:item_flexible];
+            if([self hasCmd:@"download" InFcmd:fcmd])
+            {
+                [array addObject:item_download];
+                //[array addObject:item_flexible];
+            }
+            if([self hasCmd:@"publiclink" InFcmd:fcmd])
+            {
+                [array addObject:item_send];
+                //[array addObject:item_flexible];
+            }
+            if([self hasCmd:@"del" InFcmd:fcmd])
+            {
+                [array addObject:item_del];
+                //[array addObject:item_flexible];
+            }
+            if([self hasCmd:@"copy" InFcmd:fcmd])
+            {
+                [array addObject:item_copy];
+                //[array addObject:item_flexible];
+            }
+            if([self hasCmd:@"move" InFcmd:fcmd])
+            {
+                [array addObject:item_move];
+                //[array addObject:item_flexible];
+            }
+            if([self hasCmd:@"ren" InFcmd:fcmd])
+            {
+                [array addObject:item_rename];
+                //[array addObject:item_flexible];
+            }
+            NSArray *theArray=nil;
+            if (array.count>4) {
+                theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,item_more];
+            }else if(array.count==1)
+            {
+                theArray=@[item_flexible,[array objectAtIndex:0],item_flexible];
+            }else if(array.count==2)
+            {
+                theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1]];
+            }
+            else if(array.count==3)
+            {
+                theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2]];
+            }
+            else if(array.count==4)
+            {
+                theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,[array objectAtIndex:3]];
+            }
+            [self.singleEditBar setItems:theArray];
+        }
     }else
     {
         //管理员
@@ -1660,8 +1874,10 @@ typedef enum{
         NSString *fisdir=[dic objectForKey:@"fisdir"];
         if ([fisdir isEqualToString:@"0"]) {
             //选中了文件夹，禁用分享;
-            UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
-            [item setEnabled:NO];
+//            UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
+//            [item setEnabled:NO];
+            [item_send setEnabled:NO];
+            [item_download setEnabled:NO];
         }
         return;
     }
@@ -1686,6 +1902,9 @@ typedef enum{
                      [fmime isEqualToString:@"bmp"]||
                      [fmime isEqualToString:@"gif"])
             {
+                if (![self hasCmdInFcmd:@"preview"]) {
+                    return;
+                }
                 int row = 0;
                 if(indexPath.row<[self.listArray count])
                 {
@@ -1722,11 +1941,12 @@ typedef enum{
                         PartitionViewController *look = [[PartitionViewController alloc] init];
                         [look setCurrPage:row];
                         [look setTableArray:tableArray];
-                        if ([self.roletype isEqualToString:@"9999"] || [self.roletype isEqualToString:@"0"]) {
-                             look.isHaveDelete = YES;
-                        }else if ([self.roletype isEqualToString:@"1"] || [self.roletype isEqualToString:@"2"])
-                        {
-                            look.isHaveDelete = NO;
+                        if ([self.roletype isEqualToString:@"2"]) {
+                            look.isHaveDelete = YES;
+                            //look.isHaveDownload=YES;
+                        }else{
+                            look.isHaveDelete=[self hasCmdInFcmd:@"del"];
+                            //look.isHaveDownload=[self hasCmdInFcmd:@"download"];
                         }
                         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                         UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
@@ -1744,6 +1964,9 @@ typedef enum{
             }
             else
             {
+                if (![self hasCmdInFcmd:@"preview"]) {
+                    return;
+                }
                 NSString *file_id=[dic objectForKey:@"fid"];
                 NSString *f_name=[dic objectForKey:@"fname"];
                 NSInteger fileSize = [[dic objectForKey:@"fsize"] integerValue];
@@ -1809,12 +2032,16 @@ typedef enum{
                 return;
             }
         }
-        UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
+        //UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
         if (isDis) {
-            [item setEnabled:NO];
+            //[item setEnabled:NO];
+            [item_send setEnabled:NO];
+            [item_download setEnabled:NO];
         }else
         {
-            [item setEnabled:YES];
+            //[item setEnabled:YES];
+            [item_send setEnabled:YES];
+            [item_download setEnabled:YES];
         }
         return;
     }
@@ -1842,9 +2069,10 @@ typedef enum{
     self.dataDic=datadic;
     if (self.dataDic) {
         self.listArray=(NSArray *)[self.dataDic objectForKey:@"files"];
-        if ([self.f_id intValue]==0) {
-            self.fcmd=[self.dataDic objectForKey:@"cmds"];
-        }
+//        if ([self.f_id intValue]==0) {
+//            self.fcmd=[self.dataDic objectForKey:@"cmds"];
+//        }
+        self.fcmd=[self.dataDic objectForKey:@"cmds"];
         if (self.listArray) {
             [self.tableView reloadData];
         }

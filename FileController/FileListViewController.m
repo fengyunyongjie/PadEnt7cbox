@@ -934,12 +934,14 @@ typedef enum{
     {
         flvc.targetsArray=@[fid];
     }
-    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flvc];
-    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
-    //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
-    [nav.navigationBar setTintColor:[UIColor whiteColor]];
-    [self presentViewController:nav animated:YES completion:nil];
+//    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flvc];
+//    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+//    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+//    //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+//    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+//    [self presentViewController:nav animated:YES completion:nil];
+    [self.tabBarController.tabBar setHidden:YES];
+    [self.navigationController pushViewController:flvc animated:YES];
 }
 -(void)toMove:(id)sender
 {
@@ -979,12 +981,14 @@ typedef enum{
     {
         flvc.targetsArray=@[fid];
     }
-    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flvc];
-    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
-    //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
-    [nav.navigationBar setTintColor:[UIColor whiteColor]];
-    [self presentViewController:nav animated:YES completion:nil];
+//    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flvc];
+//    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+//    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+//    //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+//    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+//    [self presentViewController:nav animated:YES completion:nil];
+    [self.tabBarController.tabBar setHidden:YES];
+    [self.navigationController pushViewController:flvc animated:YES];
 }
 -(void)toDownload:(id)sender
 {

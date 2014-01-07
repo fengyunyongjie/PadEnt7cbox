@@ -743,6 +743,7 @@
 -(NSString *)md5:(NSData *)concat {
     CC_MD5_CTX md5_ctx;
     CC_MD5_Init(&md5_ctx);
+    
     NSData* filedata = concat;
     CC_MD5_Update(&md5_ctx, [filedata bytes], [filedata length]);
     unsigned char result[CC_MD5_DIGEST_LENGTH];

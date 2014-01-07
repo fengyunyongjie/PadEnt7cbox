@@ -310,17 +310,17 @@
         UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
         if([viewController isKindOfClass:[FileListViewController class]])
         {
-            [self.navigationController popToViewController:viewController animated:NO];
+            [self.navigationController popToViewController:viewController animated:YES];
             break;
         }
         else if([viewController isKindOfClass:[UpDownloadViewController class]])
         {
-            [self.navigationController popToViewController:viewController animated:NO];
+            [self.navigationController popToViewController:viewController animated:YES];
             break;
         }
         else if([viewController isKindOfClass:[MainViewController class]])
         {
-            [self.navigationController popToViewController:viewController animated:NO];
+            [self.navigationController popToViewController:viewController animated:YES];
             break;
         }
     }
@@ -344,12 +344,12 @@
         UIViewController *delailview = [self.navigationController.viewControllers objectAtIndex:[self.navigationController.viewControllers count]-3];
         if(delailview)
         {
-            [self.navigationController popToViewController:delailview animated:NO];
+            [self.navigationController popToViewController:delailview animated:YES];
         }
     }
     else
     {
-        [self.navigationController popToRootViewControllerAnimated:NO];
+        [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
 

@@ -15,6 +15,8 @@
 #import "AppDelegate.h"
 #import "SCBSession.h"
 #import <QuartzCore/QuartzCore.h>
+#import "MyTabBarViewController.h"
+#import "MySplitViewController.h"
 
 #define AUTHOR_MENU @"AuthorMenus"
 @interface MainViewController()<SCBFileManagerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
@@ -44,9 +46,9 @@
 }
 - (void)viewDidAppear:(BOOL)animated
 {
-    CGSize winSize=[UIScreen mainScreen].bounds.size;
-    //self.view.frame=CGRectMake(0, 64, winSize.width,winSize.height-64 );
-    self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height);
+//    CGSize winSize=[UIScreen mainScreen].bounds.size;
+//    //self.view.frame=CGRectMake(0, 64, winSize.width,winSize.height-64 );
+//    self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height);
 }
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
@@ -165,6 +167,7 @@
 -(void)dissmissSelf:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:Nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods
@@ -454,7 +457,6 @@
                     flVC.roletype=@"1";
                 }
                 AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-                flVC.roletype=[dic objectForKey:@"roletype"];
                 appDelegate.file_url = flVC.title;
                 appDelegate.old_file_url = flVC.title;
                 [self.navigationController pushViewController:flVC animated:YES];
@@ -616,4 +618,34 @@
 {
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+
+-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-64);
+        }else
+        {
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-64-20);
+        }
+    }
+    else
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-64);
+        }else
+        {
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-64-20);
+        }
+    }
+}
+
 @end

@@ -14,6 +14,9 @@
 #import "UIBarButtonItem+Yn.h"
 #import "QBAssetCollectionViewController.h"
 #import "AppDelegate.h"
+#import "MySplitViewController.h"
+#import "MyTabBarViewController.h"
+
 @interface SelectFileListViewController ()<SCBFileManagerDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate,QBImageFileViewDelegate>
 @property (strong,nonatomic) SCBFileManager *fm;
 @property(strong,nonatomic) MBProgressHUD *hud;
@@ -41,27 +44,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [self updateFileList];
-    CGRect r=self.view.frame;
-    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
-    self.view.frame=r;
-    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49);
-    }else
-    {
-        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49-64);
-    }
-    if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.toolbar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
-    }else
-    {
-        self.toolbar.frame=CGRectMake(0, ([[UIScreen mainScreen] bounds].size.height-49)-self.view.frame.origin.y, 320, 49);
-    }
-    
-    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
-    NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
 }
 - (void)viewDidAppear:(BOOL)animated
 {
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 - (void)viewDidLoad
 {
@@ -93,7 +80,7 @@
     [self.toolbar setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
     
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-//    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
     
     UIButton *btn_download ,*btn_resave;
     UIBarButtonItem  *item_download, *item_resave;
@@ -116,13 +103,6 @@
     //    UIBarButtonItem *cancel_btn=[[UIBarButtonItem alloc] initWithTitleStr:@"    取 消    " style:UIBarButtonItemStyleBordered target:self action:@selector(moveCancel:)];
     UIBarButtonItem *fix=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     [self.toolbar setItems:@[fix,item_download,fix,item_resave,fix]];
-    //self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-toolbarHeight);
-    self.tableView.frame=CGRectMake(0, 64, self.view.frame.size.width, [[UIScreen mainScreen] bounds].size.height-49-64);
-    
-//    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-    
-//    self.tableView.frame=CGRectMake(0, 64, tabbar.view.frame.size.width, [[UIScreen mainScreen] bounds].size.height-49-64);
     
     //初始化返回按钮
     UIButton*backButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,35,29)];
@@ -283,10 +263,39 @@
             break;
     }
     [self dismissViewControllerAnimated:YES completion:nil];
+    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
+    {
+        UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
+        if([viewController isKindOfClass:[FileListViewController class]])
+        {
+            [self.navigationController popToViewController:viewController animated:YES];
+            break;
+        }
+        else if([viewController isKindOfClass:[QBAssetCollectionViewController class]])
+        {
+            [self.navigationController popToViewController:viewController animated:YES];
+            break;
+        }
+    }
+    
 }
 - (void)moveCancel:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
+    {
+        UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
+        if([viewController isKindOfClass:[FileListViewController class]])
+        {
+            [self.navigationController popToViewController:viewController animated:YES];
+            break;
+        }
+        else if([viewController isKindOfClass:[QBAssetCollectionViewController class]])
+        {
+            [self.navigationController popToViewController:viewController animated:YES];
+            break;
+        }
+    }
 }
 -(void)newFinder:(id)sender
 {
@@ -551,4 +560,46 @@
         NSLog(@"点击其它");
     }
 }
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+
+-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49-64);
+        }else
+        {
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49-64-20);
+        }
+        if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.toolbar.frame=CGRectMake(0, 768-49-64-20, 320, 49);
+        }else
+        {
+            self.toolbar.frame=CGRectMake(0, 768-49-64, 320, 49);
+        }
+    }
+    else
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49-64);
+        }else
+        {
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49-64-20);
+        }
+        if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.toolbar.frame=CGRectMake(0, 1024-49-64-20, 320, 49);
+        }else
+        {
+            self.toolbar.frame=CGRectMake(0, 1024-49-64, 320, 49);
+        }
+    }
+}
+
 @end

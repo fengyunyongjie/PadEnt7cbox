@@ -103,7 +103,7 @@
     self.viewControllers=@[vc1,vc2,vc4];
     self.selectedIndex=0;
     
-    //[self.tabBar setBackgroundImage:[UIImage imageNamed:@"nav_bk.png"]];
+    [self.tabBar setBackgroundImage:[UIImage imageNamed:@"nav_bk.png"]];
     //[self.tabBar setBarStyle:UIBarStyleBlack];
     //[self.tabBar setAlpha:0.65f];
     //[self.tabBar setTranslucent:NO];

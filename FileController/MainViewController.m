@@ -454,6 +454,7 @@
                     flVC.roletype=@"1";
                 }
                 AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+                flVC.roletype=[dic objectForKey:@"roletype"];
                 appDelegate.file_url = flVC.title;
                 appDelegate.old_file_url = flVC.title;
                 [self.navigationController pushViewController:flVC animated:YES];

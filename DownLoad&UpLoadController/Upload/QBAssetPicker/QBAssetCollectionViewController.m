@@ -66,17 +66,6 @@
         self.selectedAssets = [NSMutableOrderedSet orderedSet];
         
         self.imageSize = CGSizeMake(75, 75);
-        
-        // Table View
-        CGRect rect = CGRectMake(0, 0, 320, TableViewHeight);
-        UITableView *tableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
-        tableView.dataSource = self;
-        tableView.delegate = self;
-        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        tableView.allowsSelection = YES;
-        tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self.view addSubview:tableView];
-        self.tableView = tableView;
     }
     
     return self;
@@ -84,50 +73,15 @@
 
 -(void)viewDidLoad
 {
-    //添加头部试图
-//    topView = [[UIView alloc] initWithFrame:CGRectMake(0, QBY, 320, 44)];
-//    UIImageView *images = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-//    [images setImage:[UIImage imageNamed:@"Bk_Title.png"]];
-//    [topView addSubview:images];
-//    isNeedBackButton = YES;
-    //把色值转换成图片
-//    CGRect rect_image = CGRectMake(0, 0, ChangeTabWidth, 44);
-//    UIGraphicsBeginImageContext(rect_image.size);
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    CGContextSetFillColorWithColor(context,
-//                                   [hilighted_color CGColor]);
-//    CGContextFillRect(context, rect_image);
-//    UIImage * imge = [[UIImage alloc] init];
-//    imge = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//    //返回按钮
-//    if(isNeedBackButton)
-//    {
-//        //添加背景
-//        UIImage *back_image = [UIImage imageNamed:@"Bt_Back.png"];
-//        UIButton *back_button = [[UIButton alloc] initWithFrame:CGRectMake(RightButtonBoderWidth, (44-back_image.size.height/2)/2, back_image.size.width/2, back_image.size.height/2)];
-//        [back_button addTarget:self action:@selector(clicked_back) forControlEvents:UIControlEventTouchUpInside];
-//        [back_button setBackgroundImage:imge forState:UIControlStateHighlighted];
-//        [back_button setImage:back_image forState:UIControlStateNormal];
-//        [topView addSubview:back_button];
-//    }
-    
-    
-//    //选项卡栏目
-//    UIButton *phoot_button = [[UIButton alloc] init];
-//    [phoot_button setTag:23];
-//    [phoot_button setFrame:CGRectMake((320-ChangeTabWidth)/2, 0, ChangeTabWidth, 44)];
-//    [phoot_button setTitle:@"文件上传" forState:UIControlStateNormal];
-//    [phoot_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    [phoot_button addTarget:self action:@selector(clicked_uploadState:) forControlEvents:UIControlEventTouchDown];
-//    [phoot_button setBackgroundImage:imge forState:UIControlStateHighlighted];
-//    [topView addSubview:phoot_button];
-    
-    
-//    UIButton*rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,40,40)];
-//    [rightButton setImage:[UIImage imageNamed:@"title_more.png"] forState:UIControlStateNormal];
-//    [rightButton setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
-//    [rightButton addTarget:self action:@selector(menuAction:) forControlEvents:UIControlEventTouchUpInside];
+    // Table View
+    CGRect rect = CGRectMake(0, 0, 320, TableViewHeight);
+    UITableView *tableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
+    tableView.dataSource = self;
+    tableView.delegate = self;
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    tableView.allowsSelection = YES;
+    [self.view addSubview:tableView];
+    self.tableView = tableView;
     
     //更多按钮
     more_button = [[UIButton alloc] initWithFrame:CGRectMake(320-RightButtonBoderWidth-40, 0, 40, 44)];
@@ -217,7 +171,7 @@
         NSString *fname = [dictionary objectForKey:@"fname"];
         if([fname length]>0)
         {
-            AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             NSMutableString *file_url = [[NSMutableString alloc] init];
             [file_url appendString:appDelegate.file_url];
             [file_url appendString:names];
@@ -807,21 +761,25 @@
 
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
+    CGRect self_rect = CGRectMake(0, 0, 320, TableViewHeight);
     
     CGRect moreEditBar_rect = self.moreEditBar.frame;
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
         moreEditBar_rect.origin.y = 768-155;
+        self_rect.size.height = 768-155;
     }
     else
     {
         moreEditBar_rect.origin.y = 1024-155;
+        self_rect.size.height = 1024-155;
     }
     if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
     {
         moreEditBar_rect.origin.y = moreEditBar_rect.origin.y+20;
     }
     [self.moreEditBar setFrame:moreEditBar_rect];
+    [self.tableView setFrame:self_rect];
 }
 
 @end

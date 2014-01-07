@@ -92,6 +92,9 @@
     self.toolbar=toolbar;
     [self.toolbar setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
     
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+//    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    
     UIButton *btn_download ,*btn_resave;
     UIBarButtonItem  *item_download, *item_resave;
     
@@ -115,6 +118,11 @@
     [self.toolbar setItems:@[fix,item_download,fix,item_resave,fix]];
     //self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-toolbarHeight);
     self.tableView.frame=CGRectMake(0, 64, self.view.frame.size.width, [[UIScreen mainScreen] bounds].size.height-49-64);
+    
+//    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    
+//    self.tableView.frame=CGRectMake(0, 64, tabbar.view.frame.size.width, [[UIScreen mainScreen] bounds].size.height-49-64);
     
     //初始化返回按钮
     UIButton*backButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,35,29)];
@@ -542,6 +550,5 @@
     {
         NSLog(@"点击其它");
     }
-    
 }
 @end

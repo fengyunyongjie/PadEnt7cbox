@@ -165,7 +165,7 @@
     
     //请求所有的数据文件
     fileManager = [[SCBFileManager alloc] init];
-    [fileManager openFinderWithID:self.f_id sID:self.space_id];
+    [fileManager openFinderWithID:self.f_id sID:self.space_id authModelId:@"0"];
     [fileManager setDelegate:self];
     
     //初始化返回按钮

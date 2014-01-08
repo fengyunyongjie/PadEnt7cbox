@@ -906,8 +906,8 @@
     
     
     title_leble.text = [NSString formatNSStringForOjbect:title_State];
-    [title_leble setTextColor:[UIColor whiteColor]];
-    [title_leble setBackgroundColor:[UIColor colorWithRed:71.0/255.0 green:85.0/255.0 blue:96.0/255.0 alpha:1]];
+    [title_leble setTextColor:[UIColor blackColor]];
+    [title_leble setBackgroundColor:[UIColor colorWithRed:229.0/255.0 green:229.0/255.0 blue:229.0/255.0 alpha:1]];
     [title_leble setFont:[UIFont systemFontOfSize:14]];
     return title_leble;
 }
@@ -1695,15 +1695,26 @@
 
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
+    CGRect table_rect = self.table_view.frame;
+    
     CGRect editView_rect = self.editView.frame;
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
         editView_rect.origin.y = 768-49-44-20;
+        table_rect.size.height = 768-(self.customSelectButton.frame.origin.y+self.customSelectButton.frame.size.height)-TabBarHeight+10;
     }
     else
     {
         editView_rect.origin.y = 1024-49-44-20;
+        table_rect.size.height = 1024-(self.customSelectButton.frame.origin.y+self.customSelectButton.frame.size.height)-TabBarHeight+10;
     }
     [self.editView setFrame:editView_rect];
+    
+    
+    if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
+    {
+        table_rect.size.height = table_rect.size.height+TabBarHeight-10;
+    }
+    [self.table_view setFrame:table_rect];
 }
 @end

@@ -35,7 +35,7 @@
         [self.right_button.titleLabel setFont:[UIFont systemFontOfSize:16]];
         [self.right_botton_image setHidden:YES];
         [UIView animateWithDuration:0.3 animations:^{
-            CGRect boderRect = CGRectMake(0, self.frame.size.height-5, CustomHeigth, 5);
+            CGRect boderRect = CGRectMake(20, self.frame.size.height-5, CustomHeigth-40, 5);
             [self.boderImageView setFrame:boderRect];
         }];
     }
@@ -46,7 +46,7 @@
         [self.right_button.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
         [self.right_botton_image setHidden:NO];
         [UIView animateWithDuration:0.3 animations:^{
-            CGRect boderRect = CGRectMake(CustomHeigth, self.frame.size.height-5, CustomHeigth, 5);
+            CGRect boderRect = CGRectMake(CustomHeigth+20, self.frame.size.height-5, CustomHeigth-40, 5);
             [self.boderImageView setFrame:boderRect];
         }];
     }
@@ -61,7 +61,7 @@
         UIColor *boderColor=[UIColor colorWithRed:18/255.0f green:108/255.0f blue:113/255.0f alpha:1];
         
         //添加左边视图
-        CGRect left_baceRect = CGRectMake(0, 0, rect.size.width/2, rect.size.height);
+        CGRect left_baceRect = CGRectMake(20, 0, rect.size.width/2-40, rect.size.height);
         self.left_backimage = [[UIImageView alloc] initWithFrame:left_baceRect];
         [self addSubview:self.left_backimage];
         
@@ -71,13 +71,13 @@
         [self.left_button setBackgroundColor:[UIColor clearColor]];
         [self addSubview:self.left_button];
         
-        CGRect left_buttonRect = CGRectMake(0, rect.size.height-2, rect.size.width/2, 2);
+        CGRect left_buttonRect = CGRectMake(20, rect.size.height-2, rect.size.width/2-40, 2);
         self.left_botton_image = [[UIImageView alloc] initWithFrame:left_buttonRect];
         [self.left_botton_image setHidden:YES];
         [self addSubview:self.left_botton_image];
         
         //添加右边视图
-        CGRect right_baceRect = CGRectMake(rect.size.width/2, 0, rect.size.width/2, rect.size.height);
+        CGRect right_baceRect = CGRectMake(rect.size.width/2+20, 0, rect.size.width/2-40, rect.size.height);
         self.right_backimage = [[UIImageView alloc] initWithFrame:right_baceRect];
         [self addSubview:self.right_backimage];
         
@@ -87,12 +87,12 @@
         [self.right_button setBackgroundColor:[UIColor clearColor]];
         [self addSubview:self.right_button];
         
-        CGRect right_buttonRect = CGRectMake(rect.size.width/2, rect.size.height-2, rect.size.width/2, 2);
+        CGRect right_buttonRect = CGRectMake(rect.size.width/2+20, rect.size.height-2, rect.size.width/2-40, 2);
         self.right_botton_image = [[UIImageView alloc] initWithFrame:right_buttonRect];
         [self.right_botton_image setHidden:YES];
         [self addSubview:self.right_botton_image];
         
-        CGRect boderRect = CGRectMake(0, rect.size.height-5, CustomHeigth, 5);
+        CGRect boderRect = CGRectMake(20, rect.size.height-5, CustomHeigth-40, 5);
         self.boderImageView = [[UIImageView alloc] initWithFrame:boderRect];
         //[self.boderImageView setBackgroundColor:[UIColor colorWithRed:54.0/255.0 green:116.0/255.0 blue:176.0/255.0 alpha:1.0]];
         self.boderImageView.backgroundColor=boderColor;

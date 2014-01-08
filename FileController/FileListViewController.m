@@ -102,12 +102,6 @@ typedef enum{
     CGRect r=self.view.frame;
     r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
     self.view.frame=r;
-    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49);
-    }else
-    {
-        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49-64);
-    }
     
     BOOL isHideTabBar = NO;
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -138,6 +132,9 @@ typedef enum{
     self.tableView.dataSource=self;
     [self.view addSubview:self.tableView];
     self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    
     NSMutableArray *items=[NSMutableArray array];
     
     UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,20,40)];
@@ -563,12 +560,6 @@ typedef enum{
     CGRect r=self.view.frame;
     r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
     self.view.frame=r;
-    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49);
-    }else
-    {
-        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-49-64);
-    }
     
     NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
     NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
@@ -756,9 +747,10 @@ typedef enum{
                 theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,[array objectAtIndex:3]];
             }
             [self.moreEditBar setItems:theArray];
-            
         }
     }
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 -(void)sortAction:(id)sender
 {
@@ -2689,7 +2681,7 @@ typedef enum{
             BOOL result=[UIImageJPEGRepresentation(image, 1) writeToFile:filePath atomically:YES];
             if (result) {
                 NSLog(@"文件保存成功");
-                AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+                AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                 [delegate.uploadmanage uploadFilePath:filePath toFileID:self.f_id withSpaceID:self.spid];
             }else
             {
@@ -2713,15 +2705,46 @@ typedef enum{
     CGRect editView_rect = self.moreEditBar.frame;
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
-        editView_rect.origin.y = 768-49-44-20;
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            editView_rect.origin.y = 768-49-64;
+        }
+        else
+        {
+            editView_rect.origin.y = 768-49-64-20;
+        }
     }
     else
     {
-        editView_rect.origin.y = 1024-49-44-20;
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            editView_rect.origin.y = 1024-49-64;
+        }
+        else
+        {
+            editView_rect.origin.y = 1024-49-64-20;
+        }
     }
     [self.moreEditBar setFrame:editView_rect];
     
-    
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, 768-49-64);
+        }
+        else
+        {
+            self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, 768-49-64-20);
+        }
+    }
+    else
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, 1024-49-64);
+        }
+        else
+        {
+            self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, 1024-49-64-20);
+        }
+    }
 }
 
 @end

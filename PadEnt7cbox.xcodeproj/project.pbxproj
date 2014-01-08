@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		29187848187CD55800577921 /* startpage-.png in Resources */ = {isa = PBXBuildFile; fileRef = 29187844187CD55800577921 /* startpage-.png */; };
+		29187849187CD55800577921 /* startpage-@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29187845187CD55800577921 /* startpage-@2x.png */; };
+		2918784A187CD55800577921 /* startpage.png in Resources */ = {isa = PBXBuildFile; fileRef = 29187846187CD55800577921 /* startpage.png */; };
+		2918784B187CD55800577921 /* startpage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29187847187CD55800577921 /* startpage@2x.png */; };
 		294EB4ED18604E68006E6E96 /* SCBAccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 294EB4DF18604E68006E6E96 /* SCBAccountManager.m */; };
 		294EB4EE18604E68006E6E96 /* SCBDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 294EB4E118604E68006E6E96 /* SCBDownloader.m */; };
 		294EB4EF18604E68006E6E96 /* SCBUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 294EB4E318604E68006E6E96 /* SCBUploader.m */; };
@@ -285,6 +289,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		29187844187CD55800577921 /* startpage-.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "startpage-.png"; sourceTree = "<group>"; };
+		29187845187CD55800577921 /* startpage-@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "startpage-@2x.png"; sourceTree = "<group>"; };
+		29187846187CD55800577921 /* startpage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startpage.png; sourceTree = "<group>"; };
+		29187847187CD55800577921 /* startpage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "startpage@2x.png"; sourceTree = "<group>"; };
 		294EB4DE18604E68006E6E96 /* SCBAccountManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCBAccountManager.h; sourceTree = "<group>"; };
 		294EB4DF18604E68006E6E96 /* SCBAccountManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCBAccountManager.m; sourceTree = "<group>"; };
 		294EB4E018604E68006E6E96 /* SCBDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCBDownloader.h; sourceTree = "<group>"; };
@@ -947,6 +955,10 @@
 		2982E10918618584009CB82D /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				29187844187CD55800577921 /* startpage-.png */,
+				29187845187CD55800577921 /* startpage-@2x.png */,
+				29187846187CD55800577921 /* startpage.png */,
+				29187847187CD55800577921 /* startpage@2x.png */,
 				29C86435187BF76F002D8739 /* bt_alls_nor@2x.png */,
 				29C86436187BF76F002D8739 /* bt_alls_se@2x.png */,
 				29C86437187BF76F002D8739 /* bt_del_nor@2x.png */,
@@ -1429,6 +1441,7 @@
 				2982E19818618584009CB82D /* lock_bt_num_se@2x.png in Resources */,
 				2982E0A1186152FE009CB82D /* overlay@2x.png in Resources */,
 				294EB52318605061006E6E96 /* PushConfig.plist in Resources */,
+				29187848187CD55800577921 /* startpage-.png in Resources */,
 				2982E1D418618584009CB82D /* title_bt_start_nor.png in Resources */,
 				294EB51418604FB1006E6E96 /* blackArrow@2x.png in Resources */,
 				297FBFA1187A4D1A00D27970 /* copy_nor@2x.png in Resources */,
@@ -1456,6 +1469,7 @@
 				2982E1C018618584009CB82D /* set_bk_2@2x.png in Resources */,
 				2982E1CC18618584009CB82D /* title_bt_edit_nor@2x.png in Resources */,
 				294EB51A18604FB1006E6E96 /* whiteArrow@2x.png in Resources */,
+				2918784B187CD55800577921 /* startpage@2x.png in Resources */,
 				2982E1D718618584009CB82D /* title_bt_upload_se@2x.png in Resources */,
 				2982E19618618584009CB82D /* Ico_CoverF@2x.png in Resources */,
 				2982E1B818618584009CB82D /* sel_se@2x.png in Resources */,
@@ -1480,6 +1494,7 @@
 				2982E1AD18618584009CB82D /* nav_trans_nor@2x.png in Resources */,
 				2982E19018618584009CB82D /* guide_2@iPhone5.png in Resources */,
 				2982E18318618584009CB82D /* del_nor@2x.png in Resources */,
+				2918784A187CD55800577921 /* startpage.png in Resources */,
 				2982E1A418618584009CB82D /* nav_file_nor@2x.png in Resources */,
 				2982E19D18618584009CB82D /* mail_readed@2x.png in Resources */,
 				2982E1B618618584009CB82D /* sel@2x.png in Resources */,
@@ -1519,6 +1534,7 @@
 				298423DD185ECE1F002AC1D0 /* Images.xcassets in Resources */,
 				297FBFA0187A4D1A00D27970 /* bizlib@2x.png in Resources */,
 				2982E1D118618584009CB82D /* title_bt_pause_se.png in Resources */,
+				29187849187CD55800577921 /* startpage-@2x.png in Resources */,
 				2982E1A518618584009CB82D /* nav_file_se@2x.png in Resources */,
 				2982E19118618584009CB82D /* guide_3.png in Resources */,
 				294EB51618604FB1006E6E96 /* blueArrow@2x.png in Resources */,

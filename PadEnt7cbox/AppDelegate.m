@@ -70,10 +70,7 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    if([self isOpenLock])
-    {
-        [self showLoceView];
-    }
+
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application

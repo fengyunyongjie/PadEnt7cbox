@@ -119,14 +119,8 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    //加载列表
-    CGRect customRect = self.customSelectButton.frame;
-    CGRect table_rect = CGRectMake(0, customRect.origin.y+customRect.size.height, 320, self.view.frame.size.height-(customRect.origin.y+customRect.size.height)-TabBarHeight+10);
-    if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
-    {
-        table_rect.size.height = table_rect.size.height+TabBarHeight-10;
-    }
-    [self.table_view setFrame:table_rect];
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 
 -(void)menuAction:(id)sender
@@ -646,6 +640,8 @@
 {
     [self.navigationController setNavigationBarHidden:NO];
     [self isSelectedLeft:isShowUpload];
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 
 - (void)didReceiveMemoryWarning
@@ -1701,20 +1697,19 @@
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
         editView_rect.origin.y = 768-49-44-20;
-        table_rect.size.height = 768-(self.customSelectButton.frame.origin.y+self.customSelectButton.frame.size.height)-TabBarHeight+10;
+        table_rect.size.height = 768-self.customSelectButton.frame.size.height-TabBarHeight-49-5;
     }
     else
     {
         editView_rect.origin.y = 1024-49-44-20;
-        table_rect.size.height = 1024-(self.customSelectButton.frame.origin.y+self.customSelectButton.frame.size.height)-TabBarHeight+10;
+        table_rect.size.height = 1024-self.customSelectButton.frame.size.height-TabBarHeight-49-5;
     }
     [self.editView setFrame:editView_rect];
     
-    
-    if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
-    {
-        table_rect.size.height = table_rect.size.height+TabBarHeight-10;
-    }
+//    if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
+//    {
+//        table_rect.size.height = table_rect.size.height+TabBarHeight-10;
+//    }
     [self.table_view setFrame:table_rect];
 }
 @end

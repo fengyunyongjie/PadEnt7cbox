@@ -675,7 +675,7 @@ typedef enum{
                     NSString *sizeStr = [NSString stringWithFormat:@"%f",locationCacheSize];
                     descLabel.text = [YNFunctions convertSize:sizeStr];
                     descLabel.textColor = [UIColor grayColor];
-                    //cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     m_switch.hidden = YES;
                 }
                     

@@ -12,7 +12,7 @@
 #import "InputViewController.h"
 #import <UIKit/UIKit.h>
 
-#define TabBarHeight 60
+#define TabBarHeight 64
 #define hilighted_color [UIColor colorWithRed:255.0/255.0 green:180.0/255.0 blue:94.0/255.0 alpha:1.0]
 
 @class LoginViewController,MySplitViewController,MyTabBarViewController;

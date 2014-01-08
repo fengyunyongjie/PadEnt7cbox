@@ -60,6 +60,6 @@ typedef enum {
 @property(nonatomic,strong) UIView *bgView;
 @property(nonatomic,assign) id<PasswordDelegate> passwordDelegate;
 
--(void)addBackGroundImage:(UIView *)bg;
+-(void)addBackGroundImage:(UIImage *)bg;
 
 @end

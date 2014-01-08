@@ -32,12 +32,12 @@
     return self;
 }
 
--(void)addBackGroundImage:(UIView *)bg
+-(void)addBackGroundImage:(UIImage *)bg
 {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     self.localView = [[UIImageView alloc] initWithFrame:app.window.frame];
     [app.window setBackgroundColor:[UIColor blackColor]];
-    [self.localView setImage:[self getImageFromView:bg]];
+    [self.localView setImage:bg];
     [self.localView setAlpha:0.6];
     [self.view addSubview:self.localView];
 }
@@ -61,7 +61,8 @@
     
     NSLog(@"rect:%@",NSStringFromCGRect(self.view.frame));
     self.view.autoresizesSubviews = YES;
-    [self addBackGroundImage:bgView];
+    self.localView = [[UIImageView alloc] init];
+    [self addBackGroundImage:[UIImage imageNamed:@"startpage-@2x.png"]];
     self.one_password = @"";
     self.second_password = @"";
     
@@ -96,7 +97,7 @@
     self.update_button = [[UIButton alloc] initWithFrame:update_rect];
     [self.update_button setTitle:@"忘记密码" forState:UIControlStateNormal];
     [self.update_button.titleLabel setTextColor:[UIColor whiteColor]];
-    [self.update_button.titleLabel setFont:[UIFont systemFontOfSize:16]];
+    [self.update_button.titleLabel setFont:[UIFont systemFontOfSize:14]];
     [self.update_button addTarget:self action:@selector(closePassword) forControlEvents:UIControlEventTouchUpInside];
     [self.password_view addSubview:self.update_button];
     
@@ -286,6 +287,7 @@
 //第一次开启
 -(void)showTypeStartFirst
 {
+    [self.update_button setHidden:YES];
     [self.state_label setText:@"请输入密码"];
     [self.password_error setTextColor:[UIColor grayColor]];
     [self.password_error setText:@"时刻保护您的隐私安全\n(使用场景：设备丢失或者外借时)"];
@@ -324,6 +326,7 @@
 //请输入旧密码
 -(void)showTypeUpdateStartFirst
 {
+    [self.update_button setHidden:NO];
     [self.state_label setText:@"请输入旧密码"];
     [self.password_error setTextColor:[UIColor grayColor]];
     [self.password_error setText:@""];
@@ -350,6 +353,7 @@
 //输入错误提示
 -(void)showTypeUpdateFirstError
 {
+    [self.update_button setHidden:NO];
     [self.state_label setText:@"请输入旧密码"];
     PasswordList *list = [self selectList];
     [self.password_error setTextColor:[UIColor redColor]];
@@ -363,6 +367,7 @@
 //请输入新密码
 -(void)showTypeUpdateNewPassword
 {
+    [self.update_button setHidden:NO];
     [self.state_label setText:@"请输入新密码"];
     [self.password_error setTextColor:[UIColor grayColor]];
     [self.password_error setText:@""];
@@ -375,6 +380,7 @@
 //请再次输入新密码
 -(void)showTypeUpdateSecondNewPassword
 {
+    [self.update_button setHidden:NO];
     [self.state_label setText:@"请再次输入新密码"];
     [self.password_error setTextColor:[UIColor grayColor]];
     [self.password_error setText:@""];
@@ -387,6 +393,7 @@
 //新密码输入错误
 -(void)showTypeUpdateFirstNewPasswordError
 {
+    [self.update_button setHidden:NO];
     [self.state_label setText:@"请输入新密码"];
     [self.password_error setTextColor:[UIColor grayColor]];
     [self.password_error setText:@"密码不匹配，请再尝试一次"];
@@ -399,6 +406,7 @@
 //请再次输入新密码
 -(void)showTypeUpdateSecondNewPasswordError
 {
+    [self.update_button setHidden:NO];
     [self.state_label setText:@"请再次输入新密码"];
     [self.password_error setTextColor:[UIColor grayColor]];
     [self.password_error setText:@""];
@@ -814,7 +822,8 @@
     CGRect localRect = self.localView.frame;
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
-        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(90));
+        [self.localView setImage:[UIImage imageNamed:@"startpage@2x.png"]];
+//        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(90));
         localRect.origin.x = 0;
         localRect.origin.y = 0;
         localRect.size.width = self.view.frame.size.height;
@@ -822,7 +831,8 @@
     }
     else if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
     {
-        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-90));
+        [self.localView setImage:[UIImage imageNamed:@"startpage@2x.png"]];
+//        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-90));
         localRect.origin.x = 0;
         localRect.origin.y = 0;
         localRect.size.width = self.view.frame.size.height;
@@ -830,7 +840,15 @@
     }
     else if(toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
     {
-        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-180));
+        [self.localView setImage:[UIImage imageNamed:@"startpage-@2x.png"]];
+        localRect.origin.x = 0;
+        localRect.origin.y = 0;
+        localRect.size.width = self.view.frame.size.width;
+        localRect.size.height = self.view.frame.size.height;
+    }
+    else
+    {
+        [self.localView setImage:[UIImage imageNamed:@"startpage-@2x.png"]];
         localRect.origin.x = 0;
         localRect.origin.y = 0;
         localRect.size.width = self.view.frame.size.width;

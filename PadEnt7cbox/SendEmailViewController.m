@@ -379,6 +379,9 @@
                                   [fmime isEqualToString:@"pptx"])
                         {
                             cell.imageView.image = [UIImage imageNamed:@"file_ppt.png"];
+                        }else if([fmime isEqualToString:@"txt"])
+                        {
+                            cell.imageView.image = [UIImage imageNamed:@"file_txt.png"];
                         }else
                         {
                             cell.imageView.image = [UIImage imageNamed:@"file_other.png"];

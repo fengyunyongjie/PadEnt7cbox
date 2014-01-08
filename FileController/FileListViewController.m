@@ -1417,6 +1417,9 @@ typedef enum{
                           [fmime isEqualToString:@"pptx"])
                 {
                     imageView.image = [UIImage imageNamed:@"file_ppt.png"];
+                }else if([fmime isEqualToString:@"txt"])
+                {
+                    imageView.image = [UIImage imageNamed:@"file_txt.png"];
                 }else
                 {
                     imageView.image = [UIImage imageNamed:@"file_other.png"];

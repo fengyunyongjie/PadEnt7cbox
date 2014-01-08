@@ -161,17 +161,17 @@
         NSError *jsonParsingError=nil;
         NSData *data=[NSData dataWithContentsOfFile:dataFilePath];
         self.listArray=[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
-        if (self.type==kTypeUpload) {
-            NSMutableArray *array=[NSMutableArray array];
-            for (NSDictionary *dic in self.listArray) {
-                NSString *roletype=[dic objectForKey:@"roletype"];
-                if([roletype intValue]!=1&&[roletype intValue]!=2)
-                {
-                    [array addObject:dic];
-                }
-            }
-            self.listArray=array;
-        }
+//        if (self.type==kTypeUpload) {
+//            NSMutableArray *array=[NSMutableArray array];
+//            for (NSDictionary *dic in self.listArray) {
+//                NSString *roletype=[dic objectForKey:@"roletype"];
+//                if([roletype intValue]!=1&&[roletype intValue]!=2)
+//                {
+//                    [array addObject:dic];
+//                }
+//            }
+//            self.listArray=array;
+//        }
         if (self.listArray) {
             [self.tableView reloadData];
         }
@@ -492,17 +492,17 @@
     NSError *jsonParsingError=nil;
     self.listArray=[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
     if (self.listArray) {
-        if (self.type==kTypeUpload) {
-            NSMutableArray *array=[NSMutableArray array];
-            for (NSDictionary *dic in self.listArray) {
-                NSString *roletype=[dic objectForKey:@"roletype"];
-                if([roletype intValue]!=1&&[roletype intValue]!=2)
-                {
-                    [array addObject:dic];
-                }
-            }
-            self.listArray=array;
-        }
+//        if (self.type==kTypeUpload) {
+//            NSMutableArray *array=[NSMutableArray array];
+//            for (NSDictionary *dic in self.listArray) {
+//                NSString *roletype=[dic objectForKey:@"roletype"];
+//                if([roletype intValue]!=1&&[roletype intValue]!=2)
+//                {
+//                    [array addObject:dic];
+//                }
+//            }
+//            self.listArray=array;
+//        }
         [self.tableView reloadData];
         
         if([self.listArray count]>0)

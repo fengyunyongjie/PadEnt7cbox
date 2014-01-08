@@ -37,7 +37,10 @@
     }
     return self;
 }
-
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self hideMenu];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -126,9 +129,12 @@
 -(void)menuAction:(id)sender
 {
     if (!self.menuView) {
-        const float scale=1.3f;
-        self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-        [self.menuView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
+        self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height)];
+        //[self.menuView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
+        UIControl *grayView=[[UIControl alloc] initWithFrame:CGRectMake(0, 64, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height)];
+        [grayView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
+        [grayView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
+        [self.menuView addSubview:grayView];
         CGSize btnSize=CGSizeMake(self.menuView.frame.size.width, 45);
         UIButton *btnEdit,*btnUpload;
         
@@ -143,7 +149,7 @@
         //        [btnUpload setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         //        [btnUpload addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
         
-        btnEdit=[[UIButton alloc] initWithFrame:CGRectMake(0, 0*btnSize.height, btnSize.width, btnSize.height)];
+        btnEdit=[[UIButton alloc] initWithFrame:CGRectMake(0, 0*btnSize.height+64, btnSize.width, btnSize.height)];
         [btnEdit setImage:[UIImage imageNamed:@"title_edit.png"] forState:UIControlStateHighlighted];
         [btnEdit setImage:[UIImage imageNamed:@"title_edit.png"] forState:UIControlStateNormal];
         [btnEdit setBackgroundImage:[UIImage imageNamed:@"menu_1.png"] forState:UIControlStateNormal];
@@ -152,7 +158,7 @@
         [btnEdit setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         [btnEdit addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
         
-        btnStart=[[UIButton alloc] initWithFrame:CGRectMake(0, 1*btnSize.height, btnSize.width, btnSize.height)];
+        btnStart=[[UIButton alloc] initWithFrame:CGRectMake(0, 1*btnSize.height+64, btnSize.width, btnSize.height)];
         [btnStart setImage:[UIImage imageNamed:@"title_allstart.png"] forState:UIControlStateHighlighted];
         [btnStart setImage:[UIImage imageNamed:@"title_allstart.png"] forState:UIControlStateNormal];
         [btnStart setBackgroundImage:[UIImage imageNamed:@"menu_2.png"] forState:UIControlStateNormal];
@@ -166,7 +172,7 @@
         [self.menuView addSubview:btnEdit];
         [self.menuView addSubview:btnStart];
         [self.menuView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:self.menuView];
+        [self.navigationController.view addSubview:self.menuView];
     }
     else
     {
@@ -312,9 +318,9 @@
         [self.navigationItem setLeftBarButtonItem:nil];
         
         NSMutableArray *items=[NSMutableArray array];
-        UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,40,40)];
+        UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,20,40)];
         [rightButton1 setImage:[UIImage imageNamed:@"title_more.png"] forState:UIControlStateNormal];
-        [rightButton1 setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
+        [rightButton1 setBackgroundImage:[UIImage imageNamed:@"title_more_se.png"] forState:UIControlStateHighlighted];
         [rightButton1 addTarget:self action:@selector(menuAction:) forControlEvents:UIControlEventTouchUpInside];
         UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
         [items addObject:rightItem1];
@@ -1251,9 +1257,21 @@
 #pragma mark - Table view delegate
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return UITableViewCellEditingStyleDelete | UITableViewCellEditingStyleInsert;
+    if (table_view.isEditing) {
+        return UITableViewCellEditingStyleDelete | UITableViewCellEditingStyleInsert;
+    }
+    return UITableViewCellEditingStyleDelete;
 }
-
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        UploadViewCell *cell=(UploadViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+        [table_view setEditing:NO];
+        [cell deleteSelf];
+    }
+}
 -(void)deletCell:(NSObject *)object
 {
     deleteObject = object;
@@ -1262,10 +1280,11 @@
         UpLoadList *list = (UpLoadList *)deleteObject;
         if(list.t_state != 1)
         {
-            UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"你选择的文件中有正在上传的文件" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定移除" otherButtonTitles:nil, nil];
-            [actionSheet setTag:kActionSheetTagDelete];
-            [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+//            UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"你选择的文件中有正在上传的文件" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定移除" otherButtonTitles:nil, nil];
+//            [actionSheet setTag:kActionSheetTagDelete];
+//            [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+//            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+                [self deleteOldList:[NSMutableArray arrayWithObject:deleteObject]];
             return;
         }
     }
@@ -1274,17 +1293,19 @@
         DownList *list = (DownList *)deleteObject;
         if(list.d_state != 1 && list.d_state != 4)
         {
-            UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"你选择的文件中有正在下载的文件" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定移除" otherButtonTitles:nil, nil];
-            [actionSheet setTag:kActionSheetTagDelete];
-            [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+//            UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"你选择的文件中有正在下载的文件" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定移除" otherButtonTitles:nil, nil];
+//            [actionSheet setTag:kActionSheetTagDelete];
+//            [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+//            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+            [self deleteOldList:[NSMutableArray arrayWithObject:deleteObject]];
             return;
         }
     }
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"是否要删除选中的内容" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil, nil];
-    [actionSheet setTag:kActionSheetTagDelete];
-    [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+//    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"是否要删除选中的内容" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil, nil];
+//    [actionSheet setTag:kActionSheetTagDelete];
+//    [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+//    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    [self deleteOldList:[NSMutableArray arrayWithObject:deleteObject]];
 }
 
 -(NSMutableArray *)getSelectedIds
@@ -1375,6 +1396,10 @@
     else if(actionSheet.tag == kActionSheetTagAllDelete && buttonIndex == 0)
     {
         [self deleteOldList:self.selectAllIds];
+        if(self.table_view.isEditing)
+        {
+            [self editAction:nil];
+        }
     }else if(actionSheet.tag == kActionSheetTagUpload)
     {
         if (buttonIndex==0)
@@ -1499,10 +1524,10 @@
         }
     }
     [self isSelectedLeft:isShowUpload];
-    if(self.table_view.editing)
-    {
-        [self editAction:nil];
-    }
+//    if(self.table_view.editing)
+//    {
+//        [self editAction:nil];
+//    }
 }
 
 

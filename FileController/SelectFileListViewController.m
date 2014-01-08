@@ -128,7 +128,7 @@
     [rightButton setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
     [rightButton addTarget:self action:@selector(newFinder:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
-    self.navigationItem.rightBarButtonItem=rightItem;
+    //self.navigationItem.rightBarButtonItem=rightItem;
 }
 
 - (void)didReceiveMemoryWarning

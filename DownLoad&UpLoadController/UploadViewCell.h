@@ -45,6 +45,7 @@
 -(void)showTopBar;
 -(void)showEdit:(BOOL)bl;
 -(void)updateList;
+-(void)deleteSelf;
 
 @end
 

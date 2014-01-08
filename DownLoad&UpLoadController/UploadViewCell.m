@@ -46,7 +46,7 @@
         self.button_dele_button = [[UIButton alloc] initWithFrame:button_rect];
         [self.button_dele_button setBackgroundImage:[UIImage imageNamed:@"Bt_Cancle.png"] forState:UIControlStateNormal];
         [self.button_dele_button addTarget:self action:@selector(deleteSelf) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:self.button_dele_button];
+//        [self addSubview:self.button_dele_button];
         
 //        CGRect start_rect = CGRectMake(270, 15, 40, 30);
 //        self.button_start_button = [UIButton buttonWithType:UIButtonTypeRoundedRect];

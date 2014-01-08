@@ -97,6 +97,10 @@ typedef enum{
         [self updateFileList];
     }
 }
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self hideMenu];
+}
 - (void)viewDidAppear:(BOOL)animated
 {
     CGRect r=self.view.frame;
@@ -292,8 +296,12 @@ typedef enum{
 {
     [self hideSingleBar];
     if (!self.menuView) {
-        self.menuView =[[UIControl alloc] initWithFrame:self.tableView.frame];
-        [self.menuView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
+        self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height)];
+        //[self.menuView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
+        UIControl *grayView=[[UIControl alloc] initWithFrame:CGRectMake(0, 64, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height)];
+        [grayView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
+        [grayView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
+        [self.menuView addSubview:grayView];
         CGSize btnSize=CGSizeMake(self.menuView.frame.size.width, 45);
         UIButton *btnNewFinder,*btnEdit,*btnSort,*btnUpload;
         UIColor *titleColor=[UIColor colorWithRed:83/255.0f green:113/255.0f blue:190/255.0f alpha:1];
@@ -354,7 +362,7 @@ typedef enum{
         [array addObject:btnSort];
         for (int i=0; i<array.count; i++) {
             UIButton *btn=[array objectAtIndex:i];
-            btn.frame= CGRectMake(0, i*btnSize.height, btnSize.width, btnSize.height);
+            btn.frame= CGRectMake(0, i*btnSize.height+64, btnSize.width, btnSize.height);
             if (i==0) {
                 [btn setBackgroundImage:[UIImage imageNamed:@"menu_1.png"] forState:UIControlStateNormal];
             }else
@@ -369,7 +377,7 @@ typedef enum{
 //        [self.menuView addSubview:btnSort];
         
         [self.menuView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:self.menuView];
+        [self.navigationController.view addSubview:self.menuView];
 //        if ([self.roletype isEqualToString:@"1"]||[self.roletype isEqualToString:@"2"])
 //        {
 //            [bgView setImage:[UIImage imageNamed:@"title_menu2.png"]];

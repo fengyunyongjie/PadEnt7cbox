@@ -35,6 +35,7 @@ typedef enum {
 @property (nonatomic,assign) BOOL isFamily;
 -(void)cancelAllTask;
 //获取工作区列表  子账号空间权限列表/ent/author/menus
+-(void)authorMenus:(NSString *)item;
 -(void)authorMenus;
 //打开网盘/fm
 -(void)openFinderWithID:(NSString *)f_id sID:(NSString *)s_id authModelId:(NSString *)authModelId;   //无分页：所以cursor=0,offset=-1;

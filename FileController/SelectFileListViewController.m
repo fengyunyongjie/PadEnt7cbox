@@ -284,6 +284,22 @@
             //            [self.qbDelegate uploadFileder:f_name];
             //            [self.qbDelegate uploadFiledId:f_id];
         {
+            if (![self.roletype isEqualToString:@"2"]&&[self.f_id intValue]==0) {
+                if (self.hud) {
+                    [self.hud removeFromSuperview];
+                }
+                self.hud=nil;
+                self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+                [self.view.superview addSubview:self.hud];
+                [self.hud show:NO];
+                self.hud.labelText=@"文件库根目录下仅允许文件夹!";
+                self.hud.mode=MBProgressHUDModeText;
+                self.hud.margin=10.f;
+                [self.hud show:YES];
+                [self.hud hide:YES afterDelay:1.0f];
+                return;
+            }
+            
             AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             appDelegate.file_url = self.rootName;
             

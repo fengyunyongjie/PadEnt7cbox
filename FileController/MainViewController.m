@@ -180,7 +180,25 @@
     self.fm=nil;
     self.fm=[[SCBFileManager alloc] init];
     [self.fm setDelegate:self];
-    [self.fm authorMenus];
+    NSString *item=@"";
+    switch (self.type) {
+        case kTypeCopy:
+            item=@"upload,mkdir";
+            [self.fm authorMenus:item];
+            break;
+        case kTypeMove:
+            item=@"upload,mkdir";
+            [self.fm authorMenus:item];
+            break;
+        case kTypeUpload:
+            item=@"upload";
+            [self.fm authorMenus:item];
+            break;
+        default:
+            [self.fm authorMenus];
+            break;
+    }
+    
 }
 -(void)dissmissSelf:(id)sender
 {

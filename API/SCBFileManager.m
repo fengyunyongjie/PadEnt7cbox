@@ -26,6 +26,29 @@
     self.delegate=nil;
 }
 #pragma mark 获取工作区列表  子账号空间权限列表/ent/author/menus
+-(void)authorMenus:(NSString *)item
+{
+    self.fm_type=kFMTypeAuthorMenus;
+    self.activeData=[NSMutableData data];
+    NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,AUTHOR_MENUS_URI]];
+    NSLog(@"%@",s_url);
+    NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
+    NSMutableString *body=[[NSMutableString alloc] init];
+    [body appendFormat:@"item=%@",item];
+    NSMutableData *myRequestData=[NSMutableData data];
+    [myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setHTTPBody:myRequestData];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:[[SCBSession sharedSession] userId] forHTTPHeaderField:@"ent_uid"];
+    [request setValue:CLIENT_TAG forHTTPHeaderField:@"ent_uclient"];
+    [request setValue:[[SCBSession sharedSession] userToken] forHTTPHeaderField:@"ent_utoken"];
+    [request setValue:[[SCBSession sharedSession] ent_utype] forHTTPHeaderField:@"ent_utype"];
+    //[request setValue:item forHTTPHeaderField:@"item"];
+    NSLog(@"ent_uid:%@",[[SCBSession sharedSession] userId]);
+    NSLog(@"ent_uid:%@",[[SCBSession sharedSession] userToken]);
+    NSLog(@"ent_uid:%@",[[SCBSession sharedSession] ent_utype]);
+    _conn=[[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
 -(void)authorMenus
 {
     self.fm_type=kFMTypeAuthorMenus;
@@ -665,13 +688,24 @@
                 case kFMTypeCommitOrResave:
                     if ([[dic objectForKey:@"code"] intValue]==2) {
                         [self.delegate Unsucess:@"空间不足"];
+                    }else if([[dic objectForKey:@"code"] intValue]==7)
+                    {
+                        [self.delegate Unsucess:@"文件库根目录下没有复制到权限!"];
                     }else
                     {
                         [self.delegate moveUnsucess];
                     }
                     break;
                 case kFMTypeMove:
-                    [self.delegate moveUnsucess];
+                    if ([[dic objectForKey:@"code"] intValue]==2) {
+                        [self.delegate Unsucess:@"空间不足"];
+                    }else if([[dic objectForKey:@"code"] intValue]==7)
+                    {
+                        [self.delegate Unsucess:@"文件库根目录下没有移动到权限!"];
+                    }else
+                    {
+                        [self.delegate moveUnsucess];
+                    }
                     break;
                 case kFMTypeNewFinder:
                     [self.delegate newFinderUnsucess];

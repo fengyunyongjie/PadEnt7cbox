@@ -129,13 +129,14 @@
 -(void)menuAction:(id)sender
 {
     if (!self.menuView) {
-        self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height)];
+        int Height=1024;
+        self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, Height, Height)];
         //[self.menuView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
-        UIControl *grayView=[[UIControl alloc] initWithFrame:CGRectMake(0, 64, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height)];
+        UIControl *grayView=[[UIControl alloc] initWithFrame:CGRectMake(0, 64, Height, Height)];
         [grayView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
         [grayView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
         [self.menuView addSubview:grayView];
-        CGSize btnSize=CGSizeMake(self.menuView.frame.size.width, 45);
+        CGSize btnSize=CGSizeMake(320, 45);
         UIButton *btnEdit,*btnUpload;
         
         UIColor *titleColor=[UIColor colorWithRed:83/255.0f green:113/255.0f blue:190/255.0f alpha:1];
@@ -172,7 +173,7 @@
         [self.menuView addSubview:btnEdit];
         [self.menuView addSubview:btnStart];
         [self.menuView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
-        [self.navigationController.view addSubview:self.menuView];
+        [self.tabBarController.view.superview addSubview:self.menuView];
     }
     else
     {

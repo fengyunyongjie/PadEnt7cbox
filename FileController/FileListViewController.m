@@ -64,6 +64,7 @@ typedef enum{
 @property (strong,nonatomic) UIBarButtonItem *titleRightBtn;
 @property (strong,nonatomic) NSArray *rightItems;
 @property (strong,nonatomic) UIBarButtonItem *backBarButtonItem;
+@property (strong,nonatomic) UILabel * notingLabel;
 @end
 
 @implementation FileListViewController
@@ -121,7 +122,19 @@ typedef enum{
     
     NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
     NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
-    
+}
+- (void)viewDidLayoutSubviews
+{
+    NSLog(@"view frame:%@",NSStringFromCGRect(self.view.frame));
+    CGRect r=self.tableView.frame;
+    r.size=self.view.frame.size;
+    //r.size.height=self.view.frame.size.height-self.tabBarController.tabBar.frame.size.height;
+    [self.tableView setFrame:r];
+    if (self.moreEditBar) {
+        [self.moreEditBar setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.tabBarController.tabBar.frame.size.height)];
+    }
+//    r.size.height+=self.tabBarController.tabBar.frame.size.height;
+//    [self.view setFrame:r];
 }
 - (void)viewDidLoad
 {
@@ -130,7 +143,7 @@ typedef enum{
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
         [self setEdgesForExtendedLayout:UIRectEdgeNone];
     }
-    
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     self.tableView=[[UITableView alloc] init];
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
@@ -251,6 +264,27 @@ typedef enum{
             }
         }
     }
+    if (self.listArray.count<=0) {
+        if(self.notingLabel == nil)
+        {
+            CGRect notingRect = CGRectMake(0, 300, 320, 40);
+            self.notingLabel = [[UILabel alloc] initWithFrame:notingRect];
+            [self.notingLabel setTextColor:[UIColor grayColor]];
+            [self.notingLabel setFont:[UIFont systemFontOfSize:18]];
+            [self.notingLabel setTextAlignment:NSTextAlignmentCenter];
+            [self.view addSubview:self.notingLabel];
+            [self.notingLabel setHidden:YES];
+        }
+        [self.notingLabel setHidden:NO];
+        [self.tableView setHidden:YES];
+        [self.notingLabel setText:@"加载中,请稍等……"];
+    }else
+    {
+        [self.notingLabel setHidden:YES];
+        [self.tableView setHidden:NO];
+        [self.notingLabel setText:@"加载中,请稍等……"];
+    }
+
     [self.fm cancelAllTask];
     self.fm=nil;
     self.fm=[[SCBFileManager alloc] init];
@@ -296,13 +330,14 @@ typedef enum{
 {
     [self hideSingleBar];
     if (!self.menuView) {
-        self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height)];
+        int Height=1024;
+        self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, Height, Height)];
         //[self.menuView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
-        UIControl *grayView=[[UIControl alloc] initWithFrame:CGRectMake(0, 64, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height)];
+        UIControl *grayView=[[UIControl alloc] initWithFrame:CGRectMake(0, 64, Height, Height)];
         [grayView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
         [grayView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
         [self.menuView addSubview:grayView];
-        CGSize btnSize=CGSizeMake(self.menuView.frame.size.width, 45);
+        CGSize btnSize=CGSizeMake(320, 45);
         UIButton *btnNewFinder,*btnEdit,*btnSort,*btnUpload;
         UIColor *titleColor=[UIColor colorWithRed:83/255.0f green:113/255.0f blue:190/255.0f alpha:1];
         btnUpload=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnSize.width, btnSize.height)];
@@ -377,7 +412,7 @@ typedef enum{
 //        [self.menuView addSubview:btnSort];
         
         [self.menuView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
-        [self.navigationController.view addSubview:self.menuView];
+        [self.tabBarController.view.superview addSubview:self.menuView];
 //        if ([self.roletype isEqualToString:@"1"]||[self.roletype isEqualToString:@"2"])
 //        {
 //            [bgView setImage:[UIImage imageNamed:@"title_menu2.png"]];
@@ -2112,7 +2147,26 @@ typedef enum{
             NSLog(@"写入文件失败：%@",dataFilePath);
         }
     }
-    
+    if (self.listArray.count<=0) {
+        if(self.notingLabel == nil)
+        {
+            CGRect notingRect = CGRectMake(0, 300, 320, 40);
+            self.notingLabel = [[UILabel alloc] initWithFrame:notingRect];
+            [self.notingLabel setTextColor:[UIColor grayColor]];
+            [self.notingLabel setFont:[UIFont systemFontOfSize:18]];
+            [self.notingLabel setTextAlignment:NSTextAlignmentCenter];
+            [self.view addSubview:self.notingLabel];
+            [self.notingLabel setHidden:YES];
+        }
+        [self.notingLabel setHidden:NO];
+        [self.tableView setHidden:YES];
+        [self.notingLabel setText:@"暂无文件"];
+    }else
+    {
+        [self.notingLabel setHidden:YES];
+        [self.tableView setHidden:NO];
+        [self.notingLabel setText:@"暂无文件"];
+    }
 }
 -(void)newFinderSucess
 {

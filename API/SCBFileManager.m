@@ -249,7 +249,7 @@
     NSLog(@"%@",s_url);
     NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
     NSMutableString *body=[[NSMutableString alloc] init];
-    NSString *fids=[f_ids componentsJoinedByString:@"&fids="];
+    NSString *fids=[f_ids componentsJoinedByString:@","];
     [body appendFormat:@"fpid=%@&spid=%@&item=%@&fids=%@&usrid=%@",f_id,s_id,item,fids,[[SCBSession sharedSession] userId]];
     NSLog(@"%@",body);
     NSMutableData *myRequestData=[NSMutableData data];
@@ -274,7 +274,7 @@
     NSLog(@"%@",s_url);
     NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
     NSMutableString *body=[[NSMutableString alloc] init];
-    NSString *fids=[f_ids componentsJoinedByString:@"&fids="];
+    NSString *fids=[f_ids componentsJoinedByString:@","];
     [body appendFormat:@"fpid=%@&spid=%@&item=%@&fids=%@&usrid=%@",f_id,s_id,item,fids,[[SCBSession sharedSession] userId]];
     NSLog(@"%@",body);
     NSMutableData *myRequestData=[NSMutableData data];

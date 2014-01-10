@@ -46,15 +46,15 @@
     [super viewDidLoad];
     self.imageDownloadsInProgress = [[NSMutableDictionary alloc] init];
     
-    UISwipeGestureRecognizer *recognizer;
-    
-    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(rightSwipeFrom)];
-    [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
-    [[self view] addGestureRecognizer:recognizer];
-    recognizer = nil;
-    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(leftSwipeFrom)];
-    [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
-    [[self view] addGestureRecognizer:recognizer];
+//    UISwipeGestureRecognizer *recognizer;
+//    
+//    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(rightSwipeFrom)];
+//    [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
+//    [[self view] addGestureRecognizer:recognizer];
+//    recognizer = nil;
+//    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(leftSwipeFrom)];
+//    [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
+//    [[self view] addGestureRecognizer:recognizer];
     
     NSMutableArray *items=[NSMutableArray array];
     UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,20,40)];
@@ -162,7 +162,7 @@
         btnStart=[[UIButton alloc] initWithFrame:CGRectMake(0, 1*btnSize.height+64, btnSize.width, btnSize.height)];
         [btnStart setImage:[UIImage imageNamed:@"title_allstart.png"] forState:UIControlStateHighlighted];
         [btnStart setImage:[UIImage imageNamed:@"title_allstart.png"] forState:UIControlStateNormal];
-        [btnStart setBackgroundImage:[UIImage imageNamed:@"menu_2.png"] forState:UIControlStateNormal];
+        [btnStart setBackgroundImage:[UIImage imageNamed:@"menu_3.png"] forState:UIControlStateNormal];
         [btnStart setTitle:@"  全部开始" forState:UIControlStateNormal];
         [btnStart setTitleColor:titleColor forState:UIControlStateNormal];
         [btnStart setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];

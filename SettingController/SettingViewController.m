@@ -374,6 +374,15 @@ typedef enum{
 }
 -(int)import:(CFDataRef)vCardData addressBook:(ABAddressBookRef)addressBook
 {
+    NSString *path=[YNFunctions getTempCachePath];
+    path=[path stringByAppendingPathComponent:@"Vcard.vcf"];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        NSError *jsonParsingError=nil;
+        NSString *vcard=[NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&jsonParsingError];
+        CFDataRef vTheCardData=(__bridge CFDataRef)[vcard dataUsingEncoding:NSUTF8StringEncoding];
+        vCardData=vTheCardData;
+    }
     if (!vCardData) {
         return -1;
     }
@@ -549,7 +558,7 @@ typedef enum{
         label.tag=231;
         [cell.contentView addSubview:label];
     }
-    [cell setBackgroundColor:[UIColor colorWithRed:225/255.0f green:225/255.0f blue:225/255.0f alpha:1.0f]];
+    //[cell setBackgroundColor:[UIColor colorWithRed:225/255.0f green:225/255.0f blue:225/255.0f alpha:1.0f]];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;
     UILabel *titleLabel = (UILabel *)[cell.contentView  viewWithTag:1];
@@ -574,7 +583,7 @@ typedef enum{
                 {
                     titleLabel.text = @"帐号";
                     descLabel.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"];
-                    descLabel.textColor = [UIColor colorWithRed:0.0 green:0.4 blue:0.0 alpha:1.0];
+                    descLabel.textColor = [UIColor grayColor];
                 }
                     break;
                 case 1:
@@ -651,6 +660,7 @@ typedef enum{
                         m_switch.on = [switchFlag boolValue];
                     }
                     ocLabel.hidden=NO;
+                    ocLabel.textColor = [UIColor grayColor];
                 }
                     break;
                 case 0:
@@ -710,6 +720,7 @@ typedef enum{
                     descLabel.hidden = NO;
                     titleLabel.text = @"版本";
                     descLabel.text = VERSION;
+                    descLabel.textColor = [UIColor grayColor];
                     break;
                 case 1:
                     //bgView.image=[UIImage imageNamed:@"set_bk_3.png"];

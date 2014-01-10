@@ -400,6 +400,9 @@ typedef enum{
             btn.frame= CGRectMake(0, i*btnSize.height+64, btnSize.width, btnSize.height);
             if (i==0) {
                 [btn setBackgroundImage:[UIImage imageNamed:@"menu_1.png"] forState:UIControlStateNormal];
+            }else if(i==array.count-1)
+            {
+                [btn setBackgroundImage:[UIImage imageNamed:@"menu_3.png"] forState:UIControlStateNormal];
             }else
             {
                 [btn setBackgroundImage:[UIImage imageNamed:@"menu_2.png"] forState:UIControlStateNormal];

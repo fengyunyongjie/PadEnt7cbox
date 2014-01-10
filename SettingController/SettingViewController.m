@@ -651,6 +651,7 @@ typedef enum{
                     {
                         ocLabel.text = @"关闭";
                     }
+                    ocLabel.textColor = [UIColor grayColor];
                     m_switch.hidden = YES;
                     NSString *switchFlag = [[NSUserDefaults standardUserDefaults] objectForKey:@"isAutoUpload"];
                     if (switchFlag==nil) {

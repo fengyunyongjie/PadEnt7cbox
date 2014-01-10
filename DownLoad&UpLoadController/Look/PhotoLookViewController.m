@@ -11,6 +11,9 @@
 #import "AppDelegate.h"
 #import "DownList.h"
 #import "SCBSession.h"
+#import "MyTabBarViewController.h"
+#import "MySplitViewController.h"
+#import "DetailViewController.h"
 
 #define ACTNUMBER 400000
 #define ScrollViewTag 100000
@@ -294,6 +297,17 @@
     self.page = imageScrollView.contentOffset.x/currWidth;
     
     currPage = self.page;
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+    if([detailView isKindOfClass:[DetailViewController class]])
+    {
+        DetailViewController *viewCon = (DetailViewController *)detailView;
+        DownList *demo = [tableArray objectAtIndex:currPage];
+        [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete];
+        [viewCon setFile_id:demo.d_file_id];
+    }
     
     int page = self.page;
     if(page>=[tableArray count])

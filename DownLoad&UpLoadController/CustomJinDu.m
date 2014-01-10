@@ -9,9 +9,7 @@
 #import "CustomJinDu.h"
 
 #import <QuartzCore/QuartzCore.h>
-#define BWidth 1
-#define RWidth 1
-#define BX 1
+#define BX 0
 
 @implementation CustomJinDu
 @synthesize backColor,currColor,currFloat,customSize,backLabel,currLabel;
@@ -22,16 +20,18 @@
     if (self) {
         CGRect backLabelRect = CGRectMake(0, 0, frame.size.width, frame.size.height);
         backLabel = [[UILabel alloc] initWithFrame:backLabelRect];
-        backLabel.layer.borderWidth = BWidth;
-        backLabel.layer.borderColor = [[UIColor blackColor] CGColor];
         [backLabel setTextColor:[UIColor colorWithRed:180.0/255.0 green:181.0/255.0 blue:181.0/255.0 alpha:1]];
         [backLabel setFont:[UIFont systemFontOfSize:12]];
-        CGRect currLabelRect = CGRectMake(BX, BX, 0, frame.size.height-RWidth);
+        backLabel.layer.masksToBounds = YES;
+        backLabel.layer.cornerRadius = 2;
+        
+        CGRect currLabelRect = CGRectMake(BX, BX, 0, frame.size.height);
         [self addSubview:backLabel];
         
         currLabel = [[UIImageView alloc] initWithFrame:currLabelRect];
+        currLabel.layer.masksToBounds = YES;
+        currLabel.layer.cornerRadius = 2;
         [self addSubview:currLabel];
-        [self setBackColor:[UIColor whiteColor]];
         [self setCurrColor:[UIColor colorWithRed:0.0/255.0 green:160.0/255.0 blue:230.0/255.0 alpha:1]];
     }
     return self;
@@ -64,15 +64,10 @@
     [backLabel setFrame:backLabelRect];
     [backLabel setHidden:NO];
     [backLabel setText:nil];
-    backLabel.layer.borderWidth = BWidth;
-    backLabel.layer.borderColor = [[UIColor blackColor] CGColor];
+    backLabel.layer.backgroundColor = [[UIColor grayColor] CGColor];
     [currLabel setHidden:NO];
-    float width = currFloat_*self.frame.size.width-RWidth;
-    if(width>(self.frame.size.width-RWidth))
-    {
-        width = self.frame.size.width-RWidth;
-    }
-    CGRect currLabelRect = CGRectMake(BX, BX, width, self.frame.size.height-RWidth);
+    float width = currFloat_*self.frame.size.width;
+    CGRect currLabelRect = CGRectMake(BX, BX, width, self.frame.size.height);
     [currLabel setFrame:currLabelRect];
 }
 
@@ -81,7 +76,7 @@
     [currLabel setHidden:YES];
     [backLabel setFont:[UIFont systemFontOfSize:12]];
     [backLabel setText:text];
-    [backLabel setBackgroundColor:[UIColor clearColor]];
+    backLabel.layer.backgroundColor = [[UIColor clearColor] CGColor];
     CGRect backLabelRect = CGRectMake(0, -5, self.frame.size.width, 20);
     [backLabel setFrame:backLabelRect];
     [backLabel.layer setBorderWidth:0];
@@ -92,7 +87,7 @@
     [currLabel setHidden:YES];
     [backLabel setFont:[UIFont systemFontOfSize:11]];
     [backLabel setText:date];
-    [backLabel setBackgroundColor:[UIColor clearColor]];
+    backLabel.layer.backgroundColor = [[UIColor clearColor] CGColor];
     CGRect backLabelRect = CGRectMake(0, -5, self.frame.size.width, 20);
     [backLabel setFrame:backLabelRect];
     [backLabel.layer setBorderWidth:0];

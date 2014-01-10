@@ -15,6 +15,9 @@
 #import "UIBarButtonItem+Yn.h"
 #import "MyTabBarViewController.h"
 #import "MySplitViewController.h"
+#import "OpenFileViewController.h"
+#import "DetailViewController.h"
+#import "PartitionViewController.h"
 
 #define UpTabBarHeight (49+20+44)
 #define kActionSheetTagDelete 77
@@ -264,6 +267,7 @@
         [appleDate.myTabBarVC.imageView setHidden:NO];
     }
     [self.tabBarController.tabBar setHidden:isHideTabBar];
+    
 //    for(UIView *view in self.tabBarController.view.subviews)
 //    {
 //        if([view isKindOfClass:[UITabBar class]])
@@ -286,18 +290,19 @@
 //            }
 //        }
 //    }
+    
     if(self.editView == nil)
     {
         self.editView = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-49, 320, 49)];
         [self.editView setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forState:UIControlStateNormal];
         [self.editView addTarget:self action:@selector(deleteAll:) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:self.editView];
+        [self.tabBarController.view addSubview:self.editView];
         //删除
-//        self.btn_del=[[UIButton alloc] initWithFrame:CGRectMake((320-29)/2, 5, 29, 39)];
-//        [self.btn_del setImage:[UIImage imageNamed:@"del_nor.png"] forState:UIControlStateNormal];
-//        [self.btn_del setImage:[UIImage imageNamed:@"del_se.png"] forState:UIControlStateHighlighted];
-//        [self.btn_del setUserInteractionEnabled:NO];
-//        [self.editView addSubview:self.btn_del];
+        self.btn_del=[[UIButton alloc] initWithFrame:CGRectMake((320-29)/2, 5, 29, 39)];
+        [self.btn_del setImage:[UIImage imageNamed:@"del_nor.png"] forState:UIControlStateNormal];
+        [self.btn_del setImage:[UIImage imageNamed:@"del_se.png"] forState:UIControlStateHighlighted];
+        [self.btn_del addTarget:self action:@selector(deleteAll:) forControlEvents:UIControlEventTouchUpInside];
+        [self.editView addSubview:self.btn_del];
     }
     
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
@@ -1174,14 +1179,94 @@
                 [NSString CreatePath:createPath];
                 NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
                 if ([[NSFileManager defaultManager] fileExistsAtPath:savedPath]) {
-                    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
-                    browser.dataSource=browser;
-                    browser.delegate=browser;
-                    browser.currentPreviewItemIndex=0;
-                    browser.title=f_name;
-                    browser.filePath=savedPath;
-                    browser.fileName=f_name;
-                    [self presentViewController:browser animated:YES completion:nil];
+//                    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
+//                    browser.dataSource=browser;
+//                    browser.delegate=browser;
+//                    browser.currentPreviewItemIndex=0;
+//                    browser.title=f_name;
+//                    browser.filePath=savedPath;
+//                    browser.fileName=f_name;
+//                    [self presentViewController:browser animated:YES completion:nil];
+                    int row = 0;
+                    NSString *fmime = [[[f_name componentsSeparatedByString:@"."] lastObject] lowercaseString];
+                    if ([fmime isEqualToString:@"png"]||
+                        [fmime isEqualToString:@"jpg"]||
+                        [fmime isEqualToString:@"jpeg"]||
+                        [fmime isEqualToString:@"bmp"]||
+                        [fmime isEqualToString:@"gif"])
+                    {
+                        if(indexPath.row<[downLoaded_array count])
+                        {
+                            NSMutableArray *tableArray = [[NSMutableArray alloc] init];
+                            for(int i=0;i<[downLoaded_array count];i++) {
+                                DownList *downLoaded_list  = [downLoaded_array objectAtIndex:i];
+                                NSString *fname_ = downLoaded_list.d_name;
+                                NSString *fmime_=[[[fname_ componentsSeparatedByString:@"."] lastObject] lowercaseString];
+                                if([fmime_ isEqualToString:@"png"]||
+                                   [fmime_ isEqualToString:@"jpg"]||
+                                   [fmime_ isEqualToString:@"jpeg"]||
+                                   [fmime_ isEqualToString:@"bmp"]||
+                                   [fmime_ isEqualToString:@"gif"])
+                                {
+                                    DownList *list = [[DownList alloc] init];
+                                    list.d_file_id = [NSString formatNSStringForOjbect:downLoaded_list.d_file_id];
+//                                    list.d_thumbUrl = [NSString formatNSStringForOjbect:[diction objectForKey:@"fthumb"]];
+                                    if([list.d_thumbUrl length]==0)
+                                    {
+                                        list.d_thumbUrl = @"0";
+                                    }
+                                    list.d_name = [NSString formatNSStringForOjbect:downLoaded_list.d_name];
+                                    list.d_baseUrl = [NSString get_image_save_file_path:list.d_name];
+                                    list.d_downSize = downLoaded_list.d_downSize;
+                                    [tableArray addObject:list];
+                                    if(row==0 && [f_name isEqualToString:downLoaded_list.d_name])
+                                    {
+                                        row = [tableArray count]-1;
+                                    }
+                                }
+                            }
+                            if([tableArray count]>0)
+                            {
+                                PartitionViewController *look = [[PartitionViewController alloc] init];
+                                [look setCurrPage:row];
+                                [look setTableArray:tableArray];
+                                look.isHaveDelete = YES;
+                                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                                UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+                                UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                                if([detailView isKindOfClass:[DetailViewController class]])
+                                {
+                                    DetailViewController *viewCon = (DetailViewController *)detailView;
+                                    [viewCon removeAllView];
+                                    [viewCon showPhotoView:f_name withIsHave:look.isHaveDelete];
+                                    [viewCon.view addSubview:look.view];
+                                    viewCon.isFileManager = NO;
+                                    [viewCon addChildViewController:look];
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
+                        NSDictionary *diction = [[NSDictionary alloc] initWithObjectsAndKeys:f_name,@"fname",list.d_file_id,@"fid",savedPath,@"fthumb",[NSNumber numberWithInteger:list.d_downSize],@"fsize", nil];
+                        
+                        openFileView.dataDic = diction;
+                        openFileView.title = f_name;
+                        
+                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                        if([detailView isKindOfClass:[DetailViewController class]])
+                        {
+                            DetailViewController *viewCon = (DetailViewController *)detailView;
+                            [viewCon removeAllView];
+                            [viewCon.view addSubview:openFileView.view];
+                            [viewCon showOtherView:openFileView.title];
+                            viewCon.isFileManager = NO;
+                            [viewCon addChildViewController:openFileView];
+                        }
+                    }
                 }else
                 {
                     if (self.hud) {
@@ -1217,14 +1302,43 @@
                 [NSString CreatePath:createPath];
                 NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
                 if ([[NSFileManager defaultManager] fileExistsAtPath:savedPath]) {
-                    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
-                    browser.dataSource=browser;
-                    browser.delegate=browser;
-                    browser.currentPreviewItemIndex=0;
-                    browser.title=f_name;
-                    browser.filePath=savedPath;
-                    browser.fileName=f_name;
-                    [self presentViewController:browser animated:YES completion:nil];
+//                    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
+//                    browser.dataSource=browser;
+//                    browser.delegate=browser;
+//                    browser.currentPreviewItemIndex=0;
+//                    browser.title=f_name;
+//                    browser.filePath=savedPath;
+//                    browser.fileName=f_name;
+//                    [self presentViewController:browser animated:YES completion:nil];
+                    NSString *fmime = [[[f_name componentsSeparatedByString:@"."] lastObject] lowercaseString];
+                    if ([fmime isEqualToString:@"png"]||
+                        [fmime isEqualToString:@"jpg"]||
+                        [fmime isEqualToString:@"jpeg"]||
+                        [fmime isEqualToString:@"bmp"]||
+                        [fmime isEqualToString:@"gif"])
+                    {
+                        
+                    }
+                    else
+                    {
+                        OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
+                        NSDictionary *diction = [[NSDictionary alloc] initWithObjectsAndKeys:f_name,@"fname",list.d_file_id,@"fid",savedPath,@"fthumb",[NSNumber numberWithInteger:list.d_downSize],@"fsize", nil];
+                        
+                        openFileView.dataDic = diction;
+                        openFileView.title = f_name;
+                        
+                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                        if([detailView isKindOfClass:[DetailViewController class]])
+                        {
+                            DetailViewController *viewCon = (DetailViewController *)detailView;
+                            [viewCon removeAllView];
+                            [viewCon.view addSubview:openFileView.view];
+                            [viewCon showOtherView:openFileView.title];
+                            [viewCon addChildViewController:openFileView];
+                        }
+                    }
                 }else
                 {
                     if (self.hud) {
@@ -1718,22 +1832,18 @@
     CGRect table_rect = self.table_view.frame;
     
     CGRect editView_rect = self.editView.frame;
+    editView_rect.size.height = 49;
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
-        editView_rect.origin.y = 768-49-44-20;
-        table_rect.size.height = 768-self.customSelectButton.frame.size.height-TabBarHeight-49-5;
+        editView_rect.origin.y = 768-49;
+        table_rect.size.height = 768-self.customSelectButton.frame.size.height-TabBarHeight-49;
     }
     else
     {
-        editView_rect.origin.y = 1024-49-44-20;
-        table_rect.size.height = 1024-self.customSelectButton.frame.size.height-TabBarHeight-49-5;
+        editView_rect.origin.y = 1024-49;
+        table_rect.size.height = 1024-self.customSelectButton.frame.size.height-TabBarHeight-49;
     }
     [self.editView setFrame:editView_rect];
-    
-//    if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
-//    {
-//        table_rect.size.height = table_rect.size.height+TabBarHeight-10;
-//    }
     [self.table_view setFrame:table_rect];
 }
 @end

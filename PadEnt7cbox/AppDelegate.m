@@ -87,6 +87,7 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    [musicPlayer stopPlay];
     if([self isOpenLock])
     {
         [self showLoceView];

@@ -106,7 +106,11 @@
     }
     NSLog(@"下载的大小:%i",[data length]);
     downsize += [data length];
-    [delegate downCurrSize:downsize];
+    
+    if([delegate respondsToSelector:@selector(downCurrSize:)])
+    {
+        [delegate downCurrSize:downsize];
+    }
 #pragma unused(connection)
     NSInteger       dataLength;
     const uint8_t * dataBytes;

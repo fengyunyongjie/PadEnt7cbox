@@ -16,7 +16,7 @@
 @end
 
 @implementation DetailViewController
-@synthesize titleLabel,splitView_array;
+@synthesize titleLabel,splitView_array,isFileManager,file_id;
 
 #pragma mark - Managing the detail item
 
@@ -91,35 +91,41 @@
     [self hiddenPhototView];
 }
 
--(void)showPhotoView:(BOOL)isHaveDelete
+-(void)showPhotoView:(NSString *)title withIsHave:(BOOL)isHaveDelete
 {
-    int width = 50;
-    CGRect leftRect = CGRectMake(0, 5, width, 33);
-    UIButton *leftButton = [[UIButton alloc] initWithFrame:leftRect];
-    [leftButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
-    [leftButton.titleLabel setTextColor:[UIColor blackColor]];
-    [leftButton setTitle:@"下载" forState:UIControlStateNormal];
-    [leftButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [leftButton addTarget:self action:@selector(clipClicked) forControlEvents:UIControlEventTouchUpInside];
-    [leftButton setBackgroundColor:[UIColor clearColor]];
-    leftButton.showsTouchWhenHighlighted = YES;
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
-    self.navigationItem.leftBarButtonItem = leftItem;
-    
-    if(isHaveDelete)
+    if(titleLabel == nil)
     {
-        CGRect rightRect = CGRectMake(0, 5, width, 33);
-        UIButton *rightButton = [[UIButton alloc] initWithFrame:rightRect];
-        [rightButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
-        [rightButton.titleLabel setTextColor:[UIColor blackColor]];
-        [rightButton setTitle:@"删除" forState:UIControlStateNormal];
-        [rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [rightButton addTarget:self action:@selector(deleteClicked) forControlEvents:UIControlEventTouchUpInside];
-        [rightButton setBackgroundColor:[UIColor clearColor]];
-        rightButton.showsTouchWhenHighlighted = YES;
-        UIBarButtonItem *rightItem=[[UIBarButtonItem alloc] initWithCustomView:rightButton];
-        self.navigationItem.rightBarButtonItem = rightItem;
+        CGRect title_rect = CGRectMake(0, 10, 200, 20);
+        UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+        {
+            title_rect.origin.x = (1024-320-200)/2;
+        }
+        else
+        {
+            title_rect.origin.x = (768-320-200)/2;
+        }
+        titleLabel = [[UILabel alloc] initWithFrame:title_rect];
+        [titleLabel setTextAlignment:NSTextAlignmentCenter];
+        [titleLabel setLineBreakMode:NSLineBreakByTruncatingMiddle];
+        [titleLabel setTextColor:[UIColor whiteColor]];
+        [self.navigationController.navigationBar addSubview:titleLabel];
+        
+        CGRect down_rect = CGRectMake(0, 0, 20, 20);
+        UIButton *down_button = [[UIButton alloc] initWithFrame:down_rect];
+        [down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor@2x.png"] forState:UIControlStateNormal];
+        UIBarButtonItem *downItem = [[UIBarButtonItem alloc] initWithCustomView:down_button];
+        UIButton *delete_button = [[UIButton alloc] initWithFrame:down_rect];
+        [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_nor@2x.png"] forState:UIControlStateNormal];
+        UIBarButtonItem *deleteItem = [[UIBarButtonItem alloc] initWithCustomView:delete_button];
+        splitView_array = [NSMutableArray arrayWithObjects:deleteItem,downItem,nil];
     }
+    if(!isHaveDelete)
+    {
+        [splitView_array removeObjectAtIndex:0];
+    }
+    [titleLabel setText:title];
+    self.navigationItem.rightBarButtonItems = splitView_array;
 }
 
 -(void)hiddenPhototView
@@ -157,7 +163,7 @@
         UIButton *delete_button = [[UIButton alloc] initWithFrame:down_rect];
         [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_nor@2x.png"] forState:UIControlStateNormal];
         UIBarButtonItem *deleteItem = [[UIBarButtonItem alloc] initWithCustomView:delete_button];
-        splitView_array = [NSArray arrayWithObjects:deleteItem,downItem,nil];
+        splitView_array = [NSMutableArray arrayWithObjects:deleteItem,downItem,nil];
     }
     [titleLabel setText:title];
     self.navigationItem.rightBarButtonItems = splitView_array;

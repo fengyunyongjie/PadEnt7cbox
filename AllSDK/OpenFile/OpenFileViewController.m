@@ -97,10 +97,15 @@
     [self.view addSubview:self.progess2_imageView];
     
     
-    NSString *fthumb=[self.dataDic objectForKey:@"fthumb"];
-    NSString *localThumbPath=[YNFunctions getIconCachePath];
-    fthumb =[YNFunctions picFileNameFromURL:fthumb];
-    localThumbPath=[localThumbPath stringByAppendingPathComponent:fthumb];
+    NSString *file_id=[self.dataDic objectForKey:@"fid"];
+    NSString *documentDir = [YNFunctions getFMCachePath];
+    NSString *localThumbPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
+    [NSString CreatePath:localThumbPath];
+    
+//    NSString *fthumb=[self.dataDic objectForKey:@"fthumb"];
+//    NSString *localThumbPath=[YNFunctions getIconCachePath];
+//    fthumb =[YNFunctions picFileNameFromURL:fthumb];
+//    localThumbPath=[localThumbPath stringByAppendingPathComponent:fthumb];
     NSLog(@"是否存在文件：%@",localThumbPath);
     if (![[NSFileManager defaultManager] fileExistsAtPath:localThumbPath])
     {

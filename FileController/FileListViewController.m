@@ -131,9 +131,9 @@ typedef enum{
     r.size=self.view.frame.size;
     //r.size.height=self.view.frame.size.height-self.tabBarController.tabBar.frame.size.height;
     [self.tableView setFrame:r];
-    if (self.moreEditBar) {
-        [self.moreEditBar setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.tabBarController.tabBar.frame.size.height)];
-    }
+//    if (self.moreEditBar) {
+//        [self.moreEditBar setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.tabBarController.tabBar.frame.size.height)];
+//    }
 //    r.size.height+=self.tabBarController.tabBar.frame.size.height;
 //    [self.view setFrame:r];
 }
@@ -670,10 +670,7 @@ typedef enum{
     }
     
     if (!self.moreEditBar) {
-        self.moreEditBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0, ([[UIScreen mainScreen] bounds].size.height-49)-self.view.frame.origin.y, 320, 49)];
-        if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.moreEditBar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
-        }
+        self.moreEditBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-56, 320, 56)];
         [self.moreEditBar setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
             [self.moreEditBar setBarTintColor:[UIColor blueColor]];
@@ -681,7 +678,7 @@ typedef enum{
         {
             [self.moreEditBar setTintColor:[UIColor blueColor]];
         }
-        [self.view addSubview:self.moreEditBar];
+        [self.tabBarController.view addSubview:self.moreEditBar];
         //发送 删除 提交 移动 全选
         UIButton *btn_send, *btn_commit ,*btn_del ,*btn_move,*btn_download ,*btn_resave ,*btn_copy;
         UIBarButtonItem *item_commit ,*item_del ,*item_move, *item_resave,*item_flexible, *item_copy;
@@ -1997,8 +1994,9 @@ typedef enum{
                         {
                             DetailViewController *viewCon = (DetailViewController *)detailView;
                             [viewCon removeAllView];
-                            [viewCon showPhotoView:look.isHaveDelete];
+                            [viewCon showPhotoView:fname withIsHave:look.isHaveDelete];
                             [viewCon.view addSubview:look.view];
+                            viewCon.isFileManager = YES;
                             [viewCon addChildViewController:look];
                         }
                     }
@@ -2055,6 +2053,7 @@ typedef enum{
                     [viewCon removeAllView];
                     [viewCon.view addSubview:openFileView.view];
                     [viewCon showOtherView:openFileView.title];
+                    viewCon.isFileManager = YES;
                     [viewCon addChildViewController:openFileView];
                 }
             }
@@ -2771,45 +2770,48 @@ typedef enum{
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            editView_rect.origin.y = 768-49-64;
+            editView_rect.origin.y = 768-56;
         }
         else
         {
-            editView_rect.origin.y = 768-49-64-20;
+            editView_rect.origin.y = 768-56-20;
         }
     }
     else
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            editView_rect.origin.y = 1024-49-64;
+            editView_rect.origin.y = 1024-56;
         }
         else
         {
-            editView_rect.origin.y = 1024-49-64-20;
+            editView_rect.origin.y = 1024-56-20;
         }
     }
     [self.moreEditBar setFrame:editView_rect];
     
+    
+    CGRect self_rect = self.tableView.frame;
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, 768-49-64);
+            self_rect.size.height = 768-56-64;
         }
         else
         {
-            self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, 768-49-64-20);
+            self_rect.size.height = 768-56-64-20;
         }
     }
     else
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, 1024-49-64);
+            self_rect.size.height = 1024-56-64;
         }
         else
         {
-            self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, 1024-49-64-20);
+            self_rect.size.height = 1024-56-64-20;
         }
     }
+    [self.tableView setFrame:self_rect];
 }
 
 @end

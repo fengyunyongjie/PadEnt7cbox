@@ -16,6 +16,7 @@
 @end
 
 @implementation DetailViewController
+@synthesize titleLabel,splitView_array;
 
 #pragma mark - Managing the detail item
 
@@ -125,12 +126,41 @@
 {
     self.navigationItem.leftBarButtonItem = nil;
     self.navigationItem.rightBarButtonItem = nil;
-    self.navigationItem.title = nil;
+    [titleLabel setText:@""];
+    self.navigationItem.rightBarButtonItems = nil;
 }
 
 -(void)showOtherView:(NSString *)title
 {
-    self.navigationItem.title = title;
+    if(titleLabel == nil)
+    {
+        CGRect title_rect = CGRectMake(0, 10, 200, 20);
+        UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+        {
+            title_rect.origin.x = (1024-320-200)/2;
+        }
+        else
+        {
+            title_rect.origin.x = (768-320-200)/2;
+        }
+        titleLabel = [[UILabel alloc] initWithFrame:title_rect];
+        [titleLabel setTextAlignment:NSTextAlignmentCenter];
+        [titleLabel setLineBreakMode:NSLineBreakByTruncatingMiddle];
+        [titleLabel setTextColor:[UIColor whiteColor]];
+        [self.navigationController.navigationBar addSubview:titleLabel];
+        
+        CGRect down_rect = CGRectMake(0, 0, 20, 20);
+        UIButton *down_button = [[UIButton alloc] initWithFrame:down_rect];
+        [down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor@2x.png"] forState:UIControlStateNormal];
+        UIBarButtonItem *downItem = [[UIBarButtonItem alloc] initWithCustomView:down_button];
+        UIButton *delete_button = [[UIButton alloc] initWithFrame:down_rect];
+        [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_nor@2x.png"] forState:UIControlStateNormal];
+        UIBarButtonItem *deleteItem = [[UIBarButtonItem alloc] initWithCustomView:delete_button];
+        splitView_array = [NSArray arrayWithObjects:deleteItem,downItem,nil];
+    }
+    [titleLabel setText:title];
+    self.navigationItem.rightBarButtonItems = splitView_array;
 }
 
 -(void)clipClicked

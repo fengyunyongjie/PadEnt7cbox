@@ -921,6 +921,9 @@ typedef enum{
     info.is_oneWiFi = [YNFunctions isOnlyWifi];
     [info insertUserinfo];
     
+    InputViewController *inputView = [[InputViewController alloc] init];
+    [inputView controllerClose];
+    
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"usr_name"];
     [[NSUserDefaults standardUserDefaults] setObject:nil  forKey:@"usr_pwd"];
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"switch_flag"];

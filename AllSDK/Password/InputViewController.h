@@ -56,10 +56,13 @@ typedef enum {
 @property(nonatomic,strong) NSString *old_password;
 @property(nonatomic,strong) NSString *news_password;
 @property(nonatomic,strong) UIImageView *localView;
+@property(nonatomic,assign) BOOL isShowBackground;
+
 
 @property(nonatomic,strong) UIView *bgView;
 @property(nonatomic,assign) id<PasswordDelegate> passwordDelegate;
 
 -(void)addBackGroundImage:(UIImage *)bg;
+-(void)controllerClose;
 
 @end

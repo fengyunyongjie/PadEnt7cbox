@@ -104,6 +104,7 @@
     self.selectedIndex=0;
     
     [self.tabBar setBackgroundImage:[UIImage imageNamed:@"nav_bk.png"]];
+    NSLog(@"self.tabbar:%@",NSStringFromCGRect(self.tabBar.frame));
     //[self.tabBar setBarStyle:UIBarStyleBlack];
     //[self.tabBar setAlpha:0.65f];
     //[self.tabBar setTranslucent:NO];

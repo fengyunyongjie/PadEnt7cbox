@@ -223,7 +223,6 @@
 -(void)editAction:(id)sender
 {
     [self.menuView setHidden:YES];
-    
     if(isShowUpload)
     {
         if([self.upLoaded_array count] == 0 && [self.upLoading_array count] == 0)
@@ -294,12 +293,11 @@
         [self.editView addTarget:self action:@selector(deleteAll:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.editView];
         //删除
-        self.btn_del=[[UIButton alloc] initWithFrame:CGRectMake((320-29)/2, 5, 29, 39)];
-        [self.btn_del setImage:[UIImage imageNamed:@"del_nor.png"] forState:UIControlStateNormal];
-        [self.btn_del setImage:[UIImage imageNamed:@"del_se.png"] forState:UIControlStateHighlighted];
-        [self.btn_del setUserInteractionEnabled:NO];
-        [self.editView addSubview:self.btn_del];
-        
+//        self.btn_del=[[UIButton alloc] initWithFrame:CGRectMake((320-29)/2, 5, 29, 39)];
+//        [self.btn_del setImage:[UIImage imageNamed:@"del_nor.png"] forState:UIControlStateNormal];
+//        [self.btn_del setImage:[UIImage imageNamed:@"del_se.png"] forState:UIControlStateHighlighted];
+//        [self.btn_del setUserInteractionEnabled:NO];
+//        [self.editView addSubview:self.btn_del];
     }
     
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
@@ -345,7 +343,7 @@
 -(void)start:(id)sender
 {
     [self.menuView setHidden:YES];
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if(isShowUpload)
     {
         if(!appDelegate.uploadmanage.isStart)
@@ -1697,7 +1695,7 @@
             BOOL result=[UIImageJPEGRepresentation(image, 1) writeToFile:filePath atomically:YES];
             if (result) {
                 NSLog(@"文件保存成功");
-                AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+                AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                 [delegate.uploadmanage uploadFilePath:filePath toFileID:@"0" withSpaceID:delegate.space_id];
             }else
             {

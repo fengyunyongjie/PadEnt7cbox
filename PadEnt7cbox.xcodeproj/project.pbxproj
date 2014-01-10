@@ -11,6 +11,9 @@
 		29187849187CD55800577921 /* startpage-@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29187845187CD55800577921 /* startpage-@2x.png */; };
 		2918784A187CD55800577921 /* startpage.png in Resources */ = {isa = PBXBuildFile; fileRef = 29187846187CD55800577921 /* startpage.png */; };
 		2918784B187CD55800577921 /* startpage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29187847187CD55800577921 /* startpage@2x.png */; };
+		2918784F187D01B900577921 /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2918784E187D01B900577921 /* OpenFileViewController.m */; };
+		29187851187D295C00577921 /* icon_checked_gridIpad.png in Resources */ = {isa = PBXBuildFile; fileRef = 29187850187D295C00577921 /* icon_checked_gridIpad.png */; };
+		29187854187D5A6F00577921 /* nothing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 29187853187D5A6F00577921 /* nothing.mp3 */; };
 		294EB4ED18604E68006E6E96 /* SCBAccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 294EB4DF18604E68006E6E96 /* SCBAccountManager.m */; };
 		294EB4EE18604E68006E6E96 /* SCBDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 294EB4E118604E68006E6E96 /* SCBDownloader.m */; };
 		294EB4EF18604E68006E6E96 /* SCBUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 294EB4E318604E68006E6E96 /* SCBUploader.m */; };
@@ -294,6 +297,10 @@
 		29187845187CD55800577921 /* startpage-@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "startpage-@2x.png"; sourceTree = "<group>"; };
 		29187846187CD55800577921 /* startpage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startpage.png; sourceTree = "<group>"; };
 		29187847187CD55800577921 /* startpage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "startpage@2x.png"; sourceTree = "<group>"; };
+		2918784D187D01B900577921 /* OpenFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFileViewController.h; sourceTree = "<group>"; };
+		2918784E187D01B900577921 /* OpenFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFileViewController.m; sourceTree = "<group>"; };
+		29187850187D295C00577921 /* icon_checked_gridIpad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_checked_gridIpad.png; sourceTree = "<group>"; };
+		29187853187D5A6F00577921 /* nothing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = nothing.mp3; sourceTree = "<group>"; };
 		294EB4DE18604E68006E6E96 /* SCBAccountManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCBAccountManager.h; sourceTree = "<group>"; };
 		294EB4DF18604E68006E6E96 /* SCBAccountManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCBAccountManager.m; sourceTree = "<group>"; };
 		294EB4E018604E68006E6E96 /* SCBDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCBDownloader.h; sourceTree = "<group>"; };
@@ -687,6 +694,23 @@
 			path = Password;
 			sourceTree = "<group>";
 		};
+		2918784C187D014100577921 /* OpenFile */ = {
+			isa = PBXGroup;
+			children = (
+				2918784D187D01B900577921 /* OpenFileViewController.h */,
+				2918784E187D01B900577921 /* OpenFileViewController.m */,
+			);
+			path = OpenFile;
+			sourceTree = "<group>";
+		};
+		29187852187D5A6F00577921 /* Mp3 */ = {
+			isa = PBXGroup;
+			children = (
+				29187853187D5A6F00577921 /* nothing.mp3 */,
+			);
+			path = Mp3;
+			sourceTree = "<group>";
+		};
 		294EB50018604F7A006E6E96 /* MBProgressHUD */ = {
 			isa = PBXGroup;
 			children = (
@@ -845,6 +869,7 @@
 		2982E06A186152FE009CB82D /* image */ = {
 			isa = PBXGroup;
 			children = (
+				29187850187D295C00577921 /* icon_checked_gridIpad.png */,
 				2982E06B186152FE009CB82D /* Back_Normal.png */,
 				2982E06C186152FE009CB82D /* Bk_Title.png */,
 				2982E06D186152FE009CB82D /* Bt_Back.png */,
@@ -1170,6 +1195,7 @@
 			children = (
 				29842410185ED500002AC1D0 /* Configuration */,
 				29842416185ED500002AC1D0 /* Images */,
+				29187852187D5A6F00577921 /* Mp3 */,
 				29FD77AD186A8C59001D350F /* PConfig.h */,
 				298423D2185ECE1F002AC1D0 /* PadEnt7cbox-Info.plist */,
 				298423D3185ECE1F002AC1D0 /* InfoPlist.strings */,
@@ -1208,6 +1234,7 @@
 		2984240E185ED500002AC1D0 /* AllSDK */ = {
 			isa = PBXGroup;
 			children = (
+				2918784C187D014100577921 /* OpenFile */,
 				290216D11862CE2300D7D2C7 /* Password */,
 				2982E0EF186153E7009CB82D /* Reachability */,
 				2982E0C9186153C6009CB82D /* BasicSdk */,
@@ -1553,6 +1580,7 @@
 				2982E1C818618584009CB82D /* share_se@2x.png in Resources */,
 				297FBFA2187A4D1A00D27970 /* copy_se@2x.png in Resources */,
 				29FBD6011863D27A005F03AC /* login_bt1@2x.png in Resources */,
+				29187854187D5A6F00577921 /* nothing.mp3 in Resources */,
 				2982E1D818618584009CB82D /* title_menu2@2x.png in Resources */,
 				29C8643D187BF76F002D8739 /* bt_del_nor@2x.png in Resources */,
 				2982E1A018618584009CB82D /* more_nor@2x.png in Resources */,
@@ -1587,6 +1615,7 @@
 				2982E1CA18618584009CB82D /* title_bk@2x.png in Resources */,
 				2984241B185ED500002AC1D0 /* PadEnt7cbox-config.plist in Resources */,
 				2982E09F186152FE009CB82D /* minus@2x.png in Resources */,
+				29187851187D295C00577921 /* icon_checked_gridIpad.png in Resources */,
 				2982E1A318618584009CB82D /* move_se@2x.png in Resources */,
 				2982E18E18618584009CB82D /* guide_1@iPhone5.png in Resources */,
 				2982E1DC18618584009CB82D /* title_more@2x.png in Resources */,
@@ -1640,6 +1669,7 @@
 				299CFC8E186811680060855B /* PasswordButton.m in Sources */,
 				294EB4FC18604F40006E6E96 /* YNNavigationController.m in Sources */,
 				2982E100186154A3009CB82D /* SqlliteManager.m in Sources */,
+				2918784F187D01B900577921 /* OpenFileViewController.m in Sources */,
 				294EB4FB18604F40006E6E96 /* UIBarButtonItem+Yn.m in Sources */,
 				2982DFD9186150C8009CB82D /* FileListViewController.m in Sources */,
 				29842424185ED680002AC1D0 /* Configuratioin.m in Sources */,

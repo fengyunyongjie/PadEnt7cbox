@@ -11,8 +11,9 @@
 @interface DetailViewController : UIViewController <UISplitViewControllerDelegate>
 
 @property (strong, nonatomic) id detailItem;
-
 @property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
+@property (nonatomic,strong) UILabel *titleLabel;
+@property (nonatomic,strong) NSArray *splitView_array;
 
 -(void)removeAllView;
 -(void)showPhotoView:(BOOL)isHaveDelete;

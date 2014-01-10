@@ -137,6 +137,7 @@
 -(void)showLoceView
 {
     self.lockScreen = [[InputViewController alloc] init];
+    self.lockScreen.isShowBackground = YES;
     [self.lockScreen setPasswordDelegate:self];
     [self.lockScreen setBgView:self.window];
     self.lockScreen.view.autoresizesSubviews = YES;

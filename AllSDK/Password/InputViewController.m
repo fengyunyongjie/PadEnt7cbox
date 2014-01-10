@@ -21,7 +21,7 @@
 @end
 
 @implementation InputViewController
-@synthesize passwordType,password_view,top_view,back_button,title_label,update_button,state_label,password_textfield1,password_textfield2,password_textfield3,password_textfield4,password_error,password_button1,password_button2,password_button3,password_button4,password_button5,password_button6,password_button7,password_button8,password_button9,password_button0,password_return,botton_view,one_password,second_password,old_password,news_password,localView,password_delete,bgView,passwordDelegate;
+@synthesize passwordType,password_view,top_view,back_button,title_label,update_button,state_label,password_textfield1,password_textfield2,password_textfield3,password_textfield4,password_error,password_button1,password_button2,password_button3,password_button4,password_button5,password_button6,password_button7,password_button8,password_button9,password_button0,password_return,botton_view,one_password,second_password,old_password,news_password,localView,password_delete,bgView,passwordDelegate,isShowBackground;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -62,7 +62,14 @@
     NSLog(@"rect:%@",NSStringFromCGRect(self.view.frame));
     self.view.autoresizesSubviews = YES;
     self.localView = [[UIImageView alloc] init];
-    [self addBackGroundImage:[UIImage imageNamed:@"startpage-@2x.png"]];
+    if(self.isShowBackground)
+    {
+        [self addBackGroundImage:[UIImage imageNamed:@"startpage-@2x.png"]];
+    }
+    else
+    {
+        [self addBackGroundImage:[self getImageFromView:bgView]];
+    }
     self.one_password = @"";
     self.second_password = @"";
     
@@ -822,8 +829,15 @@
     CGRect localRect = self.localView.frame;
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
-        [self.localView setImage:[UIImage imageNamed:@"startpage@2x.png"]];
-//        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(90));
+        if(isShowBackground)
+        {
+            [self.localView setImage:[UIImage imageNamed:@"startpage@2x.png"]];
+        }
+        else
+        {
+            self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(90));
+        }
+        
         localRect.origin.x = 0;
         localRect.origin.y = 0;
         localRect.size.width = self.view.frame.size.height;
@@ -831,8 +845,14 @@
     }
     else if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
     {
-        [self.localView setImage:[UIImage imageNamed:@"startpage@2x.png"]];
-//        self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-90));
+        if(isShowBackground)
+        {
+            [self.localView setImage:[UIImage imageNamed:@"startpage@2x.png"]];
+        }
+        else
+        {
+            self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-90));
+        }
         localRect.origin.x = 0;
         localRect.origin.y = 0;
         localRect.size.width = self.view.frame.size.height;
@@ -840,7 +860,14 @@
     }
     else if(toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
     {
-        [self.localView setImage:[UIImage imageNamed:@"startpage-@2x.png"]];
+        if(isShowBackground)
+        {
+            [self.localView setImage:[UIImage imageNamed:@"startpage-@2x.png"]];
+        }
+        else
+        {
+            self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(180));
+        }
         localRect.origin.x = 0;
         localRect.origin.y = 0;
         localRect.size.width = self.view.frame.size.width;
@@ -848,13 +875,29 @@
     }
     else
     {
-        [self.localView setImage:[UIImage imageNamed:@"startpage-@2x.png"]];
+        if(isShowBackground)
+        {
+            [self.localView setImage:[UIImage imageNamed:@"startpage-@2x.png"]];
+        }
+        else
+        {
+            self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-180));
+        }
         localRect.origin.x = 0;
         localRect.origin.y = 0;
         localRect.size.width = self.view.frame.size.width;
         localRect.size.height = self.view.frame.size.height;
     }
     [self.localView setFrame:localRect];
+}
+
+-(void)controllerClose
+{
+    PasswordList *list = [self selectList];
+    PasswordManager *manager = [[PasswordManager alloc] init];
+    list.p_fail_count = 5;
+    list.is_open = NO;
+    [manager updatePasswordList:list];
 }
 
 @end

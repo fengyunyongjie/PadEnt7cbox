@@ -12,6 +12,7 @@
 - (void)appImageDidLoad:(NSInteger)indexTag urlImage:(UIImage *)image index:(NSIndexPath *)indexPath;
 - (void)downFinish:(NSString *)baseUrl;
 -(void)downFile:(NSInteger)downSize totalSize:(NSInteger)sudu;
+-(void)downCurrSize:(NSInteger)currSize;
 -(void)didFailWithError;
 //上传失败
 -(void)upError;

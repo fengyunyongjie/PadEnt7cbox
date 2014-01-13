@@ -1993,10 +1993,10 @@ typedef enum{
                         if([detailView isKindOfClass:[DetailViewController class]])
                         {
                             DetailViewController *viewCon = (DetailViewController *)detailView;
+                            viewCon.isFileManager = YES;
                             [viewCon removeAllView];
                             [viewCon showPhotoView:fname withIsHave:look.isHaveDelete];
                             [viewCon.view addSubview:look.view];
-                            viewCon.isFileManager = YES;
                             [viewCon addChildViewController:look];
                         }
                     }
@@ -2050,10 +2050,10 @@ typedef enum{
                 if([detailView isKindOfClass:[DetailViewController class]])
                 {
                     DetailViewController *viewCon = (DetailViewController *)detailView;
-                    [viewCon removeAllView];
-                    [viewCon.view addSubview:openFileView.view];
-                    [viewCon showOtherView:openFileView.title];
                     viewCon.isFileManager = YES;
+                    [viewCon removeAllView];
+                    [viewCon showOtherView:openFileView.title withIsHave:YES];
+                    [viewCon.view addSubview:openFileView.view];
                     [viewCon addChildViewController:openFileView];
                 }
             }

@@ -1237,10 +1237,10 @@
                                 if([detailView isKindOfClass:[DetailViewController class]])
                                 {
                                     DetailViewController *viewCon = (DetailViewController *)detailView;
+                                    viewCon.isFileManager = NO;
                                     [viewCon removeAllView];
                                     [viewCon showPhotoView:f_name withIsHave:look.isHaveDelete];
                                     [viewCon.view addSubview:look.view];
-                                    viewCon.isFileManager = NO;
                                     [viewCon addChildViewController:look];
                                 }
                             }
@@ -1260,10 +1260,10 @@
                         if([detailView isKindOfClass:[DetailViewController class]])
                         {
                             DetailViewController *viewCon = (DetailViewController *)detailView;
+                            viewCon.isFileManager = NO;
                             [viewCon removeAllView];
                             [viewCon.view addSubview:openFileView.view];
-                            [viewCon showOtherView:openFileView.title];
-                            viewCon.isFileManager = NO;
+                            [viewCon showOtherView:openFileView.title withIsHave:NO];
                             [viewCon addChildViewController:openFileView];
                         }
                     }
@@ -1333,9 +1333,10 @@
                         if([detailView isKindOfClass:[DetailViewController class]])
                         {
                             DetailViewController *viewCon = (DetailViewController *)detailView;
+                            viewCon.isFileManager = NO;
                             [viewCon removeAllView];
                             [viewCon.view addSubview:openFileView.view];
-                            [viewCon showOtherView:openFileView.title];
+                            [viewCon showOtherView:openFileView.title withIsHave:YES];
                             [viewCon addChildViewController:openFileView];
                         }
                     }

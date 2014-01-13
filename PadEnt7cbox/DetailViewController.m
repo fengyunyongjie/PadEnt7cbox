@@ -9,6 +9,8 @@
 #import "DetailViewController.h"
 #import "PartitionViewController.h"
 #import "OtherBrowserViewController.h"
+#import "OpenFileViewController.h"
+#import "YNFunctions.h"
 
 @interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -16,7 +18,7 @@
 @end
 
 @implementation DetailViewController
-@synthesize titleLabel,splitView_array,isFileManager,file_id;
+@synthesize titleLabel,splitView_array,isFileManager,downItem,deleteItem,fullItem,dataDic;
 
 #pragma mark - Managing the detail item
 
@@ -49,6 +51,22 @@
 	// Do any additional setup after loading the view, typically from a nib.
     [self configureView];
     [self.view setBackgroundColor:[UIColor whiteColor]];
+    
+    CGRect down_rect = CGRectMake(0, 0, 30, 25);
+    UIButton *down_button = [[UIButton alloc] initWithFrame:down_rect];
+    [down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor@2x.png"] forState:UIControlStateNormal];
+    [down_button addTarget:self action:@selector(clipClicked) forControlEvents:UIControlEventTouchUpInside];
+    self.downItem = [[UIBarButtonItem alloc] initWithCustomView:down_button];
+    UIButton *delete_button = [[UIButton alloc] initWithFrame:down_rect];
+    [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_nor@2x.png"] forState:UIControlStateNormal];
+    [delete_button addTarget:self action:@selector(deleteClicked) forControlEvents:UIControlEventTouchUpInside];
+    self.deleteItem = [[UIBarButtonItem alloc] initWithCustomView:delete_button];
+    
+    CGRect full_rect = CGRectMake(0, 0, 20, 20);
+    UIButton *full_button = [[UIButton alloc] initWithFrame:full_rect];
+    [full_button setBackgroundImage:[UIImage imageNamed:@"bt_alls_nor@2x.png"] forState:UIControlStateNormal];
+    [full_button addTarget:self action:@selector(fullClicked) forControlEvents:UIControlEventTouchUpInside];
+    self.fullItem = [[UIBarButtonItem alloc] initWithCustomView:full_button];
 }
 
 - (void)didReceiveMemoryWarning
@@ -110,22 +128,27 @@
         [titleLabel setLineBreakMode:NSLineBreakByTruncatingMiddle];
         [titleLabel setTextColor:[UIColor whiteColor]];
         [self.navigationController.navigationBar addSubview:titleLabel];
-        
-        CGRect down_rect = CGRectMake(0, 0, 20, 20);
-        UIButton *down_button = [[UIButton alloc] initWithFrame:down_rect];
-        [down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor@2x.png"] forState:UIControlStateNormal];
-        UIBarButtonItem *downItem = [[UIBarButtonItem alloc] initWithCustomView:down_button];
-        UIButton *delete_button = [[UIButton alloc] initWithFrame:down_rect];
-        [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_nor@2x.png"] forState:UIControlStateNormal];
-        UIBarButtonItem *deleteItem = [[UIBarButtonItem alloc] initWithCustomView:delete_button];
-        splitView_array = [NSMutableArray arrayWithObjects:deleteItem,downItem,nil];
     }
+    
     if(!isHaveDelete)
     {
-        [splitView_array removeObjectAtIndex:0];
+        splitView_array = [NSMutableArray arrayWithObjects:self.downItem,nil];
     }
+    else
+    {
+        splitView_array = [NSMutableArray arrayWithObjects:self.deleteItem,self.downItem,nil];
+    }
+    
     [titleLabel setText:title];
-    self.navigationItem.rightBarButtonItems = splitView_array;
+    
+    if(isFileManager)
+    {
+        self.navigationItem.rightBarButtonItems = splitView_array;
+    }
+    else
+    {
+        self.navigationItem.rightBarButtonItems = nil;
+    }
 }
 
 -(void)hiddenPhototView
@@ -136,7 +159,7 @@
     self.navigationItem.rightBarButtonItems = nil;
 }
 
--(void)showOtherView:(NSString *)title
+-(void)showOtherView:(NSString *)title withIsHave:(BOOL)isHaveDown
 {
     if(titleLabel == nil)
     {
@@ -155,18 +178,45 @@
         [titleLabel setLineBreakMode:NSLineBreakByTruncatingMiddle];
         [titleLabel setTextColor:[UIColor whiteColor]];
         [self.navigationController.navigationBar addSubview:titleLabel];
-        
-        CGRect down_rect = CGRectMake(0, 0, 20, 20);
-        UIButton *down_button = [[UIButton alloc] initWithFrame:down_rect];
-        [down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor@2x.png"] forState:UIControlStateNormal];
-        UIBarButtonItem *downItem = [[UIBarButtonItem alloc] initWithCustomView:down_button];
-        UIButton *delete_button = [[UIButton alloc] initWithFrame:down_rect];
-        [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_nor@2x.png"] forState:UIControlStateNormal];
-        UIBarButtonItem *deleteItem = [[UIBarButtonItem alloc] initWithCustomView:delete_button];
-        splitView_array = [NSMutableArray arrayWithObjects:deleteItem,downItem,nil];
     }
+    if(!isHaveDown)
+    {
+        splitView_array = [NSMutableArray arrayWithObjects:self.deleteItem,nil];
+    }
+    else
+    {
+        splitView_array = [NSMutableArray arrayWithObjects:self.deleteItem,self.downItem,nil];
+    }
+    
     [titleLabel setText:title];
-    self.navigationItem.rightBarButtonItems = splitView_array;
+    if(isFileManager)
+    {
+        self.navigationItem.rightBarButtonItems = splitView_array;
+    }
+    else
+    {
+        self.navigationItem.rightBarButtonItems = nil;
+    }
+    self.navigationItem.leftBarButtonItem = fullItem;
+}
+
+-(void)fullClicked
+{
+    NSString *file_id=[self.dataDic objectForKey:@"fid"];
+    NSString *f_name=[self.dataDic objectForKey:@"fname"];
+    NSString *documentDir = [YNFunctions getFMCachePath];
+    NSArray *array=[f_name componentsSeparatedByString:@"/"];
+    NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
+    [NSString CreatePath:createPath];
+    NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
+    browser.dataSource=browser;
+    browser.delegate=browser;
+    browser.currentPreviewItemIndex=0;
+    browser.title=f_name;
+    browser.filePath=savedPath;
+    browser.fileName=f_name;
+    [self presentViewController:browser animated:YES completion:^{}];
 }
 
 -(void)clipClicked

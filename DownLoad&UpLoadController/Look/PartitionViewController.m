@@ -306,7 +306,6 @@
         DetailViewController *viewCon = (DetailViewController *)detailView;
         DownList *demo = [tableArray objectAtIndex:currPage];
         [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete];
-        [viewCon setFile_id:demo.d_file_id];
     }
     
     int page = self.page;
@@ -340,7 +339,7 @@
         for(int i=0;isLoadImage&&i<[imageScrollView.subviews count];i++)
         {
             UIScrollView *s = [imageScrollView.subviews objectAtIndex:i];
-            if(s.tag-ScrollViewTag!=self.page && s.tag-ScrollViewTag!=self.page+1 && s.tag-ScrollViewTag!=self.page+2)
+            if(s.tag-ScrollViewTag!=self.page-1 && s.tag-ScrollViewTag!=self.page && s.tag-ScrollViewTag!=self.page+1 && s.tag-ScrollViewTag!=self.page+2)
             {
                 [s removeFromSuperview];
                 s = nil;
@@ -367,7 +366,7 @@
         for(int i=0;isLoadImage&&i<[imageScrollView.subviews count];i++)
         {
             UIScrollView *s = [imageScrollView.subviews objectAtIndex:i];
-            if(s.tag-ScrollViewTag!=self.page && s.tag-ScrollViewTag!=self.page-1 && s.tag-ScrollViewTag!=self.page-2)
+            if(s.tag-ScrollViewTag!=self.page+1 && s.tag-ScrollViewTag!=self.page && s.tag-ScrollViewTag!=self.page-1 && s.tag-ScrollViewTag!=self.page-2)
             {
                 [s removeFromSuperview];
                 s = nil;
@@ -1511,6 +1510,13 @@
                 imageFrame.origin = CGPointMake((currWidth-size.width)/2, (currHeight-size.height)/2);
                 imageFrame.size = size;
                 [imageview setFrame:imageFrame];
+                
+                UIActivityIndicatorView *activity_indicator = (UIActivityIndicatorView *)[s viewWithTag:ACTNUMBER+x];
+                if([activity_indicator isKindOfClass:[UIActivityIndicatorView class]])
+                {
+                    CGRect activityRect = CGRectMake((currWidth-20)/2, (currHeight-20)/2, 20, 20);
+                    [activity_indicator setFrame:activityRect];
+                }
             }
         }
         [imageScrollView reloadInputViews];
@@ -1567,6 +1573,13 @@
                 imageFrame.origin = [self ImagePoint:size];//ImagePoint(size);
                 imageFrame.size = size;
                 [imageview setFrame:imageFrame];
+                
+                UIActivityIndicatorView *activity_indicator = (UIActivityIndicatorView *)[s viewWithTag:ACTNUMBER+x];
+                if([activity_indicator isKindOfClass:[UIActivityIndicatorView class]])
+                {
+                    CGRect activityRect = CGRectMake((currWidth-20)/2, (currHeight-20)/2, 20, 20);
+                    [activity_indicator setFrame:activityRect];
+                }
             }
         }
         [imageScrollView reloadInputViews];
@@ -1688,6 +1701,7 @@
     currHeight = ScollviewHeight;
     currPage = _currPage;
     [self isScapeLeftOrRight:self.isScape];
+    [self scrollViewDidEndDecelerating:nil];
 }
 
 @end

@@ -881,7 +881,7 @@
         }
         else
         {
-            self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(-180));
+            self.localView.transform =  CGAffineTransformMakeRotation(degreesToRadinas(0));
         }
         localRect.origin.x = 0;
         localRect.origin.y = 0;

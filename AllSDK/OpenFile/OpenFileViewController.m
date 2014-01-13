@@ -123,8 +123,15 @@
         self.downImage.delegate = self;
         [self.downImage startDownload];
     }
-    UITapGestureRecognizer *onceTap =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleOnceTap:)];
-    [onceTap setNumberOfTapsRequired:1];
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+    if([detailView isKindOfClass:[DetailViewController class]])
+    {
+        DetailViewController *viewCon = (DetailViewController *)detailView;
+        [viewCon setDataDic:self.dataDic];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -184,10 +191,6 @@
     }
     [browser.view setFrame:self_rect];
     
-    UITapGestureRecognizer *onceTap =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleOnceTap:)];
-    [onceTap setNumberOfTapsRequired:1];
-    [browser.view addGestureRecognizer:onceTap];
-    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
     UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
@@ -196,15 +199,10 @@
         DetailViewController *viewCon = (DetailViewController *)detailView;
         [viewCon removeAllView];
         [viewCon.view addSubview:browser.view];
-        [viewCon showOtherView:browser.title];
+        [viewCon showOtherView:browser.title withIsHave:YES];
         [viewCon addChildViewController:browser];
     }
     
-}
-
--(void)handleOnceTap:(UIGestureRecognizer *)gesture
-{
-    NSLog(@"-(void)handleOnceTap:(UIGestureRecognizer *)gesture");
 }
 
 -(void)downFile:(NSInteger)downSize totalSize:(NSInteger)sudu

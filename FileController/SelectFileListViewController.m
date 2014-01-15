@@ -75,7 +75,7 @@
     //Reposition and resize the receiver
     [toolbar setFrame:rectArea];
     //Add the toolbar as a subview to the navigation controller.
-    [self.view addSubview:toolbar];
+    [self.tabBarController.view addSubview:toolbar];
     self.toolbar=toolbar;
     [self.toolbar setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
     
@@ -103,7 +103,7 @@
     //    UIBarButtonItem *cancel_btn=[[UIBarButtonItem alloc] initWithTitleStr:@"    取 消    " style:UIBarButtonItemStyleBordered target:self action:@selector(moveCancel:)];
     UIBarButtonItem *fix=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     [self.toolbar setItems:@[fix,item_download,fix,item_resave,fix]];
-    
+    [self.tabBarController.tabBar setHidden:YES];
     //初始化返回按钮
     UIButton*backButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,35,29)];
     [backButton setImage:[UIImage imageNamed:@"title_back.png"] forState:UIControlStateNormal];
@@ -129,6 +129,11 @@
     [rightButton addTarget:self action:@selector(newFinder:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     //self.navigationItem.rightBarButtonItem=rightItem;
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self.toolbar setHidden:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -628,10 +633,10 @@
             self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49-64-20);
         }
         if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.toolbar.frame=CGRectMake(0, 768-49-64-20, 320, 49);
+            self.toolbar.frame=CGRectMake(0, 768-49-20, 320, 49);
         }else
         {
-            self.toolbar.frame=CGRectMake(0, 768-49-64, 320, 49);
+            self.toolbar.frame=CGRectMake(0, 768-49, 320, 49);
         }
     }
     else
@@ -643,10 +648,10 @@
             self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49-64-20);
         }
         if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.toolbar.frame=CGRectMake(0, 1024-49-64-20, 320, 49);
+            self.toolbar.frame=CGRectMake(0, 1024-49-20, 320, 49);
         }else
         {
-            self.toolbar.frame=CGRectMake(0, 1024-49-64, 320, 49);
+            self.toolbar.frame=CGRectMake(0, 1024-49, 320, 49);
         }
     }
 }

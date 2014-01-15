@@ -243,4 +243,23 @@
     }
 }
 
+//视图旋转之前自动调用
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+
+-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    CGRect title_rect = self.titleLabel.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        title_rect.origin.x = (1024-320-200)/2;
+    }
+    else
+    {
+        title_rect.origin.x = (768-320-200)/2;
+    }
+    [self.titleLabel setFrame:title_rect];
+}
+
 @end

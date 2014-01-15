@@ -60,7 +60,7 @@ __strong static WelcomeViewController *_welcommeVC;
     
     [scroll_view setContentOffset:CGPointMake(imageWidth * pageCtrl.currentPage, 0) animated:YES];
     
-    CGRect hidden_rect = CGRectMake(imageWidth*3-41, imageHeigth-41, 41, 41);
+    CGRect hidden_rect = CGRectMake(imageWidth*2+(imageWidth-124)/2, imageHeigth-200, 124, 31);
     [hidden_button setFrame:hidden_rect];
 }
 
@@ -157,7 +157,7 @@ __strong static WelcomeViewController *_welcommeVC;
     pageCtrl = _pageCtrl;
     [self.view addSubview:pageCtrl];
     
-    UIButton *button=[[UIButton alloc] initWithFrame:CGRectMake(imageWidth*3-41, imageHeigth-41, 41, 41)];
+    UIButton *button=[[UIButton alloc] initWithFrame:CGRectMake(imageWidth*2+(imageWidth-124)/2, imageHeigth-200, 124, 31)];
     [button setBackgroundImage:[UIImage imageNamed:@"guide_bt_nor.png"] forState:UIControlStateNormal];
     [button setBackgroundImage:[UIImage imageNamed:@"guide_bt_se.png"] forState:UIControlStateHighlighted];
     [button addTarget:self action:@selector(toHideView) forControlEvents:UIControlEventTouchUpInside];

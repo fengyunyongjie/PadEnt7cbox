@@ -121,16 +121,16 @@ typedef enum{
         [appleDate.myTabBarVC.imageView setHidden:NO];
     }
     
-    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
-    NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
+//    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+//    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 - (void)viewDidLayoutSubviews
 {
-    NSLog(@"view frame:%@",NSStringFromCGRect(self.view.frame));
-    CGRect r=self.tableView.frame;
-    r.size=self.view.frame.size;
-    //r.size.height=self.view.frame.size.height-self.tabBarController.tabBar.frame.size.height;
-    [self.tableView setFrame:r];
+//    NSLog(@"view frame:%@",NSStringFromCGRect(self.view.frame));
+//    CGRect r=self.tableView.frame;
+//    r.size=self.view.frame.size;
+//    //r.size.height=self.view.frame.size.height-self.tabBarController.tabBar.frame.size.height;
+//    [self.tableView setFrame:r];
 //    if (self.moreEditBar) {
 //        [self.moreEditBar setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.tabBarController.tabBar.frame.size.height)];
 //    }

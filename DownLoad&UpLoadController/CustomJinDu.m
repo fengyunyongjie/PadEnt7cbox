@@ -22,17 +22,17 @@
         backLabel = [[UILabel alloc] initWithFrame:backLabelRect];
         [backLabel setTextColor:[UIColor colorWithRed:180.0/255.0 green:181.0/255.0 blue:181.0/255.0 alpha:1]];
         [backLabel setFont:[UIFont systemFontOfSize:12]];
-        backLabel.layer.masksToBounds = YES;
-        backLabel.layer.cornerRadius = 2;
+//        backLabel.layer.masksToBounds = YES;
+//        backLabel.layer.cornerRadius = 2;
         
         CGRect currLabelRect = CGRectMake(BX, BX, 0, frame.size.height);
         [self addSubview:backLabel];
         
         currLabel = [[UIImageView alloc] initWithFrame:currLabelRect];
-        currLabel.layer.masksToBounds = YES;
-        currLabel.layer.cornerRadius = 2;
+//        currLabel.layer.masksToBounds = YES;
+//        currLabel.layer.cornerRadius = 2;
         [self addSubview:currLabel];
-        [self setCurrColor:[UIColor colorWithRed:0.0/255.0 green:160.0/255.0 blue:230.0/255.0 alpha:1]];
+        [self setCurrColor:[UIColor colorWithRed:73.0/255.0 green:127.0/255.0 blue:191.0/255.0 alpha:1]];
     }
     return self;
 }
@@ -64,7 +64,7 @@
     [backLabel setFrame:backLabelRect];
     [backLabel setHidden:NO];
     [backLabel setText:nil];
-    backLabel.layer.backgroundColor = [[UIColor grayColor] CGColor];
+    backLabel.layer.backgroundColor = [[UIColor colorWithRed:203.0/255.0 green:203.0/255.0 blue:203.0/255.0 alpha:1] CGColor];
     [currLabel setHidden:NO];
     float width = currFloat_*self.frame.size.width;
     CGRect currLabelRect = CGRectMake(BX, BX, width, self.frame.size.height);

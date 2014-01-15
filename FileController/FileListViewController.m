@@ -121,8 +121,8 @@ typedef enum{
         [appleDate.myTabBarVC.imageView setHidden:NO];
     }
     
-//    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-//    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 - (void)viewDidLayoutSubviews
 {
@@ -2766,6 +2766,9 @@ typedef enum{
 
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
+    CGRect view_rect = self.view.frame;
+    view_rect.size.width = 320;
+    [self.view setFrame:view_rect];
     CGRect editView_rect = self.moreEditBar.frame;
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
@@ -2791,6 +2794,7 @@ typedef enum{
     
     
     CGRect self_rect = self.tableView.frame;
+    self_rect.size.width = 320;
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {

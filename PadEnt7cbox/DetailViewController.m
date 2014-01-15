@@ -262,4 +262,10 @@
     [self.titleLabel setFrame:title_rect];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    UIInterfaceOrientation toInterfaceOrientation = [self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+
 @end

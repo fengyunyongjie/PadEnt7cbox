@@ -47,10 +47,10 @@
 }
 - (void)viewDidLayoutSubviews
 {
-    NSLog(@"view frame:%@",NSStringFromCGRect(self.view.frame));
-    CGRect r=self.tableView.frame;
-    r.size=self.view.frame.size;
-    [self.tableView setFrame:r];
+//    NSLog(@"view frame:%@",NSStringFromCGRect(self.view.frame));
+//    CGRect r=self.tableView.frame;
+//    r.size=self.view.frame.size;
+//    [self.tableView setFrame:r];
 }
 - (void)viewDidAppear:(BOOL)animated
 {

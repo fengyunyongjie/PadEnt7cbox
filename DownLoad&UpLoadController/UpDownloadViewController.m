@@ -1336,7 +1336,7 @@
                             viewCon.isFileManager = NO;
                             [viewCon removeAllView];
                             [viewCon.view addSubview:openFileView.view];
-                            [viewCon showOtherView:openFileView.title withIsHave:YES];
+                            [viewCon showOtherView:openFileView.title withIsHave:NO];
                             [viewCon addChildViewController:openFileView];
                         }
                     }

@@ -13,8 +13,9 @@
 #import "LookDownFile.h"
 #import "SCBFileManager.h"
 #import "PhotoLookViewController.h"
+#import "DwonFile.h"
 
-@interface PartitionViewController : UIViewController<UIScrollViewDelegate,UIActionSheetDelegate,SCBLinkManagerDelegate,MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate,UIActionSheetDelegate,LookDownDelegate,SCBFileManagerDelegate,PhotoLookViewDelegate>{
+@interface PartitionViewController : UIViewController<UIScrollViewDelegate,UIActionSheetDelegate,SCBLinkManagerDelegate,MFMessageComposeViewControllerDelegate,MFMailComposeViewControllerDelegate,UIActionSheetDelegate,LookDownDelegate,SCBFileManagerDelegate,PhotoLookViewDelegate,DownloaderDelegate>{
     /*
      缩放代码
      */

@@ -812,6 +812,13 @@
         
         [table_Array addObject:list];
         [delegate.downmange addDownLists:table_Array];
+        
+        DwonFile *downImage = [[DwonFile alloc] init];
+        downImage.fileSize = list.d_downSize;
+        downImage.file_id = list.d_file_id;
+        downImage.fileName = list.d_name;
+        downImage.delegate = self;
+        [downImage startDownload];
     }
 }
 
@@ -1127,7 +1134,14 @@
 }
 
 #pragma mark 下载回调
-- (void)downFinish:(NSString *)baseUrl{}
+- (void)downFinish:(NSString *)baseUrl
+{
+    UIImage *scaleImage = [UIImage imageWithContentsOfFile:baseUrl];
+    if(scaleImage)
+    {
+        UIImageWriteToSavedPhotosAlbum(scaleImage, nil, nil,nil);
+    }
+}
 -(void)downFile:(NSInteger)downSize totalSize:(NSInteger)sudu{}
 
 -(void)appImageDidLoad:(NSInteger)indexTag urlImage:(NSString *)path index:(NSIndexPath *)indexPath

@@ -199,10 +199,9 @@
         DetailViewController *viewCon = (DetailViewController *)detailView;
         [viewCon removeAllView];
         [viewCon.view addSubview:browser.view];
-        [viewCon showOtherView:browser.title withIsHave:YES];
+        [viewCon showOtherView:browser.title withIsHave:NO];
         [viewCon addChildViewController:browser];
     }
-    
 }
 
 -(void)downFile:(NSInteger)downSize totalSize:(NSInteger)sudu

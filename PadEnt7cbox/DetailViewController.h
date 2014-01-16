@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SCBFileManager.h"
 
-@interface DetailViewController : UIViewController <UISplitViewControllerDelegate>
+@interface DetailViewController : UIViewController <UISplitViewControllerDelegate,SCBFileManagerDelegate>
 
 @property (strong, nonatomic) id detailItem;
 @property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
@@ -19,6 +20,7 @@
 @property (nonatomic,strong) UIBarButtonItem *deleteItem;
 @property (nonatomic,strong) UIBarButtonItem *fullItem;
 @property (strong,nonatomic) NSDictionary *dataDic;
+@property (strong,nonatomic) SCBFileManager *fm;
 
 -(void)removeAllView;
 -(void)showPhotoView:(NSString *)title withIsHave:(BOOL)isHaveDelete;

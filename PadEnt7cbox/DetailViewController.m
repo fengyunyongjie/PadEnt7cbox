@@ -11,6 +11,8 @@
 #import "OtherBrowserViewController.h"
 #import "OpenFileViewController.h"
 #import "YNFunctions.h"
+#import "AppDelegate.h"
+#import "MySplitViewController.h"
 
 @interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -216,7 +218,7 @@
     browser.title=f_name;
     browser.filePath=savedPath;
     browser.fileName=f_name;
-    [self presentViewController:browser animated:YES completion:^{}];
+    [self presentViewController:browser animated:NO completion:^{}];
 }
 
 -(void)clipClicked
@@ -238,6 +240,11 @@
         {
             PartitionViewController *parttion = (PartitionViewController *)viewCon;
             [parttion deleteClicked:nil];
+            break;
+        }
+        else if([viewCon isKindOfClass:[QLBrowserViewController class]])
+        {
+            [self deleteCurrFile];
             break;
         }
     }
@@ -267,5 +274,64 @@
     UIInterfaceOrientation toInterfaceOrientation = [self interfaceOrientation];
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
+
+-(void)deleteCurrFile
+{
+    NSString *f_id=[self.dataDic objectForKey:@"fid"];
+    [self.fm cancelAllTask];
+    self.fm=[[SCBFileManager alloc] init];
+    self.fm.delegate=self;
+    [self.fm removeFileWithIDs:@[f_id]];
+    
+    NSDictionary *dic = self.dataDic;
+    //获取数据
+    NSString *fileName = [NSString formatNSStringForOjbect:[dic objectForKey:@"fname"]];
+    NSString *file_id = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
+    NSString *documentDir = [YNFunctions getFMCachePath];
+    NSArray *array=[fileName componentsSeparatedByString:@"/"];
+    NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
+    NSString *file_path = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+    //查询本地是否已经有该图片
+    BOOL bl = [NSString image_exists_FM_file_path:file_path];
+    if(bl)
+    {
+        NSFileManager *filemgr = [NSFileManager defaultManager];
+        if([filemgr fileExistsAtPath:file_path])
+        {
+            BOOL isDelete = [filemgr removeItemAtPath:file_path error:nil];
+            NSLog(@"删除文件是否成功：%i",isDelete);
+        }
+    }
+}
+
+-(void)networkError{}
+-(void)authorMenusSuccess:(NSData*)data{}
+-(void)searchSucess:(NSDictionary *)datadic{}
+-(void)operateSucess:(NSDictionary *)datadic{}
+-(void)openFinderSucess:(NSDictionary *)datadic{}
+//打开家庭成员
+-(void)getOpenFamily:(NSDictionary *)dictionary{}
+//打开文件个人信息
+-(void)getFileEntInfo:(NSDictionary *)dictionary{}
+-(void)openFinderUnsucess{}
+-(void)removeSucess
+{
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+    if([detailView isKindOfClass:[DetailViewController class]])
+    {
+        DetailViewController *viewCon = (DetailViewController *)detailView;
+        [viewCon removeAllView];
+    }
+}
+-(void)removeUnsucess{}
+-(void)renameSucess{}
+-(void)renameUnsucess{}
+-(void)moveSucess{}
+-(void)moveUnsucess{}
+-(void)newFinderSucess{}
+-(void)newFinderUnsucess{}
+-(void)Unsucess:(NSString *)strError{}
 
 @end

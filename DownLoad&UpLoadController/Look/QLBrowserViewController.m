@@ -33,7 +33,7 @@
 
 - (NSUInteger)supportedInterfaceOrientations
 {
-    return UIInterfaceOrientationMaskAllButUpsideDown;
+    return UIInterfaceOrientationMaskAll;
 }
 - (void)viewDidLoad
 {

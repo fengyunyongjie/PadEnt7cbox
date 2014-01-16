@@ -2052,7 +2052,7 @@ typedef enum{
                     DetailViewController *viewCon = (DetailViewController *)detailView;
                     viewCon.isFileManager = YES;
                     [viewCon removeAllView];
-                    [viewCon showOtherView:openFileView.title withIsHave:YES];
+                    [viewCon showOtherView:openFileView.title withIsHave:NO];
                     [viewCon.view addSubview:openFileView.view];
                     [viewCon addChildViewController:openFileView];
                 }

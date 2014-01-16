@@ -329,12 +329,12 @@
         UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
         [items addObject:rightItem1];
         
-        UIButton*rightButton2 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,30,40)];
-        [rightButton2 setImage:[UIImage imageNamed:@"title_upload_nor@2x.png"] forState:UIControlStateNormal];
-        [rightButton2 setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
-        [rightButton2 addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
-        UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithCustomView:rightButton2];
-        [items addObject:rightItem2];
+//        UIButton*rightButton2 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,30,40)];
+//        [rightButton2 setImage:[UIImage imageNamed:@"title_upload_nor@2x.png"] forState:UIControlStateNormal];
+//        [rightButton2 setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
+//        [rightButton2 addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
+//        UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithCustomView:rightButton2];
+//        [items addObject:rightItem2];
         
         self.navigationItem.rightBarButtonItems = items;
     }

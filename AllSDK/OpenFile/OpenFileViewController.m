@@ -106,23 +106,34 @@
 //    NSString *localThumbPath=[YNFunctions getIconCachePath];
 //    fthumb =[YNFunctions picFileNameFromURL:fthumb];
 //    localThumbPath=[localThumbPath stringByAppendingPathComponent:fthumb];
-    NSLog(@"是否存在文件：%@",localThumbPath);
-    if (![[NSFileManager defaultManager] fileExistsAtPath:localThumbPath])
+    NSString *fmine = [[[[NSString formatNSStringForOjbect:[self.dataDic objectForKey:@"fname"]] componentsSeparatedByString:@"."] lastObject] lowercaseString];
+    if([self isFileOpen:fmine])
     {
-        [self.progess_imageView setHidden:YES];
-        [self.progess2_imageView setHidden:YES];
+        NSLog(@"是否存在文件：%@",localThumbPath);
+        if (![[NSFileManager defaultManager] fileExistsAtPath:localThumbPath])
+        {
+            [self.progess_imageView setHidden:YES];
+            [self.progess2_imageView setHidden:YES];
+        }
+        else
+        {
+            [self.progess_imageView setHidden:NO];
+            [self.progess2_imageView setHidden:NO];
+            self.downImage = [[DwonFile alloc] init];
+            self.downImage.fileName = [NSString formatNSStringForOjbect:[self.dataDic objectForKey:@"fname"]];
+            self.downImage.fileSize = [[self.dataDic objectForKey:@"fsize"] integerValue];
+            self.downImage.file_id = [NSString formatNSStringForOjbect:[self.dataDic objectForKey:@"fid"]];
+            self.downImage.delegate = self;
+            [self.downImage startDownload];
+        }
     }
     else
     {
-        [self.progess_imageView setHidden:NO];
-        [self.progess2_imageView setHidden:NO];
-        self.downImage = [[DwonFile alloc] init];
-        self.downImage.fileName = [NSString formatNSStringForOjbect:[self.dataDic objectForKey:@"fname"]];
-        self.downImage.fileSize = [[self.dataDic objectForKey:@"fsize"] integerValue];
-        self.downImage.file_id = [NSString formatNSStringForOjbect:[self.dataDic objectForKey:@"fid"]];
-        self.downImage.delegate = self;
-        [self.downImage startDownload];
+        [self.fileImageView setHidden:YES];
+        [self.progess_imageView setHidden:YES];
+        [self.fileNameLabel setText:@"此文件无法预览"];
     }
+    
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
@@ -248,6 +259,36 @@
 -(void)upNetworkStop
 {
     
+}
+
+//文件是否可以打开
+-(BOOL)isFileOpen:(NSString *)type
+{
+    if([type isEqualToString:@"pages"] ||
+       [type isEqualToString:@"doc"] ||
+       [type isEqualToString:@"pdf"]||
+       [type isEqualToString:@"html"]||
+       [type isEqualToString:@"rtf"]||
+       [type isEqualToString:@"txt"]||
+       [type isEqualToString:@"key"]||
+       [type isEqualToString:@"ppt"]||
+       [type isEqualToString:@"excel"]||
+       [type isEqualToString:@"csv"]||
+       [type isEqualToString:@"xml"]||
+       [type isEqualToString:@"mht"]||
+       [type isEqualToString:@"h"]||
+       [type isEqualToString:@"m"]||
+       [type isEqualToString:@"zip"]||
+       [type isEqualToString:@"rar"]||
+       [type isEqualToString:@"js"]||
+       [type isEqualToString:@"mp3"]||
+       [type isEqualToString:@"mp4"]||
+       [type isEqualToString:@"mov"]||
+       [type isEqualToString:@"swf"])
+    {
+        return YES;
+    }
+    return NO;
 }
 
 @end

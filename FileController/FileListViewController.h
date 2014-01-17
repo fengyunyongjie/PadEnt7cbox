@@ -41,4 +41,7 @@ typedef enum {
 -(void)moveFileToID:(NSString *)f_id;
 -(void)commitFileToID:(NSString *)f_id sID:(NSString *)s_pid;
 -(void)resaveFileToID:(NSString *)f_id;
+
+- (void)operateUpdate;
+
 @end

@@ -1343,9 +1343,9 @@ typedef enum{
     UIButton *accessory=[[UIButton alloc] init];
     [accessory setFrame:CGRectMake(5, 5, 40, 40)];
     [accessory setTag:indexPath.row];
-    [accessory setImage:[UIImage imageNamed:@"sel_nor.png"] forState:UIControlStateNormal];
-    [accessory setImage:[UIImage imageNamed:@"sel_se.png"] forState:UIControlStateHighlighted];
-    [accessory setImage:[UIImage imageNamed:@"sel_se.png"] forState:UIControlStateSelected];
+    [accessory setImage:[UIImage imageNamed:@"sel_nor@2x.png"] forState:UIControlStateNormal];
+    [accessory setImage:[UIImage imageNamed:@"sel_se@2x.png"] forState:UIControlStateHighlighted];
+    [accessory setImage:[UIImage imageNamed:@"sel_se@2x.png"] forState:UIControlStateSelected];
     [accessory  addTarget:self action:@selector(accessoryButtonPressedAction:) forControlEvents:UIControlEventTouchUpInside];
     cell.accessoryView=accessory;
     

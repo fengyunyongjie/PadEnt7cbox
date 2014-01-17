@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SCBFileManager.h"
 
-@interface DetailViewController : UIViewController <UISplitViewControllerDelegate,SCBFileManagerDelegate>
+@interface DetailViewController : UIViewController <UISplitViewControllerDelegate,SCBFileManagerDelegate,UIActionSheetDelegate>
 
 @property (strong, nonatomic) id detailItem;
 @property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;

@@ -13,6 +13,11 @@
 #import "YNFunctions.h"
 #import "AppDelegate.h"
 #import "MySplitViewController.h"
+#import "FileListViewController.h"
+#import "MyTabBarViewController.h"
+
+#define kActionSheetDeleteFile 1024
+#define kActionSheetDeletePhoto 1025
 
 @interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -244,7 +249,10 @@
         }
         else if([viewCon isKindOfClass:[QLBrowserViewController class]])
         {
-            [self deleteCurrFile];
+            UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"是否要删除此文件" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles: nil];
+            [actionSheet setTag:kActionSheetDeleteFile];
+            [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
             break;
         }
     }
@@ -324,6 +332,17 @@
         DetailViewController *viewCon = (DetailViewController *)detailView;
         [viewCon removeAllView];
     }
+    MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
+    UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
+    for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
+    {
+        FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
+        if([fileList isKindOfClass:[FileListViewController class]])
+        {
+            [fileList operateUpdate];
+            break;
+        }
+    }
 }
 -(void)removeUnsucess{}
 -(void)renameSucess{}
@@ -333,5 +352,13 @@
 -(void)newFinderSucess{}
 -(void)newFinderUnsucess{}
 -(void)Unsucess:(NSString *)strError{}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 0)
+    {
+        [self deleteCurrFile];
+    }
+}
 
 @end

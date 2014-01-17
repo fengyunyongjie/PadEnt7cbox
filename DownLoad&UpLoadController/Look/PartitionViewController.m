@@ -14,6 +14,7 @@
 #import "MyTabBarViewController.h"
 #import "MySplitViewController.h"
 #import "DetailViewController.h"
+#import "FileListViewController.h"
 
 #define ACTNUMBER 400000
 #define ScrollViewTag 100000
@@ -883,6 +884,7 @@
                 self.fm.delegate=self;
                 [self.fm removeFileWithIDs:@[demo.d_file_id]];
             }
+            [self updateViewBounds:self.view];
             hud = [[MBProgressHUD alloc] initWithView:self.view];
             [self.view addSubview:hud];
             hud.mode=MBProgressHUDModeIndeterminate;
@@ -892,12 +894,30 @@
     }
 }
 
+-(void)updateViewBounds:(UIView *)selfView
+{
+    CGRect rect = selfView.frame;
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        rect.size.width = 1024-320;
+        rect.size.height = 768;
+    }
+    else
+    {
+        rect.size.width = 768-320;
+        rect.size.height = 1024;
+    }
+    selfView.frame = rect;
+}
+
 -(void)networkError
 {
     if (self.hud) {
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
+    [self updateViewBounds:self.view];
     self.hud=[[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:self.hud];
     [self.hud show:NO];
@@ -981,6 +1001,7 @@
 {
     if([[dictionary objectForKey:@"code"] intValue] == 0)
     {
+        [self updateViewBounds:self.view];
         hud = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:hud];
         hud.labelText=@"下载成功";
@@ -1017,6 +1038,7 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
+    [self updateViewBounds:self.view];
     self.hud=[[MBProgressHUD alloc] initWithView:self.view];
     [self.view.superview addSubview:self.hud];
     [self.hud show:NO];
@@ -1238,6 +1260,7 @@
             [self.hud removeFromSuperview];
         }
         self.hud=nil;
+        [self updateViewBounds:self.view];
         self.hud=[[MBProgressHUD alloc] initWithView:self.view];
         [self.view.superview addSubview:self.hud];
         [self.hud show:NO];
@@ -1255,6 +1278,7 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
+    [self updateViewBounds:self.view];
     self.hud=[[MBProgressHUD alloc] initWithView:self.view];
     [self.view.superview addSubview:self.hud];
     [self.hud show:NO];
@@ -1303,6 +1327,17 @@
         [imageScrollView removeFromSuperview];
         imageScrollView = nil;
         [activityDic removeAllObjects];
+    }
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    if([tableArray count] == 0)
+    {
+        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+        if([detailView isKindOfClass:[DetailViewController class]])
+        {
+            DetailViewController *viewCon = (DetailViewController *)detailView;
+            [viewCon removeAllView];
+        }
     }
     
     self.offset = 0.0;
@@ -1407,6 +1442,17 @@
     hud.mode=MBProgressHUDModeText;
     [hud hide:YES afterDelay:0.8f];
     hud = nil;
+    MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
+    UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
+    for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
+    {
+        FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
+        if([fileList isKindOfClass:[FileListViewController class]])
+        {
+            [fileList operateUpdate];
+            break;
+        }
+    }
 }
 -(void)removeUnsucess
 {

@@ -151,6 +151,8 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [self updateFileList];
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 
 - (void)didReceiveMemoryWarning

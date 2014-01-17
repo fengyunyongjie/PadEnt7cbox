@@ -66,6 +66,7 @@ typedef enum{
 @property (strong,nonatomic) NSArray *rightItems;
 @property (strong,nonatomic) UIBarButtonItem *backBarButtonItem;
 @property (strong,nonatomic) UILabel * notingLabel;
+@property (strong,nonatomic) UIView *nothingView;
 @end
 
 @implementation FileListViewController
@@ -268,21 +269,27 @@ typedef enum{
     if (self.listArray.count<=0) {
         if(self.notingLabel == nil)
         {
+            self.nothingView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
+            [self.nothingView setBackgroundColor:[UIColor whiteColor]];
+            [self.tableView addSubview:self.nothingView];
+            
             CGRect notingRect = CGRectMake(0, 300, 320, 40);
             self.notingLabel = [[UILabel alloc] initWithFrame:notingRect];
             [self.notingLabel setTextColor:[UIColor grayColor]];
             [self.notingLabel setFont:[UIFont systemFontOfSize:18]];
             [self.notingLabel setTextAlignment:NSTextAlignmentCenter];
-            [self.view addSubview:self.notingLabel];
-            [self.notingLabel setHidden:YES];
+            [self.nothingView addSubview:self.notingLabel];
+            //[self.notingLabel setHidden:YES];
         }
-        [self.notingLabel setHidden:NO];
-        [self.tableView setHidden:YES];
+        [self.tableView bringSubviewToFront:self.nothingView];
+        [self.nothingView setHidden:NO];
+        //[self.tableView setHidden:YES];
         [self.notingLabel setText:@"加载中,请稍等……"];
     }else
     {
-        [self.notingLabel setHidden:YES];
-        [self.tableView setHidden:NO];
+        [self.tableView bringSubviewToFront:self.nothingView];
+        [self.nothingView setHidden:YES];
+        //[self.tableView setHidden:NO];
         [self.notingLabel setText:@"加载中,请稍等……"];
     }
 
@@ -2152,21 +2159,27 @@ typedef enum{
     if (self.listArray.count<=0) {
         if(self.notingLabel == nil)
         {
+            self.nothingView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
+            [self.nothingView setBackgroundColor:[UIColor whiteColor]];
+            [self.tableView addSubview:self.nothingView];
+            
             CGRect notingRect = CGRectMake(0, 300, 320, 40);
             self.notingLabel = [[UILabel alloc] initWithFrame:notingRect];
             [self.notingLabel setTextColor:[UIColor grayColor]];
             [self.notingLabel setFont:[UIFont systemFontOfSize:18]];
             [self.notingLabel setTextAlignment:NSTextAlignmentCenter];
-            [self.view addSubview:self.notingLabel];
-            [self.notingLabel setHidden:YES];
+            [self.nothingView addSubview:self.notingLabel];
+            //[self.notingLabel setHidden:YES];
         }
-        [self.notingLabel setHidden:NO];
-        [self.tableView setHidden:YES];
+        [self.tableView bringSubviewToFront:self.nothingView];
+        [self.nothingView setHidden:NO];
+        //[self.tableView setHidden:YES];
         [self.notingLabel setText:@"暂无文件"];
     }else
     {
-        [self.notingLabel setHidden:YES];
-        [self.tableView setHidden:NO];
+        [self.tableView bringSubviewToFront:self.nothingView];
+        [self.nothingView setHidden:YES];
+        //[self.tableView setHidden:NO];
         [self.notingLabel setText:@"暂无文件"];
     }
 }
@@ -2508,6 +2521,22 @@ typedef enum{
                     self.fm=[[SCBFileManager alloc] init];
                     [self.fm newFinderWithName:fildtext pID:self.f_id sID:self.spid];
                     [self.fm setDelegate:self];
+                }else
+                {
+                    if (self.hud) {
+                        [self.hud removeFromSuperview];
+                    }
+                    self.hud=nil;
+                    self.hud=[[MBProgressHUD alloc] initWithWindow:[[[UIApplication sharedApplication] delegate] window]];
+                    [[[[UIApplication sharedApplication] delegate] window] addSubview:self.hud];
+                    [self.hud show:NO];
+                    self.hud.labelText=@"文件名不能为空";
+                    self.hud.mode=MBProgressHUDModeText;
+                    self.hud.margin=10.f;
+                    [self.hud setYOffset:-50];
+                    [self.hud show:YES];
+                    [self.hud hide:YES afterDelay:1.0f];
+                    [self newFinder:nil];
                 }
             }else
             {

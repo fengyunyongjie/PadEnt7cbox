@@ -14,7 +14,13 @@
 #import "WelcomeViewController.h"
 #import "PConfig.h"
 #import "YNFunctions.h"
-
+#import "SCBAccountManager.h"
+typedef enum{
+    kAlertTypeNewVersion,
+    kAlertTypeNoNewVersion,
+    kAlertTypeHideFeature,
+    kAlertTypeMustUpdate,
+}kAlertType;
 @implementation AppDelegate
 @synthesize lockScreen,localV;
 @synthesize downmange,myTabBarVC,loginVC,uploadmanage,isStopUpload,musicPlayer,file_url,isConnection,space_id,space_name,old_file_url;
@@ -70,7 +76,7 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-
+    [self checkUpdate];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -87,6 +93,7 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    [self checkUpdate];
     [musicPlayer stopPlay];
     if([self isOpenLock])
     {
@@ -102,6 +109,12 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+-(void)checkUpdate
+{
+    SCBAccountManager *am=[[SCBAccountManager alloc] init];
+    am.delegate=self;
+    [am checkNewVersion:BUILD_VERSION];
 }
 -(BOOL)isLogin
 {
@@ -239,5 +252,82 @@
             break;
     }
 }
-
+#pragma mark - SCBAccountManagerDelegate
+-(void)checkVersionSucceed:(NSDictionary *)datadic
+{
+    int code=-1;
+    code=[[datadic objectForKey:@"code"] intValue];
+    if (code==0) {
+        int isupdate=-1;//是否强制更新，0不强制，1强制   10月31日，修改为： 强制更新的版本号
+        isupdate=[[datadic objectForKey:@"isupdate"] intValue];
+        if ([BUILD_VERSION intValue]>=isupdate) {
+            //            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
+            //                                                                message:@"有新版本，点确定更新"
+            //                                                               delegate:self
+            //                                                      cancelButtonTitle:@"取消"
+            //                                                      otherButtonTitles:@"确定", nil];
+            //            alertView.tag=kAlertTypeNewVersion;
+            //            [alertView show];
+        }else if([BUILD_VERSION intValue]<isupdate)
+        {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
+                                                                message:@"当前版本需要更新才可以使用，点确定更新"
+                                                               delegate:self
+                                                      cancelButtonTitle:nil
+                                                      otherButtonTitles:@"确定", nil];
+            alertView.tag=kAlertTypeMustUpdate;
+            [alertView show];
+            
+        }
+        NSLog(@"有新版本");
+    }else if(code==1)
+    {
+        NSLog(@"失败，服务端异常");
+        
+    }else if(code==2)
+    {
+        //        NSLog(@"无新版本");
+        //        [self.hud show:NO];
+        //        if (self.hud) {
+        //            [self.hud removeFromSuperview];
+        //        }
+        //        self.hud=nil;
+        //        self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+        //        [self.view.superview addSubview:self.hud];
+        //        [self.hud show:NO];
+        //        self.hud.labelText=@"当前是最新版本";
+        //        self.hud.mode=MBProgressHUDModeText;
+        //        self.hud.margin=10.f;
+        //        [self.hud show:YES];
+        //        [self.hud hide:YES afterDelay:1.0f];
+        
+    }else
+    {
+        NSLog(@"失败，服务端发生未知错误");
+    }
+}
+#pragma mark - UIAlertViewDelegate Methods
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (alertView.tag) {
+        case kAlertTypeNewVersion:
+            if (buttonIndex == 1) {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:APPSTORE_URL]];
+            }
+            break;
+        case kAlertTypeMustUpdate:
+            if (buttonIndex == 1) {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:APPSTORE_URL]];
+                //[self sureExit];
+            }else
+            {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:APPSTORE_URL]];
+                //[self sureExit];
+            }
+            break;
+        default:
+            break;
+    }
+    
+}
 @end

@@ -32,15 +32,47 @@ __strong static WelcomeViewController *_welcommeVC;
 
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
+    
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
         imageWidth = 1024;
         imageHeigth = 768;
+        CGRect hidden_rect = CGRectMake(imageWidth*2+(imageWidth-201)/2-10, imageHeigth-200, 201, 52);
+        hidden_rect.origin.y = imageHeigth-120;
+        [hidden_button setFrame:hidden_rect];
     }
     else
     {
         imageWidth = 768;
         imageHeigth = 1024;
+        CGRect hidden_rect = CGRectMake(imageWidth*2+(imageWidth-201)/2+5, imageHeigth-200, 201, 52);
+        hidden_rect.origin.y = imageHeigth-180;
+        [hidden_button setFrame:hidden_rect];
+    }
+    
+    //加载图片
+    for (int i=1; i<=3; i++) {
+        NSString *fileName = nil;
+        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+        {
+            fileName=[NSString stringWithFormat:@"guide%i.png",i];
+        }
+        else
+        {
+            fileName=[NSString stringWithFormat:@"guide%i-.png",i];
+        }
+        if(i==1)
+        {
+            [imageView1 setImage:[UIImage imageNamed:fileName]];
+        }
+        else if(i==2)
+        {
+            [imageView2 setImage:[UIImage imageNamed:fileName]];
+        }
+        else
+        {
+            [imageView3 setImage:[UIImage imageNamed:fileName]];
+        }
     }
 }
 
@@ -59,9 +91,6 @@ __strong static WelcomeViewController *_welcommeVC;
     }
     
     [scroll_view setContentOffset:CGPointMake(imageWidth * pageCtrl.currentPage, 0) animated:YES];
-    
-    CGRect hidden_rect = CGRectMake(imageWidth*2+(imageWidth-124)/2, imageHeigth-200, 124, 31);
-    [hidden_button setFrame:hidden_rect];
 }
 
 +(WelcomeViewController *)sharedUser
@@ -108,46 +137,32 @@ __strong static WelcomeViewController *_welcommeVC;
     
     //加载图片
     for (int i=1; i<=3; i++) {
-        if ([[UIScreen mainScreen] bounds].size.height>480) {
-            //iphone5
-            NSString *fileName=[NSString stringWithFormat:@"guide_%d@iPhone5.png",i];
-            UIImageView *imageView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:fileName]];
-            imageView.frame=CGRectMake((i-1)*imageWidth, 0, imageWidth, imageHeigth);
-            if(i==1)
-            {
-                imageView1 = imageView;
-                [scroll_view addSubview:imageView1];
-            }
-            else if(i==2)
-            {
-                imageView2 = imageView;
-                [scroll_view addSubview:imageView2];
-            }
-            else
-            {
-                imageView3 = imageView;
-                [scroll_view addSubview:imageView3];
-            }
-        }else
+        NSString *fileName = nil;
+        
+        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
         {
-            NSString *fileName=[NSString stringWithFormat:@"guide_%d.png",i];
-            UIImageView *imageView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:fileName]];
-            imageView.frame=CGRectMake((i-1)*imageWidth, 0, imageWidth, imageHeigth);
-            if(i==1)
-            {
-                imageView1 = imageView;
-                [scroll_view addSubview:imageView1];
-            }
-            else if(i==2)
-            {
-                imageView2 = imageView;
-                [scroll_view addSubview:imageView2];
-            }
-            else
-            {
-                imageView3 = imageView;
-                [scroll_view addSubview:imageView3];
-            }
+            fileName=[NSString stringWithFormat:@"guide%i.png",i];
+        }
+        else
+        {
+            fileName=[NSString stringWithFormat:@"guide%i-.png",i];
+        }
+        UIImageView *imageView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:fileName]];
+        imageView.frame=CGRectMake((i-1)*imageWidth, 0, imageWidth, imageHeigth);
+        if(i==1)
+        {
+            imageView1 = imageView;
+            [scroll_view addSubview:imageView1];
+        }
+        else if(i==2)
+        {
+            imageView2 = imageView;
+            [scroll_view addSubview:imageView2];
+        }
+        else
+        {
+            imageView3 = imageView;
+            [scroll_view addSubview:imageView3];
         }
     }
     
@@ -157,12 +172,13 @@ __strong static WelcomeViewController *_welcommeVC;
     pageCtrl = _pageCtrl;
     [self.view addSubview:pageCtrl];
     
-    UIButton *button=[[UIButton alloc] initWithFrame:CGRectMake(imageWidth*2+(imageWidth-124)/2, imageHeigth-200, 124, 31)];
+    UIButton *button=[[UIButton alloc] initWithFrame:CGRectMake(imageWidth*2+(imageWidth-201)/2, imageHeigth-200, 201, 52)];
     [button setBackgroundImage:[UIImage imageNamed:@"guide_bt_nor.png"] forState:UIControlStateNormal];
     [button setBackgroundImage:[UIImage imageNamed:@"guide_bt_se.png"] forState:UIControlStateHighlighted];
     [button addTarget:self action:@selector(toHideView) forControlEvents:UIControlEventTouchUpInside];
     hidden_button = button;
     [scroll_view addSubview:hidden_button];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 
 - (void)didReceiveMemoryWarning
@@ -184,7 +200,8 @@ __strong static WelcomeViewController *_welcommeVC;
 //    [self.view removeFromSuperview];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
--(void)scrollViewDidScroll:(UIScrollView *)scrollView
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     NSInteger page = scrollView.contentOffset.x/imageWidth;
     if(scrollView.contentOffset.x > imageWidth * 2 )
@@ -196,5 +213,22 @@ __strong static WelcomeViewController *_welcommeVC;
         [self.pageCtrl setHidden:NO];
     }
     [self.pageCtrl setCurrentPage:page];
+    NSLog(@"page1:%i",page);
 }
+
+-(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    NSInteger page = scrollView.contentOffset.x/imageWidth;
+    if(scrollView.contentOffset.x > imageWidth * 2 )
+    {
+        [self.pageCtrl setHidden:YES];
+    }
+    else
+    {
+        [self.pageCtrl setHidden:NO];
+    }
+    [self.pageCtrl setCurrentPage:page];
+    NSLog(@"page2:%i",page);
+}
+
 @end

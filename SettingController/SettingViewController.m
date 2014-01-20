@@ -259,11 +259,12 @@ typedef enum{
     //    [alertView show];
     //    [alertView setTag:kAlertTypeClear];
     //    [alertView release];
-    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"确定要清除缓存" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"清除" otherButtonTitles: nil];
+    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"清除缓存会导致以前下载/查看过的文件需要重新下载" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确认清除" otherButtonTitles: nil];
     [actionSheet setTag:kActionSheetTypeClear];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
 }
+
 - (IBAction)exitAccount:(id)sender
 {
     //    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""

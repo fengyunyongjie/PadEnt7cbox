@@ -491,6 +491,11 @@
     {
         return;
     }
+    if(![YNFunctions isOnlyWifi])
+    {
+        AppDelegate *app_delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        app_delegate.isConnection = YES;
+    }
     if(self.isScape)
     {
         DownList *demo = [tableArray objectAtIndex:i];

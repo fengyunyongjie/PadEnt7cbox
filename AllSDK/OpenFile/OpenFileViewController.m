@@ -131,7 +131,20 @@
     {
         [self.fileImageView setHidden:YES];
         [self.progess_imageView setHidden:YES];
+        if(self.fileImageView.hidden)
+        {
+            fileName_rect.origin.y = fileName_rect.origin.y-70;
+        }
+        [self.fileNameLabel setFrame:fileName_rect];
         [self.fileNameLabel setText:@"此文件无法预览"];
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+        if([detailView isKindOfClass:[DetailViewController class]])
+        {
+            DetailViewController *viewCon = (DetailViewController *)detailView;
+            viewCon.navigationItem.leftBarButtonItem = nil;
+        }
     }
     
     

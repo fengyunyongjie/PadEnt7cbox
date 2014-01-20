@@ -64,7 +64,7 @@
     self.localView = [[UIImageView alloc] init];
     if(self.isShowBackground)
     {
-        [self addBackGroundImage:[UIImage imageNamed:@"startpage-@2x.png"]];
+        [self addBackGroundImage:[UIImage imageNamed:@"startpage-.png"]];
     }
     else
     {
@@ -831,7 +831,7 @@
     {
         if(isShowBackground)
         {
-            [self.localView setImage:[UIImage imageNamed:@"startpage@2x.png"]];
+            [self.localView setImage:[UIImage imageNamed:@"startpage.png"]];
         }
         else
         {
@@ -847,7 +847,7 @@
     {
         if(isShowBackground)
         {
-            [self.localView setImage:[UIImage imageNamed:@"startpage@2x.png"]];
+            [self.localView setImage:[UIImage imageNamed:@"startpage.png"]];
         }
         else
         {
@@ -862,7 +862,7 @@
     {
         if(isShowBackground)
         {
-            [self.localView setImage:[UIImage imageNamed:@"startpage-@2x.png"]];
+            [self.localView setImage:[UIImage imageNamed:@"startpage-.png"]];
         }
         else
         {
@@ -877,7 +877,7 @@
     {
         if(isShowBackground)
         {
-            [self.localView setImage:[UIImage imageNamed:@"startpage-@2x.png"]];
+            [self.localView setImage:[UIImage imageNamed:@"startpage-.png"]];
         }
         else
         {

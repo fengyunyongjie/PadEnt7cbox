@@ -1337,7 +1337,7 @@ typedef enum{
         UIView *tagView = [cell viewWithTag:KCOVERTag];
         if(tagView == nil)
         {
-            tagView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Ico_CoverF@2x.png"]];
+            tagView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Ico_CoverF.png"]];
             CGRect rect = CGRectMake(53, 40, 15, 15);
             [tagView setFrame:rect];
             [tagView setTag:KCOVERTag];
@@ -1350,9 +1350,9 @@ typedef enum{
     UIButton *accessory=[[UIButton alloc] init];
     [accessory setFrame:CGRectMake(5, 5, 40, 40)];
     [accessory setTag:indexPath.row];
-    [accessory setImage:[UIImage imageNamed:@"sel_nor@2x.png"] forState:UIControlStateNormal];
-    [accessory setImage:[UIImage imageNamed:@"sel_se@2x.png"] forState:UIControlStateHighlighted];
-    [accessory setImage:[UIImage imageNamed:@"sel_se@2x.png"] forState:UIControlStateSelected];
+    [accessory setImage:[UIImage imageNamed:@"sel_nor.png"] forState:UIControlStateNormal];
+    [accessory setImage:[UIImage imageNamed:@"sel_se.png"] forState:UIControlStateHighlighted];
+    [accessory setImage:[UIImage imageNamed:@"sel_se.png"] forState:UIControlStateSelected];
     [accessory  addTarget:self action:@selector(accessoryButtonPressedAction:) forControlEvents:UIControlEventTouchUpInside];
     cell.accessoryView=accessory;
     
@@ -1958,7 +1958,7 @@ typedef enum{
                     for(int i=0;i<[self.listArray count];i++) {
                         NSDictionary *diction = [self.listArray objectAtIndex:i];
                         NSString *fname_ = [diction objectForKey:@"fname"];
-                        NSString *fmime_=[[fname pathExtension] lowercaseString];
+                        NSString *fmime_=[[fname_ pathExtension] lowercaseString];
                         if([[diction objectForKey:@"fisdir"] boolValue] && ([fmime_ isEqualToString:@"png"]||
                            [fmime_ isEqualToString:@"jpg"]||
                            [fmime_ isEqualToString:@"jpeg"]||

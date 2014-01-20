@@ -207,6 +207,18 @@
 }
 - (void)downFinish:(NSString *)baseUrl
 {
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
+    for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
+    {
+        FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
+        if([fileList isKindOfClass:[FileListViewController class]])
+        {
+            [fileList.tableView reloadData];
+            break;
+        }
+    }
     //下载完成后保存数据库
     if([downingArray count]>0)
     {

@@ -61,17 +61,17 @@
     
     CGRect down_rect = CGRectMake(0, 0, 30, 25);
     UIButton *down_button = [[UIButton alloc] initWithFrame:down_rect];
-    [down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor@2x.png"] forState:UIControlStateNormal];
+    [down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor.png"] forState:UIControlStateNormal];
     [down_button addTarget:self action:@selector(clipClicked) forControlEvents:UIControlEventTouchUpInside];
     self.downItem = [[UIBarButtonItem alloc] initWithCustomView:down_button];
     UIButton *delete_button = [[UIButton alloc] initWithFrame:down_rect];
-    [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_nor@2x.png"] forState:UIControlStateNormal];
+    [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_nor.png"] forState:UIControlStateNormal];
     [delete_button addTarget:self action:@selector(deleteClicked) forControlEvents:UIControlEventTouchUpInside];
     self.deleteItem = [[UIBarButtonItem alloc] initWithCustomView:delete_button];
     
     CGRect full_rect = CGRectMake(0, 0, 20, 20);
     UIButton *full_button = [[UIButton alloc] initWithFrame:full_rect];
-    [full_button setBackgroundImage:[UIImage imageNamed:@"bt_alls_nor@2x.png"] forState:UIControlStateNormal];
+    [full_button setBackgroundImage:[UIImage imageNamed:@"bt_alls_nor.png"] forState:UIControlStateNormal];
     [full_button addTarget:self action:@selector(fullClicked) forControlEvents:UIControlEventTouchUpInside];
     self.fullItem = [[UIBarButtonItem alloc] initWithCustomView:full_button];
 }
@@ -247,7 +247,7 @@
             [parttion deleteClicked:nil];
             break;
         }
-        else if([viewCon isKindOfClass:[QLBrowserViewController class]])
+        else if([viewCon isKindOfClass:[QLBrowserViewController class]] || [viewCon isKindOfClass:[OpenFileViewController class]])
         {
             UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"是否要删除此文件" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles: nil];
             [actionSheet setTag:kActionSheetDeleteFile];
@@ -275,6 +275,75 @@
         title_rect.origin.x = (768-320-200)/2;
     }
     [self.titleLabel setFrame:title_rect];
+    [self openFileUpdateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+
+//<ios 6.0
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return YES;
+}
+
+//>ios 6.0
+- (BOOL)shouldAutorotate{
+    return YES;
+}
+
+-(void)openFileUpdateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    for (UIViewController *viewCon in self.childViewControllers) {
+        if([viewCon isKindOfClass:[OpenFileViewController class]])
+        {
+            OpenFileViewController *openFile = (OpenFileViewController *)viewCon;
+            CGRect fileImage_rect = CGRectMake(0, 10, 100, 100);
+            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+            {
+                fileImage_rect.origin.x = (1024-320-100)/2;
+                fileImage_rect.origin.y = (768-44-100-40)/2;
+            }
+            else
+            {
+                fileImage_rect.origin.x = (768-320-100)/2;
+                fileImage_rect.origin.y = (1024-44-100-40)/2;
+            }
+            [openFile.fileImageView setFrame:fileImage_rect];
+            CGRect fileName_rect = CGRectMake(fileImage_rect.origin.x, fileImage_rect.origin.y+120, 400, 20);
+            if(openFile.fileImageView.hidden)
+            {
+                fileName_rect.origin.y = fileName_rect.origin.y-70;
+            }
+            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+            {
+                fileName_rect.origin.x = (1024-320-400)/2;
+            }
+            else
+            {
+                fileName_rect.origin.x = (768-320-400)/2;
+            }
+            [openFile.fileNameLabel setFrame:fileName_rect];
+            CGRect progess_rect = CGRectMake(0, fileName_rect.origin.y+40, 250, 5);
+            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+            {
+                progess_rect.origin.x = (1024-320-250)/2;
+            }
+            else
+            {
+                progess_rect.origin.x = (768-320-250)/2;
+            }
+            [openFile.progess_imageView setFrame:progess_rect];
+            CGRect progess2_rect = CGRectMake(0, fileName_rect.origin.y+40, 0, 5);
+            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+            {
+                progess2_rect.origin.x = (1024-320-250)/2;
+            }
+            else
+            {
+                progess2_rect.origin.x = (768-320-250)/2;
+            }
+            [openFile.progess2_imageView setFrame:progess2_rect];
+            break;
+        }
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated

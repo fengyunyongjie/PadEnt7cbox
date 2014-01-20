@@ -492,6 +492,11 @@
     {
         return;
     }
+    if(![YNFunctions isOnlyWifi])
+    {
+        AppDelegate *app_delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        app_delegate.isConnection = YES;
+    }
     if(self.isScape)
     {
         DownList *demo = [tableArray objectAtIndex:i];
@@ -795,29 +800,10 @@
     if([[tableArray objectAtIndex:page] isKindOfClass:[DownList class]])
     {
         demo = [tableArray objectAtIndex:page];
-        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        NSMutableArray *table_Array = [[NSMutableArray alloc] init];
-        
-        DownList *list = [[DownList alloc] init];
-        list.d_name = demo.d_name;
-        list.d_downSize = demo.d_downSize;
-        list.d_thumbUrl = demo.d_thumbUrl;
-        list.d_file_id = demo.d_file_id;
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        NSDate *todayDate = [NSDate date];
-        list.d_datetime = [dateFormatter stringFromDate:todayDate];
-        list.d_ure_id = [NSString formatNSStringForOjbect:[[SCBSession sharedSession] userId]];
-        
-        [table_Array addObject:list];
-        [delegate.downmange addDownLists:table_Array];
-        
         DwonFile *downImage = [[DwonFile alloc] init];
-        downImage.fileSize = list.d_downSize;
-        downImage.file_id = list.d_file_id;
-        downImage.fileName = list.d_name;
+        downImage.fileSize = demo.d_downSize;
+        downImage.file_id = demo.d_file_id;
+        downImage.fileName = demo.d_name;
         downImage.delegate = self;
         [downImage startDownload];
     }
@@ -1163,6 +1149,16 @@
     {
         UIImageWriteToSavedPhotosAlbum(scaleImage, nil, nil,nil);
     }
+    self.hud=nil;
+    [self updateViewBounds:self.view];
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=@"图片已保存至照片库";
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
 }
 -(void)downFile:(NSInteger)downSize totalSize:(NSInteger)sudu{}
 

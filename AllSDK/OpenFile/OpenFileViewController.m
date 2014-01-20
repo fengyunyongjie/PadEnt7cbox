@@ -76,7 +76,7 @@
         progess_rect.origin.x = (768-320-250)/2;
     }
     self.progess_imageView = [[UIImageView alloc] initWithFrame:progess_rect];
-    [self.progess_imageView setBackgroundColor:[UIColor grayColor]];
+    [self.progess_imageView setBackgroundColor:[UIColor colorWithRed:180.0/255.0 green:181.0/255.0 blue:181.0/255.0 alpha:1]];
     self.progess_imageView.layer.masksToBounds = YES;
     self.progess_imageView.layer.cornerRadius = 4;
     [self.view addSubview:self.progess_imageView];
@@ -91,7 +91,7 @@
         progess2_rect.origin.x = (768-320-250)/2;
     }
     self.progess2_imageView = [[UIImageView alloc] initWithFrame:progess2_rect];
-    [self.progess2_imageView setBackgroundColor:[UIColor blueColor]];
+    [self.progess2_imageView setBackgroundColor:[UIColor colorWithRed:73.0/255.0 green:127.0/255.0 blue:191.0/255.0 alpha:1]];
     self.progess2_imageView.layer.masksToBounds = YES;
     self.progess2_imageView.layer.cornerRadius = 4;
     [self.view addSubview:self.progess2_imageView];
@@ -277,27 +277,15 @@
 //文件是否可以打开
 -(BOOL)isFileOpen:(NSString *)type
 {
-    if([type isEqualToString:@"pages"] ||
-       [type isEqualToString:@"doc"] ||
-       [type isEqualToString:@"pdf"]||
-       [type isEqualToString:@"html"]||
-       [type isEqualToString:@"rtf"]||
-       [type isEqualToString:@"txt"]||
-       [type isEqualToString:@"key"]||
+    if([type isEqualToString:@"doc"] ||
+       [type isEqualToString:@"docx"] ||
+       [type isEqualToString:@"xls"]||
+       [type isEqualToString:@"xlsx"]||
        [type isEqualToString:@"ppt"]||
-       [type isEqualToString:@"excel"]||
-       [type isEqualToString:@"csv"]||
-       [type isEqualToString:@"xml"]||
-       [type isEqualToString:@"mht"]||
-       [type isEqualToString:@"h"]||
-       [type isEqualToString:@"m"]||
-       [type isEqualToString:@"zip"]||
-       [type isEqualToString:@"rar"]||
-       [type isEqualToString:@"js"]||
-       [type isEqualToString:@"mp3"]||
-       [type isEqualToString:@"mp4"]||
-       [type isEqualToString:@"mov"]||
-       [type isEqualToString:@"swf"])
+       [type isEqualToString:@"pptx"]||
+       [type isEqualToString:@"pdf"]||
+       [type isEqualToString:@"ppt"]||
+       [type isEqualToString:@"txt"])
     {
         return YES;
     }

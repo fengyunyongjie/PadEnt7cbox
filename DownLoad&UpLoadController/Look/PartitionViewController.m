@@ -492,11 +492,6 @@
     {
         return;
     }
-    if(![YNFunctions isOnlyWifi])
-    {
-        AppDelegate *app_delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        app_delegate.isConnection = YES;
-    }
     if(self.isScape)
     {
         DownList *demo = [tableArray objectAtIndex:i];
@@ -545,7 +540,7 @@
             {
                 oldImge = [UIImage imageWithContentsOfFile:url_path];
             }
-            else if(!app_delegate.isConnection)
+            if(!app_delegate.isConnection)
             {
                 oldImge = [UIImage imageNamed:@"pic_err.png"];
             }
@@ -638,7 +633,7 @@
             {
                 oldImge = [UIImage imageWithContentsOfFile:url_path];
             }
-            else if(!app_delegate.isConnection)
+            if(!app_delegate.isConnection)
             {
                 oldImge = [UIImage imageNamed:@"pic_err.png"];
             }
@@ -1014,10 +1009,7 @@
 }
 
 -(void)didFailWithError
-{
-    AppDelegate *app_delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    app_delegate.isConnection = NO;
-    
+{    
     [self updateAllView];
     
     if (self.hud) {

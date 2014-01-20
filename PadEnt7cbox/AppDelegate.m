@@ -27,7 +27,15 @@ typedef enum{
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    isConnection = YES;
+    NetworkStatus status = [self isConnections];
+    if(status == ReachableViaWiFi || status == ReachableViaWWAN)
+    {
+        isConnection = YES;
+    }
+    else
+    {
+        isConnection = NO;
+    }
     
     //初始化数据
     downmange = [[DownManager alloc] init];
@@ -115,6 +123,11 @@ typedef enum{
     SCBAccountManager *am=[[SCBAccountManager alloc] init];
     am.delegate=self;
     [am checkNewVersion:BUILD_VERSION];
+}
+
+-(void)networkError
+{
+    
 }
 -(BOOL)isLogin
 {
@@ -216,7 +229,7 @@ typedef enum{
     switch (status) {
         case 0://无网络
         {
-            
+            isConnection = NO;
         }
             break;
         case 1://WLAN
@@ -330,4 +343,12 @@ typedef enum{
     }
     
 }
+
+//判断当前的网络是3g还是wifi
+-(NetworkStatus) isConnections
+{
+    Reachability *hostReachs = [Reachability reachabilityWithHostName:@"www.baidu.com"];
+    return [hostReachs currentReachabilityStatus];
+}
+
 @end

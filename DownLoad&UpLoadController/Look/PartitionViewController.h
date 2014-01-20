@@ -78,6 +78,7 @@
 @property(retain,nonatomic) UIButton *leftButton;
 @property(retain,nonatomic) UIButton *rightButton;
 @property(assign,nonatomic) BOOL isHaveDelete;
+@property(assign,nonatomic) BOOL isHaveDownload;
 @property(retain,nonatomic) UIToolbar *bottonToolBar;
 @property(assign,nonatomic) BOOL isScape;
 @property(assign,nonatomic) int page;

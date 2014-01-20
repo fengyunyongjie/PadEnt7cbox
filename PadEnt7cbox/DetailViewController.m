@@ -116,7 +116,7 @@
     [self hiddenPhototView];
 }
 
--(void)showPhotoView:(NSString *)title withIsHave:(BOOL)isHaveDelete
+-(void)showPhotoView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload
 {
     if(titleLabel == nil)
     {
@@ -137,14 +137,17 @@
         [self.navigationController.navigationBar addSubview:titleLabel];
     }
     
-    if(!isHaveDelete)
-    {
-        splitView_array = [NSMutableArray arrayWithObjects:self.downItem,nil];
-    }
-    else
+    if(isHaveDelete&&isHaveDownload)
     {
         splitView_array = [NSMutableArray arrayWithObjects:self.deleteItem,self.downItem,nil];
+    }else if(isHaveDownload)
+    {
+        splitView_array = [NSMutableArray arrayWithObjects:self.downItem,nil];
+    }else if(isHaveDelete)
+    {
+        splitView_array = [NSMutableArray arrayWithObjects:self.deleteItem,nil];
     }
+    
     
     [titleLabel setText:title];
     
@@ -166,7 +169,7 @@
     self.navigationItem.rightBarButtonItems = nil;
 }
 
--(void)showOtherView:(NSString *)title withIsHave:(BOOL)isHaveDown
+-(void)showOtherView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload;
 {
     if(titleLabel == nil)
     {
@@ -186,13 +189,15 @@
         [titleLabel setTextColor:[UIColor whiteColor]];
         [self.navigationController.navigationBar addSubview:titleLabel];
     }
-    if(!isHaveDown)
-    {
-        splitView_array = [NSMutableArray arrayWithObjects:self.deleteItem,nil];
-    }
-    else
+    if(isHaveDelete&&isHaveDownload)
     {
         splitView_array = [NSMutableArray arrayWithObjects:self.deleteItem,self.downItem,nil];
+    }else if(isHaveDownload)
+    {
+        splitView_array = [NSMutableArray arrayWithObjects:self.downItem,nil];
+    }else if(isHaveDelete)
+    {
+        splitView_array = [NSMutableArray arrayWithObjects:self.deleteItem,nil];
     }
     
     [titleLabel setText:title];

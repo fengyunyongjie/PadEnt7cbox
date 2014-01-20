@@ -1989,10 +1989,10 @@ typedef enum{
                         [look setTableArray:tableArray];
                         if ([self.roletype isEqualToString:@"2"]) {
                             look.isHaveDelete = YES;
-                            //look.isHaveDownload=YES;
+                            look.isHaveDownload=YES;
                         }else{
                             look.isHaveDelete=[self hasCmdInFcmd:@"del"];
-                            //look.isHaveDownload=[self hasCmdInFcmd:@"download"];
+                            look.isHaveDownload=[self hasCmdInFcmd:@"download"];
                         }
                         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                         UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
@@ -2002,7 +2002,7 @@ typedef enum{
                             DetailViewController *viewCon = (DetailViewController *)detailView;
                             viewCon.isFileManager = YES;
                             [viewCon removeAllView];
-                            [viewCon showPhotoView:fname withIsHave:look.isHaveDelete];
+                            [viewCon showPhotoView:fname withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
                             [viewCon.view addSubview:look.view];
                             [viewCon addChildViewController:look];
                         }
@@ -2047,6 +2047,14 @@ typedef enum{
 //                        return;
 //                    }
 //                }
+                BOOL isHaveDelete,isHaveDownload;
+                if ([self.roletype isEqualToString:@"2"]) {
+                    isHaveDelete = YES;
+                    isHaveDownload=YES;
+                }else{
+                    isHaveDelete=[self hasCmdInFcmd:@"del"];
+                    isHaveDownload=[self hasCmdInFcmd:@"download"];
+                }
                 OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
                 openFileView.dataDic = dic;
                 openFileView.title = f_name;
@@ -2059,7 +2067,7 @@ typedef enum{
                     DetailViewController *viewCon = (DetailViewController *)detailView;
                     viewCon.isFileManager = YES;
                     [viewCon removeAllView];
-                    [viewCon showOtherView:openFileView.title withIsHave:NO];
+                    [viewCon showOtherView:openFileView.title withIsHave:isHaveDelete withIsHaveDown:isHaveDownload];
                     [viewCon.view addSubview:openFileView.view];
                     [viewCon addChildViewController:openFileView];
                 }

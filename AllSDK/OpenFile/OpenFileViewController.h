@@ -17,5 +17,6 @@
 @property (strong,nonatomic) UIImageView *progess2_imageView;
 @property (strong,nonatomic) NSDictionary *dataDic;
 @property (strong,nonatomic) DwonFile *downImage;
-
+@property(assign,nonatomic) BOOL isHaveDelete;
+@property(assign,nonatomic) BOOL isHaveDownload;
 @end

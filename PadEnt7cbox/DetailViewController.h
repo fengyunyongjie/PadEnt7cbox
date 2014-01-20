@@ -23,7 +23,6 @@
 @property (strong,nonatomic) SCBFileManager *fm;
 
 -(void)removeAllView;
--(void)showPhotoView:(NSString *)title withIsHave:(BOOL)isHaveDelete;
--(void)showOtherView:(NSString *)title withIsHave:(BOOL)isHaveDown;
-
+-(void)showPhotoView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload;
+-(void)showOtherView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload;
 @end

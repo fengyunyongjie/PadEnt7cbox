@@ -1239,7 +1239,7 @@
                                     DetailViewController *viewCon = (DetailViewController *)detailView;
                                     viewCon.isFileManager = NO;
                                     [viewCon removeAllView];
-                                    [viewCon showPhotoView:f_name withIsHave:look.isHaveDelete];
+                                    [viewCon showPhotoView:f_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
                                     [viewCon.view addSubview:look.view];
                                     [viewCon addChildViewController:look];
                                 }
@@ -1263,7 +1263,7 @@
                             viewCon.isFileManager = NO;
                             [viewCon removeAllView];
                             [viewCon.view addSubview:openFileView.view];
-                            [viewCon showOtherView:openFileView.title withIsHave:NO];
+                            [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
                             [viewCon addChildViewController:openFileView];
                         }
                     }
@@ -1336,7 +1336,7 @@
                             viewCon.isFileManager = NO;
                             [viewCon removeAllView];
                             [viewCon.view addSubview:openFileView.view];
-                            [viewCon showOtherView:openFileView.title withIsHave:NO];
+                            [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
                             [viewCon addChildViewController:openFileView];
                         }
                     }

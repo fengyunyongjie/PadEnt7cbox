@@ -305,7 +305,7 @@
     {
         DetailViewController *viewCon = (DetailViewController *)detailView;
         DownList *demo = [tableArray objectAtIndex:currPage];
-        [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete];
+        [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete withIsHaveDown:isHaveDelete];
     }
     
     int page = self.page;

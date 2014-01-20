@@ -223,7 +223,7 @@
         DetailViewController *viewCon = (DetailViewController *)detailView;
         [viewCon removeAllView];
         [viewCon.view addSubview:browser.view];
-        [viewCon showOtherView:browser.title withIsHave:NO];
+        [viewCon showOtherView:browser.title withIsHave:self.isHaveDelete withIsHaveDown:self.isHaveDownload];
         [viewCon addChildViewController:browser];
     }
 }

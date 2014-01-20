@@ -34,6 +34,7 @@
 @synthesize scale_,tableArray;
 @synthesize currPage;
 @synthesize isHaveDelete;
+@synthesize isHaveDownload;
 @synthesize linkManager;
 @synthesize selected_id;
 @synthesize hud;
@@ -205,7 +206,7 @@
     self.bottonToolBar = [[UIToolbar alloc] initWithFrame:bottonRect];
     [self.bottonToolBar setBarStyle:UIBarStyleBlackTranslucent];
     
-    if(isHaveDelete)
+    if(isHaveDelete&&isHaveDownload)
     {
         int width = 50;
         CGRect leftRect = CGRectMake(0, 5, width, 33);
@@ -234,7 +235,7 @@
         UIBarButtonItem *rightItem=[[UIBarButtonItem alloc] initWithCustomView:self.rightButton];
         self.navigationItem.rightBarButtonItem = rightItem;
     }
-    else
+    else if(isHaveDownload)
     {
         int width = currWidth-36*2;
         
@@ -250,6 +251,22 @@
 //        [self.bottonToolBar addSubview:self.leftButton];
         UIBarButtonItem *leftItem=[[UIBarButtonItem alloc] initWithCustomView:self.leftButton];
         self.navigationItem.leftBarButtonItem = leftItem;
+    }else if(isHaveDelete)
+    {
+        int width = 50;
+        
+        CGRect rightRect = CGRectMake(0, 5, width, 33);
+        self.rightButton = [[UIButton alloc] initWithFrame:rightRect];
+        [self.rightButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
+        [self.rightButton.titleLabel setTextColor:[UIColor blackColor]];
+        [self.rightButton setTitle:@"删除" forState:UIControlStateNormal];
+        [self.rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.rightButton addTarget:self action:@selector(deleteClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self.rightButton setBackgroundColor:[UIColor clearColor]];
+        self.rightButton.showsTouchWhenHighlighted = YES;
+        //        [self.bottonToolBar addSubview:self.rightButton];
+        UIBarButtonItem *rightItem=[[UIBarButtonItem alloc] initWithCustomView:self.rightButton];
+        self.navigationItem.rightBarButtonItem = rightItem;
     }
     [self.view addSubview:self.bottonToolBar];
     
@@ -306,7 +323,7 @@
     {
         DetailViewController *viewCon = (DetailViewController *)detailView;
         DownList *demo = [tableArray objectAtIndex:currPage];
-        [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete];
+        [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete withIsHaveDown:isHaveDownload];
     }
     
     int page = self.page;

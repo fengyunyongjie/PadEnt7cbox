@@ -92,9 +92,13 @@ typedef enum{
 }
 - (void)viewWillAppear:(BOOL)animated
 {
-    if(self.tabBarController.tabBar.hidden)
+    if(self.tabBarController.tabBar.hidden&&!self.tableView.isEditing)
     {
         [self.tabBarController.tabBar setHidden:NO];
+    }
+    if(self.moreEditBar.hidden && self.tableView.isEditing)
+    {
+        [self.moreEditBar setHidden:NO];
     }
     if (!self.tableView.isEditing) {
         [self updateFileList];
@@ -572,9 +576,22 @@ typedef enum{
 -(void)selectAllCell:(id)sender
 {
     if (self.listArray) {
+        BOOL canSend=YES;
+        BOOL canDown=YES;
         for (int i=0; i<self.listArray.count; i++) {
             [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+            NSDictionary *dic=[self.listArray objectAtIndex:i];
+            NSString *fisdir=[dic objectForKey:@"fisdir"];
+            if ([fisdir isEqualToString:@"0"]) {
+                //选中了文件夹，禁用分享;
+                //            UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
+                //            [item setEnabled:NO];
+                canSend=NO;
+                canDown=NO;
+            }
         }
+        [item_send setEnabled:canSend];
+        [item_download setEnabled:canDown];
     }
     [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消全选" style:UIBarButtonItemStylePlain target:self action:@selector(deselectAllCell:)]];
 }
@@ -585,7 +602,8 @@ typedef enum{
             [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES];
         }
     }
-    
+    [item_send setEnabled:YES];
+    [item_download setEnabled:YES];
 //    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
 //        [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAllCell:)]];
 //    }else
@@ -1046,6 +1064,7 @@ typedef enum{
 //    [nav.navigationBar setTintColor:[UIColor whiteColor]];
 //    [self presentViewController:nav animated:YES completion:nil];
     [self.tabBarController.tabBar setHidden:YES];
+    [self.moreEditBar setHidden:YES];
     [self.navigationController pushViewController:flvc animated:YES];
 }
 -(void)toMove:(id)sender
@@ -1096,6 +1115,7 @@ typedef enum{
 //    [nav.navigationBar setTintColor:[UIColor whiteColor]];
 //    [self presentViewController:nav animated:YES completion:nil];
     [self.tabBarController.tabBar setHidden:YES];
+    [self.moreEditBar setHidden:YES];
     [self.navigationController pushViewController:flvc animated:YES];
 }
 -(void)toDownload:(id)sender

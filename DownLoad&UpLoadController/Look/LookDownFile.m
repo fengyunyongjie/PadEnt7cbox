@@ -68,7 +68,7 @@
         documentDir = [YNFunctions getProviewCachePath];
         createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
         [NSString CreatePath:createPath];
-        file_path = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+        file_path = [NSString stringWithFormat:@"%@/%@.data",createPath,[array lastObject]];
         assert(path!=nil);
         self.fileStream=[NSOutputStream outputStreamToFileAtPath:file_path append:NO];
         assert(self.fileStream!=nil);
@@ -157,7 +157,12 @@
     //下载完成
     if(file_path)
     {
-        [delegate appImageDidLoad:imageViewIndex urlImage:file_path index:indexPath];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSString *resource = [file_path substringToIndex:file_path.length-5];
+        [fileManager moveItemAtPath:file_path
+                             toPath:resource
+                              error:nil];
+        [delegate appImageDidLoad:imageViewIndex urlImage:resource index:indexPath];
     }
 }
 

@@ -20,6 +20,7 @@
 @interface SelectFileListViewController ()<SCBFileManagerDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate,QBImageFileViewDelegate>
 @property (strong,nonatomic) SCBFileManager *fm;
 @property(strong,nonatomic) MBProgressHUD *hud;
+@property(strong,nonatomic) SCBFileManager *fm_move;
 @end
 
 @implementation SelectFileListViewController
@@ -237,6 +238,28 @@
     }
     [self.fm nodeListWithID:self.f_id sID:self.spid targetFIDS:self.targetsArray itemType:item];
 }
+-(void)moveFileToID:(NSString *)f_id spid:(NSString *)spid;
+{
+    if (self.fm_move) {
+        [self.fm_move cancelAllTask];
+    }else
+    {
+        self.fm_move=[[SCBFileManager alloc] init];
+    }
+    self.fm_move.delegate=self;
+    [self.fm_move moveFileIDs:self.targetsArray toPID:f_id sID:spid];
+}
+-(void)copyFileToID:(NSString *)f_id spid:(NSString *)spid;
+{
+    if (self.fm_move) {
+        [self.fm_move cancelAllTask];
+    }else
+    {
+        self.fm_move=[[SCBFileManager alloc] init];
+    }
+    self.fm_move.delegate=self;
+    [self.fm_move resaveFileIDs:self.targetsArray toPID:f_id sID:spid];
+}
 - (void)moveFileToHere:(id)sender
 {
     switch (self.type) {
@@ -250,7 +273,7 @@
                 self.hud=[[MBProgressHUD alloc] initWithView:self.view];
                 [self.view.superview addSubview:self.hud];
                 [self.hud show:NO];
-                self.hud.labelText=@"文件库根目录下仅允许文件夹!";
+                self.hud.labelText=@"权限不允许";
                 self.hud.mode=MBProgressHUDModeText;
                 self.hud.margin=10.f;
                 [self.hud show:YES];
@@ -258,7 +281,8 @@
                 return;
                 
             }
-            [self.delegate moveFileToID:self.f_id spid:self.spid];
+            [self moveFileToID:self.f_id spid:self.spid];
+            return;
             break;
         case kSelectTypeCopy:
             if (![self.roletype isEqualToString:@"2"]&&[self.f_id intValue]==0&&self.isHasSelectFile) {
@@ -269,7 +293,7 @@
                 self.hud=[[MBProgressHUD alloc] initWithView:self.view];
                 [self.view.superview addSubview:self.hud];
                 [self.hud show:NO];
-                self.hud.labelText=@"文件库根目录下仅允许文件夹!";
+                self.hud.labelText=@"权限不允许";
                 self.hud.mode=MBProgressHUDModeText;
                 self.hud.margin=10.f;
                 [self.hud show:YES];
@@ -277,7 +301,8 @@
                 return;
                 
             }
-            [self.delegate copyFileToID:self.f_id spid:self.spid];
+            [self copyFileToID:self.f_id spid:self.spid];
+            return;
             break;
         case kSelectTypeCommit:
             [self.delegate commitFileToID:self.f_id sID:self.spid];
@@ -297,7 +322,7 @@
                 self.hud=[[MBProgressHUD alloc] initWithView:self.view];
                 [self.view.superview addSubview:self.hud];
                 [self.hud show:NO];
-                self.hud.labelText=@"文件库根目录下仅允许文件夹!";
+                self.hud.labelText=@"权限不允许";
                 self.hud.mode=MBProgressHUDModeText;
                 self.hud.margin=10.f;
                 [self.hud show:YES];
@@ -596,6 +621,117 @@
     self.hud.margin=10.f;
     [self.hud show:YES];
     [self.hud hide:YES afterDelay:1.0f];
+}
+-(void)Unsucess:(NSString *)strError
+{
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:self.hud];
+    [self.hud show:NO];
+    if (strError==nil||[strError isEqualToString:@""]) {
+        self.hud.labelText=@"操作失败";
+    }else
+    {
+        self.hud.labelText=strError;
+    }
+    
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    if ([strError isEqualToString:@"权限不允许"]) {
+        [self.hud show:YES];
+        [self.hud hide:YES afterDelay:1.0f];
+        return;
+    }
+//    [self dismissViewControllerAnimated:YES completion:^(void){
+//        [self.delegate showMessage:strError];
+//    }];
+//    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
+//    {
+//        UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
+//        if([viewController isKindOfClass:[FileListViewController class]])
+//        {
+//            [self.navigationController popToViewController:viewController animated:YES];
+//            break;
+//        }
+//        else if([viewController isKindOfClass:[QBAssetCollectionViewController class]])
+//        {
+//            [self.navigationController popToViewController:viewController animated:YES];
+//            break;
+//        }
+//    }
+    [self.delegate showMessage:strError];
+    [self.navigationController popToViewController:(UIViewController *)self.delegate animated:YES];
+}
+-(void)moveUnsucess
+{
+    //    if (self.hud) {
+    //        [self.hud removeFromSuperview];
+    //    }
+    //    self.hud=nil;
+    //    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    //    [self.view.superview addSubview:self.hud];
+    //    [self.hud show:NO];
+    //    self.hud.labelText=@"操作失败";
+    //    self.hud.mode=MBProgressHUDModeText;
+    //    self.hud.margin=10.f;
+    //    [self.hud show:YES];
+    //    [self.hud hide:YES afterDelay:1.0f];
+//    [self dismissViewControllerAnimated:YES completion:^(void){
+//        [self.delegate showMessage:@"操作失败"];
+//    }];
+    [self.delegate showMessage:@"操作失败"];
+    [self.navigationController popToViewController:(UIViewController *)self.delegate animated:YES];
+//    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
+//    {
+//        UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
+//        if([viewController isKindOfClass:[FileListViewController class]])
+//        {
+//            [self.navigationController popToViewController:viewController animated:YES];
+//            break;
+//        }
+//        else if([viewController isKindOfClass:[QBAssetCollectionViewController class]])
+//        {
+//            [self.navigationController popToViewController:viewController animated:YES];
+//            break;
+//        }
+//    }
+}
+-(void)moveSucess
+{
+    //    if (self.hud) {
+    //        [self.hud removeFromSuperview];
+    //    }
+    //    self.hud=nil;
+    //    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    //    [self.view.superview addSubview:self.hud];
+    //    [self.hud show:NO];
+    //    self.hud.labelText=@"操作成功";
+    //    self.hud.mode=MBProgressHUDModeText;
+    //    self.hud.margin=10.f;
+    //    [self.hud show:YES];
+    //    [self.hud hide:YES afterDelay:1.0f];
+//    [self dismissViewControllerAnimated:YES completion:^(void){
+//        [self.delegate operateUpdate];
+//    }];
+    [self.delegate operateUpdate];
+    [self.navigationController popToViewController:(UIViewController *)self.delegate animated:YES];
+//    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
+//    {
+//        UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
+//        if([viewController isKindOfClass:[FileListViewController class]])
+//        {
+//            [self.navigationController popToViewController:viewController animated:YES];
+//            break;
+//        }
+//        else if([viewController isKindOfClass:[QBAssetCollectionViewController class]])
+//        {
+//            [self.navigationController popToViewController:viewController animated:YES];
+//            break;
+//        }
+//    }
 }
 #pragma mark - UIAlertViewDelegate Methods
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

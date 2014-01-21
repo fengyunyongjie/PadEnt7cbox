@@ -690,7 +690,7 @@
                         [self.delegate Unsucess:@"空间不足"];
                     }else if([[dic objectForKey:@"code"] intValue]==7)
                     {
-                        [self.delegate Unsucess:@"文件库根目录下没有复制到权限!"];
+                        [self.delegate Unsucess:@"权限不允许"];
                     }else
                     {
                         [self.delegate moveUnsucess];
@@ -701,7 +701,7 @@
                         [self.delegate Unsucess:@"空间不足"];
                     }else if([[dic objectForKey:@"code"] intValue]==7)
                     {
-                        [self.delegate Unsucess:@"文件库根目录下没有移动到权限!"];
+                        [self.delegate Unsucess:@"权限不允许"];
                     }else
                     {
                         [self.delegate moveUnsucess];

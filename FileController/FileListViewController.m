@@ -103,13 +103,7 @@ typedef enum{
     if (!self.tableView.isEditing) {
         [self updateFileList];
     }
-}
--(void)viewWillDisappear:(BOOL)animated
-{
-    [self hideMenu];
-}
-- (void)viewDidAppear:(BOOL)animated
-{
+    
     CGRect r=self.view.frame;
     r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
     self.view.frame=r;
@@ -128,6 +122,13 @@ typedef enum{
     
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self hideMenu];
+}
+- (void)viewDidAppear:(BOOL)animated
+{
 }
 - (void)viewDidLayoutSubviews
 {
@@ -2344,6 +2345,22 @@ typedef enum{
 -(void)moveSucess
 {
     [self operateUpdate];
+}
+-(void)showMessage:(NSString *)message
+{
+    [self.hud show:NO];
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=message;
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1];
 }
 #pragma mark - Deferred image loading (UIScrollViewDelegate)
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{

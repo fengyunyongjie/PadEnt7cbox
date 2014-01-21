@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SCBFileManager.h"
+#import "MBProgressHUD.h"
 
 @interface DetailViewController : UIViewController <UISplitViewControllerDelegate,SCBFileManagerDelegate,UIActionSheetDelegate>
 
@@ -21,8 +22,13 @@
 @property (nonatomic,strong) UIBarButtonItem *fullItem;
 @property (strong,nonatomic) NSDictionary *dataDic;
 @property (strong,nonatomic) SCBFileManager *fm;
+@property (strong,nonatomic) UIButton *down_button;
+@property (nonatomic,strong) MBProgressHUD *hud;
 
 -(void)removeAllView;
 -(void)showPhotoView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload;
 -(void)showOtherView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload;
+-(void)saveSuccess;
+-(void)showFullView;
+
 @end

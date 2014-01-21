@@ -433,4 +433,36 @@
     self.d_ure_id = demo.d_ure_id;
 }
 
+//查询照片库文件
+-(NSMutableArray *)selectUploadListSave
+{
+    sqlite3_stmt *statement;
+    NSMutableArray *tableArray = [[NSMutableArray alloc] init];
+    const char *dbpath = [self.databasePath UTF8String];
+    if (sqlite3_open(dbpath, &contactDB)==SQLITE_OK) {
+        const char *insert_stmt = [SelectDownListIsHaveName UTF8String];
+        sqlite3_prepare_v2(contactDB, insert_stmt, -1, &statement, NULL);
+        sqlite3_bind_text(statement, 1, [d_name UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(statement, 2, [d_ure_id UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(statement, 3, d_state);
+        sqlite3_bind_text(statement, 4, [d_file_id UTF8String], -1, SQLITE_TRANSIENT);
+        while (sqlite3_step(statement)==SQLITE_ROW) {
+            DownList *list = [[DownList alloc] init];
+            list.d_id = sqlite3_column_int(statement, 0);
+            list.d_name = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 1)];
+            list.d_state = sqlite3_column_int(statement, 2);
+            list.d_thumbUrl = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 3)];
+            list.d_baseUrl = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 4)];
+            list.d_file_id = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 5)];
+            list.d_downSize = sqlite3_column_int(statement, 6);;
+            list.d_datetime = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 7)];
+            list.d_ure_id = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 8)];
+            [tableArray addObject:list];
+        }
+        sqlite3_finalize(statement);
+        sqlite3_close(contactDB);
+    }
+    return tableArray;
+}
+
 @end

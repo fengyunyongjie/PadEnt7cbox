@@ -71,6 +71,7 @@ typedef enum{
 
 @implementation FileListViewController
 
+@synthesize dataDic,listArray,finderArray,selectArray,f_id,fcmd,spid,roletype,flType,imageDownloadsInProgress,tableView,selectedIndexPath,tableViewSelectedFid;
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
@@ -146,6 +147,7 @@ typedef enum{
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    tableViewSelectedTag = -1;
     // Do any additional setup after loading the view from its nib.
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
         [self setEdgesForExtendedLayout:UIRectEdgeNone];
@@ -274,12 +276,30 @@ typedef enum{
     if (self.listArray.count<=0) {
         if(self.notingLabel == nil)
         {
-            self.nothingView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
+            UIInterfaceOrientation toInterfaceOrientation = [self interfaceOrientation];
+            CGRect noting_rect = CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height);
+            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+            {
+                noting_rect.size.height = 768-56-64;
+            }
+            else
+            {
+                noting_rect.size.height = 1024-56-64;
+            }
+            self.nothingView=[[UIView alloc] initWithFrame:noting_rect];
             [self.nothingView setBackgroundColor:[UIColor whiteColor]];
             [self.tableView addSubview:self.nothingView];
             
-            CGRect notingRect = CGRectMake(0, 300, 320, 40);
-            self.notingLabel = [[UILabel alloc] initWithFrame:notingRect];
+            CGRect notLabel_rect = CGRectMake(0, 300, 320, 40);
+            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+            {
+                notLabel_rect.origin.y = (768-56-64-40)/2;
+            }
+            else
+            {
+                notLabel_rect.origin.y = (1024-56-64-40)/2;
+            }
+            self.notingLabel = [[UILabel alloc] initWithFrame:notLabel_rect];
             [self.notingLabel setTextColor:[UIColor grayColor]];
             [self.notingLabel setFont:[UIFont systemFontOfSize:18]];
             [self.notingLabel setTextAlignment:NSTextAlignmentCenter];
@@ -1371,9 +1391,9 @@ typedef enum{
     UIButton *accessory=[[UIButton alloc] init];
     [accessory setFrame:CGRectMake(5, 5, 40, 40)];
     [accessory setTag:indexPath.row];
-    [accessory setImage:[UIImage imageNamed:@"sel_nor.png"] forState:UIControlStateNormal];
-    [accessory setImage:[UIImage imageNamed:@"sel_se.png"] forState:UIControlStateHighlighted];
-    [accessory setImage:[UIImage imageNamed:@"sel_se.png"] forState:UIControlStateSelected];
+    [accessory setImage:[UIImage imageNamed:@"sel_nor@2x.png"] forState:UIControlStateNormal];
+    [accessory setImage:[UIImage imageNamed:@"sel_se@2x.png"] forState:UIControlStateHighlighted];
+    [accessory setImage:[UIImage imageNamed:@"sel_se@2x.png"] forState:UIControlStateSelected];
     [accessory  addTarget:self action:@selector(accessoryButtonPressedAction:) forControlEvents:UIControlEventTouchUpInside];
     cell.accessoryView=accessory;
     
@@ -1383,6 +1403,11 @@ typedef enum{
     
     if (self.listArray) {
         NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
+        NSString *fid_ = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
+        if([fid_ isEqualToString:tableViewSelectedFid])
+        {
+            [cell setSelected:YES animated:YES];
+        }
         cell.imageView.transform=CGAffineTransformMakeScale(1.0f,1.0f);
         if (dic) {
             textLabel.text=[dic objectForKey:@"fname"];
@@ -1948,6 +1973,7 @@ typedef enum{
         }
         return;
     }
+    tableViewSelectedTag = -1;
     if (self.listArray) {
         NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
         if (dic) {
@@ -1969,7 +1995,23 @@ typedef enum{
                      [fmime isEqualToString:@"bmp"]||
                      [fmime isEqualToString:@"gif"])
             {
+                tableViewSelectedTag = indexPath.row;
+                tableViewSelectedFid = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
                 if (![self hasCmdInFcmd:@"preview"]) {
+                    OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
+                    openFileView.isNotLook = YES;
+                    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+                    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                    if([detailView isKindOfClass:[DetailViewController class]])
+                    {
+                        DetailViewController *viewCon = (DetailViewController *)detailView;
+                        viewCon.isFileManager = YES;
+                        [viewCon removeAllView];
+                        [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
+                        [viewCon.view addSubview:openFileView.view];
+                        [viewCon addChildViewController:openFileView];
+                    }
                     return;
                 }
                 int row = 0;
@@ -2032,42 +2074,30 @@ typedef enum{
             }
             else
             {
+                tableViewSelectedTag = indexPath.row;
+                tableViewSelectedFid = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
                 if (![self hasCmdInFcmd:@"preview"]) {
+                    OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
+                    openFileView.isNotLook = YES;
+                    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+                    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                    if([detailView isKindOfClass:[DetailViewController class]])
+                    {
+                        DetailViewController *viewCon = (DetailViewController *)detailView;
+                        viewCon.isFileManager = YES;
+                        [viewCon removeAllView];
+                        [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
+                        [viewCon.view addSubview:openFileView.view];
+                        [viewCon addChildViewController:openFileView];
+                    }
                     return;
                 }
                 NSString *file_id=[dic objectForKey:@"fid"];
                 NSString *f_name=[dic objectForKey:@"fname"];
-//                NSInteger fileSize = [[dic objectForKey:@"fsize"] integerValue];
                 NSString *documentDir = [YNFunctions getFMCachePath];
-//                NSArray *array=[f_name componentsSeparatedByString:@"/"];
                 NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
                 [NSString CreatePath:createPath];
-//                NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
-                
-//                if ([[NSFileManager defaultManager] fileExistsAtPath:savedPath]) {
-//                    NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:savedPath];
-//                    if(fileSize==[[handle availableData] length])
-//                    {
-//                        QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
-//                        browser.dataSource=browser;
-//                        browser.delegate=browser;
-//                        browser.currentPreviewItemIndex=0;
-//                        browser.title=f_name;
-//                        browser.filePath=savedPath;
-//                        browser.fileName=f_name;
-//                        
-//                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-//                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-//                        if([detailView isKindOfClass:[DetailViewController class]])
-//                        {
-//                            DetailViewController *viewCon = (DetailViewController *)detailView;
-//                            [viewCon removeAllView];
-//                        }
-//                        [self presentViewController:browser animated:YES completion:nil];
-//                        return;
-//                    }
-//                }
                 BOOL isHaveDelete,isHaveDownload;
                 if ([self.roletype isEqualToString:@"2"]) {
                     isHaveDelete = YES;
@@ -2088,7 +2118,7 @@ typedef enum{
                     DetailViewController *viewCon = (DetailViewController *)detailView;
                     viewCon.isFileManager = YES;
                     [viewCon removeAllView];
-                    [viewCon showOtherView:openFileView.title withIsHave:isHaveDelete withIsHaveDown:isHaveDownload];
+                    [viewCon showOtherView:openFileView.title withIsHave:isHaveDelete withIsHaveDown:NO];
                     [viewCon.view addSubview:openFileView.view];
                     [viewCon addChildViewController:openFileView];
                 }
@@ -2160,10 +2190,12 @@ typedef enum{
         BOOL isWrite=[data writeToFile:dataFilePath atomically:YES];
         if (isWrite) {
             NSLog(@"写入文件成功：%@",dataFilePath);
-        }else
+        }
+        else
         {
             NSLog(@"写入文件失败：%@",dataFilePath);
         }
+        [self updateSelected];
     }else
     {
         //[self updateFileList];
@@ -2188,16 +2220,36 @@ typedef enum{
     if (self.listArray.count<=0) {
         if(self.notingLabel == nil)
         {
+            UIInterfaceOrientation toInterfaceOrientation = [self interfaceOrientation];
+            
+            CGRect noting_rect = CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height);
+            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+            {
+                noting_rect.size.height = 768-56-64;
+            }
+            else
+            {
+                noting_rect.size.height = 1024-56-64;
+            }
             self.nothingView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
             [self.nothingView setBackgroundColor:[UIColor whiteColor]];
             [self.tableView addSubview:self.nothingView];
             
-            CGRect notingRect = CGRectMake(0, 300, 320, 40);
-            self.notingLabel = [[UILabel alloc] initWithFrame:notingRect];
+            CGRect notLabel_rect = CGRectMake(0, 300, 320, 40);
+            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+            {
+                notLabel_rect.origin.y = (768-56-64-40)/2;
+            }
+            else
+            {
+                notLabel_rect.origin.y = (1024-56-64-40)/2;
+            }
+            self.notingLabel = [[UILabel alloc] initWithFrame:notLabel_rect];
             [self.notingLabel setTextColor:[UIColor grayColor]];
             [self.notingLabel setFont:[UIFont systemFontOfSize:18]];
             [self.notingLabel setTextAlignment:NSTextAlignmentCenter];
             [self.nothingView addSubview:self.notingLabel];
+            
             //[self.notingLabel setHidden:YES];
         }
         [self.tableView bringSubviewToFront:self.nothingView];
@@ -2247,6 +2299,8 @@ typedef enum{
     self.hud.margin=10.f;
     [self.hud show:YES];
     [self.hud hide:YES afterDelay:1.0f];
+    
+    [self updateSelected];
 }
 -(void)renameSucess
 {
@@ -2890,6 +2944,62 @@ typedef enum{
         }
     }
     [self.tableView setFrame:self_rect];
+    
+    CGRect notLabel_rect = self.notingLabel.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        notLabel_rect.origin.y = (768-56-64-40)/2;
+    }
+    else
+    {
+        notLabel_rect.origin.y = (1024-56-64-40)/2;
+    }
+    [self.notingLabel setFrame:notLabel_rect];
+    
+    CGRect noting_rect = self.nothingView.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        noting_rect.size.height = 768-56-64;
+    }
+    else
+    {
+        noting_rect.size.height = 1024-56-64;
+    }
+    [self.nothingView setFrame:noting_rect];
+}
+
+#pragma mark 当用户切换图片是，视图选择项也发生变化
+-(void)updateSelected
+{
+    if(tableViewSelectedTag!=-1 && self.listArray.count>tableViewSelectedTag)
+    {
+        BOOL isHave = NO;
+        for(int i=0;i<self.listArray.count;i++)
+        {
+            NSDictionary *dic=[self.listArray objectAtIndex:i];
+            NSString *fid = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
+            if([fid isEqualToString:tableViewSelectedFid])
+            {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+                isHave = YES;
+                break;
+            }
+        }
+        if(!isHave)
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:tableViewSelectedTag inSection:0];
+            [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+            [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+        }
+    }
+    else if(tableViewSelectedTag!=-1)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tableView.visibleCells.count-2 inSection:0];
+        [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+        [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+    }
 }
 
 @end

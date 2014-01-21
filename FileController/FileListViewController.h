@@ -25,6 +25,7 @@ typedef enum {
 {
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
+    NSInteger tableViewSelectedTag;
 }
 @property (strong,nonatomic) NSDictionary *dataDic;
 @property (strong,nonatomic) NSArray *listArray;
@@ -38,10 +39,13 @@ typedef enum {
 @property (strong,nonatomic) NSMutableDictionary *imageDownloadsInProgress;
 @property (strong,nonatomic) UITableView *tableView;
 @property (strong,nonatomic) NSIndexPath *selectedIndexPath;
+@property (strong,nonatomic) NSString *tableViewSelectedFid;
+
 -(void)moveFileToID:(NSString *)f_id;
 -(void)commitFileToID:(NSString *)f_id sID:(NSString *)s_pid;
 -(void)resaveFileToID:(NSString *)f_id;
 
 - (void)operateUpdate;
+-(void)updateSelected;
 
 @end

@@ -25,7 +25,7 @@
 @end
 
 @implementation DetailViewController
-@synthesize titleLabel,splitView_array,isFileManager,downItem,deleteItem,fullItem,dataDic;
+@synthesize titleLabel,splitView_array,isFileManager,downItem,deleteItem,fullItem,dataDic,down_button,hud;
 
 #pragma mark - Managing the detail item
 
@@ -60,18 +60,22 @@
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
     CGRect down_rect = CGRectMake(0, 0, 30, 25);
-    UIButton *down_button = [[UIButton alloc] initWithFrame:down_rect];
-    [down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor.png"] forState:UIControlStateNormal];
-    [down_button addTarget:self action:@selector(clipClicked) forControlEvents:UIControlEventTouchUpInside];
-    self.downItem = [[UIBarButtonItem alloc] initWithCustomView:down_button];
+    self.down_button = [[UIButton alloc] initWithFrame:down_rect];
+    [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor@2x.png"] forState:UIControlStateNormal];
+    [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_se@2x.png"] forState:UIControlStateHighlighted];
+    [self.down_button addTarget:self action:@selector(clipClicked) forControlEvents:UIControlEventTouchUpInside];
+    self.downItem = [[UIBarButtonItem alloc] initWithCustomView:self.down_button];
     UIButton *delete_button = [[UIButton alloc] initWithFrame:down_rect];
-    [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_nor.png"] forState:UIControlStateNormal];
+    [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_nor@2x.png"] forState:UIControlStateNormal];
+    [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_se@2x.png"] forState:UIControlStateHighlighted];
+    
     [delete_button addTarget:self action:@selector(deleteClicked) forControlEvents:UIControlEventTouchUpInside];
     self.deleteItem = [[UIBarButtonItem alloc] initWithCustomView:delete_button];
     
     CGRect full_rect = CGRectMake(0, 0, 20, 20);
     UIButton *full_button = [[UIButton alloc] initWithFrame:full_rect];
-    [full_button setBackgroundImage:[UIImage imageNamed:@"bt_alls_nor.png"] forState:UIControlStateNormal];
+    [full_button setBackgroundImage:[UIImage imageNamed:@"bt_alls_nor@2x.png"] forState:UIControlStateNormal];
+    [full_button setBackgroundImage:[UIImage imageNamed:@"bt_alls_se@2x.png"] forState:UIControlStateHighlighted];
     [full_button addTarget:self action:@selector(fullClicked) forControlEvents:UIControlEventTouchUpInside];
     self.fullItem = [[UIBarButtonItem alloc] initWithCustomView:full_button];
 }
@@ -110,6 +114,11 @@
             OtherBrowserViewController *otherBrowser = (OtherBrowserViewController *)viewCon;
             [otherBrowser back:nil];
         }
+        else if([viewCon isKindOfClass:[OpenFileViewController class]])
+        {
+            OpenFileViewController *openFile = (OpenFileViewController *)viewCon;
+            [openFile cancelDown];
+        }
         [viewCon.view removeFromSuperview];
         [viewCon removeFromParentViewController];
     }
@@ -118,6 +127,8 @@
 
 -(void)showPhotoView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload
 {
+    [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_save_nor@2x.png"] forState:UIControlStateNormal];
+    [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_save_se@2x.png"] forState:UIControlStateHighlighted];
     if(titleLabel == nil)
     {
         CGRect title_rect = CGRectMake(0, 10, 200, 20);
@@ -171,6 +182,8 @@
 
 -(void)showOtherView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload;
 {
+    [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor@2x.png"] forState:UIControlStateNormal];
+    [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_se@2x.png"] forState:UIControlStateHighlighted];
     if(titleLabel == nil)
     {
         CGRect title_rect = CGRectMake(0, 10, 200, 20);
@@ -209,6 +222,11 @@
     {
         self.navigationItem.rightBarButtonItems = nil;
     }
+    self.navigationItem.leftBarButtonItem = nil;
+}
+
+-(void)showFullView
+{
     self.navigationItem.leftBarButtonItem = fullItem;
 }
 
@@ -433,6 +451,41 @@
     {
         [self deleteCurrFile];
     }
+}
+
+-(void)saveSuccess
+{
+    if(self.hud)
+    {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    [self updateViewBounds:self.view];
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=@"图片已保存至照片库";
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
+}
+
+-(void)updateViewBounds:(UIView *)selfView
+{
+    CGRect rect = selfView.frame;
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        rect.size.width = 1024-320;
+        rect.size.height = 768;
+    }
+    else
+    {
+        rect.size.width = 768-320;
+        rect.size.height = 1024;
+    }
+    selfView.frame = rect;
 }
 
 @end

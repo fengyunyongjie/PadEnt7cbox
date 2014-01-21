@@ -14,6 +14,7 @@
 #import "MyTabBarViewController.h"
 #import "MySplitViewController.h"
 #import "DetailViewController.h"
+#import "FileListViewController.h"
 
 #define ACTNUMBER 400000
 #define ScrollViewTag 100000
@@ -764,6 +765,26 @@
     self.page = x/currWidth;
     [self.photoDelegate updateCurrpage:self.page];
     [self backClick];
+    if(tableArray)
+    {
+        if([tableArray count]>self.page)
+        {
+            DownList *demo = [tableArray objectAtIndex:self.page];
+            AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+            UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
+            for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
+            {
+                FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
+                if([fileList isKindOfClass:[FileListViewController class]])
+                {
+                    fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:demo.d_file_id];
+                    [fileList updateSelected];
+                    break;
+                }
+            }
+        }
+    }
 }
 
 #pragma mark - Utility methods

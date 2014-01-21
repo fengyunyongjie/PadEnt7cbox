@@ -14,6 +14,7 @@
 #import "MyTabBarViewController.h"
 #import "FileListViewController.h"
 #import "MySplitViewController.h"
+#import "LoginViewController.h"
 
 @implementation DownManager
 @synthesize downingArray,isOpenedDown,isStart,isStopCurrDown,file,isAutoStart;
@@ -314,6 +315,10 @@
         }
         UIApplication *app = [UIApplication sharedApplication];
         app.applicationIconBadgeNumber = [self.downingArray count]+[appleDate.uploadmanage.uploadArray count];
+        if([appleDate.window.rootViewController isKindOfClass:[LoginViewController class]])
+        {
+            app.applicationIconBadgeNumber = 0;
+        }
         [tabbar addUploadNumber:app.applicationIconBadgeNumber];
         
         if (appleDate.myTabBarVC.selectedIndex==0) {

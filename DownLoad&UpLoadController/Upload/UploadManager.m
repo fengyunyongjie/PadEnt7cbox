@@ -16,6 +16,7 @@
 #import "MyTabBarViewController.h"
 #import "YNFunctions.h"
 #import "MySplitViewController.h"
+#import "LoginViewController.h"
 
 @implementation UploadManager
 @synthesize uploadArray,isStopCurrUpload,isStart,isOpenedUpload,isAutoStart,isJoin;
@@ -529,6 +530,10 @@
         }
         UIApplication *app = [UIApplication sharedApplication];
         app.applicationIconBadgeNumber = [self.uploadArray count]+[appleDate.downmange.downingArray count];
+        if([appleDate.window.rootViewController isKindOfClass:[LoginViewController class]])
+        {
+            app.applicationIconBadgeNumber = 0;
+        }
         [tabbar addUploadNumber:app.applicationIconBadgeNumber];
     });
 }

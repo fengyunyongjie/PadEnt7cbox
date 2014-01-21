@@ -19,4 +19,8 @@
 @property (strong,nonatomic) DwonFile *downImage;
 @property(assign,nonatomic) BOOL isHaveDelete;
 @property(assign,nonatomic) BOOL isHaveDownload;
+@property(assign,nonatomic) BOOL isNotLook;
+
+-(void)cancelDown;
+
 @end

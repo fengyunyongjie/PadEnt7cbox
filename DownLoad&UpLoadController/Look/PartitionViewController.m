@@ -22,6 +22,7 @@
 #define kAlertTagMailAddr 72
 #define kActionSheetTagShare 74
 #define kActionSheetTagDelete 77
+#define kActionSheetTagClicp 78
 #define iPadHeight 768
 #define iPadWidth 768-320
 
@@ -38,6 +39,11 @@
 @synthesize linkManager;
 @synthesize selected_id;
 @synthesize hud;
+@synthesize jindu_control;
+@synthesize jinDuView;
+@synthesize progess_imageView;
+@synthesize progess2_imageView;
+@synthesize downImage;
 
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -81,7 +87,6 @@
     {
         [self setNeedsStatusBarAppearanceUpdate];
     }
-    
     downArray = [[NSMutableArray alloc] init];
     linkManager = [[SCBLinkManager alloc] init];
     activityDic = [[NSMutableArray alloc] init];
@@ -332,6 +337,21 @@
         return;
     }
     [self loadPageColoumn:page];
+    
+    DownList *demo = [tableArray objectAtIndex:page];
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
+    for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
+    {
+        FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
+        if([fileList isKindOfClass:[FileListViewController class]])
+        {
+            fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:demo.d_file_id];
+            [fileList updateSelected];
+            break;
+        }
+    }
 }
 
 #pragma mark 滑动隐藏
@@ -807,18 +827,51 @@
 #pragma mark 收藏按钮事件
 -(void)clipClicked:(id)sender
 {
-    int page = self.page;
     DownList *demo = nil;
-    if([[tableArray objectAtIndex:page] isKindOfClass:[DownList class]])
+    if([[tableArray objectAtIndex:self.page] isKindOfClass:[DownList class]])
     {
-        demo = [tableArray objectAtIndex:page];
-        DwonFile *downImage = [[DwonFile alloc] init];
-        downImage.fileSize = demo.d_downSize;
-        downImage.file_id = demo.d_file_id;
-        downImage.fileName = demo.d_name;
-        downImage.delegate = self;
-        [downImage startDownload];
+        demo = [tableArray objectAtIndex:self.page];
     }
+    DownList *list = [[DownList alloc] init];
+    list.d_name = demo.d_name;
+    list.d_state = -1;
+    list.d_file_id = demo.d_file_id;
+    list.d_ure_id = [[SCBSession sharedSession] userId];
+    NSMutableArray *array = [list selectUploadListSave];
+    if([array count]>0)
+    {
+        list = [array lastObject];
+    }
+    
+    ALAssetsLibrary *libary = [[ALAssetsLibrary alloc] init];
+    [libary assetForURL:[NSURL URLWithString:list.d_baseUrl] resultBlock:^(ALAsset *result)
+     {
+         if(result)
+         {
+             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+             UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+             UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+             if([detailView isKindOfClass:[DetailViewController class]])
+             {
+                 DetailViewController *viewCon = (DetailViewController *)detailView;
+                 [viewCon saveSuccess];
+             }
+         }
+         else
+         {
+             UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"是否要保存至照片库" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil, nil];
+             [actionSheet setTag:kActionSheetTagClicp];
+             [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+             [actionSheet showInView:self.imageScrollView];
+         }
+     }
+     failureBlock:^(NSError *error)
+     {
+         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"是否要保存至照片库" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil, nil];
+         [actionSheet setTag:kActionSheetTagClicp];
+         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+         [actionSheet showInView:self.imageScrollView];
+     }];
 }
 
 #pragma mark 分享按钮事件
@@ -888,6 +941,31 @@
             hud.mode=MBProgressHUDModeIndeterminate;
             hud.labelText=@"正在删除";
             [hud show:YES];
+        }
+    }
+    else if (actionSheet.tag == kActionSheetTagClicp)
+    {
+        if(buttonIndex == 0)
+        {
+            int page = self.page;
+            DownList *demo = nil;
+            if([[tableArray objectAtIndex:page] isKindOfClass:[DownList class]])
+            {
+                demo = [tableArray objectAtIndex:page];
+                if(self.downImage)
+                {
+                    [self.downImage cancelDownload];
+                }
+                self.downImage = [[DwonFile alloc] init];
+                self.downImage.fileSize = demo.d_downSize;
+                self.downImage.file_id = demo.d_file_id;
+                self.downImage.fileName = demo.d_name;
+                self.downImage.delegate = self;
+                [self.downImage startDownload];
+            }
+            [self showJinDu];
+//            return;
+            
         }
     }
 }
@@ -1153,23 +1231,45 @@
 #pragma mark 下载回调
 - (void)downFinish:(NSString *)baseUrl
 {
+    CGRect progess2_rect = self.progess2_imageView.frame;
+    progess2_rect.size.width = 250;
+    [self.progess2_imageView setFrame:progess2_rect];
+    [self.jindu_control setHidden:YES];
+    
     UIImage *scaleImage = [UIImage imageWithContentsOfFile:baseUrl];
-    if(scaleImage)
+    
+    ALAssetsLibrary *library=[[ALAssetsLibrary alloc] init];
+    [library writeImageToSavedPhotosAlbum:[scaleImage CGImage] orientation:(ALAssetOrientation)[scaleImage imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error) {
+        [library assetForURL:assetURL resultBlock:^(ALAsset *asset)
+         {
+             DownList *demo = [tableArray objectAtIndex:self.page];
+             demo.d_baseUrl = [NSString formatNSStringForOjbect:assetURL];
+             demo.d_state = -1;
+             demo.d_ure_id = [[SCBSession sharedSession] userId];
+             BOOL bl = [demo selectUploadListIsHave];
+             if(!bl)
+             {
+                 [demo insertDownList];
+             }
+         }failureBlock:^(NSError *error)
+         {
+             NSLog(@"error:%@",error);
+         }];
+    }];
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+    if([detailView isKindOfClass:[DetailViewController class]])
     {
-        UIImageWriteToSavedPhotosAlbum(scaleImage, nil, nil,nil);
+        DetailViewController *viewCon = (DetailViewController *)detailView;
+        [viewCon saveSuccess];
     }
-    self.hud=nil;
-    [self updateViewBounds:self.view];
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
-    [self.hud show:NO];
-    self.hud.labelText=@"图片已保存至照片库";
-    self.hud.mode=MBProgressHUDModeText;
-    self.hud.margin=10.f;
-    [self.hud show:YES];
-    [self.hud hide:YES afterDelay:1.0f];
 }
--(void)downFile:(NSInteger)downSize totalSize:(NSInteger)sudu{}
+-(void)downFile:(NSInteger)downSize totalSize:(NSInteger)sudu
+{
+
+}
 
 -(void)appImageDidLoad:(NSInteger)indexTag urlImage:(NSString *)path index:(NSIndexPath *)indexPath
 {
@@ -1218,6 +1318,26 @@
         }
     });
 }
+
+-(void)downCurrSize:(NSInteger)currSize
+{
+    float width = currSize*250.0/self.downImage.fileSize;
+    CGRect progess2_rect = self.progess2_imageView.frame;
+    progess2_rect.size.width = width;
+    [self.progess2_imageView setFrame:progess2_rect];
+}
+//上传失败
+-(void)upError{}
+//服务器异常
+-(void)webServiceFail{}
+//上传无权限
+-(void)upNotUpload{}
+//用户存储空间不足
+-(void)upUserSpaceLass{}
+//等待WiFi
+-(void)upWaitWiFi{}
+//网络失败
+-(void)upNetworkStop{}
 
 #pragma mark SCBLinkManagerDelegate -------------
 -(void)releaseEmailSuccess:(NSString *)l_url
@@ -1767,6 +1887,73 @@
     currPage = _currPage;
     [self isScapeLeftOrRight:self.isScape];
     [self scrollViewDidEndDecelerating:nil];
+}
+
+-(void)showJinDu
+{
+    if(self.jinDuView == nil)
+    {
+        CGRect jinDu_rect = CGRectMake(0, 0, 350, 50);
+        UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+        {
+            jinDu_rect.origin.x = (1024-350)/2;
+            jinDu_rect.origin.y = (768-50)/2;
+        }
+        else
+        {
+            jinDu_rect.origin.x = (768-350)/2;
+            jinDu_rect.origin.y = (1024-50)/2;
+        }
+        self.jinDuView = [[UIView alloc] initWithFrame:jinDu_rect];
+        [self.jinDuView setBackgroundColor:[UIColor whiteColor]];
+        self.jinDuView.layer.masksToBounds = YES;
+        self.jinDuView.layer.cornerRadius = 4;
+        
+        CGRect progess_rect = CGRectMake(20, 22, 250, 5);
+        self.progess_imageView = [[UIImageView alloc] initWithFrame:progess_rect];
+        [self.progess_imageView setBackgroundColor:[UIColor colorWithRed:180.0/255.0 green:181.0/255.0 blue:181.0/255.0 alpha:1]];
+        self.progess_imageView.layer.masksToBounds = YES;
+        self.progess_imageView.layer.cornerRadius = 4;
+        [self.jinDuView addSubview:self.progess_imageView];
+        
+        CGRect progess2_rect = CGRectMake(0, 22, 0, 5);
+        self.progess2_imageView = [[UIImageView alloc] initWithFrame:progess2_rect];
+        [self.progess2_imageView setBackgroundColor:[UIColor colorWithRed:73.0/255.0 green:127.0/255.0 blue:191.0/255.0 alpha:1]];
+        self.progess2_imageView.layer.masksToBounds = YES;
+        self.progess2_imageView.layer.cornerRadius = 4;
+        [self.jinDuView addSubview:self.progess2_imageView];
+        
+        CGRect esc_rect = CGRectMake(270, 10, 80, 30);
+        UIButton *esc_button = [[UIButton alloc] initWithFrame:esc_rect];
+        [esc_button setTitle:@"取消" forState:UIControlStateNormal];
+        [esc_button.titleLabel setTextAlignment:NSTextAlignmentCenter];
+        [esc_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [esc_button addTarget:self action:@selector(esc_clicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.jinDuView addSubview:esc_button];
+        
+        CGRect control_rect = CGRectMake(0, 0, 1024, 1024);
+        self.jindu_control = [[UIControl alloc] initWithFrame:control_rect];
+        [self.jindu_control addSubview:self.jinDuView];
+        
+        
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
+        [tabbar.view.superview addSubview:self.jindu_control];
+    }
+    else
+    {
+        [self.jindu_control setHidden:NO];
+    }
+}
+
+-(void)esc_clicked
+{
+    if(self.downImage)
+    {
+        [self.downImage cancelDownload];
+    }
+    [self.jindu_control setHidden:YES];
 }
 
 @end

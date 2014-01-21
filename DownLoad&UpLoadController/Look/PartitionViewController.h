@@ -87,6 +87,11 @@
 @property(nonatomic,retain) NSString *selected_id;
 @property(nonatomic,retain) MBProgressHUD *hud;
 @property(strong,nonatomic) SCBFileManager *fm;
+@property(nonatomic,strong) UIControl *jindu_control;
+@property(nonatomic,strong) UIView *jinDuView;
+@property(strong,nonatomic) UIImageView *progess_imageView;
+@property(strong,nonatomic) UIImageView *progess2_imageView;
+@property(strong,nonatomic) DwonFile *downImage;
 
 -(CGRect)zoomRectForScale:(float)scale inView:(UIScrollView*)scrollView withCenter:(CGPoint)center;
 

@@ -242,6 +242,8 @@
 		299CFC88186810E90060855B /* PasswordList.m in Sources */ = {isa = PBXBuildFile; fileRef = 299CFC87186810E90060855B /* PasswordList.m */; };
 		299CFC8B186811380060855B /* PasswordManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 299CFC8A186811380060855B /* PasswordManager.m */; };
 		299CFC8E186811680060855B /* PasswordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 299CFC8D186811680060855B /* PasswordButton.m */; };
+		29AF89B8188E142F00A71A0E /* bt_save_nor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29AF89B6188E142F00A71A0E /* bt_save_nor@2x.png */; };
+		29AF89B9188E142F00A71A0E /* bt_save_se@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29AF89B7188E142F00A71A0E /* bt_save_se@2x.png */; };
 		29CE22351862E5BB0030EC86 /* InputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29CE22341862E5BB0030EC86 /* InputViewController.m */; };
 		29F1DDB7186BC467001CC8B1 /* PartitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F1DDB6186BC467001CC8B1 /* PartitionViewController.m */; };
 		29FBD5FF1863D27A005F03AC /* login_bt.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5F71863D27A005F03AC /* login_bt.png */; };
@@ -577,6 +579,8 @@
 		299CFC8A186811380060855B /* PasswordManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordManager.m; sourceTree = "<group>"; };
 		299CFC8C186811680060855B /* PasswordButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasswordButton.h; sourceTree = "<group>"; };
 		299CFC8D186811680060855B /* PasswordButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordButton.m; sourceTree = "<group>"; };
+		29AF89B6188E142F00A71A0E /* bt_save_nor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bt_save_nor@2x.png"; sourceTree = "<group>"; };
+		29AF89B7188E142F00A71A0E /* bt_save_se@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bt_save_se@2x.png"; sourceTree = "<group>"; };
 		29CE22331862E5BB0030EC86 /* InputViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputViewController.h; sourceTree = "<group>"; };
 		29CE22341862E5BB0030EC86 /* InputViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputViewController.m; sourceTree = "<group>"; };
 		29F1DDB5186BC467001CC8B1 /* PartitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PartitionViewController.h; sourceTree = "<group>"; };
@@ -633,6 +637,8 @@
 		29135DEE188CF35800A951CE /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				29AF89B6188E142F00A71A0E /* bt_save_nor@2x.png */,
+				29AF89B7188E142F00A71A0E /* bt_save_se@2x.png */,
 				29135DEF188CF35800A951CE /* bizfiles@2x.png */,
 				29135DF0188CF35800A951CE /* bizlib@2x.png */,
 				29135DF5188CF35800A951CE /* bk_select@2x.png */,
@@ -1367,6 +1373,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29135EBB188CF35900A951CE /* guide3-.png in Resources */,
+				29AF89B8188E142F00A71A0E /* bt_save_nor@2x.png in Resources */,
 				29135EE1188CF35900A951CE /* nav_set_nor@2x.png in Resources */,
 				294EB51918604FB1006E6E96 /* whiteArrow.png in Resources */,
 				29135F23188CF35900A951CE /* tj_nor@2x.png in Resources */,
@@ -1452,6 +1459,7 @@
 				29135EC0188CF35900A951CE /* guide_bt_nor@2x.png in Resources */,
 				29135F00188CF35900A951CE /* share_se@2x.png in Resources */,
 				29135EA0188CF35900A951CE /* copy_nor@2x.png in Resources */,
+				29AF89B9188E142F00A71A0E /* bt_save_se@2x.png in Resources */,
 				298423DD185ECE1F002AC1D0 /* Images.xcassets in Resources */,
 				29135F07188CF35900A951CE /* title_back@2x.png in Resources */,
 				29135F11188CF35900A951CE /* title_bt_sort_se@2x.png in Resources */,

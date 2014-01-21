@@ -25,6 +25,8 @@
 #import "QLBrowserViewController.h"
 #import "PasswordManager.h"
 #import "PasswordList.h"
+#import "MySplitViewController.h"
+#import "DetailViewController.h"
 
 typedef enum{
     kAlertTypeNewVersion,
@@ -941,6 +943,15 @@ typedef enum{
     
     [[LTHPasscodeViewController sharedUser] hiddenPassword];
     [appDelegate finishLogout];
+    
+    UINavigationController *NavigationController = [appDelegate.splitVC.viewControllers lastObject];
+    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+    if([detailView isKindOfClass:[DetailViewController class]])
+    {
+        DetailViewController *viewCon = (DetailViewController *)detailView;
+        viewCon.isFileManager = YES;
+        [viewCon removeAllView];
+    }
 }
 #pragma mark - UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex

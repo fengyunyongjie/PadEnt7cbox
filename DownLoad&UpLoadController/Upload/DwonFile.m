@@ -66,6 +66,7 @@
     }
     else
     {
+        file_path = [NSString stringWithFormat:@"%@.data",file_path];
         assert(file_path!=nil);
         self.fileStream=[NSOutputStream outputStreamToFileAtPath:file_path append:NO];
         assert(self.fileStream!=nil);
@@ -170,7 +171,12 @@
         BOOL bl = fileSize==[[handle availableData] length];
         if(bl)
         {
-            [delegate downFinish:file_path];
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            NSString *resource = [file_path substringToIndex:file_path.length-5];
+            [fileManager moveItemAtPath:file_path
+                                 toPath:resource
+                                  error:nil];
+            [delegate downFinish:resource];
         }
         else
         {

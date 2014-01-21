@@ -61,5 +61,7 @@
 -(BOOL)insertsDownList:(NSMutableArray *)tableArray;
 //批量处理删除
 -(BOOL)deletesDownList:(NSMutableArray *)tableArray;
+//查询照片库文件
+-(NSMutableArray *)selectUploadListSave;
 
 @end

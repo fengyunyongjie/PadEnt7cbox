@@ -15,13 +15,14 @@
 #import "MySplitViewController.h"
 #import "MyTabBarViewController.h"
 #import "DetailViewController.h"
+#import "FileListViewController.h"
 
 @interface OpenFileViewController ()
 
 @end
 
 @implementation OpenFileViewController
-@synthesize  fileImageView,fileNameLabel,progess_imageView,progess2_imageView,dataDic,downImage;
+@synthesize  fileImageView,fileNameLabel,progess_imageView,progess2_imageView,dataDic,downImage,isNotLook;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -96,6 +97,26 @@
     self.progess2_imageView.layer.cornerRadius = 4;
     [self.view addSubview:self.progess2_imageView];
     
+    if(isNotLook)
+    {
+        [self.fileImageView setHidden:YES];
+        [self.progess_imageView setHidden:YES];
+        if(self.fileImageView.hidden)
+        {
+            fileName_rect.origin.y = fileName_rect.origin.y-70;
+        }
+        [self.fileNameLabel setFrame:fileName_rect];
+        [self.fileNameLabel setText:@"权限不足无法预览"];
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+        if([detailView isKindOfClass:[DetailViewController class]])
+        {
+            DetailViewController *viewCon = (DetailViewController *)detailView;
+            viewCon.navigationItem.leftBarButtonItem = nil;
+        }
+        return;
+    }
     
     NSString *file_id=[self.dataDic objectForKey:@"fid"];
     NSString *documentDir = [YNFunctions getFMCachePath];
@@ -158,6 +179,14 @@
     }
 }
 
+-(void)cancelDown
+{
+    if(self.downImage)
+    {
+        [self.downImage cancelDownload];
+    }
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -172,7 +201,6 @@
 
 -(void)downCurrSize:(NSInteger)currSize
 {
-    NSLog(@"downCurrSize:%i",currSize);
     float width = currSize*250.0/self.downImage.fileSize;
     CGRect progess2_rect = self.progess2_imageView.frame;
     progess2_rect.size.width = width;
@@ -225,6 +253,20 @@
         [viewCon.view addSubview:browser.view];
         [viewCon showOtherView:browser.title withIsHave:self.isHaveDelete withIsHaveDown:self.isHaveDownload];
         [viewCon addChildViewController:browser];
+        [viewCon showFullView];
+    }
+    
+    MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
+    UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
+    for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
+    {
+        FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
+        if([fileList isKindOfClass:[FileListViewController class]])
+        {
+            fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:file_id];
+            [fileList.tableView reloadData];
+            break;
+        }
     }
 }
 

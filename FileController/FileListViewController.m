@@ -2561,7 +2561,7 @@ typedef enum{
                     self.hud.labelText=@"文件名不能为空";
                     self.hud.mode=MBProgressHUDModeText;
                     self.hud.margin=10.f;
-                    [self.hud setYOffset:-50];
+                    [self.hud setYOffset:-285];
                     [self.hud show:YES];
                     [self.hud hide:YES afterDelay:1.0f];
                     [self newFinder:nil];

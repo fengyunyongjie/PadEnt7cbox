@@ -148,6 +148,7 @@
 		294EB51F18604FD2006E6E96 /* libPushSDK-Simulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 294EB51D18604FD2006E6E96 /* libPushSDK-Simulator.a */; };
 		294EB52018604FD2006E6E96 /* libPushSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 294EB51E18604FD2006E6E96 /* libPushSDK.a */; };
 		294EB52318605061006E6E96 /* PushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 294EB52218605061006E6E96 /* PushConfig.plist */; };
+		296EBB26188F7134006CDAC3 /* file_folder_comp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 296EBB25188F7134006CDAC3 /* file_folder_comp@2x.png */; };
 		2982DFBD18614507009CB82D /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982DFBB18614507009CB82D /* LoginViewController.m */; };
 		2982DFBE18614507009CB82D /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2982DFBC18614507009CB82D /* LoginViewController.xib */; };
 		2982DFC0186149E6009CB82D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2982DFBF186149E6009CB82D /* SystemConfiguration.framework */; };
@@ -421,6 +422,7 @@
 		294EB51E18604FD2006E6E96 /* libPushSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPushSDK.a; sourceTree = "<group>"; };
 		294EB52118605055006E6E96 /* PConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PConfig.h; sourceTree = "<group>"; };
 		294EB52218605061006E6E96 /* PushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PushConfig.plist; sourceTree = "<group>"; };
+		296EBB25188F7134006CDAC3 /* file_folder_comp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_folder_comp@2x.png"; sourceTree = "<group>"; };
 		2982DFBA18614507009CB82D /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = SOURCE_ROOT; };
 		2982DFBB18614507009CB82D /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = SOURCE_ROOT; };
 		2982DFBC18614507009CB82D /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = SOURCE_ROOT; };
@@ -637,6 +639,7 @@
 		29135DEE188CF35800A951CE /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				296EBB25188F7134006CDAC3 /* file_folder_comp@2x.png */,
 				29AF89B6188E142F00A71A0E /* bt_save_nor@2x.png */,
 				29AF89B7188E142F00A71A0E /* bt_save_se@2x.png */,
 				29135DEF188CF35800A951CE /* bizfiles@2x.png */,
@@ -1493,6 +1496,7 @@
 				29135F1F188CF35900A951CE /* title_sort@2x.png in Resources */,
 				2982E09D186152FE009CB82D /* icon_checked_grid.png in Resources */,
 				29135F16188CF35900A951CE /* title_edit@2x.png in Resources */,
+				296EBB26188F7134006CDAC3 /* file_folder_comp@2x.png in Resources */,
 				29135F0E188CF35900A951CE /* title_bt_pause_nor.png in Resources */,
 				29135EB1188CF35900A951CE /* file_word@2x.png in Resources */,
 				29135ED0188CF35900A951CE /* mail_unread@2x.png in Resources */,

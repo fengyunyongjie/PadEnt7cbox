@@ -283,6 +283,7 @@
     }
     return bl;
 }
+
 //根据用户id更新数据
 -(BOOL)updateDownListForUserId
 {
@@ -323,6 +324,55 @@
         {
             [NSThread sleepForTimeInterval:0.5];
             [self updateDownListForUserId];
+            count++;
+        }
+        else
+        {
+            count = 0;
+        }
+    }
+    return bl;
+}
+//根据用户state更新数据
+-(BOOL)updateDownListForState
+{
+    sqlite3_stmt *statement;
+    __block BOOL bl = FALSE;
+    const char *dbpath = [self.databasePath UTF8String];
+    if (sqlite3_open(dbpath, &contactDB)==SQLITE_OK) {
+        const char *insert_stmt = [UpdateDownListForState UTF8String];
+        int success = sqlite3_prepare_v2(contactDB, insert_stmt, -1, &statement, NULL);
+        if (success != SQLITE_OK) {
+            bl = FALSE;
+        }
+        //#define UpdateDownListForState @"UPDATE DownList SET d_baseUrl=?,d_file_id=?,d_downSize=?,d_datetime=? WHERE d_state=? and d_name=? and d_ure_id=?"
+        
+        sqlite3_bind_text(statement, 1, [d_baseUrl UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(statement, 2, [d_file_id UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(statement, 3, d_downSize);
+        sqlite3_bind_text(statement, 4, [d_datetime UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(statement, 5, d_state);
+        sqlite3_bind_text(statement, 6, [d_name UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(statement, 7, [d_ure_id UTF8String], -1, SQLITE_TRANSIENT);
+        
+        success = sqlite3_step(statement);
+        if (success == SQLITE_ERROR) {
+            bl = FALSE;
+        }
+        else
+        {
+            bl = TRUE;
+        }
+        NSLog(@"insertUserinfo:%i",success);
+        sqlite3_finalize(statement);
+        sqlite3_close(contactDB);
+    }
+    if(!bl)
+    {
+        if(count<2)
+        {
+            [NSThread sleepForTimeInterval:0.5];
+            [self updateDownListForState];
             count++;
         }
         else

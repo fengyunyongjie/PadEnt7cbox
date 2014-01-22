@@ -16,9 +16,10 @@
 #define DeleteDownedAll @"DELETE FROM DownList WHERE d_state=1 and d_ure_id=?"
 #define SelectDownListIsHaveName @"SELECT * FROM DownList WHERE d_name=? and d_ure_id=? and d_state=? and d_file_id=?"
 #define UpdateDownListForUserId @"UPDATE DownList SET d_state=?,d_baseUrl=?,d_file_id=?,d_downSize=?,d_datetime=? WHERE d_id=? and d_ure_id=?"
+#define UpdateDownListForState @"UPDATE DownList SET d_baseUrl=?,d_file_id=?,d_downSize=?,d_datetime=? WHERE d_state=? and d_name=? and d_ure_id=?"
 #define UpdateDownListAllForUserId @"UPDATE DownList SET d_state=4 WHERE d_state=1"
-#define SelectDowningAll @"SELECT * FROM DownList WHERE d_state<>1 and d_id>? and d_ure_id=?"
-#define SelectDownedAll @"SELECT * FROM DownList WHERE d_state=1 and d_id>? and d_ure_id=? ORDER BY d_id desc"
+#define SelectDowningAll @"SELECT * FROM DownList WHERE d_state<>1 and d_id>? and d_ure_id=? and d_state<>-1"
+#define SelectDownedAll @"SELECT * FROM DownList WHERE d_state=1 and d_id>? and d_ure_id=? and d_state<>-1 ORDER BY d_id desc "
 
 @interface DownList : DBSqlite3
 {
@@ -50,6 +51,8 @@
 -(BOOL)selectUploadListIsHave;
 //根据用户id更新数据
 -(BOOL)updateDownListForUserId;
+//根据用户state更新数据
+-(BOOL)updateDownListForState;
 //查询所有没有完成的记录
 -(NSMutableArray *)selectDowningAll;
 //查询所有上传完成的历史记录

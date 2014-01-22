@@ -156,9 +156,9 @@
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     NSLog(@"eeor:%@",error);
-    if(delegate && [delegate respondsToSelector:@selector(didFailWithError)])
+    if(delegate && [delegate respondsToSelector:@selector(upError)])
     {
-        [delegate didFailWithError];
+        [delegate upError];
     }
 }
 
@@ -187,12 +187,12 @@
 
 - (void)connection:(NSURLConnection *)theConnection didReceiveResponse:(NSURLResponse *)response
 {
-    NSLog(@"response:%@",response);
     NSHTTPURLResponse *ponse = (NSHTTPURLResponse *)response;
     if(ponse.statusCode == 404)
     {
         file_path = nil;
     }
+    
 }
 
 @end

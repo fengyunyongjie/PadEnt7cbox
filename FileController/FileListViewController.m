@@ -890,8 +890,9 @@ typedef enum{
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view.superview addSubview:self.hud];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+            [appDelegate.window addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"未选中任何文件（夹）";
             self.hud.mode=MBProgressHUDModeText;
@@ -922,8 +923,9 @@ typedef enum{
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view.superview addSubview:self.hud];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+            [appDelegate.window addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"未选中任何文件（夹）";
             self.hud.mode=MBProgressHUDModeText;
@@ -974,8 +976,9 @@ typedef enum{
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view.superview addSubview:self.hud];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+            [appDelegate.window addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"未选中任何文件";
             self.hud.mode=MBProgressHUDModeText;
@@ -1050,8 +1053,9 @@ typedef enum{
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view.superview addSubview:self.hud];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+            [appDelegate.window addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"未选中任何文件（夹）";
             self.hud.mode=MBProgressHUDModeText;
@@ -1100,8 +1104,9 @@ typedef enum{
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view.superview addSubview:self.hud];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+            [appDelegate.window addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"未选中任何文件（夹）";
             self.hud.mode=MBProgressHUDModeText;
@@ -1153,8 +1158,9 @@ typedef enum{
                     [self.hud removeFromSuperview];
                 }
                 self.hud=nil;
-                self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-                [self.view.superview addSubview:self.hud];
+                AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+                [appDelegate.window addSubview:self.hud];
                 [self.hud show:NO];
                 self.hud.labelText=@"不能下载文件夹";
                 self.hud.mode=MBProgressHUDModeText;
@@ -1170,8 +1176,9 @@ typedef enum{
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view.superview addSubview:self.hud];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+            [appDelegate.window addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"未选中任何文件";
             self.hud.mode=MBProgressHUDModeText;
@@ -1221,8 +1228,9 @@ typedef enum{
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view.superview addSubview:self.hud];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+            [appDelegate.window addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"不能下载文件夹";
             self.hud.mode=MBProgressHUDModeText;
@@ -1414,7 +1422,14 @@ typedef enum{
             NSString *fisdir=[dic objectForKey:@"fisdir"];
             if ([fisdir isEqualToString:@"0"]) {
                 detailTextLabel.text=[NSString stringWithFormat:@"%@",[dic objectForKey:@"fmodify"]];
-                imageView.image=[UIImage imageNamed:@"file_folder.png"];
+                if([roletype isEqualToString:@"1"])
+                {
+                    imageView.image=[UIImage imageNamed:@"file_folder_comp@2x.png"];
+                }
+                else
+                {
+                    imageView.image=[UIImage imageNamed:@"file_folder.png"];
+                }
             }else
             {
                 imageView.image=[UIImage imageNamed:@"file_other.png"];
@@ -2159,9 +2174,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
-    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";
     self.hud.mode=MBProgressHUDModeText;
@@ -2274,9 +2289,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
-    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"操作失败";
     self.hud.mode=MBProgressHUDModeText;
@@ -2291,8 +2306,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"操作成功";
     self.hud.mode=MBProgressHUDModeText;
@@ -2312,9 +2328,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
-    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"操作失败";
     self.hud.mode=MBProgressHUDModeText;
@@ -2351,8 +2367,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"操作失败";
     self.hud.mode=MBProgressHUDModeText;
@@ -2366,8 +2383,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     if (strError==nil||[strError isEqualToString:@""]) {
         self.hud.labelText=@"操作失败";
@@ -2387,8 +2405,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"操作失败";
     self.hud.mode=MBProgressHUDModeText;
@@ -2407,8 +2426,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=message;
     self.hud.mode=MBProgressHUDModeText;
@@ -2994,11 +3014,23 @@ typedef enum{
             [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
         }
     }
-    else if(tableViewSelectedTag!=-1)
+    else if(tableViewSelectedTag!=-1 && self.listArray.count>self.tableView.visibleCells.count-1)
     {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tableView.visibleCells.count-2 inSection:0];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tableView.visibleCells.count-1 inSection:0];
         [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
         [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+    }
+    else if(self.listArray.count ==0)
+    {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+        if([detailView isKindOfClass:[DetailViewController class]])
+        {
+            DetailViewController *viewCon = (DetailViewController *)detailView;
+            viewCon.isFileManager = YES;
+            [viewCon removeAllView];
+        }
     }
 }
 

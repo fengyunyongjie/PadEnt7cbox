@@ -18,6 +18,8 @@
 #import "OpenFileViewController.h"
 #import "DetailViewController.h"
 #import "PartitionViewController.h"
+#import "MySplitViewController.h"
+#import "MyTabBarViewController.h"
 
 #define UpTabBarHeight (49+20+44)
 #define kActionSheetTagDelete 77
@@ -29,7 +31,7 @@
 @end
 
 @implementation UpDownloadViewController
-@synthesize table_view,upLoading_array,upLoaded_array,downLoading_array,downLoaded_array,customSelectButton,isShowUpload,deleteObject,menuView,editView,rightItem,hud,btnStart,selectAllIds,notingLabel,btn_del;
+@synthesize table_view,upLoading_array,upLoaded_array,downLoading_array,downLoaded_array,customSelectButton,isShowUpload,deleteObject,menuView,editView,rightItem,hud,btnStart,selectAllIds,notingLabel,btn_del,selectTableViewFid;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -48,7 +50,7 @@
 {
     [super viewDidLoad];
     self.imageDownloadsInProgress = [[NSMutableDictionary alloc] init];
-    
+    selectTableViewRow = -1;
 //    UISwipeGestureRecognizer *recognizer;
 //    
 //    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(rightSwipeFrom)];
@@ -811,6 +813,7 @@
             [notingLabel setHidden:YES];
         }
     }
+//    [self performSelector:@selector(updateSelected) withObject:Nil afterDelay:1.0];
 }
 
 -(void)leftSwipeFrom
@@ -1158,6 +1161,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    selectTableViewRow = -1;
     if(self.table_view.isEditing)
     {
         [self updateSelectIndexPath];
@@ -1178,16 +1182,11 @@
                 NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,list.d_file_id];
                 [NSString CreatePath:createPath];
                 NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
-                if ([[NSFileManager defaultManager] fileExistsAtPath:savedPath]) {
-//                    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
-//                    browser.dataSource=browser;
-//                    browser.delegate=browser;
-//                    browser.currentPreviewItemIndex=0;
-//                    browser.title=f_name;
-//                    browser.filePath=savedPath;
-//                    browser.fileName=f_name;
-//                    [self presentViewController:browser animated:YES completion:nil];
-                    int row = 0;
+                if ([[NSFileManager defaultManager] fileExistsAtPath:savedPath])
+                {
+                    selectTableviewSection = indexPath.section;
+                    selectTableViewRow = indexPath.row;
+                    selectTableViewFid = list.d_file_id;
                     NSString *fmime = [[[f_name componentsSeparatedByString:@"."] lastObject] lowercaseString];
                     if ([fmime isEqualToString:@"png"]||
                         [fmime isEqualToString:@"jpg"]||
@@ -1195,55 +1194,41 @@
                         [fmime isEqualToString:@"bmp"]||
                         [fmime isEqualToString:@"gif"])
                     {
-                        if(indexPath.row<[downLoaded_array count])
+                        int selectRow = 0;
+                        NSMutableArray *tableArray = [[NSMutableArray alloc] init];
+                        for(int i=0;i<downLoaded_array.count;i++)
                         {
-                            NSMutableArray *tableArray = [[NSMutableArray alloc] init];
-                            for(int i=0;i<[downLoaded_array count];i++) {
-                                DownList *downLoaded_list  = [downLoaded_array objectAtIndex:i];
-                                NSString *fname_ = downLoaded_list.d_name;
-                                NSString *fmime_=[[[fname_ componentsSeparatedByString:@"."] lastObject] lowercaseString];
-                                if([fmime_ isEqualToString:@"png"]||
-                                   [fmime_ isEqualToString:@"jpg"]||
-                                   [fmime_ isEqualToString:@"jpeg"]||
-                                   [fmime_ isEqualToString:@"bmp"]||
-                                   [fmime_ isEqualToString:@"gif"])
-                                {
-                                    DownList *list = [[DownList alloc] init];
-                                    list.d_file_id = [NSString formatNSStringForOjbect:downLoaded_list.d_file_id];
-//                                    list.d_thumbUrl = [NSString formatNSStringForOjbect:[diction objectForKey:@"fthumb"]];
-                                    if([list.d_thumbUrl length]==0)
-                                    {
-                                        list.d_thumbUrl = @"0";
-                                    }
-                                    list.d_name = [NSString formatNSStringForOjbect:downLoaded_list.d_name];
-                                    list.d_baseUrl = [NSString get_image_save_file_path:list.d_name];
-                                    list.d_downSize = downLoaded_list.d_downSize;
-                                    [tableArray addObject:list];
-                                    if(row==0 && [f_name isEqualToString:downLoaded_list.d_name])
-                                    {
-                                        row = [tableArray count]-1;
-                                    }
-                                }
-                            }
-                            if([tableArray count]>0)
+                            DownList *demo = [downLoaded_array objectAtIndex:i];
+                            NSString *d_fmime = [[[demo.d_name componentsSeparatedByString:@"."] lastObject] lowercaseString];
+                            if ([d_fmime isEqualToString:@"png"]||
+                                [d_fmime isEqualToString:@"jpg"]||
+                                [d_fmime isEqualToString:@"jpeg"]||
+                                [d_fmime isEqualToString:@"bmp"]||
+                                [d_fmime isEqualToString:@"gif"])
                             {
-                                PartitionViewController *look = [[PartitionViewController alloc] init];
-                                [look setCurrPage:row];
-                                [look setTableArray:tableArray];
-                                look.isHaveDelete = YES;
-                                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                                UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-                                UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-                                if([detailView isKindOfClass:[DetailViewController class]])
+                                if(demo.d_id == list.d_id)
                                 {
-                                    DetailViewController *viewCon = (DetailViewController *)detailView;
-                                    viewCon.isFileManager = NO;
-                                    [viewCon removeAllView];
-                                    [viewCon showPhotoView:f_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
-                                    [viewCon.view addSubview:look.view];
-                                    [viewCon addChildViewController:look];
+                                    selectRow = i;
                                 }
+                                [tableArray addObject:demo];
                             }
+                        }
+                        PartitionViewController *look = [[PartitionViewController alloc] init];
+                        [look setCurrPage:selectRow];
+                        [look setTableArray:tableArray];
+                        look.isHaveDelete = YES;
+                        look.isHaveDownload = NO;
+                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                        if([detailView isKindOfClass:[DetailViewController class]])
+                        {
+                            DetailViewController *viewCon = (DetailViewController *)detailView;
+                            viewCon.isFileManager = NO;
+                            [viewCon removeAllView];
+                            [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
+                            [viewCon.view addSubview:look.view];
+                            [viewCon addChildViewController:look];
                         }
                     }
                     else
@@ -1286,12 +1271,6 @@
         }
         else if(type == 3)
         {
-            if(indexPath.section==0 && [downLoading_array count]>0)
-            {
-//                PhotoLookViewController *look = [[PhotoLookViewController alloc] init];
-//                [look setTableArray:downLoading_array];
-//                [self presentModalViewController:look animated:YES];
-            }
             if(indexPath.section==1 && [downLoaded_array count]>0)
             {
                 DownList *list = [downLoaded_array objectAtIndex:indexPath.row];
@@ -1301,15 +1280,11 @@
                 NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,list.d_file_id];
                 [NSString CreatePath:createPath];
                 NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
-                if ([[NSFileManager defaultManager] fileExistsAtPath:savedPath]) {
-//                    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
-//                    browser.dataSource=browser;
-//                    browser.delegate=browser;
-//                    browser.currentPreviewItemIndex=0;
-//                    browser.title=f_name;
-//                    browser.filePath=savedPath;
-//                    browser.fileName=f_name;
-//                    [self presentViewController:browser animated:YES completion:nil];
+                if ([[NSFileManager defaultManager] fileExistsAtPath:savedPath])
+                {
+                    selectTableviewSection = indexPath.section;
+                    selectTableViewRow = indexPath.row;
+                    selectTableViewFid = list.d_file_id;
                     NSString *fmime = [[[f_name componentsSeparatedByString:@"."] lastObject] lowercaseString];
                     if ([fmime isEqualToString:@"png"]||
                         [fmime isEqualToString:@"jpg"]||
@@ -1317,7 +1292,42 @@
                         [fmime isEqualToString:@"bmp"]||
                         [fmime isEqualToString:@"gif"])
                     {
-                        
+                        int selectRow = 0;
+                        NSMutableArray *tableArray = [[NSMutableArray alloc] init];
+                        for(int i=0;i<downLoaded_array.count;i++)
+                        {
+                            DownList *demo = [downLoaded_array objectAtIndex:i];
+                            NSString *d_fmime = [[[demo.d_name componentsSeparatedByString:@"."] lastObject] lowercaseString];
+                            if ([d_fmime isEqualToString:@"png"]||
+                                [d_fmime isEqualToString:@"jpg"]||
+                                [d_fmime isEqualToString:@"jpeg"]||
+                                [d_fmime isEqualToString:@"bmp"]||
+                                [d_fmime isEqualToString:@"gif"])
+                            {
+                                if(demo.d_id == list.d_id)
+                                {
+                                    selectRow = i;
+                                }
+                                [tableArray addObject:demo];
+                            }
+                        }
+                        PartitionViewController *look = [[PartitionViewController alloc] init];
+                        [look setCurrPage:selectRow];
+                        [look setTableArray:tableArray];
+                        look.isHaveDelete = YES;
+                        look.isHaveDownload = NO;
+                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                        if([detailView isKindOfClass:[DetailViewController class]])
+                        {
+                            DetailViewController *viewCon = (DetailViewController *)detailView;
+                            viewCon.isFileManager = NO;
+                            [viewCon removeAllView];
+                            [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
+                            [viewCon.view addSubview:look.view];
+                            [viewCon addChildViewController:look];
+                        }
                     }
                     else
                     {
@@ -1638,10 +1648,6 @@
         }
     }
     [self isSelectedLeft:isShowUpload];
-//    if(self.table_view.editing)
-//    {
-//        [self editAction:nil];
-//    }
 }
 
 
@@ -1847,4 +1853,53 @@
     [self.editView setFrame:editView_rect];
     [self.table_view setFrame:table_rect];
 }
+
+#pragma mark 当用户切换图片是，视图选择项也发生变化
+-(void)updateSelected
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+    if(selectTableViewRow!=-1 && self.downLoaded_array.count>selectTableViewRow)
+    {
+        BOOL isHave = NO;
+        for(int i=0;i<self.downLoaded_array.count;i++)
+        {
+            DownList *list = [downLoaded_array objectAtIndex:i];
+            NSString *fid = [NSString formatNSStringForOjbect:list.d_file_id];
+            if([fid isEqualToString:selectTableViewFid])
+            {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:selectTableviewSection];
+                [self tableView:self.table_view didSelectRowAtIndexPath:indexPath];
+                [self.table_view selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+                isHave = YES;
+                break;
+            }
+        }
+        if(!isHave)
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:selectTableViewRow inSection:selectTableviewSection];
+            [self tableView:self.table_view didSelectRowAtIndexPath:indexPath];
+            [self.table_view selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+        }
+    }
+    else if(selectTableViewRow!=-1 && self.downLoaded_array.count>self.table_view.visibleCells.count-1)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.table_view.visibleCells.count-1 inSection:selectTableviewSection];
+        [self tableView:self.table_view didSelectRowAtIndexPath:indexPath];
+        [self.table_view selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+    }
+    else if(self.downLoaded_array.count ==0)
+    {
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+        if([detailView isKindOfClass:[DetailViewController class]])
+        {
+            DetailViewController *viewCon = (DetailViewController *)detailView;
+            viewCon.isFileManager = YES;
+            [viewCon removeAllView];
+        }
+    }
+    });
+}
+
 @end

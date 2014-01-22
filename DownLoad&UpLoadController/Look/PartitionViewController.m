@@ -15,6 +15,7 @@
 #import "MySplitViewController.h"
 #import "DetailViewController.h"
 #import "FileListViewController.h"
+#import "UpDownloadViewController.h"
 
 #define ACTNUMBER 400000
 #define ScrollViewTag 100000
@@ -320,6 +321,12 @@
     self.page = imageScrollView.contentOffset.x/currWidth;
     
     currPage = self.page;
+    int page = self.page;
+    if(page>=[tableArray count])
+    {
+        return;
+    }
+    [self loadPageColoumn:page];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
@@ -329,27 +336,37 @@
         DetailViewController *viewCon = (DetailViewController *)detailView;
         DownList *demo = [tableArray objectAtIndex:currPage];
         [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete withIsHaveDown:isHaveDownload];
-    }
-    
-    int page = self.page;
-    if(page>=[tableArray count])
-    {
-        return;
-    }
-    [self loadPageColoumn:page];
-    
-    DownList *demo = [tableArray objectAtIndex:page];
-    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-    UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
-    for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
-    {
-        FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
-        if([fileList isKindOfClass:[FileListViewController class]])
+        if(viewCon.isFileManager)
         {
-            fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:demo.d_file_id];
-            [fileList updateSelected];
-            break;
+            AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+            UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
+            for(int i=NavigationController2.viewControllers.count-1;i>=0;i--)
+            {
+                FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
+                if([fileList isKindOfClass:[FileListViewController class]])
+                {
+                    fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:demo.d_file_id];
+                    [fileList updateSelected];
+                    break;
+                }
+            }
+        }
+        else
+        {
+            AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+            UINavigationController *NavigationController3 = [[tabbar viewControllers] objectAtIndex:1];
+            for(int i=NavigationController3.viewControllers.count-1;i>=0;i--)
+            {
+                UpDownloadViewController *upDownLoad = [NavigationController3.viewControllers objectAtIndex:i];
+                if([upDownLoad isKindOfClass:[UpDownloadViewController class]])
+                {
+                    upDownLoad.selectTableViewFid = [NSString formatNSStringForOjbect:demo.d_file_id];
+                    [upDownLoad updateSelected];
+                    break;
+                }
+            }
         }
     }
 }
@@ -964,8 +981,6 @@
                 [self.downImage startDownload];
             }
             [self showJinDu];
-//            return;
-            
         }
     }
 }
@@ -1231,17 +1246,13 @@
 #pragma mark 下载回调
 - (void)downFinish:(NSString *)baseUrl
 {
-    CGRect progess2_rect = self.progess2_imageView.frame;
-    progess2_rect.size.width = 250;
-    [self.progess2_imageView setFrame:progess2_rect];
-    [self.jindu_control setHidden:YES];
-    
     UIImage *scaleImage = [UIImage imageWithContentsOfFile:baseUrl];
     
     ALAssetsLibrary *library=[[ALAssetsLibrary alloc] init];
     [library writeImageToSavedPhotosAlbum:[scaleImage CGImage] orientation:(ALAssetOrientation)[scaleImage imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error) {
         [library assetForURL:assetURL resultBlock:^(ALAsset *asset)
          {
+             dispatch_async(dispatch_get_main_queue(), ^{
              DownList *demo = [tableArray objectAtIndex:self.page];
              demo.d_baseUrl = [NSString formatNSStringForOjbect:assetURL];
              demo.d_state = -1;
@@ -1251,20 +1262,31 @@
              {
                  [demo insertDownList];
              }
+             else
+             {
+                 [demo updateDownListForState];
+             }
+             CGRect progess2_rect = self.progess2_imageView.frame;
+             progess2_rect.size.width = 250;
+             [self.progess2_imageView setFrame:progess2_rect];
+             [self.jindu_control setHidden:YES];
+             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+             UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+             UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+             if([detailView isKindOfClass:[DetailViewController class]])
+             {
+                 DetailViewController *viewCon = (DetailViewController *)detailView;
+                 [viewCon saveSuccess];
+             }
+             NSFileManager *fileManager = [NSFileManager defaultManager];
+             BOOL isRemove = [fileManager removeItemAtPath:baseUrl error:nil];
+             NSLog(@"删除:%i",isRemove);
+             });
          }failureBlock:^(NSError *error)
          {
              NSLog(@"error:%@",error);
          }];
     }];
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-    if([detailView isKindOfClass:[DetailViewController class]])
-    {
-        DetailViewController *viewCon = (DetailViewController *)detailView;
-        [viewCon saveSuccess];
-    }
 }
 -(void)downFile:(NSInteger)downSize totalSize:(NSInteger)sudu
 {
@@ -1327,7 +1349,18 @@
     [self.progess2_imageView setFrame:progess2_rect];
 }
 //上传失败
--(void)upError{}
+-(void)upError
+{
+    [self esc_clicked];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+    if([detailView isKindOfClass:[DetailViewController class]])
+    {
+        DetailViewController *viewCon = (DetailViewController *)detailView;
+        [viewCon saveFail];
+    }
+}
 //服务器异常
 -(void)webServiceFail{}
 //上传无权限
@@ -1917,7 +1950,7 @@
         self.progess_imageView.layer.cornerRadius = 4;
         [self.jinDuView addSubview:self.progess_imageView];
         
-        CGRect progess2_rect = CGRectMake(0, 22, 0, 5);
+        CGRect progess2_rect = CGRectMake(20, 22, 0, 5);
         self.progess2_imageView = [[UIImageView alloc] initWithFrame:progess2_rect];
         [self.progess2_imageView setBackgroundColor:[UIColor colorWithRed:73.0/255.0 green:127.0/255.0 blue:191.0/255.0 alpha:1]];
         self.progess2_imageView.layer.masksToBounds = YES;

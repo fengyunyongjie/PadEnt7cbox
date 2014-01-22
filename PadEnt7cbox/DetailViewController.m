@@ -127,6 +127,8 @@
 
 -(void)showPhotoView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload
 {
+    CGRect down_rect = CGRectMake(0, 0, 40, 25);
+    [self.down_button setFrame:down_rect];
     [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_save_nor@2x.png"] forState:UIControlStateNormal];
     [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_save_se@2x.png"] forState:UIControlStateHighlighted];
     if(titleLabel == nil)
@@ -182,6 +184,8 @@
 
 -(void)showOtherView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload;
 {
+    CGRect down_rect = CGRectMake(0, 0, 30, 25);
+    [self.down_button setFrame:down_rect];
     [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor@2x.png"] forState:UIControlStateNormal];
     [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_se@2x.png"] forState:UIControlStateHighlighted];
     if(titleLabel == nil)
@@ -299,6 +303,26 @@
     }
     [self.titleLabel setFrame:title_rect];
     [self openFileUpdateViewToInterfaceOrientation:toInterfaceOrientation];
+    for (UIViewController *viewCon in self.childViewControllers) {
+        if([viewCon isKindOfClass:[PartitionViewController class]])
+        {
+            PartitionViewController *parttion = (PartitionViewController *)viewCon;
+            CGRect jinDu_rect = CGRectMake(0, 0, 350, 50);
+            UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+            {
+                jinDu_rect.origin.x = (1024-350)/2;
+                jinDu_rect.origin.y = (768-50)/2;
+            }
+            else
+            {
+                jinDu_rect.origin.x = (768-350)/2;
+                jinDu_rect.origin.y = (1024-50)/2;
+            }
+            [parttion.jinDuView setFrame:jinDu_rect];
+            break;
+        }
+    }
 }
 
 //<ios 6.0
@@ -460,11 +484,29 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    [self updateViewBounds:self.view];
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"图片已保存至照片库";
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.5f];
+}
+
+-(void)saveFail
+{
+    if(self.hud)
+    {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=@"图片保存失败";
     self.hud.mode=MBProgressHUDModeText;
     self.hud.margin=10.f;
     [self.hud show:YES];
@@ -477,12 +519,12 @@
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
-        rect.size.width = 1024-320;
+        rect.size.width = 1024;
         rect.size.height = 768;
     }
     else
     {
-        rect.size.width = 768-320;
+        rect.size.width = 768;
         rect.size.height = 1024;
     }
     selfView.frame = rect;

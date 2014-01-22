@@ -15,6 +15,10 @@
 #import "IconDownloader.h"
 
 @interface UpDownloadViewController : UIViewController<CustomSelectButtonDelegate,UITableViewDelegate,UITableViewDataSource,UploadViewCellDelegate,QBImagePickerControllerDelegate,UIActionSheetDelegate,IconDownloaderDelegate>
+{
+    NSInteger selectTableviewSection;
+    NSInteger selectTableViewRow;
+}
 
 @property(strong,nonatomic) UITableView *table_view;
 @property(strong,nonatomic) NSMutableArray *upLoading_array;
@@ -33,6 +37,7 @@
 @property(strong,nonatomic) NSMutableDictionary *imageDownloadsInProgress;
 @property(strong,nonatomic) UILabel *notingLabel;
 @property(strong,nonatomic) UIButton *btn_del;
+@property(strong,nonatomic) NSString *selectTableViewFid;
 
 -(void)isSelectedLeft:(BOOL)bl;
 -(void)updateCount:(NSString *)upload_count downCount:(NSString *)down_count;
@@ -43,5 +48,6 @@
 -(void)start:(id)sender;
 //显示数据正在加载中....
 -(void)showLoadData;
+-(void)updateSelected;
 
 @end

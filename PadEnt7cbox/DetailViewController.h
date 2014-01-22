@@ -29,6 +29,7 @@
 -(void)showPhotoView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload;
 -(void)showOtherView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload;
 -(void)saveSuccess;
+-(void)saveFail;
 -(void)showFullView;
 
 @end

@@ -302,12 +302,13 @@
     self.password_textfield2.text = @"";
     self.password_textfield3.text = @"";
     self.password_textfield4.text = @"";
+    [self.title_label setText:@"设置密码"];
 }
 
 //第二次输入
 -(void)showTypeStartSecond
 {
-    [self.state_label setText:@"请重新输入密码"];
+    [self.state_label setText:@"请再次输入密码"];
     [self.password_error setTextColor:[UIColor grayColor]];
     [self.password_error setText:@""];
     self.password_textfield1.text = @"";
@@ -334,13 +335,14 @@
 -(void)showTypeUpdateStartFirst
 {
     [self.update_button setHidden:NO];
-    [self.state_label setText:@"请输入旧密码"];
+    [self.state_label setText:@"请输入原密码"];
     [self.password_error setTextColor:[UIColor grayColor]];
     [self.password_error setText:@""];
     self.password_textfield1.text = @"";
     self.password_textfield2.text = @"";
     self.password_textfield3.text = @"";
     self.password_textfield4.text = @"";
+    [self.title_label setText:@"修改密码"];
 }
 
 -(PasswordList *)selectList
@@ -361,7 +363,7 @@
 -(void)showTypeUpdateFirstError
 {
     [self.update_button setHidden:NO];
-    [self.state_label setText:@"请输入旧密码"];
+    [self.state_label setText:@"请输入原密码"];
     PasswordList *list = [self selectList];
     [self.password_error setTextColor:[UIColor redColor]];
     [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
@@ -446,6 +448,7 @@
     self.password_textfield2.text = @"";
     self.password_textfield3.text = @"";
     self.password_textfield4.text = @"";
+    [self.title_label setText:@"关闭密码"];
 }
 
 //输入错误提示
@@ -472,6 +475,7 @@
     self.password_textfield2.text = @"";
     self.password_textfield3.text = @"";
     self.password_textfield4.text = @"";
+    [self.title_label setText:@"输入密码"];
 }
 
 -(void)showTypeDefaultError
@@ -565,6 +569,7 @@
                 else if(list.p_fail_count == 1)
                 {
                     [self showEnd];
+                    [self showTypeDefaultError];
                 }
                 else
                 {

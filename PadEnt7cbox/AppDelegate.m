@@ -97,6 +97,11 @@ typedef enum{
     {
         [musicPlayer stopPlay];
     }
+    UIViewController *viewController = self.window.rootViewController.presentedViewController;
+    if([viewController isKindOfClass:[InputViewController class]])
+    {
+        [self deleteView];
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application

@@ -33,6 +33,7 @@ typedef enum{
     kAlertTypeNoNewVersion,
     kAlertTypeHideFeature,
     kAlertTypeMustUpdate,
+    kAlertTypeClear,
 }kAlertType;
 typedef enum{
     kActionSheetTypeExit,
@@ -253,18 +254,17 @@ typedef enum{
 }
 - (void)clearCache
 {
-    //    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
-    //                                                        message:@"确定要清除缓存"
-    //                                                       delegate:self
-    //                                              cancelButtonTitle:@"取消"
-    //                                              otherButtonTitles:@"确定", nil];
-    //    [alertView show];
-    //    [alertView setTag:kAlertTypeClear];
-    //    [alertView release];
-    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"清除缓存后下载或查看过的文件需要重新下载" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"确认清除",@"取消", nil];
-    [actionSheet setTag:kActionSheetTypeClear];
-    [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"清除缓存，释放手机空间"
+                                                        message:@"下载或查看过的文件需要重新下载"
+                                                       delegate:self
+                                              cancelButtonTitle:@"取消"
+                                              otherButtonTitles:@"确定", nil];
+    [alertView show];
+    [alertView setTag:kAlertTypeClear];
+//    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"清除缓存后下载或查看过的文件需要重新下载" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"确认清除",@"取消", nil];
+//    [actionSheet setTag:kActionSheetTypeClear];
+//    [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+//    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
 }
 
 - (IBAction)exitAccount:(id)sender
@@ -897,6 +897,11 @@ typedef enum{
             {
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:APPSTORE_URL]];
                 [self sureExit];
+            }
+            break;
+        case kAlertTypeClear:
+            if (buttonIndex==1) {
+                [self sureClear];
             }
             break;
         default:

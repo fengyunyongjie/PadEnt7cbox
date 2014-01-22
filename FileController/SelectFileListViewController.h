@@ -47,5 +47,6 @@ typedef enum {
 -(void)uploadSpid:(NSString *)s_pid_;
 -(void)uploadFiledId:(NSString *)f_id_;
 -(void)showMessage:(NSString *)message;
-- (void)operateUpdate;
+-(void)operateUpdate;
+-(void)editFinished;
 @end

@@ -298,7 +298,7 @@
                                       reuseIdentifier:CellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        UIImageView *imageView=[[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 40, 40)];
+        UIImageView *imageView=[[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 50, 50)];
         CGRect titleRect=CGRectMake(70, 10, 200, 21);
         CGRect detailRect=CGRectMake(70, 30, 200, 21);
         if (self.dirType==kTypeRoot) {

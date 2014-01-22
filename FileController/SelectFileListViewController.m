@@ -248,6 +248,7 @@
     }
     self.fm_move.delegate=self;
     [self.fm_move moveFileIDs:self.targetsArray toPID:f_id sID:spid];
+    [self.delegate editFinished];
 }
 -(void)copyFileToID:(NSString *)f_id spid:(NSString *)spid;
 {
@@ -259,6 +260,7 @@
     }
     self.fm_move.delegate=self;
     [self.fm_move resaveFileIDs:self.targetsArray toPID:f_id sID:spid];
+    [self.delegate editFinished];
 }
 - (void)moveFileToHere:(id)sender
 {

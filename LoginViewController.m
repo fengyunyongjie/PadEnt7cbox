@@ -14,6 +14,7 @@
 #import "SCBSession.h"
 #import "PConfig.h"
 #import "YNFunctions.h"
+#import "UserInfo.h"
 
 BOOL isMustUpdate=NO;
 enum{
@@ -189,18 +190,18 @@ enum{
 }
 -(void)loginSucceed:(id)manager
 {
-//    UserInfo *info = [[UserInfo alloc] init];
-//    info.user_name = _userNameTextField.text;
-//    NSArray *array = [info selectAllUserinfo];
-//    if([array count]>0)
-//    {
-//        UserInfo *lastInfo = [array lastObject];
-//        [YNFunctions setIsOnlyWifi:lastInfo.is_oneWiFi];
-//    }
-//    else
-//    {
-//        [YNFunctions setIsOnlyWifi:YES];
-//    }
+    UserInfo *info = [[UserInfo alloc] init];
+    info.user_name = _userNameTextField.text;
+    NSArray *array = [info selectAllUserinfo];
+    if([array count]>0)
+    {
+        UserInfo *lastInfo = [array lastObject];
+        [YNFunctions setIsOnlyWifi:lastInfo.is_oneWiFi];
+    }
+    else
+    {
+        [YNFunctions setIsOnlyWifi:YES];
+    }
     
     NSString *alias=[NSString stringWithFormat:@"%@",[[SCBSession sharedSession] entjpush]];
     [APService setTags:nil alias:alias];

@@ -131,6 +131,11 @@
     [self.down_button setFrame:down_rect];
     [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_save_nor@2x.png"] forState:UIControlStateNormal];
     [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_save_se@2x.png"] forState:UIControlStateHighlighted];
+    if(self.downItem)
+    {
+        self.downItem = nil;
+    }
+    self.downItem = [[UIBarButtonItem alloc] initWithCustomView:self.down_button];
     if(titleLabel == nil)
     {
         CGRect title_rect = CGRectMake(0, 10, 200, 20);
@@ -188,6 +193,11 @@
     [self.down_button setFrame:down_rect];
     [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor@2x.png"] forState:UIControlStateNormal];
     [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_se@2x.png"] forState:UIControlStateHighlighted];
+    if(self.downItem)
+    {
+        self.downItem = nil;
+    }
+    self.downItem = [[UIBarButtonItem alloc] initWithCustomView:self.down_button];
     if(titleLabel == nil)
     {
         CGRect title_rect = CGRectMake(0, 10, 200, 20);
@@ -308,18 +318,23 @@
         {
             PartitionViewController *parttion = (PartitionViewController *)viewCon;
             CGRect jinDu_rect = CGRectMake(0, 0, 350, 50);
-            UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+            CGRect control_rect = CGRectMake(0, 0, 1024, 768);
             if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
             {
                 jinDu_rect.origin.x = (1024-350)/2;
                 jinDu_rect.origin.y = (768-50)/2;
+                control_rect.size.width = 1024;
+                control_rect.size.height = 768;
             }
             else
             {
                 jinDu_rect.origin.x = (768-350)/2;
                 jinDu_rect.origin.y = (1024-50)/2;
+                control_rect.size.width = 768;
+                control_rect.size.height = 1024;
             }
             [parttion.jinDuView setFrame:jinDu_rect];
+            [parttion.jindu_control setFrame:control_rect];
             break;
         }
     }

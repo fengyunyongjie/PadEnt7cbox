@@ -45,7 +45,8 @@ enum{
     // Do any additional setup after loading the view from its nib.
     self.userNameTextField.delegate=self;
     self.passwordTextField.delegate=self;
-    
+    [self.logoView setHidden:YES];
+    [self.loginView setHidden:YES];
     // observe keyboard hide and show notifications to resize the text view appropriately
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShow:)
@@ -55,26 +56,28 @@ enum{
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-//    int W=1024;
-//    int H=768;
-//    
-//    if (self.view.bounds.size.width>=1000)
-//    {
-//        CGRect r1=self.logoView.frame;
-//        CGRect r2=self.loginView.frame;
-//        self.logoView.frame=CGRectMake((W-r2.size.width-r1.size.width)/3, (H-r1.size.height)/2, r1.size.width, r1.size.height);
-//        self.loginView.frame=CGRectMake((W-r2.size.width-r1.size.width)/3*2+r1.size.width, (H-r2.size.height)/2, r2.size.width, r2.size.height);
-//    }else
-//    {
-//        CGRect r1=self.logoView.frame;
-//        CGRect r2=self.loginView.frame;
-//        self.logoView.frame=CGRectMake((H-r1.size.width)/2, (W-r2.size.height-r1.size.height)/3, r1.size.width, r1.size.height);
-//        self.loginView.frame=CGRectMake((H-r2.size.width)/2, (W-r2.size.height-r1.size.height)/3*2+r1.size.height, r2.size.width, r2.size.height);
-//    }
+    UIInterfaceOrientation toInterfaceOrientation = [self interfaceOrientation];
+    int W = 1024,H = 768;
+    if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft
+        ||  toInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
+    {
+        CGRect r1=self.logoView.frame;
+        CGRect r2=self.loginView.frame;
+        self.logoView.frame=CGRectMake((W-r2.size.width-r1.size.width)/3, (H-r1.size.height)/2, r1.size.width, r1.size.height);
+        self.loginView.frame=CGRectMake((W-r2.size.width-r1.size.width)/3*2+r1.size.width, (H-r2.size.height)/2, r2.size.width, r2.size.height);
+    }else
+    {
+        CGRect r1=self.logoView.frame;
+        CGRect r2=self.loginView.frame;
+        self.logoView.frame=CGRectMake((H-r1.size.width)/2, (W-r2.size.height-r1.size.height)/3, r1.size.width, r1.size.height);
+        self.loginView.frame=CGRectMake((H-r2.size.width)/2, (W-r2.size.height-r1.size.height)/3*2+r1.size.height, r2.size.width, r2.size.height);
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [self.logoView setHidden:NO];
+    [self.loginView setHidden:NO];
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     [self willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:0];
 }

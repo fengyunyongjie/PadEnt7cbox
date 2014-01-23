@@ -13,6 +13,10 @@
 #import "MBProgressHUD.h"
 #import "UIBarButtonItem+Yn.h"
 #import "IconDownloader.h"
+#import "AppDelegate.h"
+#import "MySplitViewController.h"
+#import "PartitionViewController.h"
+#import "DetailViewController.h"
 
 @implementation FileView{
     NSDictionary *_dic;
@@ -433,6 +437,22 @@
 #pragma mark - 操作方法
 -(void)cancelAction:(id)sender
 {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+    if([detailView isKindOfClass:[DetailViewController class]])
+    {
+        DetailViewController *viewCon = (DetailViewController *)detailView;
+        for (UIViewController *viewC in viewCon.childViewControllers) {
+            if([viewC isKindOfClass:[PartitionViewController class]])
+            {
+                PartitionViewController *parttion = (PartitionViewController *)viewC;
+                UIInterfaceOrientation toInterfaceOrientation = [self interfaceOrientation];
+                [parttion willRotateToInterfaceOrientation:toInterfaceOrientation duration:0];
+                break;
+            }
+        }
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(BOOL)checkIsEmail:(NSString *)text

@@ -99,4 +99,8 @@
 
 -(void)deleteClicked:(id)sender;
 
+-(void)showJinDu;
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
+
 @end

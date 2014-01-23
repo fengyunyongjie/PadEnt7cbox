@@ -859,13 +859,12 @@
     {
         list = [array lastObject];
     }
-    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     ALAssetsLibrary *libary = [[ALAssetsLibrary alloc] init];
     [libary assetForURL:[NSURL URLWithString:list.d_baseUrl] resultBlock:^(ALAsset *result)
      {
          if(result)
          {
-             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
              UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
              UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
              if([detailView isKindOfClass:[DetailViewController class]])
@@ -879,7 +878,7 @@
              UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"是否要保存至照片库" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil, nil];
              [actionSheet setTag:kActionSheetTagClicp];
              [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-             [actionSheet showInView:self.imageScrollView];
+             [actionSheet showInView:app.window];
          }
      }
      failureBlock:^(NSError *error)
@@ -887,7 +886,7 @@
          UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"是否要保存至照片库" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil, nil];
          [actionSheet setTag:kActionSheetTagClicp];
          [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-         [actionSheet showInView:self.imageScrollView];
+         [actionSheet showInView:app.window];
      }];
 }
 
@@ -1072,7 +1071,10 @@
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"是否要删除选中的内容" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil, nil];
     [actionSheet setTag:kActionSheetTagDelete];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-    [actionSheet showInView:self.imageScrollView];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
+//    [tabbar.view.superview addSubview:self.jindu_control];
+    [actionSheet showInView:tabbar.view];
 }
 
 #pragma mark UIAalertViewDelegate
@@ -1927,16 +1929,21 @@
     if(self.jinDuView == nil)
     {
         CGRect jinDu_rect = CGRectMake(0, 0, 350, 50);
+        CGRect control_rect = CGRectMake(0, 0, 1024, 768);
         UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
         {
             jinDu_rect.origin.x = (1024-350)/2;
             jinDu_rect.origin.y = (768-50)/2;
+            control_rect.size.width = 1024;
+            control_rect.size.height = 768;
         }
         else
         {
             jinDu_rect.origin.x = (768-350)/2;
             jinDu_rect.origin.y = (1024-50)/2;
+            control_rect.size.width = 768;
+            control_rect.size.height = 1024;
         }
         self.jinDuView = [[UIView alloc] initWithFrame:jinDu_rect];
         [self.jinDuView setBackgroundColor:[UIColor whiteColor]];
@@ -1965,7 +1972,7 @@
         [esc_button addTarget:self action:@selector(esc_clicked) forControlEvents:UIControlEventTouchUpInside];
         [self.jinDuView addSubview:esc_button];
         
-        CGRect control_rect = CGRectMake(0, 0, 1024, 1024);
+        
         self.jindu_control = [[UIControl alloc] initWithFrame:control_rect];
         [self.jindu_control addSubview:self.jinDuView];
         
@@ -1976,6 +1983,8 @@
     }
     else
     {
+        CGRect progess2_rect = CGRectMake(20, 22, 0, 5);
+        [self.progess2_imageView setFrame:progess2_rect];
         [self.jindu_control setHidden:NO];
     }
 }

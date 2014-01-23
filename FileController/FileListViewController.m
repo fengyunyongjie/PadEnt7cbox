@@ -1586,12 +1586,23 @@ typedef enum{
         NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
         [NSString CreatePath:createPath];
         NSString *file_path = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
-        //查询本地是否已经有该图片
-        BOOL bl = [NSString image_exists_FM_file_path:file_path];
+        
+        DownList *list = [[DownList alloc] init];
+        //d_name=? and d_ure_id=? and d_state=? and d_file_id=?
+        list.d_name = [NSString formatNSStringForOjbect:fileName];
+        list.d_ure_id = [NSString formatNSStringForOjbect:[[SCBSession sharedSession] userId]];
+        list.d_file_id = [NSString formatNSStringForOjbect:file_id];
+        list.d_state = 1;
+        BOOL bl = [list selectUploadListIsHave];
         if(bl)
         {
-            NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:file_path];
-            bl = fileSize==[[handle availableData] length];
+            //查询本地是否已经有该图片
+            BOOL bl = [NSString image_exists_FM_file_path:file_path];
+            if(bl)
+            {
+                NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:file_path];
+                bl = fileSize==[[handle availableData] length];
+            }
         }
         if(bl)
         {

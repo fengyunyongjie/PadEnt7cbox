@@ -261,20 +261,44 @@
         if(!imageV)
         {
             NSString *fmime=[[list.d_name pathExtension] lowercaseString];
-            if ([fmime isEqualToString:@"doc"]|| [fmime isEqualToString:@"docx"])
+            if ([fmime isEqualToString:@"png"]||
+                [fmime isEqualToString:@"jpg"]||
+                [fmime isEqualToString:@"jpeg"]||
+                [fmime isEqualToString:@"bmp"]||
+                [fmime isEqualToString:@"gif"])
             {
-                imageV = [UIImage imageNamed:@"file_doc.png"];
+                imageV = [UIImage imageNamed:@"file_pic.png"];
+            }
+            else if ([fmime isEqualToString:@"doc"]||
+                [fmime isEqualToString:@"docx"]||
+                [fmime isEqualToString:@"rtf"])
+            {
+                imageV = [UIImage imageNamed:@"file_word.png"];
+            }
+            else if ([fmime isEqualToString:@"xls"]||
+                     [fmime isEqualToString:@"xlsx"])
+            {
+                imageV = [UIImage imageNamed:@"file_excel.png"];
             }else if ([fmime isEqualToString:@"mp3"])
             {
-                imageV = [UIImage imageNamed:@"file_music.png"];
-            }else if ([fmime isEqualToString:@"mov"])
+                imageView.image = [UIImage imageNamed:@"file_music.png"];
+            }else if ([fmime isEqualToString:@"mov"]||
+                      [fmime isEqualToString:@"mp4"]||
+                      [fmime isEqualToString:@"avi"]||
+                      [fmime isEqualToString:@"rmvb"])
             {
-                imageV = [UIImage imageNamed:@"file_moving.png"];
-            }else if ([fmime isEqualToString:@"ppt"])
+                imageV= [UIImage imageNamed:@"file_moving.png"];
+            }else if ([fmime isEqualToString:@"pdf"])
             {
-                imageV = [UIImage imageNamed:@"file_other.png"];
-            }
-            else
+                imageV = [UIImage imageNamed:@"file_pdf.png"];
+            }else if ([fmime isEqualToString:@"ppt"]||
+                      [fmime isEqualToString:@"pptx"])
+            {
+                imageV = [UIImage imageNamed:@"file_ppt.png"];
+            }else if([fmime isEqualToString:@"txt"])
+            {
+                imageV = [UIImage imageNamed:@"file_txt.png"];
+            }else
             {
                 imageV = [UIImage imageNamed:@"file_other.png"];
             }

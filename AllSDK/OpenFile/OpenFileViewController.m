@@ -256,18 +256,18 @@
         [viewCon showFullView];
     }
     
-    MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
-    UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
-    for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
-    {
-        FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
-        if([fileList isKindOfClass:[FileListViewController class]])
-        {
-            fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:file_id];
-            [fileList.tableView reloadData];
-            break;
-        }
-    }
+//    MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
+//    UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
+//    for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
+//    {
+//        FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
+//        if([fileList isKindOfClass:[FileListViewController class]])
+//        {
+//            fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:file_id];
+//            [fileList.tableView reloadData];
+//            break;
+//        }
+//    }
 }
 
 -(void)downFile:(NSInteger)downSize totalSize:(NSInteger)sudu

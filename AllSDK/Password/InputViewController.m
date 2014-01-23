@@ -653,6 +653,7 @@
                 else if(list.p_fail_count == 1)
                 {
                     [self showEnd];
+                    [self showTypeUpdateFirstError];
                 }
                 else
                 {
@@ -738,6 +739,7 @@
                 else if(list.p_fail_count == 1)
                 {
                     [self showEnd];
+                    [self showTypeCloseError];
                 }
                 else
                 {

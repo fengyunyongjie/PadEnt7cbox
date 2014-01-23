@@ -104,6 +104,12 @@
         [imageConnection cancel];
         NSLog(@"暂停下载");
         [delegate upError];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        BOOL bl = [fileManager removeItemAtPath:file_path error:nil];
+        if(bl)
+        {
+            NSLog(@"删除临时文件成功");
+        }
     }
     NSLog(@"下载的大小:%i",[data length]);
     downsize += [data length];

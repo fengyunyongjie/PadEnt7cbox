@@ -40,6 +40,7 @@ typedef enum {
 @property (strong,nonatomic) UITableView *tableView;
 @property (strong,nonatomic) NSIndexPath *selectedIndexPath;
 @property (strong,nonatomic) NSString *tableViewSelectedFid;
+@property (assign,nonatomic) BOOL isNotRequestUpdate;
 
 -(void)moveFileToID:(NSString *)f_id;
 -(void)commitFileToID:(NSString *)f_id sID:(NSString *)s_pid;

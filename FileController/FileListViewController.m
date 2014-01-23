@@ -71,7 +71,8 @@ typedef enum{
 
 @implementation FileListViewController
 
-@synthesize dataDic,listArray,finderArray,selectArray,f_id,fcmd,spid,roletype,flType,imageDownloadsInProgress,tableView,selectedIndexPath,tableViewSelectedFid;
+@synthesize dataDic,listArray,finderArray,selectArray,f_id,fcmd,spid,roletype,flType,imageDownloadsInProgress,tableView,selectedIndexPath,tableViewSelectedFid,isNotRequestUpdate;
+
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
@@ -102,7 +103,14 @@ typedef enum{
         [self.moreEditBar setHidden:NO];
     }
     if (!self.tableView.isEditing) {
-        [self updateFileList];
+        if(isNotRequestUpdate)
+        {
+            isNotRequestUpdate = NO;
+        }
+        else
+        {
+            [self updateFileList];
+        }
     }
     
     CGRect r=self.view.frame;

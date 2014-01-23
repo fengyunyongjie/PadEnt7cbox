@@ -71,6 +71,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
+    for(int i=NavigationController2.viewControllers.count-1;i>=0;i--)
+    {
+        FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
+        if([fileList isKindOfClass:[FileListViewController class]])
+        {
+            [fileList setIsNotRequestUpdate:YES];
+            break;
+        }
+    }
+    
     if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
     {
         [[UIApplication sharedApplication] setStatusBarHidden:YES];
@@ -266,7 +280,9 @@
     {
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
     }
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [self dismissViewControllerAnimated:NO completion:^{
+        
+    }];
     for(int i=0;i<[downArray count];i++)
     {
         LookDownFile *down = [downArray objectAtIndex:i];

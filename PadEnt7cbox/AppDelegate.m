@@ -78,7 +78,7 @@ typedef enum{
 //        [[WelcomeViewController sharedUser] showWelCome];
         //        [[NSUserDefaults standardUserDefaults] setObject:VERSION forKey:VERSION];
     }
-    
+    [self checkUpdate];
     return YES;
 }
 

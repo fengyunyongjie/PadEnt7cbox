@@ -703,21 +703,22 @@
 }
 -(void)moveSucess
 {
-    //    if (self.hud) {
-    //        [self.hud removeFromSuperview];
-    //    }
-    //    self.hud=nil;
-    //    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    //    [self.view.superview addSubview:self.hud];
-    //    [self.hud show:NO];
-    //    self.hud.labelText=@"操作成功";
-    //    self.hud.mode=MBProgressHUDModeText;
-    //    self.hud.margin=10.f;
-    //    [self.hud show:YES];
-    //    [self.hud hide:YES afterDelay:1.0f];
+//    if (self.hud) {
+//        [self.hud removeFromSuperview];
+//    }
+//    self.hud=nil;
+//    self.hud=[[MBProgressHUD alloc] initWithView:self.navigationController.view];
+//    [self.navigationController.view addSubview:self.hud];
+//    [self.hud show:NO];
+//    self.hud.labelText=@"操作成功";
+//    self.hud.mode=MBProgressHUDModeText;
+//    self.hud.margin=10.f;
+//    [self.hud show:YES];
+//    [self.hud hide:YES afterDelay:1.0f];
 //    [self dismissViewControllerAnimated:YES completion:^(void){
 //        [self.delegate operateUpdate];
 //    }];
+    [self.delegate showMessage:@"操作成功"];
     [self.delegate operateUpdate];
     [self.navigationController popToViewController:(UIViewController *)self.delegate animated:YES];
 //    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)

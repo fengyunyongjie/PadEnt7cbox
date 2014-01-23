@@ -80,6 +80,7 @@ enum{
     [self.loginView setHidden:NO];
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     [self willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:0];
+    [self checkUpdate];
 }
 
 - (void)didReceiveMemoryWarning

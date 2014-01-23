@@ -29,7 +29,6 @@ __strong static WelcomeViewController *_welcommeVC;
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
     [self updateLoadView];
 }
-
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
     
@@ -40,6 +39,7 @@ __strong static WelcomeViewController *_welcommeVC;
         CGRect hidden_rect = CGRectMake(imageWidth*2+(imageWidth-201)/2-10, imageHeigth-200, 201, 52);
         hidden_rect.origin.y = imageHeigth-120;
         [hidden_button setFrame:hidden_rect];
+        [pageCtrl setFrame:CGRectMake((768-200)/2, imageHeigth-60, 200, 49)];
     }
     else
     {
@@ -48,6 +48,7 @@ __strong static WelcomeViewController *_welcommeVC;
         CGRect hidden_rect = CGRectMake(imageWidth*2+(imageWidth-201)/2+5, imageHeigth-200, 201, 52);
         hidden_rect.origin.y = imageHeigth-180;
         [hidden_button setFrame:hidden_rect];
+        [pageCtrl setFrame:CGRectMake((1024-200)/2, imageHeigth-60, 200, 49)];
     }
     
     //加载图片
@@ -166,9 +167,11 @@ __strong static WelcomeViewController *_welcommeVC;
         }
     }
     
-    UIPageControl *_pageCtrl=[[UIPageControl alloc] initWithFrame:CGRectMake((imageWidth-200)/2, 10, 200, 49)];
+    UIPageControl *_pageCtrl=[[UIPageControl alloc] initWithFrame:CGRectMake((imageWidth-200)/2, imageHeigth-60, 200, 49)];
     [_pageCtrl setNumberOfPages:3];
     [_pageCtrl addTarget:self action:@selector(clicked_page:) forControlEvents:UIControlEventTouchUpInside];
+    [_pageCtrl setPageIndicatorTintColor:[UIColor colorWithRed:142/255.0f green:142/255.0f blue:142/255.0f alpha:1]];
+    [_pageCtrl setCurrentPageIndicatorTintColor:[UIColor colorWithRed:31/255.0f green:58/255.0f blue:125/255.0f alpha:1]];
     pageCtrl = _pageCtrl;
     [self.view addSubview:pageCtrl];
     
@@ -179,6 +182,13 @@ __strong static WelcomeViewController *_welcommeVC;
     hidden_button = button;
     [scroll_view addSubview:hidden_button];
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        [pageCtrl setFrame:CGRectMake((1024-200)/2, 768-60, 200, 49)];
+    }else
+    {
+        [pageCtrl setFrame:CGRectMake((768-200)/2, 1024-60, 200, 49)];
+    }
 }
 
 - (void)didReceiveMemoryWarning

@@ -52,6 +52,20 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    for(UIViewController *viewCon in self.childViewControllers)
+    {
+        if([viewCon isKindOfClass:[PartitionViewController class]])
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+            PartitionViewController *partition = (PartitionViewController *)viewCon;
+            [partition willRotateToInterfaceOrientation:[self interfaceOrientation] duration:0.0];
+            });
+        }
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];

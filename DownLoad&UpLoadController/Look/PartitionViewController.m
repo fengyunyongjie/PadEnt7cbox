@@ -1326,7 +1326,6 @@
         
         imageScrollView.contentSize = CGSizeMake(currWidth*[tableArray count], currHeight);
         [imageScrollView setContentOffset:CGPointMake(currWidth*currPage, 0) animated:NO];
-        [self handleOnceTap:nil];
     });
 }
 

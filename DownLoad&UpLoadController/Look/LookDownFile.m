@@ -17,6 +17,10 @@
 
 - (void)startDownload
 {
+    if(imageConnection)
+    {
+        return;
+    }
     if([self isConnection] == ReachableViaWiFi)
     {
         
@@ -98,7 +102,9 @@
     if(isStop)
     {
         [imageConnection cancel];
-        NSLog(@"取消下载");
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        BOOL bl = [fileManager removeItemAtPath:file_path error:nil];
+        NSLog(@"取消下载,删除临时文件：%i",bl);
         return;
     }
     NSLog(@"下载的大小:%i",[data length]);

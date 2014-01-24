@@ -272,6 +272,14 @@
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
     [self isScapeLeftOrRight:self.isScape];
+    
+    for(int i=0;i<downArray.count;i++)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            LookDownFile *downImage = [downArray objectAtIndex:i];
+            [downImage startDownload];
+        });
+    }
 }
 
 -(void)backClick
@@ -314,6 +322,19 @@
     self.page = imageScrollView.contentOffset.x/currWidth;
     
     currPage = self.page;
+    int page = self.page;
+    if(page>=[tableArray count])
+    {
+        return;
+    }
+    
+    for(int i=0;i<downArray.count;i++)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            LookDownFile *downImage = [downArray objectAtIndex:i];
+            [downImage startDownload];
+        });
+    }
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
@@ -325,12 +346,8 @@
         [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete withIsHaveDown:isHaveDelete];
     }
     
-    int page = self.page;
-    if(page>=[tableArray count])
-    {
-        return;
-    }
-    [self loadPageColoumn:page];
+
+//    [self loadPageColoumn:page];
 }
 
 #pragma mark 滑动隐藏
@@ -368,6 +385,34 @@
             //加载数据
             self.page = imageScrollView.contentOffset.x/currWidth;
             int page = self.page;
+            
+            for(int i=0;i<downArray.count;i++)
+            {
+                LookDownFile *downImage = [downArray objectAtIndex:i];
+                NSString *fileId1 = [NSString formatNSStringForOjbect:downImage.file_id];
+                BOOL isHave = NO;
+                for(int j=page;j<page+3;j++)
+                {
+                    if(j>=[tableArray count])
+                    {
+                        break;
+                    }
+                    DownList *demo = [tableArray objectAtIndex:j];
+                    NSString *fileId2 = [NSString formatNSStringForOjbect:demo.d_file_id];
+                    if([fileId1 isEqualToString:fileId2])
+                    {
+                        isHave = YES;
+                        break;
+                    }
+                }
+                if(!isHave)
+                {
+                    [downImage cancelDownload];
+                    [downArray removeObjectAtIndex:i];
+                    i--;
+                }
+            }
+            
             for(int i=page;i<page+3;i++)
             {
                 if(i>=[tableArray count])
@@ -389,11 +434,40 @@
                     s = nil;
                 }
             }
+            
             //向左滑动
             NSLog(@"向左滑动:%i",[imageScrollView.subviews count]);
             //加载数据
             self.page = imageScrollView.contentOffset.x/currWidth;
             int page = self.page;
+            
+            for(int i=0;i<downArray.count;i++)
+            {
+                LookDownFile *downImage = [downArray objectAtIndex:i];
+                NSString *fileId1 = [NSString formatNSStringForOjbect:downImage.file_id];
+                BOOL isHave = NO;
+                for(int j=page;j>page-3;j--)
+                {
+                    if(j>=[tableArray count])
+                    {
+                        break;
+                    }
+                    DownList *demo = [tableArray objectAtIndex:j];
+                    NSString *fileId2 = [NSString formatNSStringForOjbect:demo.d_file_id];
+                    if([fileId1 isEqualToString:fileId2])
+                    {
+                        isHave = YES;
+                        break;
+                    }
+                }
+                if(!isHave)
+                {
+                    [downImage cancelDownload];
+                    [downArray removeObjectAtIndex:i];
+                    i--;
+                }
+            }
+            
             for(int i=page;i>page-3;i--)
             {
                 if(i>=[tableArray count])
@@ -530,11 +604,14 @@
         imageview.userInteractionEnabled = YES;
         imageview.tag = ImageViewTag+i;
         [imageview addGestureRecognizer:doubleTap];
-        
         __block BOOL isAction = FALSE;
+        UITapGestureRecognizer *doubleTap2 =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap2:)];
+        [doubleTap2 setNumberOfTapsRequired:2];
+        [s addGestureRecognizer:doubleTap2];
+        [onceTap requireGestureRecognizerToFail:doubleTap2];
         [s addGestureRecognizer:onceTap];
-        UIImage *oldImge = nil;
         
+        UIImage *oldImge = nil;
         NSString *documentDir = [YNFunctions getFMCachePath];
         NSArray *array=[demo.d_name componentsSeparatedByString:@"/"];
         NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,demo.d_file_id];
@@ -574,7 +651,7 @@
                 [downImage setImageViewIndex:ImageViewTag+i];
                 [downImage setIndexPath:[NSIndexPath indexPathForRow:ACTNUMBER+i inSection:0]];
                 [downImage setDelegate:self];
-                [downImage startDownload];
+//                [downImage startDownload];
                 [downArray addObject:downImage];
             }
         }
@@ -624,11 +701,14 @@
         imageview.userInteractionEnabled = YES;
         imageview.tag = ImageViewTag+i;
         [imageview addGestureRecognizer:doubleTap];
-        
+        UITapGestureRecognizer *doubleTap2 =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap2:)];
+        [doubleTap2 setNumberOfTapsRequired:2];
+        [s addGestureRecognizer:doubleTap2];
+        [onceTap requireGestureRecognizerToFail:doubleTap2];
         [s addGestureRecognizer:onceTap];
+        
         __block BOOL isAction = FALSE;
         UIImage *oldImge = nil;
-        
         NSString *documentDir = [YNFunctions getFMCachePath];
         NSArray *array=[demo.d_name componentsSeparatedByString:@"/"];
         NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,demo.d_file_id];
@@ -667,7 +747,7 @@
                 [downImage setImageViewIndex:ImageViewTag+i];
                 [downImage setIndexPath:[NSIndexPath indexPathForRow:ACTNUMBER+i inSection:0]];
                 [downImage setDelegate:self];
-                [downImage startDownload];
+//                [downImage startDownload];
                 [downArray addObject:downImage];
             }
         }
@@ -694,6 +774,11 @@
         }
         [imageScrollView addSubview:s];
     }
+}
+
+-(void)handleDoubleTap2:(UIGestureRecognizer *)gesture
+{
+    
 }
 
 //竖屏
@@ -801,6 +886,11 @@
             }
         }
     }
+}
+
+-(void)handleOnceTap2:(UIGestureRecognizer *)gesture
+{
+    
 }
 
 #pragma mark - Utility methods

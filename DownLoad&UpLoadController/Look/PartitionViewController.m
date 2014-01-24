@@ -44,7 +44,7 @@
 @synthesize jinDuView;
 @synthesize progess_imageView;
 @synthesize progess2_imageView;
-@synthesize downImage;
+@synthesize downImageS;
 
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -281,6 +281,14 @@
     
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
     [self isScapeLeftOrRight:self.isScape];
+    
+    for(int i=0;i<downArray.count;i++)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            LookDownFile *downImage = [downArray objectAtIndex:i];
+            [downImage startDownload];
+        });
+    }
 }
 
 -(void)backClick
@@ -319,14 +327,22 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     self.page = imageScrollView.contentOffset.x/currWidth;
-    
     currPage = self.page;
+    
     int page = self.page;
     if(page>=[tableArray count])
     {
         return;
     }
-    [self loadPageColoumn:page];
+//    [self loadPageColoumn:page];
+    
+    for(int i=0;i<downArray.count;i++)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+        LookDownFile *downImage = [downArray objectAtIndex:i];
+        [downImage startDownload];
+        });
+    }
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
@@ -406,6 +422,34 @@
         //加载数据
         self.page = imageScrollView.contentOffset.x/currWidth;
         int page = self.page;
+        
+        for(int i=0;i<downArray.count;i++)
+        {
+            LookDownFile *downImage = [downArray objectAtIndex:i];
+            NSString *fileId1 = [NSString formatNSStringForOjbect:downImage.file_id];
+            BOOL isHave = NO;
+            for(int j=page;j<page+3;j++)
+            {
+                if(j>=[tableArray count])
+                {
+                    break;
+                }
+                DownList *demo = [tableArray objectAtIndex:j];
+                NSString *fileId2 = [NSString formatNSStringForOjbect:demo.d_file_id];
+                if([fileId1 isEqualToString:fileId2])
+                {
+                    isHave = YES;
+                    break;
+                }
+            }
+            if(!isHave)
+            {
+                [downImage cancelDownload];
+                [downArray removeObjectAtIndex:i];
+                i--;
+            }
+        }
+        
         for(int i=page;i<page+3;i++)
         {
             if(i>=[tableArray count])
@@ -432,6 +476,34 @@
         //加载数据
         self.page = imageScrollView.contentOffset.x/currWidth;
         int page = self.page;
+        
+        for(int i=0;i<downArray.count;i++)
+        {
+            LookDownFile *downImage = [downArray objectAtIndex:i];
+            NSString *fileId1 = [NSString formatNSStringForOjbect:downImage.file_id];
+            BOOL isHave = NO;
+            for(int j=page;j>page-3;j--)
+            {
+                if(j>=[tableArray count])
+                {
+                    break;
+                }
+                DownList *demo = [tableArray objectAtIndex:j];
+                NSString *fileId2 = [NSString formatNSStringForOjbect:demo.d_file_id];
+                if([fileId1 isEqualToString:fileId2])
+                {
+                    isHave = YES;
+                    break;
+                }
+            }
+            if(!isHave)
+            {
+                [downImage cancelDownload];
+                [downArray removeObjectAtIndex:i];
+                i--;
+            }
+        }
+        
         for(int i=page;i>page-3;i--)
         {
             if(i>=[tableArray count])
@@ -570,7 +642,12 @@
         [imageview addGestureRecognizer:doubleTap];
         
         __block BOOL isAction = FALSE;
+        UITapGestureRecognizer *doubleTap2 =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap2:)];
+        [doubleTap2 setNumberOfTapsRequired:2];
+        [s addGestureRecognizer:doubleTap2];
+        [onceTap requireGestureRecognizerToFail:doubleTap2];
         [s addGestureRecognizer:onceTap];
+        
         UIImage *oldImge = nil;
         
         NSString *documentDir = [YNFunctions getFMCachePath];
@@ -612,7 +689,7 @@
                 [downImage setImageViewIndex:ImageViewTag+i];
                 [downImage setIndexPath:[NSIndexPath indexPathForRow:ACTNUMBER+i inSection:0]];
                 [downImage setDelegate:self];
-                [downImage startDownload];
+//                [downImage startDownload];
                 [downArray addObject:downImage];
             }
         }
@@ -662,8 +739,12 @@
         imageview.userInteractionEnabled = YES;
         imageview.tag = ImageViewTag+i;
         [imageview addGestureRecognizer:doubleTap];
-        
+        UITapGestureRecognizer *doubleTap2 =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap2:)];
+        [doubleTap2 setNumberOfTapsRequired:2];
+        [s addGestureRecognizer:doubleTap2];
+        [onceTap requireGestureRecognizerToFail:doubleTap2];
         [s addGestureRecognizer:onceTap];
+        
         __block BOOL isAction = FALSE;
         UIImage *oldImge = nil;
         
@@ -705,7 +786,7 @@
                 [downImage setImageViewIndex:ImageViewTag+i];
                 [downImage setIndexPath:[NSIndexPath indexPathForRow:ACTNUMBER+i inSection:0]];
                 [downImage setDelegate:self];
-                [downImage startDownload];
+//                [downImage startDownload];
                 [downArray addObject:downImage];
             }
         }
@@ -799,6 +880,11 @@
     }
 }
 
+-(void)handleDoubleTap2:(UIGestureRecognizer *)gesture
+{
+    
+}
+
 -(void)handleOnceTap:(UIGestureRecognizer *)gesture{
 //    //单击头部和底部出现
 //    if(self.bottonToolBar.hidden)
@@ -815,7 +901,6 @@
 //        [self.topToolBar setHidden:YES];
 //        [self.bottonToolBar setHidden:YES];
 //    }
-    
     CGFloat x = imageScrollView.contentOffset.x;
     self.page = x/currWidth;
     PhotoLookViewController *look = [[PhotoLookViewController alloc] init];
@@ -968,16 +1053,16 @@
             if([[tableArray objectAtIndex:page] isKindOfClass:[DownList class]])
             {
                 demo = [tableArray objectAtIndex:page];
-                if(self.downImage)
+                if(self.downImageS)
                 {
-                    [self.downImage cancelDownload];
+                    [self.downImageS cancelDownload];
                 }
-                self.downImage = [[DwonFile alloc] init];
-                self.downImage.fileSize = demo.d_downSize;
-                self.downImage.file_id = demo.d_file_id;
-                self.downImage.fileName = demo.d_name;
-                self.downImage.delegate = self;
-                [self.downImage startDownload];
+                self.downImageS = [[DwonFile alloc] init];
+                self.downImageS.fileSize = demo.d_downSize;
+                self.downImageS.file_id = demo.d_file_id;
+                self.downImageS.fileName = demo.d_name;
+                self.downImageS.delegate = self;
+                [self.downImageS startDownload];
             }
             [self showJinDu];
         }
@@ -1345,7 +1430,7 @@
 
 -(void)downCurrSize:(NSInteger)currSize
 {
-    float width = currSize*250.0/self.downImage.fileSize;
+    float width = currSize*250.0/self.downImageS.fileSize;
     CGRect progess2_rect = self.progess2_imageView.frame;
     progess2_rect.size.width = width;
     [self.progess2_imageView setFrame:progess2_rect];
@@ -1991,11 +2076,21 @@
 
 -(void)esc_clicked
 {
-    if(self.downImage)
+    if(self.downImageS)
     {
-        [self.downImage cancelDownload];
+        [self.downImageS cancelDownload];
     }
     [self.jindu_control setHidden:YES];
+}
+
+-(void)cancelDown
+{
+    [self esc_clicked];
+    for(int i=0;i<downArray.count;i++)
+    {
+        LookDownFile *downImage = [downArray objectAtIndex:i];
+        [downImage cancelDownload];
+    }
 }
 
 @end

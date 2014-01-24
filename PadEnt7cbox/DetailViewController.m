@@ -119,6 +119,11 @@
             OpenFileViewController *openFile = (OpenFileViewController *)viewCon;
             [openFile cancelDown];
         }
+//        else if([viewCon isKindOfClass:[PartitionViewController class]])
+//        {
+//            PartitionViewController *partition = (PartitionViewController *)viewCon;
+//            [partition cancelDown];
+//        }
         [viewCon.view removeFromSuperview];
         [viewCon removeFromParentViewController];
     }

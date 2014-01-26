@@ -1417,7 +1417,7 @@ typedef enum{
     if (self.listArray) {
         NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
         NSString *fid_ = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
-        if([fid_ isEqualToString:tableViewSelectedFid])
+        if([fid_ isEqualToString:tableViewSelectedFid] && !self.tableView.editing)
         {
             [cell setSelected:YES animated:YES];
         }
@@ -1993,6 +1993,7 @@ typedef enum{
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.tableView.editing) {
+        tableViewSelectedTag = -1;
         NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
         NSString *fisdir=[dic objectForKey:@"fisdir"];
         if ([fisdir isEqualToString:@"0"]) {
@@ -2027,6 +2028,11 @@ typedef enum{
                      [fmime isEqualToString:@"gif"])
             {
                 tableViewSelectedTag = indexPath.row;
+                NSString *curr_fid = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
+                if([tableViewSelectedFid isEqualToString:curr_fid])
+                {
+                    return;
+                }
                 tableViewSelectedFid = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
                 if (![self hasCmdInFcmd:@"preview"]) {
                     OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
@@ -2106,6 +2112,11 @@ typedef enum{
             else
             {
                 tableViewSelectedTag = indexPath.row;
+                NSString *curr_fid = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
+                if([tableViewSelectedFid isEqualToString:curr_fid])
+                {
+                    return;
+                }
                 tableViewSelectedFid = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
                 if (![self hasCmdInFcmd:@"preview"]) {
                     OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
@@ -3007,6 +3018,10 @@ typedef enum{
 #pragma mark 当用户切换图片是，视图选择项也发生变化
 -(void)updateSelected
 {
+    if(self.tableView.editing)
+    {
+        return;
+    }
     if(tableViewSelectedTag!=-1 && self.listArray.count>tableViewSelectedTag)
     {
         BOOL isHave = NO;

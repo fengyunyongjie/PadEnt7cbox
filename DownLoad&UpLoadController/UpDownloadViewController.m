@@ -1166,6 +1166,7 @@
 {
     if(self.table_view.isEditing)
     {
+        selectTableViewRow = -1;
         [self updateSelectIndexPath];
         return;
     }
@@ -1188,7 +1189,12 @@
                 {
                     selectTableviewSection = indexPath.section;
                     selectTableViewRow = indexPath.row;
-                    selectTableViewFid = list.d_file_id;
+                    NSString *curr_fid = [NSString formatNSStringForOjbect:list.d_file_id];
+                    if([selectTableViewFid isEqualToString:curr_fid])
+                    {
+                        return;
+                    }
+                    selectTableViewFid = [NSString formatNSStringForOjbect:list.d_file_id];
                     NSString *fmime = [[[f_name componentsSeparatedByString:@"."] lastObject] lowercaseString];
                     if ([fmime isEqualToString:@"png"]||
                         [fmime isEqualToString:@"jpg"]||
@@ -1291,7 +1297,12 @@
                 {
                     selectTableviewSection = indexPath.section;
                     selectTableViewRow = indexPath.row;
-                    selectTableViewFid = list.d_file_id;
+                    NSString *curr_fid = [NSString formatNSStringForOjbect:list.d_file_id];
+                    if([selectTableViewFid isEqualToString:curr_fid])
+                    {
+                        return;
+                    }
+                    selectTableViewFid = [NSString formatNSStringForOjbect:list.d_file_id];
                     NSString *fmime = [[[f_name componentsSeparatedByString:@"."] lastObject] lowercaseString];
                     if ([fmime isEqualToString:@"png"]||
                         [fmime isEqualToString:@"jpg"]||
@@ -1872,6 +1883,10 @@
 #pragma mark 当用户切换图片是，视图选择项也发生变化
 -(void)updateSelected
 {
+    if(self.table_view.editing)
+    {
+        return;
+    }
     dispatch_async(dispatch_get_main_queue(), ^{
     if(selectTableViewRow!=-1 && self.downLoaded_array.count>selectTableViewRow)
     {

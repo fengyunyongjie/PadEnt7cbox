@@ -312,17 +312,14 @@ typedef enum{
             [self.notingLabel setFont:[UIFont systemFontOfSize:18]];
             [self.notingLabel setTextAlignment:NSTextAlignmentCenter];
             [self.nothingView addSubview:self.notingLabel];
-            //[self.notingLabel setHidden:YES];
         }
         [self.tableView bringSubviewToFront:self.nothingView];
         [self.nothingView setHidden:NO];
-        //[self.tableView setHidden:YES];
         [self.notingLabel setText:@"加载中,请稍等……"];
     }else
     {
         [self.tableView bringSubviewToFront:self.nothingView];
         [self.nothingView setHidden:YES];
-        //[self.tableView setHidden:NO];
         [self.notingLabel setText:@"加载中,请稍等……"];
     }
 
@@ -1960,7 +1957,7 @@ typedef enum{
                 [array addObject:item_copy];
                 //[array addObject:item_flexible];
             }
-            if([self hasCmdInFcmd:@"move"])
+            if([self hasCmdInFcmd:@"move"])                                                                                                      
             {
                 [array addObject:item_move];
                 //[array addObject:item_flexible];

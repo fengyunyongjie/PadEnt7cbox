@@ -475,6 +475,23 @@ typedef enum{
     }
     return -1;
 }
+-(void)showMessage:(NSString *)message
+{
+    [self.hud show:NO];
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=message;
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1];
+}
 #pragma mark - Table view data source
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
@@ -1099,20 +1116,7 @@ typedef enum{
     }else if(code==2)
     {
         NSLog(@"无新版本");
-        [self.hud show:NO];
-        if (self.hud) {
-            [self.hud removeFromSuperview];
-        }
-        self.hud=nil;
-        self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-        [self.view.superview addSubview:self.hud];
-        [self.hud show:NO];
-        self.hud.labelText=@"当前是最新版本";
-        self.hud.mode=MBProgressHUDModeText;
-        self.hud.margin=10.f;
-        [self.hud show:YES];
-        [self.hud hide:YES afterDelay:1.0f];
-
+        [self showMessage:@"当前是最新版本"];
     }else
     {
         NSLog(@"失败，服务端发生未知错误");
@@ -1120,19 +1124,7 @@ typedef enum{
 }
 -(void)checkVersionFail
 {
-    if (self.hud) {
-        [self.hud removeFromSuperview];
-    }
-    self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
-    
-    [self.hud show:NO];
-    self.hud.labelText=@"检测更新失败";
-    self.hud.mode=MBProgressHUDModeText;
-    self.hud.margin=10.f;
-    [self.hud show:YES];
-    [self.hud hide:YES afterDelay:1.0f];
+    [self showMessage:@"检测更新失败"];
 }
 -(void)getVcardSucceed:(NSDictionary *)datadic
 {

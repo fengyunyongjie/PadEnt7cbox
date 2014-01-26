@@ -288,13 +288,13 @@ enum{
         }else if([BUILD_VERSION intValue]<isupdate)
         {
             isMustUpdate=YES;
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
-                                                                message:@"当前版本需要更新才可以使用，点确定更新"
-                                                               delegate:self
-                                                      cancelButtonTitle:nil
-                                                      otherButtonTitles:@"确定", nil];
-            alertView.tag=kAlertTypeMustUpdate;
-            [alertView show];
+//            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
+//                                                                message:@"当前版本需要更新才可以使用，点确定更新"
+//                                                               delegate:self
+//                                                      cancelButtonTitle:nil
+//                                                      otherButtonTitles:@"确定", nil];
+//            alertView.tag=kAlertTypeMustUpdate;
+//            [alertView show];
             
         }
         NSLog(@"有新版本");

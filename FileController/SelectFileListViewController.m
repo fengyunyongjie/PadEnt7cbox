@@ -268,18 +268,7 @@
         case kSelectTypeDefault:
         case kSelectTypeMove:
             if (![self.roletype isEqualToString:@"2"]&&[self.f_id intValue]==0&&self.isHasSelectFile) {
-                if (self.hud) {
-                    [self.hud removeFromSuperview];
-                }
-                self.hud=nil;
-                self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-                [self.view.superview addSubview:self.hud];
-                [self.hud show:NO];
-                self.hud.labelText=@"权限不允许";
-                self.hud.mode=MBProgressHUDModeText;
-                self.hud.margin=10.f;
-                [self.hud show:YES];
-                [self.hud hide:YES afterDelay:1.0f];
+                [self.delegate showMessage:@"权限不允许"];
                 return;
                 
             }
@@ -288,18 +277,7 @@
             break;
         case kSelectTypeCopy:
             if (![self.roletype isEqualToString:@"2"]&&[self.f_id intValue]==0&&self.isHasSelectFile) {
-                if (self.hud) {
-                    [self.hud removeFromSuperview];
-                }
-                self.hud=nil;
-                self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-                [self.view.superview addSubview:self.hud];
-                [self.hud show:NO];
-                self.hud.labelText=@"权限不允许";
-                self.hud.mode=MBProgressHUDModeText;
-                self.hud.margin=10.f;
-                [self.hud show:YES];
-                [self.hud hide:YES afterDelay:1.0f];
+                [self.delegate showMessage:@"权限不允许"];
                 return;
                 
             }
@@ -317,18 +295,7 @@
             //            [self.qbDelegate uploadFiledId:f_id];
         {
             if (![self.roletype isEqualToString:@"2"]&&[self.f_id intValue]==0) {
-                if (self.hud) {
-                    [self.hud removeFromSuperview];
-                }
-                self.hud=nil;
-                self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-                [self.view.superview addSubview:self.hud];
-                [self.hud show:NO];
-                self.hud.labelText=@"权限不允许";
-                self.hud.mode=MBProgressHUDModeText;
-                self.hud.margin=10.f;
-                [self.hud show:YES];
-                [self.hud hide:YES afterDelay:1.0f];
+                [self.delegate showMessage:@"权限不允许"];
                 return;
             }
             

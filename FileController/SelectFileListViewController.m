@@ -45,6 +45,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [self updateFileList];
+    [self.toolbar setHidden:NO];
 }
 - (void)viewDidAppear:(BOOL)animated
 {

@@ -336,8 +336,9 @@
 {
     [self.update_button setHidden:NO];
     [self.state_label setText:@"请输入原密码"];
-    [self.password_error setTextColor:[UIColor grayColor]];
-    [self.password_error setText:@""];
+    PasswordList *list = [self selectList];
+    [self.password_error setTextColor:[UIColor redColor]];
+    [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
     self.password_textfield1.text = @"";
     self.password_textfield2.text = @"";
     self.password_textfield3.text = @"";

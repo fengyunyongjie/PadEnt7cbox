@@ -336,9 +336,18 @@
 {
     [self.update_button setHidden:NO];
     [self.state_label setText:@"请输入原密码"];
+    
     PasswordList *list = [self selectList];
-    [self.password_error setTextColor:[UIColor redColor]];
-    [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
+    if(list.p_fail_count == 5)
+    {
+        [self.password_error setTextColor:[UIColor grayColor]];
+        [self.password_error setText:@""];
+    }
+    else
+    {
+        [self.password_error setTextColor:[UIColor redColor]];
+        [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
+    }
     self.password_textfield1.text = @"";
     self.password_textfield2.text = @"";
     self.password_textfield3.text = @"";
@@ -366,8 +375,16 @@
     [self.update_button setHidden:NO];
     [self.state_label setText:@"请输入原密码"];
     PasswordList *list = [self selectList];
-    [self.password_error setTextColor:[UIColor redColor]];
-    [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
+    if(list.p_fail_count == 5)
+    {
+        [self.password_error setTextColor:[UIColor grayColor]];
+        [self.password_error setText:@""];
+    }
+    else
+    {
+        [self.password_error setTextColor:[UIColor redColor]];
+        [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
+    }
     self.password_textfield1.text = @"";
     self.password_textfield2.text = @"";
     self.password_textfield3.text = @"";
@@ -444,8 +461,16 @@
 {
     [self.state_label setText:@"请输入你的密码"];
     PasswordList *list = [self selectList];
-    [self.password_error setTextColor:[UIColor redColor]];
-    [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
+    if(list.p_fail_count == 5)
+    {
+        [self.password_error setTextColor:[UIColor grayColor]];
+        [self.password_error setText:@""];
+    }
+    else
+    {
+        [self.password_error setTextColor:[UIColor redColor]];
+        [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
+    }
     self.password_textfield1.text = @"";
     self.password_textfield2.text = @"";
     self.password_textfield3.text = @"";
@@ -458,8 +483,16 @@
 {
     [self.state_label setText:@"请输入你的密码"];
     PasswordList *list = [self selectList];
-    [self.password_error setTextColor:[UIColor redColor]];
-    [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
+    if(list.p_fail_count == 5)
+    {
+        [self.password_error setTextColor:[UIColor grayColor]];
+        [self.password_error setText:@""];
+    }
+    else
+    {
+        [self.password_error setTextColor:[UIColor redColor]];
+        [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
+    }
     self.password_textfield1.text = @"";
     self.password_textfield2.text = @"";
     self.password_textfield3.text = @"";
@@ -473,8 +506,16 @@
 {
     [self.state_label setText:@"请输入你的密码"];
     PasswordList *list = [self selectList];
-    [self.password_error setTextColor:[UIColor redColor]];
-    [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
+    if(list.p_fail_count == 5)
+    {
+        [self.password_error setTextColor:[UIColor grayColor]];
+        [self.password_error setText:@""];
+    }
+    else
+    {
+        [self.password_error setTextColor:[UIColor redColor]];
+        [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
+    }
     self.password_textfield2.text = @"";
     self.password_textfield3.text = @"";
     self.password_textfield4.text = @"";
@@ -485,8 +526,16 @@
 {
     [self.state_label setText:@"请输入你的密码"];
     PasswordList *list = [self selectList];
-    [self.password_error setTextColor:[UIColor redColor]];
-    [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
+    if(list.p_fail_count == 5)
+    {
+        [self.password_error setTextColor:[UIColor grayColor]];
+        [self.password_error setText:@""];
+    }
+    else
+    {
+        [self.password_error setTextColor:[UIColor redColor]];
+        [self.password_error setText:[NSString stringWithFormat:@"还可以尝试%i次",list.p_fail_count]];
+    }
     self.password_textfield1.text = @"";
     self.password_textfield2.text = @"";
     self.password_textfield3.text = @"";

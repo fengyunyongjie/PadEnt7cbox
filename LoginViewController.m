@@ -15,6 +15,9 @@
 #import "PConfig.h"
 #import "YNFunctions.h"
 #import "UserInfo.h"
+#import "MySplitViewController.h"
+#import "MyTabBarViewController.h"
+#import "UpDownloadViewController.h"
 
 BOOL isMustUpdate=NO;
 enum{
@@ -231,17 +234,18 @@ enum{
     [self.hud hide:YES afterDelay:1.0f];
     AppDelegate *app_delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app_delegate finishLogin];
-//    
-//    UINavigationController *NavigationController = [[app_delegate.myTabBarVC viewControllers] objectAtIndex:1];
-//    UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
-//    if([uploadView isKindOfClass:[UpDownloadViewController class]])
-//    {
-//        [app_delegate.uploadmanage.uploadArray removeAllObjects];
-//        [uploadView.upLoaded_array removeAllObjects];
-//        
-//        [app_delegate.downmange.downingArray removeAllObjects];
-//        [uploadView.downLoaded_array removeAllObjects];
-//    }
+    
+    MyTabBarViewController *tabbar = [app_delegate.splitVC.viewControllers firstObject];
+    UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
+    UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
+    if([uploadView isKindOfClass:[UpDownloadViewController class]])
+    {
+        [app_delegate.uploadmanage.uploadArray removeAllObjects];
+        [uploadView.upLoaded_array removeAllObjects];
+        
+        [app_delegate.downmange.downingArray removeAllObjects];
+        [uploadView.downLoaded_array removeAllObjects];
+    }
 }
 -(void)loginUnsucceed:(NSDictionary *)datadic
 {

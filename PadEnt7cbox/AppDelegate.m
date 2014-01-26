@@ -102,16 +102,16 @@ typedef enum{
     {
         [self deleteView];
     }
+    if([self isOpenLock])
+    {
+        [self showLoceView];
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [self checkUpdate];
     [musicPlayer stopPlay];
-    if([self isOpenLock])
-    {
-        [self showLoceView];
-    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

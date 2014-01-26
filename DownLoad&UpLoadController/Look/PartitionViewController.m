@@ -326,6 +326,12 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    int imagePage = imageScrollView.contentOffset.x/currWidth;
+    if(self.page != imagePage)
+    {
+        [self scrollViewWillBeginDragging:scrollView];
+    }
+    
     self.page = imageScrollView.contentOffset.x/currWidth;
     currPage = self.page;
     

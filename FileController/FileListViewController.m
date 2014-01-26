@@ -3039,18 +3039,6 @@ typedef enum{
         [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
         [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
     }
-    else if(self.listArray.count ==0)
-    {
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-        if([detailView isKindOfClass:[DetailViewController class]])
-        {
-            DetailViewController *viewCon = (DetailViewController *)detailView;
-            viewCon.isFileManager = YES;
-            [viewCon removeAllView];
-        }
-    }
 }
 
 @end

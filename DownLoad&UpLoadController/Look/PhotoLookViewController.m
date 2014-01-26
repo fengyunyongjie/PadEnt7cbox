@@ -319,6 +319,12 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    int imagePage = imageScrollView.contentOffset.x/currWidth;
+    if(self.page != imagePage)
+    {
+        [self scrollViewWillBeginDragging:scrollView];
+    }
+    
     self.page = imageScrollView.contentOffset.x/currWidth;
     
     currPage = self.page;
@@ -355,7 +361,7 @@
 {
     [self.topToolBar setHidden:YES];
     [self.bottonToolBar setHidden:YES];
-    
+    NSLog(@"scrollViewWillBeginDragging:%f",imageScrollView.contentOffset.x/currWidth);
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     
         if(isLoadImage)
@@ -771,6 +777,7 @@
             [s addSubview:activity_indicator];
             [activity_indicator startAnimating];
             [activityDic addObject:activity_indicator];
+            NSLog(@"添加加载符：%i",i);
         }
         [imageScrollView addSubview:s];
     }

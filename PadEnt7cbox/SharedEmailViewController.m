@@ -239,6 +239,10 @@
 	[_tokenFieldView becomeFirstResponder];
     [self getEmailTemplate];
 }
+- (void)viewWillLayoutSubviews
+{
+    [self reloadFiles];
+}
 - (void)getEmailTemplate
 {
     self.em=[[SCBEmailManager alloc] init];
@@ -259,10 +263,11 @@
     UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(10, 5, _filesView.bounds.size.width-20, 21)];
     label.text=@"分享内容";
     [_filesView addSubview:label];
+    int numEveryRow=self.view.bounds.size.width/120;
     for (int i=0; i<self.fileArray.count; i++) {
-        int row=i/4;
-        int column=i%4;
-        FileView *fv=[[FileView alloc] initWithFrame:CGRectMake(column*(self.view.bounds.size.width/4), row*(100)+30, self.view.bounds.size.width/4, 100)];
+        int row=i/numEveryRow;
+        int column=i%numEveryRow;
+        FileView *fv=[[FileView alloc] initWithFrame:CGRectMake(column*(self.view.bounds.size.width/numEveryRow), row*(100)+30, self.view.bounds.size.width/numEveryRow, 100)];
         [fv setDic:[self.fileArray objectAtIndex:i]];
         [fv setIndex:i];
         [fv addTarget:self action:@selector(fileTouch:) forControlEvents:UIControlEventTouchUpInside];
@@ -270,7 +275,7 @@
         [_filesView addSubview:fv];
     }
     
-	CGFloat newHeight = (self.fileArray.count/4+1)*100+40;
+	CGFloat newHeight = (self.fileArray.count/numEveryRow+1)*100+40;
 	
 	CGRect newTextFrame = _tokenFieldView.contentView2.frame;
 	newTextFrame.size.height = newHeight;

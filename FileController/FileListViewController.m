@@ -67,6 +67,7 @@ typedef enum{
 @property (strong,nonatomic) UIBarButtonItem *backBarButtonItem;
 @property (strong,nonatomic) UILabel * notingLabel;
 @property (strong,nonatomic) UIView *nothingView;
+@property (strong,nonatomic) NSArray *selectedFIDs;
 @end
 
 @implementation FileListViewController
@@ -262,6 +263,9 @@ typedef enum{
 #pragma mark - 操作方法
 - (void)updateFileList
 {
+    if (self.tableView.isEditing) {
+        self.selectedFIDs=[self selectedIDs];
+    }
     //加载本地缓存文件
     NSString *dataFilePath=[YNFunctions getDataCachePath];
     dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:[NSString stringWithFormat:@"%@_%@",self.spid,self.f_id]]];
@@ -1426,6 +1430,18 @@ typedef enum{
     if (self.listArray) {
         NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
         NSString *fid_ = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
+        if (self.tableView.isEditing) {
+            BOOL isSelectThis=NO;
+            for (NSString *str in self.selectedFIDs) {
+                if ([str intValue]==[fid_ intValue]) {
+                    isSelectThis=YES;
+                    break;
+                }
+            }
+            if (isSelectThis) {
+                [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+            }
+        }
         if([fid_ isEqualToString:tableViewSelectedFid] && !self.tableView.editing)
         {
             [cell setSelected:YES animated:YES];
@@ -2227,6 +2243,9 @@ typedef enum{
 }
 -(void)openFinderSucess:(NSDictionary *)datadic
 {
+    if (self.tableView.isEditing) {
+        self.selectedFIDs=[self selectedIDs];
+    }
     self.dataDic=datadic;
     if (self.dataDic) {
         self.listArray=(NSArray *)[self.dataDic objectForKey:@"files"];
@@ -2566,7 +2585,21 @@ typedef enum{
     IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:indexPath];
     if (iconDownloader != nil)
     {
+        BOOL isSelect=NO;
+        if (self.tableView.editing) {
+            NSArray *array=[self selectedIndexPaths];
+            for (NSIndexPath *index in array) {
+                if (iconDownloader.indexPathInTableView.row==index.row) {
+                    isSelect=YES;
+                }
+            }
+            self.selectedFIDs=[self selectedIDs];
+        }
         [self.tableView reloadRowsAtIndexPaths:@[iconDownloader.indexPathInTableView] withRowAnimation:UITableViewRowAnimationNone];
+        if (self.tableView.editing&&isSelect) {
+            [self.tableView selectRowAtIndexPath:iconDownloader.indexPathInTableView animated:NO scrollPosition:UITableViewScrollPositionNone];
+        }
+        
     }
     
     // Remove the IconDownloader from the in progress list.

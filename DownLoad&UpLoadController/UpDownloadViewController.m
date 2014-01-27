@@ -51,6 +51,7 @@
     [super viewDidLoad];
     self.imageDownloadsInProgress = [[NSMutableDictionary alloc] init];
     selectTableViewRow = -1;
+    self.isMultEditing=NO;
 //    UISwipeGestureRecognizer *recognizer;
 //    
 //    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(rightSwipeFrom)];
@@ -257,7 +258,7 @@
     [self updateLoadData];
     
     BOOL isHideTabBar=self.table_view.editing;
-    
+    self.isMultEditing=self.table_view.editing;
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UIApplication *app = [UIApplication sharedApplication];
     if(isHideTabBar || app.applicationIconBadgeNumber==0)
@@ -1404,7 +1405,7 @@
 #pragma mark - Table view delegate
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (table_view.isEditing) {
+    if (self.isMultEditing) {
         return UITableViewCellEditingStyleDelete | UITableViewCellEditingStyleInsert;
     }
     return UITableViewCellEditingStyleDelete;

@@ -38,6 +38,7 @@
 @property(strong,nonatomic) UILabel *notingLabel;
 @property(strong,nonatomic) UIButton *btn_del;
 @property(strong,nonatomic) NSString *selectTableViewFid;
+@property(assign,nonatomic) BOOL isMultEditing;
 
 -(void)isSelectedLeft:(BOOL)bl;
 -(void)updateCount:(NSString *)upload_count downCount:(NSString *)down_count;

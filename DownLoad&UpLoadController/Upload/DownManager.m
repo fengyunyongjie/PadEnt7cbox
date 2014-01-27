@@ -216,7 +216,10 @@
         FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
         if([fileList isKindOfClass:[FileListViewController class]])
         {
-            [fileList.tableView reloadData];
+            if(!fileList.tableView.isEditing)
+            {
+                [fileList.tableView reloadData];
+            }
             break;
         }
     }

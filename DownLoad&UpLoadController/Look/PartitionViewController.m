@@ -349,7 +349,7 @@
         [downImage startDownload];
         });
     }
-    return;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];

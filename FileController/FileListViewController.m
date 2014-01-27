@@ -1611,7 +1611,7 @@ typedef enum{
         if(bl)
         {
             //查询本地是否已经有该图片
-            BOOL bl = [NSString image_exists_FM_file_path:file_path];
+            bl = [NSString image_exists_FM_file_path:file_path];
             if(bl)
             {
                 NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:file_path];

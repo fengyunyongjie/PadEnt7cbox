@@ -1617,6 +1617,10 @@ typedef enum{
                 NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:file_path];
                 bl = fileSize==[[handle availableData] length];
             }
+            else
+            {
+                bl = FALSE;
+            }
         }
         if(bl)
         {

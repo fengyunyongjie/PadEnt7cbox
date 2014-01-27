@@ -248,7 +248,17 @@
         DownList *down = (DownList *)[downingArray objectAtIndex:0];
         down.curr_size = downSize;
     }
-    [self updateTable];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
+        UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
+        if([uploadView isKindOfClass:[UpDownloadViewController class]])
+        {
+            //更新UI
+            [uploadView updateJinduData];
+        }
+    });
 }
 
 -(void)didFailWithError

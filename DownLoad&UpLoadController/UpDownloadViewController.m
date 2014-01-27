@@ -1956,4 +1956,34 @@
     });
 }
 
+-(void)updateJinduData
+{
+    if(isShowUpload)
+    {
+        if(self.table_view.visibleCells.count>0)
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            UploadViewCell *cell = (UploadViewCell *)[self.table_view cellForRowAtIndexPath:indexPath];
+            if(self.upLoading_array.count>0)
+            {
+                UpLoadList *list = [self.upLoading_array objectAtIndex:0];
+                [cell setUploadDemo:list];
+            }
+        }
+    }
+    else
+    {
+        if(self.table_view.visibleCells.count>0)
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            UploadViewCell *cell = (UploadViewCell *)[self.table_view cellForRowAtIndexPath:indexPath];
+            if(self.downLoading_array.count>0)
+            {
+                DownList *list = [self.downLoading_array objectAtIndex:0];
+                [cell setDownDemo:list];
+            }
+        }
+    }
+}
+
 @end

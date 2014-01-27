@@ -50,5 +50,6 @@
 //显示数据正在加载中....
 -(void)showLoadData;
 -(void)updateSelected;
+-(void)updateJinduData;
 
 @end

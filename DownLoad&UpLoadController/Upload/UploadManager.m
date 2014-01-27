@@ -318,7 +318,17 @@
         list.sudu = (int)sudu;
         float f = (float)list.upload_size / (float)list.t_lenght;
         NSLog(@"上传进度:%f",f);
-        [self updateTable];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+            UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
+            UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
+            if([uploadView isKindOfClass:[UpDownloadViewController class]])
+            {
+                //更新UI
+                [uploadView updateJinduData];
+            }
+        });
     }
 }
 

@@ -23,7 +23,7 @@ typedef enum{
 }kAlertType;
 @implementation AppDelegate
 @synthesize lockScreen,localV;
-@synthesize downmange,myTabBarVC,loginVC,uploadmanage,isStopUpload,musicPlayer,file_url,isConnection,space_id,space_name,old_file_url;
+@synthesize downmange,myTabBarVC,loginVC,uploadmanage,isStopUpload,musicPlayer,file_url,isConnection,space_id,space_name,old_file_url,action_array;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -38,6 +38,7 @@ typedef enum{
     }
     
     //初始化数据
+    action_array = [[NSMutableArray alloc] init];
     downmange = [[DownManager alloc] init];
     uploadmanage = [[UploadManager alloc] init];
     UIApplication *app = [UIApplication sharedApplication];

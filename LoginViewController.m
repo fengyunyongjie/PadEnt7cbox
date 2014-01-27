@@ -97,8 +97,9 @@ enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     
     BOOL rt = YES;
     NSString *loginName = self.userNameTextField.text;
@@ -159,8 +160,9 @@ enum{
             [self.hud removeFromSuperview];
         }
         self.hud=nil;
-        self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-        [self.view.superview addSubview:self.hud];
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+        [appDelegate.window addSubview:self.hud];
         self.hud.labelText=@"正在登录...";
         self.hud.mode=MBProgressHUDModeIndeterminate;
         [self.hud show:YES];
@@ -184,8 +186,9 @@ enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";
@@ -224,8 +227,9 @@ enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"登录成功！";
     self.hud.mode=MBProgressHUDModeText;
@@ -253,8 +257,9 @@ enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"用户名或密码错误";
     int code=[[datadic objectForKey:@"code"] intValue];

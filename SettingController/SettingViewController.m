@@ -61,6 +61,17 @@ typedef enum{
 
 @implementation SettingViewController
 
+//<ios 6.0
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return YES;
+}
+
+//>ios 6.0
+- (BOOL)shouldAutorotate{
+    return YES;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -206,6 +217,8 @@ typedef enum{
                 [actionSheet setTag:kActionSheetTypeWiFi];
                 [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
                 [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                [app.action_array addObject:actionSheet];
             }else
             {
                 [YNFunctions setIsOnlyWifi:YES];
@@ -281,6 +294,8 @@ typedef enum{
     [actionSheet setTag:kActionSheetTypeExit];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array addObject:actionSheet];
 }
 -(void)checkUpdate
 {
@@ -300,8 +315,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"正在导入……";
     self.hud.mode=MBProgressHUDModeIndeterminate;
@@ -837,6 +853,8 @@ typedef enum{
                     [actionSheet setTag:kActionSheetTypeInContent];
                     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
                     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+                    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                    [app.action_array addObject:actionSheet];
                 }
                     break;
                 default:
@@ -978,6 +996,9 @@ typedef enum{
 #pragma mark - UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array removeAllObjects];
+    
     switch ([actionSheet tag]) {
         case kActionSheetTypeExit:
             if (buttonIndex == 0) {
@@ -1028,8 +1049,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";
@@ -1208,8 +1230,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=message;
     self.hud.mode=MBProgressHUDModeText;
@@ -1268,8 +1291,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"导入失败";
     self.hud.mode=MBProgressHUDModeText;
@@ -1284,8 +1308,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"正在导入……";
     self.hud.mode=MBProgressHUDModeIndeterminate;
@@ -1426,6 +1451,34 @@ typedef enum{
         return YES;
     }
     return NO;
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+//视图旋转完成之后自动调用
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIActionSheet *actionsheet = [app.action_array lastObject];
+    if(actionsheet)
+    {
+        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
+        [actionsheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }
+}
+
+-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    CGRect self_rect = self.tableView.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        self_rect.size.height = 768;
+    }
+    else
+    {
+        self_rect.size.height = 1024;
+    }
+    [self.tableView setFrame:self_rect];
 }
 
 @end

@@ -10,6 +10,7 @@
 #import "YNFunctions.h"
 #import "SCBAccountManager.h"
 #import "MBProgressHUD.h"
+#import "AppDelegate.h"
 
 @implementation FileItem
 
@@ -235,8 +236,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";

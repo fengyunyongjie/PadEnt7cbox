@@ -349,7 +349,8 @@
         [downImage startDownload];
         });
     }
-    
+    return;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
     UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
@@ -369,7 +370,9 @@
                 if([fileList isKindOfClass:[FileListViewController class]])
                 {
                     fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:demo.d_file_id];
+                    dispatch_async(dispatch_get_main_queue(), ^{
                     [fileList updateSelected];
+                    });
                     break;
                 }
             }
@@ -385,12 +388,15 @@
                 if([upDownLoad isKindOfClass:[UpDownloadViewController class]])
                 {
                     upDownLoad.selectTableViewFid = [NSString formatNSStringForOjbect:demo.d_file_id];
+                    dispatch_async(dispatch_get_main_queue(), ^{
                     [upDownLoad updateSelected];
+                    });
                     break;
                 }
             }
         }
     }
+    });
 }
 
 #pragma mark 滑动隐藏
@@ -969,7 +975,8 @@
              UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"是否要保存至照片库" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil, nil];
              [actionSheet setTag:kActionSheetTagClicp];
              [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-             [actionSheet showInView:app.window];
+             [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+             [app.action_array addObject:actionSheet];
          }
      }
      failureBlock:^(NSError *error)
@@ -977,7 +984,8 @@
          UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"是否要保存至照片库" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil, nil];
          [actionSheet setTag:kActionSheetTagClicp];
          [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-         [actionSheet showInView:app.window];
+         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+         [app.action_array addObject:actionSheet];
      }];
 }
 
@@ -990,11 +998,16 @@
     [actionSheet setTag:kActionSheetTagShare];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array addObject:actionSheet];
 }
 
 #pragma mark UIActionSheetDelegate
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array removeAllObjects];
+    
     if(actionSheet.tag == kActionSheetTagShare)
     {
         int page = self.page;
@@ -1042,12 +1055,16 @@
                 self.fm.delegate=self;
                 [self.fm removeFileWithIDs:@[demo.d_file_id]];
             }
-            [self updateViewBounds:self.view];
-            hud = [[MBProgressHUD alloc] initWithView:self.view];
-            [self.view addSubview:hud];
-            hud.mode=MBProgressHUDModeIndeterminate;
-            hud.labelText=@"正在删除";
-            [hud show:YES];
+            if (self.hud) {
+                [self.hud removeFromSuperview];
+            }
+            self.hud = nil;
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+            [appDelegate.window addSubview:hud];
+            self.hud.mode=MBProgressHUDModeIndeterminate;
+            self.hud.labelText=@"正在删除";
+            [self.hud show:YES];
         }
     }
     else if (actionSheet.tag == kActionSheetTagClicp)
@@ -1075,32 +1092,15 @@
     }
 }
 
--(void)updateViewBounds:(UIView *)selfView
-{
-    CGRect rect = selfView.frame;
-    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        rect.size.width = 1024-320;
-        rect.size.height = 768;
-    }
-    else
-    {
-        rect.size.width = 768-320;
-        rect.size.height = 1024;
-    }
-    selfView.frame = rect;
-}
-
 -(void)networkError
 {
     if (self.hud) {
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    [self updateViewBounds:self.view];
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";
     self.hud.mode=MBProgressHUDModeText;
@@ -1162,10 +1162,9 @@
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"是否要删除选中的内容" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil, nil];
     [actionSheet setTag:kActionSheetTagDelete];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
-//    [tabbar.view.superview addSubview:self.jindu_control];
-    [actionSheet showInView:tabbar.view];
+    [app.action_array addObject:actionSheet];
 }
 
 #pragma mark UIAalertViewDelegate
@@ -1185,14 +1184,18 @@
 {
     if([[dictionary objectForKey:@"code"] intValue] == 0)
     {
-        [self updateViewBounds:self.view];
-        hud = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:hud];
-        hud.labelText=@"下载成功";
-        hud.mode=MBProgressHUDModeText;
-        [hud show:YES];
-        [hud hide:YES afterDelay:0.8f];
-        hud = nil;
+        if (self.hud) {
+            [self.hud removeFromSuperview];
+        }
+        self.hud = nil;
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+        [appDelegate.window addSubview:hud];
+        self.hud.labelText=@"下载成功";
+        self.hud.mode=MBProgressHUDModeText;
+        [self.hud show:YES];
+        [self.hud hide:YES afterDelay:0.8f];
+        self.hud = nil;
     }
 }
 
@@ -1219,9 +1222,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    [self updateViewBounds:self.view];
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";
     self.hud.mode=MBProgressHUDModeText;
@@ -1510,9 +1513,9 @@
             [self.hud removeFromSuperview];
         }
         self.hud=nil;
-        [self updateViewBounds:self.view];
-        self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-        [self.view.superview addSubview:self.hud];
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+        [appDelegate.window addSubview:self.hud];
         [self.hud show:NO];
         self.hud.labelText=@"已经复制成功";
         self.hud.mode=MBProgressHUDModeText;
@@ -1528,9 +1531,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    [self updateViewBounds:self.view];
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     if (error_info==nil||[error_info isEqualToString:@""]) {
         self.hud.labelText=@"获取外链失败";
@@ -1774,6 +1777,13 @@
     [UIView animateWithDuration:0.0 animations:^{
         [self scrollViewDidEndDecelerating:imageScrollView];
     }];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIActionSheet *actionsheet = [app.action_array lastObject];
+    if(actionsheet)
+    {
+        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
+        [actionsheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }
 }
 //视图旋转动画前一半发生之后自动调用
 

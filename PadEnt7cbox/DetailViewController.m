@@ -309,6 +309,8 @@
             [actionSheet setTag:kActionSheetDeleteFile];
             [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
             [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            [app.action_array addObject:actionSheet];
             break;
         }
     }
@@ -317,6 +319,17 @@
 //视图旋转之前自动调用
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+
+//视图旋转完成之后自动调用
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIActionSheet *actionsheet = [app.action_array lastObject];
+    if(actionsheet)
+    {
+        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
+        [actionsheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }
 }
 
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -505,6 +518,9 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array removeAllObjects];
+    
     if(buttonIndex == 0)
     {
         [self deleteCurrFile];
@@ -545,23 +561,6 @@
     self.hud.margin=10.f;
     [self.hud show:YES];
     [self.hud hide:YES afterDelay:1.0f];
-}
-
--(void)updateViewBounds:(UIView *)selfView
-{
-    CGRect rect = selfView.frame;
-    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        rect.size.width = 1024;
-        rect.size.height = 768;
-    }
-    else
-    {
-        rect.size.width = 768;
-        rect.size.height = 1024;
-    }
-    selfView.frame = rect;
 }
 
 @end

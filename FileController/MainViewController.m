@@ -128,7 +128,8 @@
     [actionSheet setTag:1];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
-    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array addObject:actionSheet];
     //    QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
     //    imagePickerController.delegate = self;
     //    imagePickerController.allowsMultipleSelection = YES;
@@ -563,8 +564,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";
@@ -577,6 +579,9 @@
 #pragma mark - UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array removeAllObjects];
+    
     switch ([actionSheet tag]) {
         case 1:
         {
@@ -669,6 +674,17 @@
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
+
+//视图旋转完成之后自动调用
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIActionSheet *actionsheet = [app.action_array lastObject];
+    if(actionsheet)
+    {
+        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
+        [actionsheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }
 }
 
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation

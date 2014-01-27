@@ -48,7 +48,44 @@
         fileImage_rect.origin.y = (1024-44-100-40)/2;
     }
     self.fileImageView = [[UIImageView alloc] initWithFrame:fileImage_rect];
-    [self.fileImageView setImage:[UIImage imageNamed:@"file_other.png"]];
+    
+    NSString *fname=[dataDic objectForKey:@"fname"];
+    NSString *fmime=[[fname pathExtension] lowercaseString];
+    UIImage *fileImage = nil;
+    if ([fmime isEqualToString:@"doc"]||
+        [fmime isEqualToString:@"docx"]||
+        [fmime isEqualToString:@"rtf"])
+    {
+        fileImage = [UIImage imageNamed:@"file_word.png"];
+    }
+    else if ([fmime isEqualToString:@"xls"]||
+             [fmime isEqualToString:@"xlsx"])
+    {
+        fileImage = [UIImage imageNamed:@"file_excel.png"];
+    }else if ([fmime isEqualToString:@"mp3"])
+    {
+        fileImage = [UIImage imageNamed:@"file_music.png"];
+    }else if ([fmime isEqualToString:@"mov"]||
+              [fmime isEqualToString:@"mp4"]||
+              [fmime isEqualToString:@"avi"]||
+              [fmime isEqualToString:@"rmvb"])
+    {
+        fileImage = [UIImage imageNamed:@"file_moving.png"];
+    }else if ([fmime isEqualToString:@"pdf"])
+    {
+        fileImage = [UIImage imageNamed:@"file_pdf.png"];
+    }else if ([fmime isEqualToString:@"ppt"]||
+              [fmime isEqualToString:@"pptx"])
+    {
+        fileImage = [UIImage imageNamed:@"file_ppt.png"];
+    }else if([fmime isEqualToString:@"txt"])
+    {
+        fileImage = [UIImage imageNamed:@"file_txt.png"];
+    }else
+    {
+        fileImage = [UIImage imageNamed:@"file_other.png"];
+    }
+    [self.fileImageView setImage:fileImage];
     [self.view addSubview:self.fileImageView];
     
     CGRect fileName_rect = CGRectMake(fileImage_rect.origin.x, fileImage_rect.origin.y+120, 400, 20);

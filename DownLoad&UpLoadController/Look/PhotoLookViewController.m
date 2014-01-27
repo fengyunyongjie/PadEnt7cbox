@@ -953,11 +953,16 @@
     [actionSheet setTag:kActionSheetTagShare];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array addObject:actionSheet];
 }
 
 #pragma mark UIActionSheetDelegate
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array removeAllObjects];
+    
     if(actionSheet.tag == kActionSheetTagShare)
     {
         int page = [[[self.topTitleLabel.text componentsSeparatedByString:@"/"] objectAtIndex:0] intValue]-1;
@@ -1005,11 +1010,16 @@
                 self.fm.delegate=self;
                 [self.fm removeFileWithIDs:@[demo.d_file_id]];
             }
-            hud = [[MBProgressHUD alloc] initWithView:self.view];
-            [self.view addSubview:hud];
-            hud.mode=MBProgressHUDModeIndeterminate;
-            hud.labelText=@"正在删除";
-            [hud show:YES];
+            if (self.hud) {
+                [self.hud removeFromSuperview];
+            }
+            self.hud = nil;
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+            [appDelegate.window addSubview:hud];
+            self.hud.mode=MBProgressHUDModeIndeterminate;
+            self.hud.labelText=@"正在删除";
+            [self.hud show:YES];
         }
     }
 }
@@ -1020,8 +1030,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";
     self.hud.mode=MBProgressHUDModeText;
@@ -1084,6 +1095,8 @@
     [actionSheet setTag:kActionSheetTagDelete];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:self.imageScrollView];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array addObject:actionSheet];
 }
 
 #pragma mark UIAalertViewDelegate
@@ -1103,13 +1116,18 @@
 {
     if([[dictionary objectForKey:@"code"] intValue] == 0)
     {
-        hud = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:hud];
-        hud.labelText=@"下载成功";
-        hud.mode=MBProgressHUDModeText;
-        [hud show:YES];
-        [hud hide:YES afterDelay:0.8f];
-        hud = nil;
+        if (self.hud) {
+            [self.hud removeFromSuperview];
+        }
+        self.hud = nil;
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+        [appDelegate.window addSubview:hud];
+        self.hud.labelText=@"下载成功";
+        self.hud.mode=MBProgressHUDModeText;
+        [self.hud show:YES];
+        [self.hud hide:YES afterDelay:0.8f];
+        self.hud = nil;
     }
 }
 
@@ -1136,8 +1154,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";
     self.hud.mode=MBProgressHUDModeText;
@@ -1349,8 +1368,9 @@
             [self.hud removeFromSuperview];
         }
         self.hud=nil;
-        self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-        [self.view.superview addSubview:self.hud];
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+        [appDelegate.window addSubview:self.hud];
         [self.hud show:NO];
         self.hud.labelText=@"已经复制成功";
         self.hud.mode=MBProgressHUDModeText;
@@ -1366,8 +1386,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     if (error_info==nil||[error_info isEqualToString:@""]) {
         self.hud.labelText=@"获取外链失败";
@@ -1594,6 +1615,13 @@
     [UIView animateWithDuration:0.0 animations:^{
         [self scrollViewDidEndDecelerating:imageScrollView];
     }];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIActionSheet *actionsheet = [app.action_array lastObject];
+    if(actionsheet)
+    {
+        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
+        [actionsheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }
 }
 //视图旋转动画前一半发生之后自动调用
 

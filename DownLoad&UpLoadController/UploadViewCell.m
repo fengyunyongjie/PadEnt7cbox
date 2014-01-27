@@ -139,7 +139,7 @@
                 NSRange range = [fmime rangeOfString:@"."];
                 if(range.length>0)
                 {
-                    fmime = [fmime substringFromIndex:range.location+1];
+                    fmime = [[fmime substringFromIndex:range.location+1] lowercaseString];
                     if ([fmime isEqualToString:@"png"]||
                         [fmime isEqualToString:@"jpg"]||
                         [fmime isEqualToString:@"jpeg"]||
@@ -185,7 +185,7 @@
                     NSRange range = [fmime rangeOfString:@"."];
                     if(range.length>0)
                     {
-                        fmime = [fmime substringFromIndex:range.location+1];
+                        fmime = [[fmime substringFromIndex:range.location+1] lowercaseString];
                         if ([fmime isEqualToString:@"png"]||
                             [fmime isEqualToString:@"jpg"]||
                             [fmime isEqualToString:@"jpeg"]||

@@ -106,7 +106,8 @@
     [actionSheet setTag:kActionSheetTagUpload];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
-    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array addObject:actionSheet];
 //    QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
 //    imagePickerController.delegate = self;
 //    imagePickerController.allowsMultipleSelection = YES;
@@ -402,6 +403,8 @@
             [actionSheet setTag:kActionSheetTagAllDelete];
             [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
             [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            [app.action_array addObject:actionSheet];
         }
     }
 }
@@ -1537,6 +1540,9 @@
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array removeAllObjects];
+    
     if(actionSheet.tag == kActionSheetTagDelete && buttonIndex == 0)
     {
         [self deleteList];
@@ -1861,6 +1867,17 @@
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 
+//视图旋转完成之后自动调用
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIActionSheet *actionsheet = [app.action_array lastObject];
+    if(actionsheet)
+    {
+        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
+        [actionsheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }
+}
+
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
     CGRect table_rect = self.table_view.frame;
@@ -1907,16 +1924,34 @@
         }
         if(!isHave)
         {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:selectTableViewRow inSection:selectTableviewSection];
-            [self tableView:self.table_view didSelectRowAtIndexPath:indexPath];
-            [self.table_view selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+            DownList *list = [downLoaded_array objectAtIndex:selectTableViewRow];
+            NSString *fmime=[[list.d_name pathExtension] lowercaseString];
+            if ([fmime isEqualToString:@"png"]||
+                [fmime isEqualToString:@"jpg"]||
+                [fmime isEqualToString:@"jpeg"]||
+                [fmime isEqualToString:@"bmp"]||
+                [fmime isEqualToString:@"gif"])
+            {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:selectTableViewRow inSection:selectTableviewSection];
+                [self tableView:self.table_view didSelectRowAtIndexPath:indexPath];
+                [self.table_view selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+            }
         }
     }
     else if(selectTableViewRow!=-1 && self.downLoaded_array.count>self.table_view.visibleCells.count-1)
     {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.table_view.visibleCells.count-1 inSection:selectTableviewSection];
-        [self tableView:self.table_view didSelectRowAtIndexPath:indexPath];
-        [self.table_view selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+        DownList *list = [downLoaded_array objectAtIndex:self.table_view.visibleCells.count-1];
+        NSString *fmime=[[list.d_name pathExtension] lowercaseString];
+        if ([fmime isEqualToString:@"png"]||
+            [fmime isEqualToString:@"jpg"]||
+            [fmime isEqualToString:@"jpeg"]||
+            [fmime isEqualToString:@"bmp"]||
+            [fmime isEqualToString:@"gif"])
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.table_view.visibleCells.count-1 inSection:selectTableviewSection];
+            [self tableView:self.table_view didSelectRowAtIndexPath:indexPath];
+            [self.table_view selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+        }
     }
     });
 }

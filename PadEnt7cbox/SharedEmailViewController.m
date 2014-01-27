@@ -285,6 +285,8 @@
     UIActionSheet *as=[[UIActionSheet alloc] initWithTitle:fv.nameLabel.text delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"删除" otherButtonTitles:nil, nil];
     [as setTag:fv.index];
     [as showInView:[[UIApplication sharedApplication] keyWindow]];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array addObject:as];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -302,6 +304,13 @@
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 	[self resizeViews];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIActionSheet *actionsheet = [app.action_array lastObject];
+    if(actionsheet)
+    {
+        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
+        [actionsheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }
 }
 
 - (void)showContactsPicker:(id)sender {
@@ -495,8 +504,9 @@
             [self.hud removeFromSuperview];
         }
         self.hud=nil;
-        self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-        [self.view.superview addSubview:self.hud];
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+        [appDelegate.window addSubview:self.hud];
         [self.hud show:NO];
         self.hud.labelText=@"收件人数量不能超过10个";
         //self.hud.labelText=error_info;
@@ -512,8 +522,9 @@
             [self.hud removeFromSuperview];
         }
         self.hud=nil;
-        self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-        [self.view.superview addSubview:self.hud];
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+        [appDelegate.window addSubview:self.hud];
         [self.hud show:NO];
         self.hud.labelText=@"请填写主题";
         //self.hud.labelText=error_info;
@@ -528,8 +539,9 @@
             [self.hud removeFromSuperview];
         }
         self.hud=nil;
-        self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-        [self.view.superview addSubview:self.hud];
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+        [appDelegate.window addSubview:self.hud];
         [self.hud show:NO];
         self.hud.labelText=@"请填写收件人";
         //self.hud.labelText=error_info;
@@ -586,8 +598,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"正在发送...";
     //self.hud.labelText=error_info;
@@ -608,6 +621,9 @@
 #pragma mark - UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array removeAllObjects];
+    
     int tag=actionSheet.tag;
     if (tag>=0) {
         if (buttonIndex==0) {
@@ -615,6 +631,8 @@
                 UIActionSheet *as=[[UIActionSheet alloc] initWithTitle:@"至少要分享一个文件" delegate:nil cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"确定", nil];
                 [as setTag:-1];
                 [as showInView:[[UIApplication sharedApplication] keyWindow]];
+                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                [app.action_array addObject:as];
                 return;
             }
             //删除选中文件！
@@ -635,8 +653,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"分享成功";
     //self.hud.labelText=error_info;
@@ -652,8 +671,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"发送失败";
     //self.hud.labelText=error_info;
@@ -668,8 +688,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";
@@ -689,4 +710,5 @@
 {
     
 }
+
 @end

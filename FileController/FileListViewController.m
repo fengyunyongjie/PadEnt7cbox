@@ -537,7 +537,8 @@ typedef enum{
     [actionSheet setTag:kActionSheetTagUpload];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
-    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array addObject:actionSheet];
 //    QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
 //    AppDelegate *app_delegate = [[UIApplication sharedApplication] delegate];
 //    app_delegate.file_url = [NSString formatNSStringForOjbect:app_delegate.old_file_url];
@@ -854,6 +855,8 @@ typedef enum{
     [actionSheet setTag:kActionSheetTagSort];
     [actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array addObject:actionSheet];
 }
 -(void)toMore:(id)sender
 {
@@ -864,6 +867,8 @@ typedef enum{
         [actionSheet setTag:kActionSheetTagMore];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [app.action_array addObject:actionSheet];
     }else
     {
         //企业空间;
@@ -871,6 +876,8 @@ typedef enum{
         [actionSheet setTag:kActionSheetTagMore];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [app.action_array addObject:actionSheet];
     }
 }
 -(void)toRename:(id)sender
@@ -916,6 +923,8 @@ typedef enum{
     [actionSheet setTag:kActionSheetTagDeleteOne];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array addObject:actionSheet];
 }
 -(void)toCommitOrResave:(id)sender
 {
@@ -2698,6 +2707,9 @@ typedef enum{
 #pragma mark - UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array removeAllObjects];
+    
     switch ([actionSheet tag]) {
         case kActionSheetTagSort:
         {
@@ -2939,6 +2951,17 @@ typedef enum{
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 
+//视图旋转完成之后自动调用
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIActionSheet *actionsheet = [app.action_array lastObject];
+    if(actionsheet)
+    {
+        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
+        [actionsheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }
+}
+
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
     CGRect view_rect = self.view.frame;
@@ -3040,16 +3063,38 @@ typedef enum{
         }
         if(!isHave)
         {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:tableViewSelectedTag inSection:0];
-            [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
-            [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+            NSDictionary *dic=[self.listArray objectAtIndex:tableViewSelectedTag];
+            NSString *fname=[dic objectForKey:@"fname"];
+            NSString *fmime=[[fname pathExtension] lowercaseString];
+            NSLog(@"fmime:%@",fmime);
+            if ([fmime isEqualToString:@"png"]||
+                [fmime isEqualToString:@"jpg"]||
+                [fmime isEqualToString:@"jpeg"]||
+                [fmime isEqualToString:@"bmp"]||
+                [fmime isEqualToString:@"gif"])
+            {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:tableViewSelectedTag inSection:0];
+                [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+            }
         }
     }
     else if(tableViewSelectedTag!=-1 && self.listArray.count>self.tableView.visibleCells.count-1)
     {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tableView.visibleCells.count-1 inSection:0];
-        [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
-        [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+        NSDictionary *dic=[self.listArray objectAtIndex:self.tableView.visibleCells.count-1];
+        NSString *fname=[dic objectForKey:@"fname"];
+        NSString *fmime=[[fname pathExtension] lowercaseString];
+        NSLog(@"fmime:%@",fmime);
+        if ([fmime isEqualToString:@"png"]||
+            [fmime isEqualToString:@"jpg"]||
+            [fmime isEqualToString:@"jpeg"]||
+            [fmime isEqualToString:@"bmp"]||
+            [fmime isEqualToString:@"gif"])
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tableView.visibleCells.count-1 inSection:0];
+            [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+            [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+        }
     }
 }
 

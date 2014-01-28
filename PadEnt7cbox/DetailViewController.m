@@ -173,7 +173,10 @@
         [titleLabel setTextColor:[UIColor whiteColor]];
         [self.navigationController.navigationBar addSubview:titleLabel];
     }
-    
+    if([splitView_array count]>0)
+    {
+        [splitView_array removeAllObjects];
+    }
     if(isHaveDelete&&isHaveDownload)
     {
         splitView_array = [NSMutableArray arrayWithObjects:self.deleteItem,self.downItem,nil];
@@ -234,6 +237,10 @@
         [titleLabel setLineBreakMode:NSLineBreakByTruncatingMiddle];
         [titleLabel setTextColor:[UIColor whiteColor]];
         [self.navigationController.navigationBar addSubview:titleLabel];
+    }
+    if([splitView_array count]>0)
+    {
+        [splitView_array removeAllObjects];
     }
     if(isHaveDelete&&isHaveDownload)
     {

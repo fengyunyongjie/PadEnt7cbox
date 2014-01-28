@@ -1341,41 +1341,39 @@
 #pragma mark 下载回调
 - (void)downFinish:(NSString *)baseUrl
 {
-    UIImage *scaleImage = [UIImage imageWithContentsOfFile:baseUrl];
-    
     ALAssetsLibrary *library=[[ALAssetsLibrary alloc] init];
-    [library writeImageToSavedPhotosAlbum:[scaleImage CGImage] orientation:(ALAssetOrientation)[scaleImage imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error) {
+    [library writeImageDataToSavedPhotosAlbum:[NSData dataWithContentsOfFile:baseUrl] metadata:nil completionBlock:^(NSURL *assetURL, NSError *error){
         [library assetForURL:assetURL resultBlock:^(ALAsset *asset)
          {
              dispatch_async(dispatch_get_main_queue(), ^{
-             DownList *demo = [tableArray objectAtIndex:self.page];
-             demo.d_baseUrl = [NSString formatNSStringForOjbect:assetURL];
-             demo.d_state = -1;
-             demo.d_ure_id = [[SCBSession sharedSession] userId];
-             BOOL bl = [demo selectUploadListIsHave];
-             if(!bl)
-             {
-                 [demo insertDownList];
-             }
-             else
-             {
-                 [demo updateDownListForState];
-             }
-             CGRect progess2_rect = self.progess2_imageView.frame;
-             progess2_rect.size.width = 250;
-             [self.progess2_imageView setFrame:progess2_rect];
-             [self.jindu_control setHidden:YES];
-             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-             UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-             UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-             if([detailView isKindOfClass:[DetailViewController class]])
-             {
-                 DetailViewController *viewCon = (DetailViewController *)detailView;
-                 [viewCon saveSuccess];
-             }
-             NSFileManager *fileManager = [NSFileManager defaultManager];
-             BOOL isRemove = [fileManager removeItemAtPath:baseUrl error:nil];
-             NSLog(@"删除:%i",isRemove);
+                 DownList *demo = [tableArray objectAtIndex:self.page];
+                 demo.d_baseUrl = [NSString formatNSStringForOjbect:assetURL];
+                 demo.d_state = -1;
+                 demo.d_ure_id = [[SCBSession sharedSession] userId];
+                 BOOL bl = [demo selectUploadListIsHave];
+                 if(!bl)
+                 {
+                     [demo insertDownList];
+                 }
+                 else
+                 {
+                     [demo updateDownListForState];
+                 }
+                 CGRect progess2_rect = self.progess2_imageView.frame;
+                 progess2_rect.size.width = 250;
+                 [self.progess2_imageView setFrame:progess2_rect];
+                 [self.jindu_control setHidden:YES];
+                 AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                 UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+                 UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                 if([detailView isKindOfClass:[DetailViewController class]])
+                 {
+                     DetailViewController *viewCon = (DetailViewController *)detailView;
+                     [viewCon saveSuccess];
+                 }
+                 NSFileManager *fileManager = [NSFileManager defaultManager];
+                 BOOL isRemove = [fileManager removeItemAtPath:baseUrl error:nil];
+                 NSLog(@"删除:%i",isRemove);
              });
          }failureBlock:^(NSError *error)
          {

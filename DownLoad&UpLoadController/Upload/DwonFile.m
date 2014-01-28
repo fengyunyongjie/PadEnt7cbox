@@ -186,7 +186,7 @@
         }
         else
         {
-            [delegate upError];
+            [delegate didFailWithError];
         }
     }
 }
@@ -199,6 +199,11 @@
         file_path = nil;
     }
     
+}
+
+- (void)connection:(NSURLConnection *)connection didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+
 }
 
 @end

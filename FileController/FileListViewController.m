@@ -3012,7 +3012,7 @@ typedef enum{
         }
         else
         {
-            editView_rect.origin.y = 768-56-20;
+            editView_rect.origin.y = 768-56;
         }
     }
     else
@@ -3022,7 +3022,7 @@ typedef enum{
         }
         else
         {
-            editView_rect.origin.y = 1024-56-20;
+            editView_rect.origin.y = 1024-56;
         }
     }
     [self.moreEditBar setFrame:editView_rect];
@@ -3037,7 +3037,7 @@ typedef enum{
         }
         else
         {
-            self_rect.size.height = 768-56-64-20;
+            self_rect.size.height = 768-56-64;
         }
     }
     else
@@ -3047,7 +3047,7 @@ typedef enum{
         }
         else
         {
-            self_rect.size.height = 1024-56-64-20;
+            self_rect.size.height = 1024-56-64;
         }
     }
     [self.tableView setFrame:self_rect];

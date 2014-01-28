@@ -698,7 +698,7 @@
             self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49);
         }else
         {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49-20);
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49);
         }
     }
     else
@@ -707,7 +707,7 @@
             self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49);
         }else
         {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49-20);
+            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49);
         }
     }
 }

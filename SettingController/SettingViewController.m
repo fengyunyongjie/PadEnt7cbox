@@ -897,7 +897,14 @@ typedef enum{
                     break;
                 case 1:
                     //评分
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:APPSTORE_URL]];
+                    if ([YNFunctions systemIsLaterThanString:@"7.0"])
+                    {
+                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:APPSTORE_URL]];
+                    }
+                    else
+                    {
+                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:APPSTORE_URL6]];
+                    }
                     break;
                 case 2:
                     //检查更新

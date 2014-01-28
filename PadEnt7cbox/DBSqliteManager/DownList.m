@@ -23,7 +23,7 @@
         sqlite3_exec(contactDB,"BEGIN TRANSACTION",0,0,0);  //事务开始
         for (int i=0; i<tableArray.count; i++) {
             DownList *list = [tableArray objectAtIndex:i];
-            NSString *format = [NSString stringWithFormat:InsertsDownLists,list.d_name,list.d_state,list.d_thumbUrl,list.d_baseUrl,list.d_file_id,list.d_downSize,list.d_datetime,list.d_ure_id];
+            NSString *format = [NSString stringWithFormat:InsertsDownLists,list.d_name,list.d_state,list.d_thumbUrl,list.d_baseUrl,list.d_file_id,list.d_downSize,list.d_datetime,list.d_ure_id,list.is_Onece];
             NSString *s = [[NSString alloc] initWithUTF8String:[format UTF8String]];
             const char *insert_stmt = (char *) [s UTF8String];
             int success  = sqlite3_exec(contactDB, insert_stmt , 0, 0, 0 );
@@ -95,6 +95,7 @@
         sqlite3_bind_int(statement, 6, d_downSize);
         sqlite3_bind_text(statement, 7, [d_datetime UTF8String], -1, SQLITE_TRANSIENT);
         sqlite3_bind_text(statement, 8, [d_ure_id UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(statement, 9, is_Onece);
         success = sqlite3_step(statement);
         if (success == SQLITE_ERROR || success != 101) {
             bl = FALSE;
@@ -296,15 +297,16 @@
         if (success != SQLITE_OK) {
             bl = FALSE;
         }
-        sqlite3_bind_int(statement, 1, d_state);
+        sqlite3_bind_int(statement, 1, is_Onece);
+        sqlite3_bind_int(statement, 2, d_state);
         
-        sqlite3_bind_text(statement, 2, [d_baseUrl UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(statement, 3, [d_baseUrl UTF8String], -1, SQLITE_TRANSIENT);
         
-        sqlite3_bind_text(statement, 3, [d_file_id UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_int(statement, 4, d_downSize);
-        sqlite3_bind_text(statement, 5, [d_datetime UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_int(statement, 6, d_id);
-        sqlite3_bind_text(statement, 7, [d_ure_id UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(statement, 4, [d_file_id UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(statement, 5, d_downSize);
+        sqlite3_bind_text(statement, 6, [d_datetime UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(statement, 7, d_id);
+        sqlite3_bind_text(statement, 8, [d_ure_id UTF8String], -1, SQLITE_TRANSIENT);
         
         success = sqlite3_step(statement);
         if (success == SQLITE_ERROR) {
@@ -346,14 +348,14 @@
             bl = FALSE;
         }
         //#define UpdateDownListForState @"UPDATE DownList SET d_baseUrl=?,d_file_id=?,d_downSize=?,d_datetime=? WHERE d_state=? and d_name=? and d_ure_id=?"
-        
-        sqlite3_bind_text(statement, 1, [d_baseUrl UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(statement, 2, [d_file_id UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_int(statement, 3, d_downSize);
-        sqlite3_bind_text(statement, 4, [d_datetime UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_int(statement, 5, d_state);
-        sqlite3_bind_text(statement, 6, [d_name UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(statement, 7, [d_ure_id UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(statement, 1, is_Onece);
+        sqlite3_bind_text(statement, 2, [d_baseUrl UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(statement, 3, [d_file_id UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(statement, 4, d_downSize);
+        sqlite3_bind_text(statement, 5, [d_datetime UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(statement, 6, d_state);
+        sqlite3_bind_text(statement, 7, [d_name UTF8String], -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(statement, 8, [d_ure_id UTF8String], -1, SQLITE_TRANSIENT);
         
         success = sqlite3_step(statement);
         if (success == SQLITE_ERROR) {
@@ -401,9 +403,10 @@
             list.d_thumbUrl = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 3)];
             list.d_baseUrl = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 4)];
             list.d_file_id = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 5)];
-            list.d_downSize = sqlite3_column_int(statement, 6);;
+            list.d_downSize = sqlite3_column_int(statement, 6);
             list.d_datetime = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 7)];
             list.d_ure_id = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 8)];
+            list.is_Onece = sqlite3_column_int(statement, 9);
             [tableArray addObject:list];
         }
         sqlite3_finalize(statement);
@@ -434,6 +437,7 @@
             list.d_downSize = sqlite3_column_int(statement, 6);;
             list.d_datetime = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 7)];
             list.d_ure_id = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 8)];
+            list.is_Onece = sqlite3_column_int(statement, 9);
             [tableArray addObject:list];
         }
         sqlite3_finalize(statement);

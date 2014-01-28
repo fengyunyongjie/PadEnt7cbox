@@ -54,7 +54,7 @@
             DownList *list = [downingArray objectAtIndex:i];
             if(list.d_state == 5)
             {
-                list.is_Onece = YES;
+                list.is_Onece = FALSE;
             }
             else
             {
@@ -187,15 +187,23 @@
         self.file.file_id = list.d_file_id;
         self.file.fileName = list.d_name;
         self.file.delegate = self;
-        if(list.d_state == 0 || list.is_Onece)
+        if(list.d_state == 0 || !list.is_Onece)
         {
             list.d_state = 0;
             [self.file startDownload];
+        }
+        else if(list.is_Onece)
+        {
+            [self upNetworkStop];
         }
     }
     if([downingArray count]==0)
     {
         isStart = FALSE;
+    }
+    if(!isStart)
+    {
+        [self upNetworkStop];
     }
     });
 }
@@ -268,7 +276,7 @@
     {
         DownList *list = [downingArray objectAtIndex:0];
         list.d_state = 5;
-        list.is_Onece = NO;
+        list.is_Onece = YES;
         [list deleteDownList];
         [list insertDownList];
         [downingArray removeObjectAtIndex:0];
@@ -355,7 +363,7 @@
         DownList *list = [downingArray objectAtIndex:i];
         if(list.d_state == 5)
         {
-            list.is_Onece = YES;
+            list.is_Onece = NO;
         }
         else
         {
@@ -373,7 +381,7 @@
         DownList *list = [downingArray objectAtIndex:i];
         if(list.d_state == 5)
         {
-            list.is_Onece = YES;
+            list.is_Onece = FALSE;
         }
         else
         {
@@ -391,7 +399,7 @@
         DownList *list = [downingArray objectAtIndex:i];
         if(list.d_state == 5)
         {
-            list.is_Onece = YES;
+            list.is_Onece = FALSE;
         }
         else
         {

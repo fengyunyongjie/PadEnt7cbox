@@ -40,4 +40,5 @@
 
 -(void)finishLogin;
 -(void)finishLogout;
+-(void)getStopUpload;
 @end

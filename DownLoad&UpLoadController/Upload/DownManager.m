@@ -200,6 +200,8 @@
     if([downingArray count]==0)
     {
         isStart = FALSE;
+        AppDelegate *app_delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [app_delegate getStopUpload];
     }
     if(!isStart)
     {

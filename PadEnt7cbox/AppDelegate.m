@@ -357,4 +357,13 @@ typedef enum{
     return [hostReachs currentReachabilityStatus];
 }
 
+//是否要暂停音乐播放
+-(void)getStopUpload
+{
+    if(!self.downmange.isStart && !self.uploadmanage.isStart)
+    {
+        [musicPlayer stopPlay];
+    }
+}
+
 @end

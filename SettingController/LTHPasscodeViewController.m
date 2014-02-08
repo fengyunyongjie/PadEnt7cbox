@@ -724,6 +724,7 @@ static CGFloat const kSlideAnimationDuration = 0.0f;
         [[NSUserDefaults standardUserDefaults] setObject:nil  forKey:@"usr_pwd"];
         [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"switch_flag"];
         [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"isAutoUpload"];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:@"switch_upload"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [APService setTags:nil alias:nil];
         

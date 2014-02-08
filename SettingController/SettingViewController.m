@@ -261,6 +261,17 @@ typedef enum{
             }
         }
             break;
+        case 4:
+        {
+            UISwitch *theSwith = (UISwitch *)sender;
+            if (theSwith.on) {
+                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:@"switch_upload"];
+            }else
+            {
+                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:NO] forKey:@"switch_upload"];
+            }
+        }
+            break;
         default:
             break;
     }
@@ -542,7 +553,7 @@ typedef enum{
             return 1;
             break;
         case 1:
-            return 3;
+            return 5;
             break;
         case 2:
             return 3;
@@ -734,6 +745,14 @@ typedef enum{
                     titleLabel.text = @"导入企业通讯录到手机";
                     m_switch.hidden = YES;
                     break;
+                case 4:
+                {
+                    //bgView.image=[UIImage imageNamed:@"set_bk_3.png"];
+                    titleLabel.text = @"使用后台上传/下载";
+                    BOOL switchFlag = [[[NSUserDefaults standardUserDefaults] objectForKey:@"switch_upload"] boolValue];
+                    automicOff_button.hidden = NO;
+                    m_switch.on = switchFlag;
+                }
             }
         }
             break;

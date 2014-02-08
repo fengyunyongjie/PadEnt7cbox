@@ -208,6 +208,7 @@
         [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"switch_flag"];
         [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"isAutoUpload"];
         [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"passcodeTimerDuration"];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:@"switch_upload"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [APService setTags:nil alias:nil];
         

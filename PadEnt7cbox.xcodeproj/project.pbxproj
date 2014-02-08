@@ -591,7 +591,6 @@
 		29FBD5F81863D27A005F03AC /* login_bt1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_bt1.png; sourceTree = "<group>"; };
 		29FBD5FB1863D27A005F03AC /* Login_ico.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Login_ico.png; sourceTree = "<group>"; };
 		29FBD5FD1863D27A005F03AC /* login_input.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_input.png; sourceTree = "<group>"; };
-		29FD77AD186A8C59001D350F /* PConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PConfig.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1113,7 +1112,6 @@
 				29842410185ED500002AC1D0 /* Configuration */,
 				29842416185ED500002AC1D0 /* Images */,
 				29187852187D5A6F00577921 /* Mp3 */,
-				29FD77AD186A8C59001D350F /* PConfig.h */,
 				298423D2185ECE1F002AC1D0 /* PadEnt7cbox-Info.plist */,
 				298423D3185ECE1F002AC1D0 /* InfoPlist.strings */,
 				298423D6185ECE1F002AC1D0 /* main.m */,

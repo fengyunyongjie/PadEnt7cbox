@@ -245,6 +245,7 @@
 		299CFC8E186811680060855B /* PasswordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 299CFC8D186811680060855B /* PasswordButton.m */; };
 		29AF89B8188E142F00A71A0E /* bt_save_nor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29AF89B6188E142F00A71A0E /* bt_save_nor@2x.png */; };
 		29AF89B9188E142F00A71A0E /* bt_save_se@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29AF89B7188E142F00A71A0E /* bt_save_se@2x.png */; };
+		29B3543218B2F8130079184B /* BackgroundRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B3543118B2F8130079184B /* BackgroundRunner.m */; };
 		29CE22351862E5BB0030EC86 /* InputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29CE22341862E5BB0030EC86 /* InputViewController.m */; };
 		29F1DDB7186BC467001CC8B1 /* PartitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F1DDB6186BC467001CC8B1 /* PartitionViewController.m */; };
 		29FBD5FF1863D27A005F03AC /* login_bt.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5F71863D27A005F03AC /* login_bt.png */; };
@@ -583,6 +584,8 @@
 		299CFC8D186811680060855B /* PasswordButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordButton.m; sourceTree = "<group>"; };
 		29AF89B6188E142F00A71A0E /* bt_save_nor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bt_save_nor@2x.png"; sourceTree = "<group>"; };
 		29AF89B7188E142F00A71A0E /* bt_save_se@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bt_save_se@2x.png"; sourceTree = "<group>"; };
+		29B3543018B2F8130079184B /* BackgroundRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundRunner.h; sourceTree = "<group>"; };
+		29B3543118B2F8130079184B /* BackgroundRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundRunner.m; sourceTree = "<group>"; };
 		29CE22331862E5BB0030EC86 /* InputViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputViewController.h; sourceTree = "<group>"; };
 		29CE22341862E5BB0030EC86 /* InputViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputViewController.m; sourceTree = "<group>"; };
 		29F1DDB5186BC467001CC8B1 /* PartitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PartitionViewController.h; sourceTree = "<group>"; };
@@ -1149,6 +1152,7 @@
 		2984240E185ED500002AC1D0 /* AllSDK */ = {
 			isa = PBXGroup;
 			children = (
+				29B3542F18B2F8130079184B /* BackgroundRunner */,
 				2918784C187D014100577921 /* OpenFile */,
 				290216D11862CE2300D7D2C7 /* Password */,
 				2982E0EF186153E7009CB82D /* Reachability */,
@@ -1282,6 +1286,15 @@
 			);
 			name = SettingController;
 			path = ../SettingController;
+			sourceTree = "<group>";
+		};
+		29B3542F18B2F8130079184B /* BackgroundRunner */ = {
+			isa = PBXGroup;
+			children = (
+				29B3543018B2F8130079184B /* BackgroundRunner.h */,
+				29B3543118B2F8130079184B /* BackgroundRunner.m */,
+			);
+			path = BackgroundRunner;
 			sourceTree = "<group>";
 		};
 		29FBD5F61863D27A005F03AC /* iPadLogin */ = {
@@ -1548,6 +1561,7 @@
 				2982E060186152F5009CB82D /* PhotoLookViewController.m in Sources */,
 				2982DFEF1861517E009CB82D /* EmailDetailViewController.m in Sources */,
 				2982E04C186152A0009CB82D /* UpDownloadViewController.m in Sources */,
+				29B3543218B2F8130079184B /* BackgroundRunner.m in Sources */,
 				299CFC8E186811680060855B /* PasswordButton.m in Sources */,
 				294EB4FC18604F40006E6E96 /* YNNavigationController.m in Sources */,
 				2982E100186154A3009CB82D /* SqlliteManager.m in Sources */,

@@ -15,6 +15,7 @@
 #import "PConfig.h"
 #import "YNFunctions.h"
 #import "SCBAccountManager.h"
+#import "BackgroundRunner.h"
 typedef enum{
     kAlertTypeNewVersion,
     kAlertTypeNoNewVersion,
@@ -92,11 +93,15 @@ typedef enum{
 {
     if(self.downmange.isStart || self.uploadmanage.isStart)
     {
-        [musicPlayer startPlay];
+//        [musicPlayer startPlay];
+        if ([[UIDevice currentDevice] isMultitaskingSupported]) {
+            [[BackgroundRunner shared] run];
+        }
     }
     else
     {
-        [musicPlayer stopPlay];
+        [[BackgroundRunner shared] stop];
+//        [musicPlayer stopPlay];
     }
     UIViewController *viewController = self.window.rootViewController.presentedViewController;
     if([viewController isKindOfClass:[InputViewController class]])
@@ -112,7 +117,8 @@ typedef enum{
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [self checkUpdate];
-    [musicPlayer stopPlay];
+//    [musicPlayer stopPlay];
+    [[BackgroundRunner shared] stop];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -362,7 +368,8 @@ typedef enum{
 {
     if(!self.downmange.isStart && !self.uploadmanage.isStart)
     {
-        [musicPlayer stopPlay];
+//        [musicPlayer stopPlay];
+        [[BackgroundRunner shared] stop];
     }
 }
 

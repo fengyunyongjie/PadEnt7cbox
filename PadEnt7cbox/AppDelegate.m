@@ -93,15 +93,11 @@ typedef enum{
 {
     if(self.downmange.isStart || self.uploadmanage.isStart)
     {
-//        [musicPlayer startPlay];
-        if ([[UIDevice currentDevice] isMultitaskingSupported]) {
-            [[BackgroundRunner shared] run];
-        }
+        [musicPlayer startPlay];
     }
     else
     {
-        [[BackgroundRunner shared] stop];
-//        [musicPlayer stopPlay];
+        [musicPlayer stopPlay];
     }
     UIViewController *viewController = self.window.rootViewController.presentedViewController;
     if([viewController isKindOfClass:[InputViewController class]])
@@ -117,8 +113,7 @@ typedef enum{
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [self checkUpdate];
-//    [musicPlayer stopPlay];
-    [[BackgroundRunner shared] stop];
+    [musicPlayer stopPlay];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -368,8 +363,7 @@ typedef enum{
 {
     if(!self.downmange.isStart && !self.uploadmanage.isStart)
     {
-//        [musicPlayer stopPlay];
-        [[BackgroundRunner shared] stop];
+        [musicPlayer stopPlay];
     }
 }
 

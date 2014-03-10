@@ -38,7 +38,10 @@
     }
     return self;
 }
-
+-(void)viewDidAppear:(BOOL)animated
+{
+    [self setHasEmailTagHidden:NO];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -78,8 +81,8 @@
     UINavigationController *vc3=[[UINavigationController alloc] init];
     EmailListViewController * vc33=[[EmailListViewController alloc] init];
     [vc3 pushViewController:vc33 animated:YES];
-    vc33.title=@"文件收发";
-    vc3.title=@"文件收发";
+    vc33.title=@"收件管理";
+    vc3.title=@"收件管理";
     [vc3.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
     [vc3.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
      [vc3.navigationBar setTintColor:[UIColor whiteColor]];
@@ -100,7 +103,7 @@
     [vc4.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemSeColor forKey:UITextAttributeTextColor] forState:UIControlStateSelected];
     [vc4.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemNorColor forKey:UITextAttributeTextColor] forState:UIControlStateNormal];
     //2013年10月29日，隐掉“文件收发”模块; by FengYN
-    self.viewControllers=@[vc1,vc2,vc4];
+    self.viewControllers=@[vc1,vc3,vc2,vc4];
     self.selectedIndex=0;
     
     [self.tabBar setBackgroundImage:[UIImage imageNamed:@"nav_bk.png"]];
@@ -115,12 +118,20 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+-(void)setHasEmailTagHidden:(BOOL)isHidden
+{
+    if (!self.tagImageView) {
+        self.tagImageView=[[UIImageView alloc] initWithFrame:CGRectMake(130, 6, 10, 10)];
+        self.tagImageView.image=[UIImage imageNamed:@"icon_hasnew_tag.png"];
+        [self.tabBar addSubview:self.tagImageView];
+    }
+    [self.tagImageView setHidden:isHidden];
+}
 -(void)addUploadNumber:(NSInteger)count
 {
     if(!imageView)
     {
-        CGRect imageRect = CGRectMake(165, -10, 35, 35);
+        CGRect imageRect = CGRectMake(205, -10, 35, 35);
         imageView = [[UIImageView alloc] initWithFrame:imageRect];
         
         if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)

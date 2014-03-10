@@ -11,6 +11,7 @@
 @interface MyTabBarViewController : UITabBarController
 @property(nonatomic,strong) UIImageView *imageView;
 @property(nonatomic,strong) UILabel *label;
+@property(nonatomic,strong) UIImageView *tagImageView;
 -(void)addUploadNumber:(NSInteger)count;
 
 @end

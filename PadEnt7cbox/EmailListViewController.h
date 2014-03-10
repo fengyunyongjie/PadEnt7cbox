@@ -19,4 +19,6 @@
 @property (strong,nonatomic) NSArray *outArray;
 @property (strong,nonatomic) UITableView *tableView;
 @property (strong,nonatomic) NSIndexPath *selectedIndexPath;
+@property (strong,nonatomic) NSArray *rightItems;
+@property (strong,nonatomic) UIControl *menuView;
 @end

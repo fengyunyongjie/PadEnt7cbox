@@ -46,6 +46,7 @@ typedef enum{
     kActionSheetTagDeleteMore,
     kActionSheetTagPhoto,
     kActionSheetTagSend,
+    kActionSheetTagSendHasDir,
     kActionSheetTagSort,
     kActionSheetTagUpload,
 }ActionSheetTag;
@@ -53,6 +54,7 @@ typedef enum{
 @interface FileListViewController ()<SCBFileManagerDelegate,IconDownloaderDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate>
 {
     UIBarButtonItem *item_send,*item_download;
+    BOOL isSelectedDir;
 }
 @property (strong,nonatomic) SCBFileManager *fm;
 @property (strong,nonatomic) SCBFileManager *fm_move;
@@ -161,6 +163,7 @@ typedef enum{
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
         [self setEdgesForExtendedLayout:UIRectEdgeNone];
     }
+    isSelectedDir=NO;
     [self.view setBackgroundColor:[UIColor whiteColor]];
     self.tableView=[[UITableView alloc] init];
     self.tableView.delegate=self;
@@ -625,6 +628,31 @@ typedef enum{
         [item_download setEnabled:canDown];
     }
     [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消全选" style:UIBarButtonItemStylePlain target:self action:@selector(deselectAllCell:)]];
+    
+    BOOL isDis=NO;
+    for (NSIndexPath *newIP in [self selectedIndexPaths]) {
+        NSDictionary *dic=[self.listArray objectAtIndex:newIP.row];
+        NSString *fisdir=[dic objectForKey:@"fisdir"];
+        if ([fisdir isEqualToString:@"0"]) {
+            //选中了文件夹，禁用分享;
+            isDis=YES;
+            break;
+        }
+    }
+    //UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
+    if (isDis) {
+        //[item setEnabled:NO];
+        //[item_send setEnabled:NO];
+        isSelectedDir=YES;
+        [item_download setEnabled:NO];
+    }else
+    {
+        //[item setEnabled:YES];
+        //[item_send setEnabled:YES];
+        isSelectedDir=NO;
+        [item_download setEnabled:YES];
+    }
+
 }
 -(void)deselectAllCell:(id)sender
 {
@@ -670,6 +698,9 @@ typedef enum{
     
     [self hideMenu];
     [self.tableView setEditing:!self.tableView.editing animated:YES];
+    if (self.tableView.editing) {
+        isSelectedDir=NO;
+    }
     BOOL isHideTabBar=self.tableView.editing;
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UIApplication *app = [UIApplication sharedApplication];
@@ -1044,20 +1075,49 @@ typedef enum{
         sevc.fids=@[fid];
         sevc.fileArray=@[dic];
     }
-    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:sevc];
-    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
-    //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
-    [nav.navigationBar setTintColor:[UIColor whiteColor]];
-    [self presentViewController:nav animated:YES completion:nil];
-    [self editFinished];
+//    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:sevc];
+//    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+//    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+//    //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+//    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+//    [self presentViewController:nav animated:YES completion:nil];
+//    [self editFinished];
 
     
 //    NSLog(@"发送");
-//    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"发送" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"站内发送",@"站外发送",nil];
-//    [actionSheet setTag:kActionSheetTagSend];
-//    [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-//    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    if (self.tableView.isEditing) {
+        if (isSelectedDir) {
+            goto hasDirSend;
+        }else
+        {
+            goto noDirSend;
+        }
+    }else
+    {
+        NSString *fisdir=[dic objectForKey:@"fisdir"];
+        if ([fisdir isEqualToString:@"0"]) {
+            goto hasDirSend;
+        }else
+        {
+            goto noDirSend;
+        }
+    }
+hasDirSend:
+    {
+        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"邮件外链",@"短信分享",@"复制链接",@"其它分享",nil];
+        [actionSheet setTag:kActionSheetTagSendHasDir];
+        [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        return;
+    }
+noDirSend:
+    {
+        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"企业分享",@"邮件外链",@"短信分享",@"复制链接",@"其它分享",nil];
+        [actionSheet setTag:kActionSheetTagSend];
+        [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        return;
+    }
 }
 -(void)toCopy:(id)sender
 {
@@ -1364,8 +1424,15 @@ typedef enum{
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (self.listArray) {
+        if (self.listArray.count>0) {
+            [tableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+        }else
+        {
+            [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+        }
         return self.listArray.count;
     }
+    [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     return 0;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1804,7 +1871,7 @@ typedef enum{
         //个人空间
         if ([fisdir isEqualToString:@"0"])
         {
-            [self.singleEditBar setItems:@[item_copy,item_flexible,item_move,item_flexible,item_rename,item_flexible,item_del]];
+            [self.singleEditBar setItems:@[item_flexible,item_send,item_flexible,item_copy,item_flexible,item_move,item_flexible,item_rename,item_flexible,item_del]];
         }else
         {
             [self.singleEditBar setItems:@[item_download,item_flexible,item_send,item_flexible,item_del,item_flexible,item_more]];
@@ -1812,6 +1879,7 @@ typedef enum{
         //[self.singleEditBar setItems:@[item_send,item_flexible,item_commit,item_flexible,item_del,item_flexible,item_more]];
     }else if([self.f_id intValue]==0)
     {
+        //企业库根目录
         NSString *fcmd=[dic objectForKey:@"fcmd"];
         
         //管理员
@@ -1820,6 +1888,11 @@ typedef enum{
             //            [self.singleEditBar setItems:@[item_resave,item_flexible,item_move,item_flexible,item_rename,item_flexible,item_del]];
             NSMutableArray *array=[NSMutableArray array];
             //[array addObject:item_flexible];
+            if([self hasCmd:@"publiclink" InFcmd:fcmd])
+            {
+                [array addObject:item_send];
+                //[array addObject:item_flexible];
+            }
             if([self hasCmd:@"copy" InFcmd:fcmd])
             {
                 [array addObject:item_copy];
@@ -1841,7 +1914,7 @@ typedef enum{
                 //[array addObject:item_flexible];
             }
             NSArray *theArray=nil;
-            if (array.count>4) {
+            if (array.count>5) {
                 theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,item_more];
             }else if(array.count==1)
             {
@@ -1857,6 +1930,10 @@ typedef enum{
             else if(array.count==4)
             {
                 theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,[array objectAtIndex:3]];
+            }
+            else if(array.count==5)
+            {
+                theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,[array objectAtIndex:3],item_flexible,[array objectAtIndex:4]];
             }
             [self.singleEditBar setItems:theArray];
         }else
@@ -1916,12 +1993,18 @@ typedef enum{
         }
     }else
     {
-        //管理员
+         //企业库子目录
         if ([fisdir isEqualToString:@"0"])
         {
+            //文件夹
 //            [self.singleEditBar setItems:@[item_resave,item_flexible,item_move,item_flexible,item_rename,item_flexible,item_del]];
             NSMutableArray *array=[NSMutableArray array];
             //[array addObject:item_flexible];
+            if([self hasCmdInFcmd:@"publiclink"])
+            {
+                [array addObject:item_send];
+                //[array addObject:item_flexible];
+            }
             if([self hasCmdInFcmd:@"copy"])
             {
                 [array addObject:item_copy];
@@ -1943,7 +2026,7 @@ typedef enum{
                 //[array addObject:item_flexible];
             }
             NSArray *theArray=nil;
-            if (array.count>4) {
+            if (array.count>5) {
                 theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,item_more];
             }else if(array.count==1)
             {
@@ -1959,6 +2042,10 @@ typedef enum{
             else if(array.count==4)
             {
                 theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,[array objectAtIndex:3]];
+            }
+            else if(array.count==5)
+            {
+                theArray=@[[array objectAtIndex:0],item_flexible,[array objectAtIndex:1],item_flexible,[array objectAtIndex:2],item_flexible,[array objectAtIndex:3],item_flexible,[array objectAtIndex:4]];
             }
             [self.singleEditBar setItems:theArray];
         }else
@@ -2029,7 +2116,8 @@ typedef enum{
             //选中了文件夹，禁用分享;
 //            UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
 //            [item setEnabled:NO];
-            [item_send setEnabled:NO];
+            //[item_send setEnabled:NO];
+            isSelectedDir=YES;
             [item_download setEnabled:NO];
         }
         return;
@@ -2206,18 +2294,20 @@ typedef enum{
             if ([fisdir isEqualToString:@"0"]) {
                 //选中了文件夹，禁用分享;
                 isDis=YES;
-                return;
+                break;
             }
         }
         //UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
         if (isDis) {
             //[item setEnabled:NO];
-            [item_send setEnabled:NO];
+            //[item_send setEnabled:NO];
+            isSelectedDir=YES;
             [item_download setEnabled:NO];
         }else
         {
             //[item setEnabled:YES];
-            [item_send setEnabled:YES];
+            //[item_send setEnabled:YES];
+            isSelectedDir=NO;
             [item_download setEnabled:YES];
         }
         return;
@@ -2769,6 +2859,38 @@ typedef enum{
             break;
         case kActionSheetTagSend:
         {
+            switch (buttonIndex) {
+                case 0:
+                {
+                    //企业分享
+                }
+                    break;
+                case 1:
+                {
+                    //邮件外链
+                }
+                    break;
+                case 2:
+                {
+                    //短信分享
+                }
+                    break;
+                case 3:
+                {
+                    //复制连接
+                }
+                    break;
+                case 4:
+                {
+                    //其他分享
+                }
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+            
             NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
             NSString *fid=[dic objectForKey:@"fid"];
             SendEmailViewController *sevc=[[SendEmailViewController alloc] init];
@@ -2801,6 +2923,35 @@ typedef enum{
             YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:sevc];
             [self presentViewController:nav animated:YES completion:nil];
             [self editFinished];
+        }
+            break;
+        case kActionSheetTagSendHasDir:
+        {
+            switch (buttonIndex) {
+                case 0:
+                {
+                    //邮件外链
+                }
+                    break;
+                case 1:
+                {
+                    //短信分享
+                }
+                    break;
+                case 2:
+                {
+                    //复制链接
+                }
+                    break;
+                case 3:
+                {
+                    //其它分享
+                }
+                    break;
+                    
+                default:
+                    break;
+            }
         }
             break;
         case kActionSheetTagDeleteOne:

@@ -40,17 +40,6 @@ enum{
 }
 - (void)viewDidAppear:(BOOL)animated
 {
-    CGRect r=self.view.frame;
-    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
-    self.view.frame=r;
-    self.tableView.frame=CGRectMake(0, 30, self.view.frame.size.width, self.view.frame.size.height-49-30);
-    if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.tableView.frame=CGRectMake(0, 30, self.view.frame.size.width, self.view.frame.size.height-49-64-30);
-        self.moreEditBar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
-    }
-    
-    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
-    NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
 }
 - (void)viewDidLoad
 {
@@ -63,17 +52,38 @@ enum{
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
     [self.view addSubview:self.tableView];
-    self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    self.segmentedControl=[[UISegmentedControl alloc] initWithItems:@[@"已接收",@"已发送"]];
-    self.segmentedControl.frame=CGRectMake(100, 8, 120, 29);
-    [self.segmentedControl setTintColor:[UIColor whiteColor]];
+    self.tableView.frame=CGRectMake(0, 50, self.view.frame.size.width, self.view.frame.size.height);
+    self.segmentedControl=[[UISegmentedControl alloc] initWithItems:@[@"收件箱(1)",@"发件箱"]];
+    self.segmentedControl.frame=CGRectMake(80, 12, 160, 25);
+//    [self.segmentedControl setTintColor:[UIColor whiteColor]];
     [self.segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-    [self.segmentedControl setHidden:YES];
+//    [self.segmentedControl setHidden:YES];
 //    [self.navigationItem setTitleView:self.segmentedControl];
+    [self.view addSubview:self.segmentedControl];
     [self.segmentedControl setSelectedSegmentIndex:0];
     
-    UIBarButtonItem *editItem=[[UIBarButtonItem alloc] initWithTitleStr:@"编辑" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)];
-    [self.navigationItem setRightBarButtonItem:editItem];
+    NSMutableArray *items=[NSMutableArray array];
+    UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,20,40)];
+    [rightButton1 setImage:[UIImage imageNamed:@"title_more.png"] forState:UIControlStateNormal];
+    [rightButton1 setBackgroundImage:[UIImage imageNamed:@"title_more_se.png"] forState:UIControlStateHighlighted];
+    [rightButton1 addTarget:self action:@selector(menuAction:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
+    [items addObject:rightItem1];
+    
+    //    if (![self.roletype isEqualToString:@"1"] && ![self.roletype isEqualToString:@"2"])
+    //    {
+    //        UIButton*rightButton2 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,30,40)];
+    //        [rightButton2 setImage:[UIImage imageNamed:@"title_upload_nor@2x.png"] forState:UIControlStateNormal];
+    //        [rightButton2 setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
+    //        [rightButton2 addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
+    //        UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithCustomView:rightButton2];
+    //        [items addObject:rightItem2];
+    //    }
+    self.rightItems=items;
+    self.navigationItem.rightBarButtonItems = items;
+    
+//    UIBarButtonItem *editItem=[[UIBarButtonItem alloc] initWithTitleStr:@"编辑" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)];
+//    [self.navigationItem setRightBarButtonItem:editItem];
     
     if (_refreshHeaderView==nil) {
         EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
@@ -88,6 +98,7 @@ enum{
     [self.customSelectButton setDelegate:self];
     [self.customSelectButton setBackgroundColor:[UIColor lightGrayColor]];
     [self.view addSubview:self.customSelectButton];
+    [self.customSelectButton setHidden:YES];
     
     //左右滑动效果
     UISwipeGestureRecognizer *recognizer;
@@ -105,10 +116,24 @@ enum{
         temporaryBarButtonItem.title = @"";
         self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
     }
+    [self.view setBackgroundColor:[UIColor whiteColor]];
 }
 -(void)viewWillAppear:(BOOL)animated
 {
     [self updateEmailList];
+}
+-(void)viewDidLayoutSubviews
+{
+    CGRect r=self.view.frame;
+    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
+    self.view.frame=r;
+    self.tableView.frame=CGRectMake(0, 50, self.view.frame.size.width, self.view.frame.size.height-49-50);
+    if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
+        self.tableView.frame=CGRectMake(0, 30, self.view.frame.size.width, self.view.frame.size.height-49-64-30);
+        self.moreEditBar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
+    }
+    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
+    NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
 }
 - (void)didReceiveMemoryWarning
 {
@@ -124,6 +149,9 @@ enum{
     }else
     {
         self.segmentedControl.selectedSegmentIndex=1;
+    }
+    if (self.tableView.isEditing) {
+        [self editAction:nil];
     }
     [self.tableView reloadData];
 }
@@ -231,9 +259,102 @@ enum{
     [self.em setDelegate:self];
     [self.em operateUpdateWithType:@"2"];
 }
+-(void)menuAction:(id)sender
+{
+    if (self.menuView) {
+        [self.menuView removeFromSuperview];
+        self.menuView=nil;
+    }
+    if (!self.menuView) {
+        int Height=1024;
+        self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, Height, Height)];
+        //[self.menuView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
+        UIControl *grayView=[[UIControl alloc] initWithFrame:CGRectMake(0, 64, Height, Height)];
+        [grayView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
+        [grayView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
+        [self.menuView addSubview:grayView];
+        CGSize btnSize=CGSizeMake(320, 45);
+        UIButton *btnNewFinder,*btnEdit,*btnSort,*btnUpload,*btnClearAll;
+        UIColor *titleColor=[UIColor colorWithRed:83/255.0f green:113/255.0f blue:190/255.0f alpha:1];
+        btnUpload=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnSize.width, btnSize.height)];
+        [btnUpload setImage:[UIImage imageNamed:@"title_read.png"] forState:UIControlStateHighlighted];
+        [btnUpload setImage:[UIImage imageNamed:@"title_read.png"] forState:UIControlStateNormal];
+        [btnUpload setBackgroundImage:[UIImage imageNamed:@"menu_1.png"] forState:UIControlStateNormal];
+        [btnUpload setTitle:@"  全部标为已读" forState:UIControlStateNormal];
+        [btnUpload setTitleColor:titleColor forState:UIControlStateNormal];
+        [btnUpload setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        [btnUpload addTarget:self action:@selector(markAllAsRead:) forControlEvents:UIControlEventTouchUpInside];
+        
+        btnClearAll=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnSize.width, btnSize.height)];
+        [btnClearAll setImage:[UIImage imageNamed:@"title_alldel.png"] forState:UIControlStateHighlighted];
+        [btnClearAll setImage:[UIImage imageNamed:@"title_alldel.png"] forState:UIControlStateNormal];
+        [btnClearAll setBackgroundImage:[UIImage imageNamed:@"menu_1.png"] forState:UIControlStateNormal];
+        [btnClearAll setTitle:@"  全部清空" forState:UIControlStateNormal];
+        [btnClearAll setTitleColor:titleColor forState:UIControlStateNormal];
+        [btnClearAll setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        [btnClearAll addTarget:self action:@selector(clearAllEmail:) forControlEvents:UIControlEventTouchUpInside];
+        
+        btnEdit=[[UIButton alloc] initWithFrame:CGRectMake(0, 1*btnSize.height, btnSize.width, btnSize.height)];
+        [btnEdit setImage:[UIImage imageNamed:@"title_edit.png"] forState:UIControlStateHighlighted];
+        [btnEdit setImage:[UIImage imageNamed:@"title_edit.png"] forState:UIControlStateNormal];
+        [btnEdit setBackgroundImage:[UIImage imageNamed:@"menu_2.png"] forState:UIControlStateNormal];
+        [btnEdit setTitle:@"  编辑" forState:UIControlStateNormal];
+        [btnEdit setTitleColor:titleColor forState:UIControlStateNormal];
+        [btnEdit setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        [btnEdit addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        NSMutableArray *array=[NSMutableArray array];
+        if (self.segmentedControl.selectedSegmentIndex==0) {
+            [array addObject:btnUpload];
+        }else
+        {
+            [array addObject:btnClearAll];
+        }
+        
+        [array addObject:btnEdit];
+        for (int i=0; i<array.count; i++) {
+            UIButton *btn=[array objectAtIndex:i];
+            btn.frame= CGRectMake(0, i*btnSize.height+64, btnSize.width, btnSize.height);
+            if (i==0) {
+                [btn setBackgroundImage:[UIImage imageNamed:@"menu_1.png"] forState:UIControlStateNormal];
+            }else if(i==array.count-1)
+            {
+                [btn setBackgroundImage:[UIImage imageNamed:@"menu_3.png"] forState:UIControlStateNormal];
+            }else
+            {
+                [btn setBackgroundImage:[UIImage imageNamed:@"menu_2.png"] forState:UIControlStateNormal];
+            }
+            [self.menuView addSubview:btn];
+        }
+        //        [self.menuView addSubview:btnUpload];
+        //        [self.menuView addSubview:btnNewFinder];
+        //        [self.menuView addSubview:btnEdit];
+        //        [self.menuView addSubview:btnSort];
+        
+        [self.menuView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
+        [self.tabBarController.view.superview addSubview:self.menuView];
+        [self.menuView setHidden:YES];
+    }
+    [self.menuView setHidden:!self.menuView.hidden];
+}
+-(void)hideMenu
+{
+    [self.menuView setHidden:YES];
+}
 -(void)segmentAction:(UISegmentedControl *)seg
 {
     [self updateEmailList];
+    if (self.tableView.isEditing) {
+        [self editAction:nil];
+    }
+}
+-(void)markAllAsRead:(id)sender
+{
+    [self hideMenu];
+}
+-(void)clearAllEmail:(id)sender
+{
+    [self hideMenu];
 }
 -(void)selectAllCell:(id)sender
 {
@@ -300,9 +421,8 @@ enum{
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-            [appDelegate.window addSubview:self.hud];
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view.superview addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"未选中任何邮件";
             self.hud.mode=MBProgressHUDModeText;
@@ -321,10 +441,7 @@ enum{
     [actionSheet setTag:kActionSheetTagDeleteOne];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [app.action_array addObject:actionSheet];
 }
-
 -(void)editFinished;
 {
     if (self.tableView.isEditing) {
@@ -333,19 +450,20 @@ enum{
 }
 -(void)editAction:(id)sender
 {
+    [self hideMenu];
     if (!self.tableView.isEditing && self.inArray.count==0&&self.outArray.count==0) {
         return;
     }
-    CGRect r=self.view.frame;
-    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
-    self.view.frame=r;
-    self.tableView.frame=CGRectMake(0, 30, self.view.frame.size.width, self.view.frame.size.height-49-30);
-    if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.tableView.frame=CGRectMake(0, 30, self.view.frame.size.width, self.view.frame.size.height-49-64-30);
-        self.moreEditBar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
-    }
-    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
-    NSLog(@"self.table.frame:%@",NSStringFromCGRect(self.tableView.frame));
+//    CGRect r=self.view.frame;
+//    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
+//    self.view.frame=r;
+//    self.tableView.frame=CGRectMake(0, 30, self.view.frame.size.width, self.view.frame.size.height-49-30);
+//    if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
+//        self.tableView.frame=CGRectMake(0, 30, self.view.frame.size.width, self.view.frame.size.height-49-64-30);
+//        self.moreEditBar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
+//    }
+//    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
+//    NSLog(@"self.table.frame:%@",NSStringFromCGRect(self.tableView.frame));
     [self.tableView setEditing:!self.tableView.editing animated:YES];
     BOOL isHideTabBar=self.tableView.editing;
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -358,30 +476,29 @@ enum{
     {
         [appleDate.myTabBarVC.imageView setHidden:NO];
     }
-    [self.tabBarController.tabBar setHidden:isHideTabBar];
-//    //isHideTabBar=!isHideTabBar;
-//    for(UIView *view in self.tabBarController.view.subviews)
-//    {
-//        if([view isKindOfClass:[UITabBar class]])
-//        {
-//            if (isHideTabBar) { //if hidden tabBar
-//                [view setFrame:CGRectMake(view.frame.origin.x,[[UIScreen mainScreen]bounds].size.height+10, view.frame.size.width, view.frame.size.height)];
-//            }else {
-//                NSLog(@"isHideTabBar %@",NSStringFromCGRect(view.frame));
-//                [view setFrame:CGRectMake(view.frame.origin.x, [[UIScreen mainScreen]bounds].size.height-49, view.frame.size.width, view.frame.size.height)];
-//            }
-//        }else
-//        {
-//            if (isHideTabBar) {
-//                NSLog(@"%@",NSStringFromCGRect(view.frame));
-//                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, [[UIScreen mainScreen]bounds].size.height)];
-//                NSLog(@"%@",NSStringFromCGRect(view.frame));
-//            }else {
-//                NSLog(@"%@",NSStringFromCGRect(view.frame));
-//                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width,[[UIScreen mainScreen]bounds].size.height-49)];
-//            }
-//        }
-//    }
+    //isHideTabBar=!isHideTabBar;
+    for(UIView *view in self.tabBarController.view.subviews)
+    {
+        if([view isKindOfClass:[UITabBar class]])
+        {
+            if (isHideTabBar) { //if hidden tabBar
+                [view setFrame:CGRectMake(view.frame.origin.x,[[UIScreen mainScreen]bounds].size.height+10, view.frame.size.width, view.frame.size.height)];
+            }else {
+                NSLog(@"isHideTabBar %@",NSStringFromCGRect(view.frame));
+                [view setFrame:CGRectMake(view.frame.origin.x, [[UIScreen mainScreen]bounds].size.height-49, view.frame.size.width, view.frame.size.height)];
+            }
+        }else
+        {
+            if (isHideTabBar) {
+                NSLog(@"%@",NSStringFromCGRect(view.frame));
+                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, [[UIScreen mainScreen]bounds].size.height)];
+                NSLog(@"%@",NSStringFromCGRect(view.frame));
+            }else {
+                NSLog(@"%@",NSStringFromCGRect(view.frame));
+                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width,[[UIScreen mainScreen]bounds].size.height-49)];
+            }
+        }
+    }
     
     //隐藏返回按钮
     if (isHideTabBar) {
@@ -390,11 +507,14 @@ enum{
     }else
     {
         [self.navigationItem setLeftBarButtonItem:nil];
-        UIBarButtonItem *editItem=[[UIBarButtonItem alloc] initWithTitleStr:@"编辑" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)];
-        [self.navigationItem setRightBarButtonItem:editItem];
-
+//        UIBarButtonItem *editItem=[[UIBarButtonItem alloc] initWithTitleStr:@"编辑" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)];
+//        [self.navigationItem setRightBarButtonItem:editItem];
+        [self.navigationItem setRightBarButtonItems:self.rightItems];
     }
-    
+    if (self.moreEditBar) {
+        [self.moreEditBar removeFromSuperview];
+        self.moreEditBar=nil;
+    }
     if (!self.moreEditBar) {
         self.moreEditBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0, ([[UIScreen mainScreen] bounds].size.height-49)-self.view.frame.origin.y, 320, 49)];
         if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
@@ -409,19 +529,37 @@ enum{
         }
         [self.view addSubview:self.moreEditBar];
         //发送 删除 提交 移动 全选
-        UIButton *btn_del;
-        UIBarButtonItem *item_del,*item_flexible;
+        UIButton *btn_del,*btn_markReaded,*btn_Resend;
+        UIBarButtonItem *item_del,*item_flexible,*item_markReaded,*item_Resend;
         
-        btn_del =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 29, 39)];
-        [btn_del setImage:[UIImage imageNamed:@"del_nor.png"] forState:UIControlStateNormal];
-        [btn_del setImage:[UIImage imageNamed:@"del_se.png"] forState:UIControlStateHighlighted];
+        btn_del =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 25)];
+        [btn_del setImage:[UIImage imageNamed:@"delx_nor.png"] forState:UIControlStateNormal];
+        [btn_del setImage:[UIImage imageNamed:@"delx_se.png"] forState:UIControlStateHighlighted];
         [btn_del addTarget:self action:@selector(toDelete:) forControlEvents:UIControlEventTouchUpInside];
         item_del=[[UIBarButtonItem alloc] initWithCustomView:btn_del];
         
+        btn_markReaded =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 75, 25)];
+//        [btn_markReaded setTitle:@"标为已读" forState:UIControlStateNormal];
+        [btn_markReaded setImage:[UIImage imageNamed:@"read_nor.png"] forState:UIControlStateNormal];
+        [btn_markReaded setImage:[UIImage imageNamed:@"read_se.png"] forState:UIControlStateHighlighted];
+        [btn_markReaded addTarget:self action:@selector(toDelete:) forControlEvents:UIControlEventTouchUpInside];
+        item_markReaded=[[UIBarButtonItem alloc] initWithCustomView:btn_markReaded];
+        
+        btn_Resend =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 25)];
+//        [btn_Resend setTitle:@"重新发送" forState:UIControlStateNormal];
+        [btn_Resend setImage:[UIImage imageNamed:@"resend_nor.png"] forState:UIControlStateNormal];
+        [btn_Resend setImage:[UIImage imageNamed:@"resend_se.png"] forState:UIControlStateHighlighted];
+        [btn_Resend addTarget:self action:@selector(toDelete:) forControlEvents:UIControlEventTouchUpInside];
+        item_Resend=[[UIBarButtonItem alloc] initWithCustomView:btn_Resend];
+        
         
         item_flexible=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        
-        [self.moreEditBar setItems:@[item_flexible,item_del,item_flexible]];
+        if (self.segmentedControl.selectedSegmentIndex==0) {
+            [self.moreEditBar setItems:@[item_flexible,item_markReaded,item_flexible,item_del,item_flexible]];
+        }else
+        {
+            [self.moreEditBar setItems:@[item_flexible,item_Resend,item_flexible,item_del,item_flexible]];
+        }
     }
 }
 #pragma mark - Table view data source
@@ -453,23 +591,28 @@ enum{
         
         
         UIImageView *unread_tag=[[UIImageView alloc] initWithFrame:CGRectMake(10, 30, 10, 10)];
-        UILabel *lab_role=[[UILabel alloc] initWithFrame:CGRectMake(30, 4, 150, 21)];
+        UILabel *lab_role=[[UILabel alloc] initWithFrame:CGRectMake(30, 4, 92, 21)];
         UILabel *lab_title=[[UILabel alloc] initWithFrame:CGRectMake(30, 24, 150, 21)];
-        UILabel *lab_time=[[UILabel alloc] initWithFrame:CGRectMake(190, 4, 130, 21)];
+        UILabel *lab_time=[[UILabel alloc] initWithFrame:CGRectMake(206, 4, 109, 21)];
         UILabel *lab_econtent=[[UILabel alloc] initWithFrame:CGRectMake(30, 44, 270, 21)];
+        UILabel *lab_fileNum=[[UILabel alloc] initWithFrame:CGRectMake(146, 4, 56, 21)];
+        UIImageView *file_tag=[[UIImageView alloc] initWithFrame:CGRectMake(125, 7, 15, 15)];
         [cell.contentView addSubview:lab_role];
         [cell.contentView addSubview:lab_title];
         [cell.contentView addSubview:lab_time];
         [cell.contentView addSubview:lab_econtent];
         [cell.contentView addSubview:unread_tag];
+        [cell.contentView addSubview:lab_fileNum];
+        [cell.contentView addSubview:file_tag];
         
         [lab_role setFont:[UIFont boldSystemFontOfSize:16]];
         [lab_title setFont:[UIFont systemFontOfSize:14]];
         [lab_econtent setFont:[UIFont systemFontOfSize:14]];
         [lab_time setFont:[UIFont systemFontOfSize:13]];
+        [lab_fileNum setFont:[UIFont systemFontOfSize:13]];
         
         [lab_econtent setTextColor:[UIColor grayColor]];
-        [lab_time setTextColor:[UIColor grayColor]];
+        [lab_fileNum setTextColor:[UIColor grayColor]];
         [lab_econtent setNumberOfLines:1];
         
         
@@ -480,12 +623,16 @@ enum{
         lab_title.tag=3;
         lab_time.tag=4;
         lab_econtent.tag=5;
+        lab_fileNum.tag=6;
+        file_tag.tag=7;
     }
     UIImageView *unread_tag=(UIImageView *)[cell.contentView viewWithTag:1];
     UILabel *lab_role=(UILabel *)[cell.contentView viewWithTag:2];
     UILabel *lab_title=(UILabel *)[cell.contentView viewWithTag:3];
     UILabel *lab_time=(UILabel *)[cell.contentView viewWithTag:4];
     UILabel *lab_econtent=(UILabel *)[cell.contentView viewWithTag:5];
+    UILabel *lab_fileNum=(UILabel *)[cell.contentView viewWithTag:6];
+    UIImageView *file_tag=(UIImageView *)[cell.contentView viewWithTag:7];
     NSDictionary *dic;
     if (self.segmentedControl.selectedSegmentIndex==0) {
         //收件箱
@@ -523,20 +670,36 @@ enum{
 //        cell.detailTextLabel.text=[dic objectForKey:@"sendtime"];
         lab_title.text=[dic objectForKey:@"etitle"];
         if ([lab_title.text isEqualToString:@""]) {
-            lab_title.text=@"无主题";
+            lab_title.text=@"(无标题)";
         }
         NSString *econtent=[dic objectForKey:@"econtent"];
         if ([econtent isKindOfClass:NSClassFromString(@"NSNull")]) {
             
-            lab_econtent.text=@"此邮件中无内容";
+            lab_econtent.text=@"(无内容)";
         }else if ([econtent isEqualToString:@""])
         {
-            lab_econtent.text=@"此邮件中无内容";
+            lab_econtent.text=@"(无内容)";
         }else
         {
             lab_econtent.text=econtent;
         }
-        lab_time.text=[dic objectForKey:@"sendtime"];
+        lab_fileNum.text=@"3个文件";
+//        lab_time.text=[dic objectForKey:@"sendtime"];
+        NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
+        NSDateFormatter *oldDateFormatter=[[NSDateFormatter alloc] init];
+        [oldDateFormatter setDateFormat:@"yyyy-MM-dd HH:mm"];
+        NSDate *oldDate=[oldDateFormatter dateFromString:[dic objectForKey:@"sendtime"]];
+        NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:[NSDate date]];
+        NSInteger thisYear= [components year];
+        NSDateComponents *oldComponents = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:oldDate];
+        NSInteger oldYear= [oldComponents year];
+        if (oldYear<thisYear) {
+            [dateFormatter setDateFormat:@"yyyy年MM月dd日"];
+        }else
+        {
+            [dateFormatter setDateFormat:@"MM月dd日"];
+        }
+        lab_time.text=[dateFormatter stringFromDate:oldDate];
         
         int readstate=-1;
         readstate=[[dic objectForKey:@"readstate"] intValue];
@@ -548,12 +711,13 @@ enum{
 //            cell.imageView.image=[UIImage imageNamed:@"mail_readed.png"];
             unread_tag.image=[UIImage imageNamed:@"mail_readed.png"];
         }
+        file_tag.image=[UIImage imageNamed:@"hasfile.png"];
     }
     return cell;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 70;
+    return 75;
 }
 
 #pragma mark - Table view delegate
@@ -617,9 +781,8 @@ enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-    [appDelegate.window addSubview:self.hud];
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
     
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";
@@ -636,9 +799,8 @@ enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-    [appDelegate.window addSubview:self.hud];
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"操作成功";
     self.hud.mode=MBProgressHUDModeText;
@@ -657,9 +819,8 @@ enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-    [appDelegate.window addSubview:self.hud];
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"操作失败";
     self.hud.mode=MBProgressHUDModeText;
@@ -729,9 +890,6 @@ enum{
 #pragma mark - UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [app.action_array removeAllObjects];
-    
     switch ([actionSheet tag]) {
         case kActionSheetTagDeleteOne:
         {
@@ -751,28 +909,6 @@ enum{
         }
         default:
             break;
-    }
-}
-
-//<ios 6.0
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    return NO;
-}
-
-//>ios 6.0
-- (BOOL)shouldAutorotate{
-    return NO;
-}
-
-//视图旋转完成之后自动调用
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UIActionSheet *actionsheet = [app.action_array lastObject];
-    if(actionsheet)
-    {
-        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
-        [actionsheet showInView:[[UIApplication sharedApplication] keyWindow]];
     }
 }
 

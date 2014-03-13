@@ -240,7 +240,7 @@ enum{
     [app_delegate finishLogin];
     
     MyTabBarViewController *tabbar = [app_delegate.splitVC.viewControllers firstObject];
-    UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
+    UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:2];
     UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
     if([uploadView isKindOfClass:[UpDownloadViewController class]])
     {

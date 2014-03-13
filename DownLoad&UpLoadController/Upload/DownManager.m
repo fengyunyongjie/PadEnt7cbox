@@ -39,7 +39,7 @@
     [self updateDownList];
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-    UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
+    UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:2];
     UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
     if([uploadView isKindOfClass:[UpDownloadViewController class]])
     {
@@ -72,7 +72,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-        UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
+        UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:2];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
         {
@@ -85,7 +85,7 @@
     
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-    UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
+    UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:2];
     UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
     if([uploadView isKindOfClass:[UpDownloadViewController class]])
     {
@@ -261,7 +261,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-        UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
+        UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:2];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
         {
@@ -329,7 +329,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-        UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:1];
+        UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:2];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
         {

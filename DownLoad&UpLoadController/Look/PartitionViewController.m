@@ -381,7 +381,7 @@
         {
             AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-            UINavigationController *NavigationController3 = [[tabbar viewControllers] objectAtIndex:1];
+            UINavigationController *NavigationController3 = [[tabbar viewControllers] objectAtIndex:2];
             for(int i=NavigationController3.viewControllers.count-1;i>=0;i--)
             {
                 UpDownloadViewController *upDownLoad = [NavigationController3.viewControllers objectAtIndex:i];

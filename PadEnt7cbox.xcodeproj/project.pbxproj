@@ -240,6 +240,9 @@
 		2984241B185ED500002AC1D0 /* PadEnt7cbox-config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 29842411185ED500002AC1D0 /* PadEnt7cbox-config.plist */; };
 		2984241C185ED500002AC1D0 /* PadEnt7cbox-LanguageExtract.plist in Resources */ = {isa = PBXBuildFile; fileRef = 29842412185ED500002AC1D0 /* PadEnt7cbox-LanguageExtract.plist */; };
 		29842424185ED680002AC1D0 /* Configuratioin.m in Sources */ = {isa = PBXBuildFile; fileRef = 29842423185ED680002AC1D0 /* Configuratioin.m */; };
+		29900AB71920AD86009C5357 /* login_bt1.png in Resources */ = {isa = PBXBuildFile; fileRef = 29900AB41920AD86009C5357 /* login_bt1.png */; };
+		29900AB81920AD86009C5357 /* Login_ico.png in Resources */ = {isa = PBXBuildFile; fileRef = 29900AB51920AD86009C5357 /* Login_ico.png */; };
+		29900AB91920AD86009C5357 /* login_input.png in Resources */ = {isa = PBXBuildFile; fileRef = 29900AB61920AD86009C5357 /* login_input.png */; };
 		299CFC88186810E90060855B /* PasswordList.m in Sources */ = {isa = PBXBuildFile; fileRef = 299CFC87186810E90060855B /* PasswordList.m */; };
 		299CFC8B186811380060855B /* PasswordManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 299CFC8A186811380060855B /* PasswordManager.m */; };
 		299CFC8E186811680060855B /* PasswordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 299CFC8D186811680060855B /* PasswordButton.m */; };
@@ -260,9 +263,6 @@
 		29CE22351862E5BB0030EC86 /* InputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29CE22341862E5BB0030EC86 /* InputViewController.m */; };
 		29F1DDB7186BC467001CC8B1 /* PartitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F1DDB6186BC467001CC8B1 /* PartitionViewController.m */; };
 		29FBD5FF1863D27A005F03AC /* login_bt.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5F71863D27A005F03AC /* login_bt.png */; };
-		29FBD6001863D27A005F03AC /* login_bt1.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5F81863D27A005F03AC /* login_bt1.png */; };
-		29FBD6031863D27A005F03AC /* Login_ico.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5FB1863D27A005F03AC /* Login_ico.png */; };
-		29FBD6051863D27A005F03AC /* login_input.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5FD1863D27A005F03AC /* login_input.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -587,6 +587,9 @@
 		29842412185ED500002AC1D0 /* PadEnt7cbox-LanguageExtract.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "PadEnt7cbox-LanguageExtract.plist"; sourceTree = "<group>"; };
 		29842422185ED680002AC1D0 /* Configuratioin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configuratioin.h; sourceTree = "<group>"; };
 		29842423185ED680002AC1D0 /* Configuratioin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Configuratioin.m; sourceTree = "<group>"; };
+		29900AB41920AD86009C5357 /* login_bt1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_bt1.png; sourceTree = "<group>"; };
+		29900AB51920AD86009C5357 /* Login_ico.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Login_ico.png; sourceTree = "<group>"; };
+		29900AB61920AD86009C5357 /* login_input.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_input.png; sourceTree = "<group>"; };
 		299CFC86186810E90060855B /* PasswordList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasswordList.h; sourceTree = "<group>"; };
 		299CFC87186810E90060855B /* PasswordList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordList.m; sourceTree = "<group>"; };
 		299CFC89186811380060855B /* PasswordManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasswordManager.h; sourceTree = "<group>"; };
@@ -613,9 +616,6 @@
 		29F1DDB5186BC467001CC8B1 /* PartitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PartitionViewController.h; sourceTree = "<group>"; };
 		29F1DDB6186BC467001CC8B1 /* PartitionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PartitionViewController.m; sourceTree = "<group>"; };
 		29FBD5F71863D27A005F03AC /* login_bt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_bt.png; sourceTree = "<group>"; };
-		29FBD5F81863D27A005F03AC /* login_bt1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_bt1.png; sourceTree = "<group>"; };
-		29FBD5FB1863D27A005F03AC /* Login_ico.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Login_ico.png; sourceTree = "<group>"; };
-		29FBD5FD1863D27A005F03AC /* login_input.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_input.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -689,6 +689,8 @@
 				29135DFE188CF35800A951CE /* bt_del_se@2x.png */,
 				29135DFF188CF35800A951CE /* bt_download_nor@2x.png */,
 				29135E00188CF35800A951CE /* bt_download_se@2x.png */,
+				29AF89B6188E142F00A71A0E /* bt_save_nor@2x.png */,
+				29AF89B7188E142F00A71A0E /* bt_save_se@2x.png */,
 				29135E03188CF35800A951CE /* copy_nor@2x.png */,
 				29135E04188CF35800A951CE /* copy_se@2x.png */,
 				29135E05188CF35800A951CE /* del.png */,
@@ -699,6 +701,7 @@
 				29135E0A188CF35800A951CE /* file_doc@2x.png */,
 				29135E0B188CF35800A951CE /* file_excel@2x.png */,
 				29135E0C188CF35800A951CE /* file_folder@2x.png */,
+				296EBB25188F7134006CDAC3 /* file_folder_comp@2x.png */,
 				29135E0D188CF35800A951CE /* file_moving@2x.png */,
 				29135E0E188CF35800A951CE /* file_music@2x.png */,
 				29135E0F188CF35800A951CE /* file_other@2x.png */,
@@ -718,9 +721,13 @@
 				29135E24188CF35800A951CE /* guide_bt_se@2x.png */,
 				29135E25188CF35800A951CE /* guide_gray.png */,
 				29135E26188CF35800A951CE /* Ico_CoverF@2x.png */,
+				29FBD5F71863D27A005F03AC /* login_bt.png */,
+				29900AB41920AD86009C5357 /* login_bt1.png */,
 				29135E2D188CF35800A951CE /* login_bt1@2x.png */,
 				29135E2E188CF35800A951CE /* login_bt@2x.png */,
+				29900AB51920AD86009C5357 /* Login_ico.png */,
 				29135E2F188CF35800A951CE /* Login_ico@2x.png */,
+				29900AB61920AD86009C5357 /* login_input.png */,
 				29135E30188CF35800A951CE /* login_input@2x.png */,
 				29135E31188CF35800A951CE /* mail_readed@2x.png */,
 				29135E32188CF35800A951CE /* mail_unread.png */,
@@ -1274,24 +1281,15 @@
 		29842416185ED500002AC1D0 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				29842417185ED500002AC1D0 /* Logo */,
 				29842418185ED500002AC1D0 /* Others */,
 			);
 			name = Images;
 			path = ../Images;
 			sourceTree = "<group>";
 		};
-		29842417185ED500002AC1D0 /* Logo */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Logo;
-			sourceTree = "<group>";
-		};
 		29842418185ED500002AC1D0 /* Others */ = {
 			isa = PBXGroup;
 			children = (
-				29FBD5F61863D27A005F03AC /* iPadLogin */,
 				29135DEE188CF35800A951CE /* iPhone */,
 			);
 			path = Others;
@@ -1328,17 +1326,6 @@
 				29B3543118B2F8130079184B /* BackgroundRunner.m */,
 			);
 			path = BackgroundRunner;
-			sourceTree = "<group>";
-		};
-		29FBD5F61863D27A005F03AC /* iPadLogin */ = {
-			isa = PBXGroup;
-			children = (
-				29FBD5F71863D27A005F03AC /* login_bt.png */,
-				29FBD5F81863D27A005F03AC /* login_bt1.png */,
-				29FBD5FB1863D27A005F03AC /* Login_ico.png */,
-				29FBD5FD1863D27A005F03AC /* login_input.png */,
-			);
-			path = iPadLogin;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1427,6 +1414,7 @@
 				294EB52318605061006E6E96 /* PushConfig.plist in Resources */,
 				29135EC1188CF35900A951CE /* guide_bt_se@2x.png in Resources */,
 				2982E098186152FE009CB82D /* Back_Normal.png in Resources */,
+				29900AB91920AD86009C5357 /* login_input.png in Resources */,
 				29135EFE188CF35900A951CE /* share_locked@2x.png in Resources */,
 				29135ECE188CF35900A951CE /* mail_readed@2x.png in Resources */,
 				29135EB2188CF35900A951CE /* grayArrow@2x.png in Resources */,
@@ -1461,7 +1449,6 @@
 				29135F10188CF35900A951CE /* title_bt_sort_nor@2x.png in Resources */,
 				29135EAE188CF35900A951CE /* file_pic@2x.png in Resources */,
 				29135EDF188CF35900A951CE /* nav_send_nor@2x.png in Resources */,
-				29FBD6031863D27A005F03AC /* Login_ico.png in Resources */,
 				29135EAB188CF35900A951CE /* file_music@2x.png in Resources */,
 				294EB51718604FB1006E6E96 /* grayArrow.png in Resources */,
 				29135F1B188CF35900A951CE /* title_more@2x.png in Resources */,
@@ -1469,7 +1456,6 @@
 				29135E96188CF35900A951CE /* blackArrow@2x.png in Resources */,
 				29C0D54F18CDB70400056CB9 /* title_alldel@2x.png in Resources */,
 				29135F15188CF35900A951CE /* title_bt_upload_se@2x.png in Resources */,
-				29FBD6051863D27A005F03AC /* login_input.png in Resources */,
 				29135EDC188CF35900A951CE /* nav_more_nor@2x.png in Resources */,
 				29FBD5FF1863D27A005F03AC /* login_bt.png in Resources */,
 				29135EEF188CF35900A951CE /* sel_nor@2x.png in Resources */,
@@ -1493,6 +1479,7 @@
 				2982E0A4186152FE009CB82D /* video.png in Resources */,
 				29135EE8188CF35900A951CE /* overlay@2x.png in Resources */,
 				2982DFCD18614DE7009CB82D /* MySplitViewController.xib in Resources */,
+				29900AB71920AD86009C5357 /* login_bt1.png in Resources */,
 				29135F09188CF35900A951CE /* title_bk_ti@2x.png in Resources */,
 				29135EAF188CF35900A951CE /* file_ppt@2x.png in Resources */,
 				294EB51518604FB1006E6E96 /* blueArrow.png in Resources */,
@@ -1511,6 +1498,7 @@
 				29135EA2188CF35900A951CE /* del.png in Resources */,
 				29135EC0188CF35900A951CE /* guide_bt_nor@2x.png in Resources */,
 				29135F00188CF35900A951CE /* share_se@2x.png in Resources */,
+				29900AB81920AD86009C5357 /* Login_ico.png in Resources */,
 				29135EA0188CF35900A951CE /* copy_nor@2x.png in Resources */,
 				29C0D54C18CDB70400056CB9 /* delx_se@2x.png in Resources */,
 				29AF89B9188E142F00A71A0E /* bt_save_se@2x.png in Resources */,
@@ -1573,7 +1561,6 @@
 				29135EE4188CF35900A951CE /* nav_trans_se@2x.png in Resources */,
 				29135ECD188CF35900A951CE /* login_input@2x.png in Resources */,
 				29135E97188CF35900A951CE /* blueArrow@2x.png in Resources */,
-				29FBD6001863D27A005F03AC /* login_bt1.png in Resources */,
 				29135EC3188CF35900A951CE /* Ico_CoverF@2x.png in Resources */,
 				29135EA8188CF35900A951CE /* file_excel@2x.png in Resources */,
 				29135EFF188CF35900A951CE /* share_nor@2x.png in Resources */,
@@ -1736,8 +1723,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: yunfei ma (2838Z979QM)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: yunfei ma (2838Z979QM)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1755,8 +1742,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "005A913E-2651-40F1-BD9F-39C5B7603DD9";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "005A913E-2651-40F1-BD9F-39C5B7603DD9";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos7.0;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -1779,8 +1766,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: yunfei ma (2838Z979QM)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: yunfei ma (2838Z979QM)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1792,8 +1779,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "005A913E-2651-40F1-BD9F-39C5B7603DD9";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "005A913E-2651-40F1-BD9F-39C5B7603DD9";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos7.0;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -1805,7 +1792,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: yunfei ma (2838Z979QM)";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: yunfei ma (2838Z979QM)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PadEnt7cbox/PadEnt7cbox-Prefix.pch";
@@ -1817,8 +1804,8 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "005A913E-2651-40F1-BD9F-39C5B7603DD9";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "005A913E-2651-40F1-BD9F-39C5B7603DD9";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -1830,8 +1817,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: yunfei ma (2838Z979QM)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: yunfei ma (2838Z979QM)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Xi'an ZhouHe Network Technology Co., Ltd. (3N53M83M5K)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PadEnt7cbox/PadEnt7cbox-Prefix.pch";
 				INFOPLIST_FILE = "PadEnt7cbox/PadEnt7cbox-Info.plist";
@@ -1841,8 +1828,8 @@
 					"$(SRCROOT)/AllSDK/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "005A913E-2651-40F1-BD9F-39C5B7603DD9";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "005A913E-2651-40F1-BD9F-39C5B7603DD9";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;

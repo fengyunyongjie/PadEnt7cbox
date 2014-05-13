@@ -1476,7 +1476,7 @@
     if(sharedType == 1)
     {
         //短信分享
-        NSString *text=[NSString stringWithFormat:@"%@想和您分享虹盘的文件，链接地址：%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"],l_url];
+        NSString *text=[NSString stringWithFormat:@"%@想和您分享icoffer企业网盘的文件，链接地址：%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"],l_url];
         
         if ([MFMessageComposeViewController canSendText]) {
             MFMessageComposeViewController *picker = [[MFMessageComposeViewController alloc] init];
@@ -1489,7 +1489,7 @@
     else if(sharedType == 2)
     {
         //邮件分享
-        NSString *text=[NSString stringWithFormat:@"%@想和您分享虹盘的文件，链接地址：%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"],l_url];
+        NSString *text=[NSString stringWithFormat:@"%@想和您分享icoffer企业网盘的文件，链接地址：%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"],l_url];
         
         if ([MFMailComposeViewController canSendMail]) {
             MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];

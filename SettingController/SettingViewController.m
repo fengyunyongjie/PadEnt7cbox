@@ -490,7 +490,7 @@ typedef enum{
         case  kABAuthorizationStatusRestricted:
         {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"没有打开通讯录权限"
-                                                            message:@"因iOS系统限制，需要读取联系人信息才能导入通讯录\n 步骤：设置-隐私-通讯录-虹盘商业版"
+                                                            message:@"因iOS系统限制，需要读取联系人信息才能导入通讯录\n 步骤：设置-隐私-通讯录-icoffer"
                                                            delegate:nil
                                                   cancelButtonTitle:@"确定"
                                                   otherButtonTitles:nil];

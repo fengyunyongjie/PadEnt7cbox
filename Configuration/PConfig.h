@@ -9,7 +9,7 @@
 #ifndef NetDisk_PConfig_h
 #define NetDisk_PConfig_h
 #define VERSION [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"]
-#define BUILD_VERSION @"1"
+#define BUILD_VERSION @"2"
 //#define BUILD_VERSION [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"]
 //#define APPSTORE_URL @"https://itunes.apple.com/us/app/hong-pan-shang-ye-ban/id737677663?ls=1&mt=8"
 #define APPSTORE_URL @"itms-apps://itunes.apple.com/app/id808080594"

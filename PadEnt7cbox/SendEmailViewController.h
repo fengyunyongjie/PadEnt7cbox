@@ -21,11 +21,13 @@ typedef enum {
 @property (strong,nonatomic) UITextField *receversTextField;
 @property (strong,nonatomic) NSString *recevers;
 @property (strong,nonatomic) NSArray *usrids;
+@property (strong,nonatomic) NSArray *usernameList;
 @property (strong,nonatomic) NSString *names;
+@property (strong,nonatomic) NSArray *emails;
 @property (assign,nonatomic) SendEmailType tyle;
 
 @property (strong,nonatomic) UITableView *tableView;
 @property (strong,nonatomic) NSIndexPath *selectedIndexPath;
 @property (strong,nonatomic) NSMutableDictionary *imageDownloadsInProgress;
--(void)didSelectUserIDS:(NSArray *)ids Names:(NSArray *)names;
+-(void)didSelectUserIDS:(NSArray *)ids Names:(NSArray *)names emails:(NSArray *)emails;
 @end

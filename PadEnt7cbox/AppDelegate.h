@@ -34,6 +34,7 @@
 @property (strong, nonatomic) NSString *space_id;
 @property (strong, nonatomic) NSString *space_name;
 @property (strong, nonatomic) NSString *old_file_url;
+@property (assign, nonatomic) BOOL isFileShare;
 @property (nonatomic,strong) InputViewController *lockScreen;
 @property (nonatomic,strong) UIView *localV;
 @property (strong,nonatomic) NSMutableArray *action_array;

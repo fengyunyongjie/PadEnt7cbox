@@ -45,12 +45,13 @@
 @synthesize contentView2=_contentView2;
 @synthesize separator = _separator;
 @synthesize sourceArray = _sourceArray;
+@synthesize selectButton,isShowSelectButton;
 
 #pragma mark Init
 - (instancetype)initWithFrame:(CGRect)frame {
 	
     if ((self = [super initWithFrame:frame])){
-		[self setup];
+        
 	}
 	
     return self;
@@ -59,7 +60,7 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
 	
 	if ((self = [super initWithCoder:aDecoder])){
-		[self setup];
+        
 	}
 	
 	return self;
@@ -84,8 +85,20 @@
 	[_tokenField addTarget:self action:@selector(tokenFieldFrameDidChange:) forControlEvents:(UIControlEvents)TITokenFieldControlEventFrameDidChange];
 	[_tokenField setDelegate:self];
 	[self addSubview:_tokenField];
+    
 	CGFloat tokenFieldBottom = CGRectGetMaxY(_tokenField.frame);
-	
+    self.selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.selectButton setFrame:CGRectMake(0, tokenFieldBottom+2, 320, 40)];
+    [self.selectButton setTitle:@"选择接收人" forState:UIControlStateNormal];
+    [self.selectButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [self.selectButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.selectButton.titleLabel setTextAlignment:NSTextAlignmentLeft];
+    
+    [self addSubview:self.selectButton];
+    if(isShowSelectButton)
+    {
+        tokenFieldBottom+=41;
+    }
 	_separator = [[UIView alloc] initWithFrame:CGRectMake(0, tokenFieldBottom, self.bounds.size.width, 1)];
 	[_separator setBackgroundColor:[UIColor colorWithWhite:0.7 alpha:1]];
 	[self addSubview:_separator];
@@ -272,8 +285,13 @@
 }
 
 - (void)tokenFieldFrameWillChange:(TITokenField *)field {
-	
-	CGFloat tokenFieldBottom = CGRectGetMaxY(_tokenField.frame);
+    CGFloat tokenFieldBottom = CGRectGetMaxY(_tokenField.frame);
+    if(isShowSelectButton)
+    {
+        tokenFieldBottom += 40;
+        CGRect selectRect = CGRectMake(0, _tokenField.frame.origin.y+_tokenField.frame.size.height+2, 320, 40);
+        [self.selectButton setFrame:selectRect];
+    }
 	[_separator setFrame:((CGRect){{_separator.frame.origin.x, tokenFieldBottom}, _separator.bounds.size})];
 	[_resultsTable setFrame:((CGRect){{_resultsTable.frame.origin.x, (tokenFieldBottom + 1)}, _resultsTable.bounds.size})];
     [_titileField setFrame:((CGRect){{_titileField.frame.origin.x, (tokenFieldBottom+1)},_titileField.bounds.size})];
@@ -464,7 +482,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 - (instancetype)initWithFrame:(CGRect)frame {
 	
     if ((self = [super initWithFrame:frame])){
-		[self setup];
+        [self setup];
     }
 	
     return self;
@@ -473,7 +491,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
 	
 	if ((self = [super initWithCoder:aDecoder])){
-		[self setup];
+        [self setup];
 	}
 	
 	return self;
@@ -832,9 +850,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 
 #pragma mark Left / Right view stuff
 - (void)setPromptText:(NSString *)text {
-	
 	if (text){
-		
 		UILabel * label = (UILabel *)self.leftView;
 		if (!label || ![label isKindOfClass:[UILabel class]]){
 			label = [[UILabel alloc] initWithFrame:CGRectZero];

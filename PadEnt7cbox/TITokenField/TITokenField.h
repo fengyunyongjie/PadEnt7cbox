@@ -60,15 +60,18 @@
 @property (nonatomic, assign) BOOL forcePickSearchResult;
 @property (nonatomic, readonly) TITokenField * tokenField;
 @property (nonatomic, strong) UITextField *titileField;
+@property (nonatomic, strong) UIButton *selectButton;
 @property (nonatomic, readonly) UIView * separator;
 @property (nonatomic, readonly) UITableView * resultsTable;
 @property (nonatomic, readonly) UIView * contentView;
 @property (nonatomic, readonly) UIView * contentView2;
 @property (nonatomic, copy) NSArray * sourceArray;
 @property (weak, nonatomic, readonly) NSArray * tokenTitles;
+@property (nonatomic, assign) BOOL isShowSelectButton;
 
 - (void)updateContentSize;
 - (void)setPromptText:(NSString *)text;
+- (void)setup;
 @end
 
 //==========================================================
@@ -104,8 +107,7 @@ typedef enum {
 
 - (void)layoutTokensAnimated:(BOOL)animated;
 - (void)setResultsModeEnabled:(BOOL)enabled animated:(BOOL)animated;
-
-// Pass nil to hide label
+- (void)setup;
 - (void)setPromptText:(NSString *)aText;
 
 @end

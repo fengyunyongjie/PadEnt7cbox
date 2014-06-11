@@ -11,7 +11,6 @@
 #import "SCBEmailManager.h"
 #import "MBProgressHUD.h"
 #import "YNFunctions.h"
-#import "AppDelegate.h"
 
 @interface SendEmailViewController ()<SCBEmailManagerDelegate,UITextFieldDelegate,UITextViewDelegate>
 @property (strong,nonatomic) SCBEmailManager *em;
@@ -80,9 +79,8 @@
             [self.hud removeFromSuperview];
         }
         self.hud=nil;
-        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-        [appDelegate.window addSubview:self.hud];
+        self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+        [self.view.superview addSubview:self.hud];
         [self.hud show:NO];
         self.hud.labelText=@"请填写标题栏";
         //self.hud.labelText=error_info;
@@ -99,9 +97,8 @@
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-            [appDelegate.window addSubview:self.hud];
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view.superview addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"请填写收件人";
             //self.hud.labelText=error_info;
@@ -116,9 +113,8 @@
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-            [appDelegate.window addSubview:self.hud];
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view.superview addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"请输入正确的邮箱帐号";
             //self.hud.labelText=error_info;
@@ -135,9 +131,8 @@
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-            [appDelegate.window addSubview:self.hud];
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view.superview addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"请选择收件人";
             //self.hud.labelText=error_info;
@@ -170,19 +165,20 @@
     
     if (self.tyle==kTypeSendEx) {
         self.recevers=self.receversTextField.text;
-        [self.em sendExternalEmailToUser:self.recevers Title:self.eTitle Content:self.eContent Files:self.fids];
+//        [self.em sendExternalEmailToUser:self.recevers Title:self.eTitle Content:self.eContent Files:self.fids];
+        [self.em sendFilesWithSubject:self.eTitle userids:self.usrids usernames:self.usernameList useremails:self.emails sendfiles:self.fids message:self.eContent];
     }else
     {
         NSLog(@"%@",self.eTitleTextField.text);
-        [self.em sendInteriorEmailToUser:self.usrids Title:self.eTitle Content:self.eContent Files:self.fids];
+//        [self.em sendInteriorEmailToUser:self.usrids Title:self.eTitle Content:self.eContent Files:self.fids];
+        [self.em sendFilesWithSubject:self.eTitle userids:self.usrids usernames:self.usernameList useremails:self.emails sendfiles:self.fids message:self.eContent];
     }
     if (self.hud) {
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-    [appDelegate.window addSubview:self.hud];
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"正在发送...";
     //self.hud.labelText=error_info;
@@ -207,10 +203,12 @@
     }
     return YES;
 }
--(void)didSelectUserIDS:(NSArray *)ids Names:(NSArray *)names
+-(void)didSelectUserIDS:(NSArray *)ids Names:(NSArray *)names emails:(NSArray *)emails
 {
     self.usrids=ids;
+    self.usernameList=names;
     self.names=[names componentsJoinedByString:@";"];
+    self.emails=emails;
     [self.tableView reloadData];
 }
 #pragma mark - Table view data source
@@ -444,15 +442,32 @@
     }
 }
 #pragma mark - SCBEmailManagerDelegate
+-(void)sendFilesSucceed:(NSDictionary *)datadic
+{
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=@"发送成功";
+    //self.hud.labelText=error_info;
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
+    [self performSelector:@selector(cancelAction:) withObject:self afterDelay:1.0f];
+
+}
 -(void)sendEmailSucceed
 {
     if (self.hud) {
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-    [appDelegate.window addSubview:self.hud];
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"发送成功";
     //self.hud.labelText=error_info;
@@ -468,9 +483,8 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-    [appDelegate.window addSubview:self.hud];
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"发送失败";
     //self.hud.labelText=error_info;
@@ -485,9 +499,8 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-    [appDelegate.window addSubview:self.hud];
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
     
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";

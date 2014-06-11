@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "EGORefreshTableHeaderView.h"
+#import "CustomSelectButton.h"
 
 @interface EmailListViewController : UIViewController<EGORefreshTableHeaderDelegate,UITableViewDataSource,UITableViewDelegate>
 {
@@ -21,4 +22,7 @@
 @property (strong,nonatomic) NSIndexPath *selectedIndexPath;
 @property (strong,nonatomic) NSArray *rightItems;
 @property (strong,nonatomic) UIControl *menuView;
+@property (strong,nonatomic) CustomSelectButton *customSelectButton;
+@property (nonatomic,assign) BOOL isShowEmail;
+
 @end

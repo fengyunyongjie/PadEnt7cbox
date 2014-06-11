@@ -10,7 +10,6 @@
 #import "YNFunctions.h"
 #import "SCBAccountManager.h"
 #import "MBProgressHUD.h"
-#import "AppDelegate.h"
 
 @implementation FileItem
 
@@ -26,6 +25,7 @@
 @end
 
 @implementation UserListViewController
+@synthesize listViewDelegate,selectedItems,toolbar;
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
@@ -47,22 +47,32 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [self updateList];
+    self.view.userInteractionEnabled = NO;
+    [UIView animateWithDuration:0.2 animations:^{} completion:^(BOOL bl){
+        self.view.userInteractionEnabled = YES;
+    }];
 }
--(void)viewDidAppear:(BOOL)animated
+
+-(void)viewDidLayoutSubviews
 {
     CGRect r=self.view.frame;
     r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
     self.view.frame=r;
     if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-[self.toolbar frame].size.height);
     }else
     {
-        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-64);
+        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-64-[self.toolbar frame].size.height);
     }
     
-    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
-    NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
+    if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
+        self.toolbar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
+    }else
+    {
+        self.toolbar.frame=CGRectMake(0, ([[UIScreen mainScreen] bounds].size.height-49)-self.view.frame.origin.y, 320, 49);
+    }
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -70,11 +80,70 @@
     self.tableView=[[UITableView alloc] init];
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
+    
     [self.view addSubview:self.tableView];
-    self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    UIBarButtonItem *barItem=[[UIBarButtonItem alloc] initWithTitle:@"确定" style:UIBarButtonItemStylePlain target:self action:@selector(okAction:)];
+    
+    UIBarButtonItem *barItem=[[UIBarButtonItem alloc] initWithTitle:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAll:)];
     self.navigationItem.rightBarButtonItem=barItem;
     [self.tableView setEditing:YES];
+    
+    self.toolbar=[[UIToolbar alloc] init];
+    [self.toolbar sizeToFit];
+    [self.view addSubview:self.toolbar];
+    
+    [self.toolbar setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+    
+    UIButton *btn_download ,*btn_resave;
+    UIBarButtonItem  *item_download, *item_resave;
+    btn_resave =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 134, 35)];
+    [btn_resave setBackgroundImage:[UIImage imageNamed:@"oper_bt_nor.png"] forState:UIControlStateNormal];
+    [btn_resave setBackgroundImage:[UIImage imageNamed:@"oper_bt_se.png"] forState:UIControlStateHighlighted];
+    [btn_resave setTitle:@"确 定" forState:UIControlStateNormal];
+    [btn_resave addTarget:self action:@selector(okAction:) forControlEvents:UIControlEventTouchUpInside];
+    item_resave=[[UIBarButtonItem alloc] initWithCustomView:btn_resave];
+    
+    btn_download =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 134, 35)];
+    [btn_download setBackgroundImage:[UIImage imageNamed:@"oper_bt_nor.png"] forState:UIControlStateNormal];
+    [btn_download setBackgroundImage:[UIImage imageNamed:@"oper_bt_se.png"] forState:UIControlStateHighlighted];
+    [btn_download setTitle:@"取 消" forState:UIControlStateNormal];
+    [btn_download addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
+    item_download=[[UIBarButtonItem alloc] initWithCustomView:btn_download];
+    UIBarButtonItem *fix=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    [self.toolbar setItems:@[fix,item_download,fix,item_resave,fix]];
+}
+
+-(void)selectAll:(id)sender
+{
+    UIBarButtonItem *barItem = sender;
+    if([barItem.title isEqualToString:@"全选"])
+    {
+        [barItem setTitle:@"取消全选"];
+        for(int i=0;i<self.listArray.count;i++)
+        {
+            if(i<self.userItems.count)
+            {
+                FileItem* fileItem = [self.userItems objectAtIndex:i];
+                [fileItem setChecked:YES];
+            }
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+        }
+    }
+    else
+    {
+        [barItem setTitle:@"全选"];
+        
+        for(int i=0;i<self.listArray.count;i++)
+        {
+            if(i<self.userItems.count)
+            {
+                FileItem* fileItem = [self.userItems objectAtIndex:i];
+                [fileItem setChecked:NO];
+            }
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -116,21 +185,30 @@
 }
 -(void)okAction:(id)sender
 {
-    NSMutableArray *ids=[NSMutableArray array];
-    NSMutableArray *names=[NSMutableArray array];
+    NSMutableArray *ids=[[NSMutableArray alloc] init];
+    NSMutableArray *names=[[NSMutableArray alloc] init];
+    NSMutableArray *emails=[[NSMutableArray alloc] init];
     for (int i=0;i<self.userItems.count; i++) {
         FileItem *item=[self.userItems objectAtIndex:i];
         if ([item checked]) {
             NSDictionary *dic=[self.listArray objectAtIndex:i];
             NSString *id=[dic objectForKey:@"usrid"];
             NSString *name=[dic objectForKey:@"usrturename"];
+            NSString *email=[dic objectForKey:@"usraccount"];
             [ids addObject:id];
             [names addObject:name];
+            [emails addObject:email];
         }
     }
-    [self.delegate didSelectUserIDS:ids Names:names];
+    [self.listViewDelegate didSelectUserIDS:ids Names:names emails:emails];
     [self.navigationController popViewControllerAnimated:YES];
 }
+
+-(void)cancel:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -147,22 +225,21 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                       reuseIdentifier:CellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-//        NSString *osVersion = [[UIDevice currentDevice] systemVersion];
-//        NSString *versionWithoutRotation = @"7.0";
-//        BOOL noRotationNeeded = ([versionWithoutRotation compare:osVersion options:NSNumericSearch]
-//                                 != NSOrderedDescending);
-//        if (noRotationNeeded) {
-//            cell.accessoryType=UITableViewCellAccessoryDetailButton;
-//        }else
-//        {
-//            cell.accessoryType=UITableViewCellAccessoryDetailDisclosureButton;
-//        }
     }
     if (self.listArray) {
         NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
         if (dic)
         {
             cell.textLabel.text=[dic objectForKey:@"usrturename"];
+            int fid1 = [[dic objectForKey:@"usrid"] intValue];
+            for(int j=0;j<self.selectedItems.count;j++)
+            {
+                int fid2 = [[self.selectedItems objectAtIndex:j] intValue];
+                if(fid1==fid2)
+                {
+                    [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+                }
+            }
         }
     }
     return cell;
@@ -206,7 +283,18 @@
             for (int i=0; i<self.listArray.count; i++) {
                 FileItem *fileItem=[[FileItem alloc]init];
                 [a addObject:fileItem];
-                [fileItem setChecked:NO];
+                BOOL bl = NO;
+                NSDictionary *diction1 = [self.listArray objectAtIndex:i];
+                int fid1 = [[diction1 objectForKey:@"usrid"] intValue];
+                for(int j=0;j<self.selectedItems.count;j++)
+                {
+                    int fid2 = [[self.selectedItems objectAtIndex:j] intValue];
+                    if(fid1==fid2)
+                    {
+                        bl = YES;
+                    }
+                }
+                [fileItem setChecked:bl];
             }
             self.userItems=a;
             [self.tableView reloadData];
@@ -236,9 +324,8 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-    [appDelegate.window addSubview:self.hud];
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
     
     [self.hud show:NO];
     self.hud.labelText=@"链接失败，请检查网络";

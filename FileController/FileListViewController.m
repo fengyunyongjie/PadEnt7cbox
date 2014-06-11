@@ -29,6 +29,7 @@
 #import "MySplitViewController.h"
 #import "PartitionViewController.h"
 #import "OpenFileViewController.h"
+#import "SCBEmailManager.h"
 
 #define KCOVERTag 888
 
@@ -51,7 +52,7 @@ typedef enum{
     kActionSheetTagUpload,
 }ActionSheetTag;
 
-@interface FileListViewController ()<SCBFileManagerDelegate,IconDownloaderDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate>
+@interface FileListViewController ()<SCBFileManagerDelegate,IconDownloaderDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate,SCBEmailManagerDelegate,MFMessageComposeViewControllerDelegate>
 {
     UIBarButtonItem *item_send,*item_download;
     BOOL isSelectedDir;
@@ -73,7 +74,6 @@ typedef enum{
 @end
 
 @implementation FileListViewController
-
 @synthesize dataDic,listArray,finderArray,selectArray,f_id,fcmd,spid,roletype,flType,imageDownloadsInProgress,tableView,selectedIndexPath,tableViewSelectedFid,isNotRequestUpdate;
 
 //<ios 6.0
@@ -134,6 +134,11 @@ typedef enum{
     
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    
+    self.view.userInteractionEnabled = NO;
+    [UIView animateWithDuration:0.2 animations:^{} completion:^(BOOL bl){
+        self.view.userInteractionEnabled = YES;
+    }];
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
@@ -170,29 +175,19 @@ typedef enum{
     self.tableView.dataSource=self;
     [self.view addSubview:self.tableView];
     self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
     
-    NSMutableArray *items=[NSMutableArray array];
-    
-    UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,20,40)];
-    [rightButton1 setImage:[UIImage imageNamed:@"title_more.png"] forState:UIControlStateNormal];
-    [rightButton1 setBackgroundImage:[UIImage imageNamed:@"title_more_se.png"] forState:UIControlStateHighlighted];
-    [rightButton1 addTarget:self action:@selector(menuAction:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
-    [items addObject:rightItem1];
-    
-//    if (![self.roletype isEqualToString:@"1"] && ![self.roletype isEqualToString:@"2"])
-//    {
-//        UIButton*rightButton2 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,30,40)];
-//        [rightButton2 setImage:[UIImage imageNamed:@"title_upload_nor@2x.png"] forState:UIControlStateNormal];
-//        [rightButton2 setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
-//        [rightButton2 addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
-//        UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithCustomView:rightButton2];
-//        [items addObject:rightItem2];
-//    }
-    self.rightItems=items;
-    self.navigationItem.rightBarButtonItems = items;
+    if(self.shareType!=kShareTypeShare)
+    {
+        NSMutableArray *items=[NSMutableArray array];
+        UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,20,40)];
+        [rightButton1 setImage:[UIImage imageNamed:@"title_more.png"] forState:UIControlStateNormal];
+        [rightButton1 setBackgroundImage:[UIImage imageNamed:@"title_more_se.png"] forState:UIControlStateHighlighted];
+        [rightButton1 addTarget:self action:@selector(menuAction:) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
+        [items addObject:rightItem1];
+        self.rightItems=items;
+        self.navigationItem.rightBarButtonItems = items;
+    }
 
     //初始化返回按钮
     UIButton*backButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,35,29)];
@@ -717,30 +712,9 @@ typedef enum{
     
     //隐藏返回按钮
     if (isHideTabBar) {
-//        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-//            [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)]];
-//            [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAllCell:)]];
-//        }else
-//        {
-//            UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(0,0,71,33)];
-//            [button setTitle:@"全选" forState:UIControlStateNormal];
-//            button.titleLabel.font=[UIFont systemFontOfSize:12];
-//            [button addTarget:self action:@selector(selectAllCell:) forControlEvents:UIControlEventTouchUpInside];
-//            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-//            
-//            UIButton *leftButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,71,33)];
-//            [leftButton setTitle:@"取消" forState:UIControlStateNormal];
-//            leftButton.titleLabel.font=[UIFont systemFontOfSize:12];
-//            [leftButton addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
-//            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
-//        }
-            [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)]];
-            [self.navigationItem setRightBarButtonItems:@[]];
-            [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAllCell:)]];
-        if(self.moreEditBar)
-        {
-            [self.moreEditBar setHidden:NO];
-        }
+        [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)]];
+        [self.navigationItem setRightBarButtonItems:@[]];
+        [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAllCell:)]];
     }else
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
@@ -1014,6 +988,53 @@ typedef enum{
         [self presentViewController:nav animated:YES completion:nil];
     }
 }
+//企业分享
+-(void)qiyeShared
+{
+    SharedEmailViewController *sevc=[[SharedEmailViewController alloc] init];
+    sevc.title=@"新邮件";
+    sevc.fids=[NSMutableArray arrayWithArray:self.selectedFids];
+    sevc.fileArray=[NSMutableArray arrayWithArray:self.selectedFiles];
+    sevc.tyle=kTypeShareIn;
+    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:sevc];
+    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+    [self presentViewController:nav animated:YES completion:nil];
+    [self editFinished];
+}
+-(void)emailLinkShared
+{
+    SharedEmailViewController *sevc=[[SharedEmailViewController alloc] init];
+    sevc.title=@"新邮件";
+    sevc.fids=[NSMutableArray arrayWithArray:self.selectedFids];
+    sevc.fileArray=[NSMutableArray arrayWithArray:self.selectedFiles];
+    sevc.tyle=kTypeShareEx;
+    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:sevc];
+    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+    [self presentViewController:nav animated:YES completion:nil];
+    [self editFinished];
+}
+-(void)createLink
+{
+    SCBEmailManager *em=[[SCBEmailManager alloc] init];
+    [em setDelegate:self];
+    [em createLinkWithFids:self.selectedFids];
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=@"正在生成链接...";
+    //self.hud.labelText=error_info;
+    self.hud.mode=MBProgressHUDModeIndeterminate;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+}
 -(void)toSend:(id)sender
 {
     [self hideSingleBar];
@@ -1025,9 +1046,8 @@ typedef enum{
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
-            [appDelegate.window addSubview:self.hud];
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view.superview addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"未选中任何文件";
             self.hud.mode=MBProgressHUDModeText;
@@ -1040,19 +1060,6 @@ typedef enum{
             UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"一次最多只能分享50个文件" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
             [av setTag:234];
             [av show];
-//
-//            if (self.hud) {
-//                [self.hud removeFromSuperview];
-//            }
-//            self.hud=nil;
-//            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-//            [self.view.superview addSubview:self.hud];
-//            [self.hud show:NO];
-//            self.hud.labelText=@"一次最多只能分享50个文件";
-//            self.hud.mode=MBProgressHUDModeText;
-//            self.hud.margin=10.f;
-//            [self.hud show:YES];
-//            [self.hud hide:YES afterDelay:1.0f];
             return;
         }
     }
@@ -1070,21 +1077,16 @@ typedef enum{
             [fileDatas addObject:dic];
         }
         sevc.fileArray=fileDatas;
+        self.selectedFids=[self selectedIDs];
+        self.selectedFiles=fileDatas;
     }else
     {
         sevc.fids=@[fid];
         sevc.fileArray=@[dic];
+        self.selectedFids=@[fid];
+        self.selectedFiles=@[dic];
     }
-//    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:sevc];
-//    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-//    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
-//    //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
-//    [nav.navigationBar setTintColor:[UIColor whiteColor]];
-//    [self presentViewController:nav animated:YES completion:nil];
-//    [self editFinished];
-
     
-//    NSLog(@"发送");
     if (self.tableView.isEditing) {
         if (isSelectedDir) {
             goto hasDirSend;
@@ -1104,7 +1106,7 @@ typedef enum{
     }
 hasDirSend:
     {
-        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"邮件外链",@"短信分享",@"复制链接",@"其它分享",nil];
+        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"邮件分享",@"短信分享",@"复制链接",@"其它分享",nil];
         [actionSheet setTag:kActionSheetTagSendHasDir];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
@@ -1112,7 +1114,7 @@ hasDirSend:
     }
 noDirSend:
     {
-        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"企业分享",@"邮件外链",@"短信分享",@"复制链接",@"其它分享",nil];
+        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"企业分享",@"邮件分享",@"短信分享",@"复制链接",@"其它分享",nil];
         [actionSheet setTag:kActionSheetTagSend];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
@@ -1447,9 +1449,14 @@ noDirSend:
         NSString *osVersion = [[UIDevice currentDevice] systemVersion];
         NSString *versionWithoutRotation = @"7.0";
         BOOL noRotationNeeded = ([versionWithoutRotation compare:osVersion options:NSNumericSearch] != NSOrderedDescending);
-        if (noRotationNeeded) {
+        if(self.shareType==kShareTypeShare)
+        {
+            cell.accessoryType=UITableViewCellAccessoryNone;
+        }
+        else if(noRotationNeeded) {
             cell.accessoryType=UITableViewCellAccessoryDetailButton;
-        }else
+        }
+        else
         {
             cell.accessoryType=UITableViewCellAccessoryDetailDisclosureButton;
         }
@@ -1489,6 +1496,10 @@ noDirSend:
     [accessory setImage:[UIImage imageNamed:@"sel_se@2x.png"] forState:UIControlStateSelected];
     [accessory  addTarget:self action:@selector(accessoryButtonPressedAction:) forControlEvents:UIControlEventTouchUpInside];
     cell.accessoryView=accessory;
+    if(self.shareType==kShareTypeShare)
+    {
+        cell.accessoryView=nil;
+    }
     
     UIImageView *imageView=(UIImageView *)[cell.contentView viewWithTag:1];
     UILabel *textLabel=(UILabel *)[cell.contentView viewWithTag:2];
@@ -2129,6 +2140,11 @@ noDirSend:
             NSString *fisdir=[dic objectForKey:@"fisdir"];
             NSString *fname = [dic objectForKey:@"fname"];
             NSString *fmime=[[fname pathExtension] lowercaseString];
+            
+            if(![fisdir isEqualToString:@"0"] && self.shareType==kShareTypeShare)
+            {
+                [self addSharedFileView:dic];
+            }else
             if ([fisdir isEqualToString:@"0"]) {
                 FileListViewController *flVC=[[FileListViewController alloc] init];
                 flVC.spid=self.spid;
@@ -2311,6 +2327,57 @@ noDirSend:
             [item_download setEnabled:YES];
         }
         return;
+    }
+}
+#pragma mark - SCBEmailManagerDelegate
+-(void)createLinkSucceed:(NSDictionary *)datadic
+{
+    NSString *link=[datadic objectForKey:@"msg"];
+    NSString *template=@"%@想和您分享虹盘的文件，链接地址：%@";
+    NSLog(@"Link:%@",link);
+    [self.hud hide:YES];
+    switch (self.shareType) {
+        case kShareTypeCopyLink:
+        {
+            [[UIPasteboard generalPasteboard] setString:link];
+            
+            if (self.hud) {
+                [self.hud removeFromSuperview];
+            }
+            self.hud=nil;
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view addSubview:self.hud];
+            [self.hud show:NO];
+            self.hud.labelText=@"复制成功";
+            self.hud.mode=MBProgressHUDModeText;
+            self.hud.margin=10.f;
+            [self.hud show:YES];
+            [self.hud hide:YES afterDelay:1.0f];
+        }
+            break;
+        case kShareTypeMessage:
+        {
+            NSString *text=[NSString stringWithFormat:template,[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"],link];
+            if ([MFMessageComposeViewController canSendText]) {
+                MFMessageComposeViewController *picker = [[MFMessageComposeViewController alloc] init];
+                picker.messageComposeDelegate = self;
+                [picker setBody:text];
+                [self presentViewController:picker animated:YES completion:nil];
+            }
+        }
+            break;
+        case kShareTypeOther:
+        {
+            NSString *text=[NSString stringWithFormat:template,[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"],link];
+            UIActivityViewController *activityViewController=[[UIActivityViewController alloc] initWithActivityItems:@[text] applicationActivities:nil];
+            if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+                //iPhone, present activity view controller as is.
+                [self presentViewController:activityViewController animated:YES completion:nil];
+            }
+        }
+            break;
+        default:
+            break;
     }
 }
 #pragma mark - SCBFileManagerDelegate
@@ -2863,66 +2930,40 @@ noDirSend:
                 case 0:
                 {
                     //企业分享
+                    [self qiyeShared];
                 }
                     break;
                 case 1:
                 {
                     //邮件外链
+                    [self emailLinkShared];
                 }
                     break;
                 case 2:
                 {
                     //短信分享
+                    self.shareType=kShareTypeMessage;
+                    [self createLink];
                 }
                     break;
                 case 3:
                 {
                     //复制连接
+                    self.shareType=kShareTypeCopyLink;
+                    [self createLink];
                 }
                     break;
                 case 4:
                 {
                     //其他分享
+                    self.shareType=kShareTypeOther;
+                    [self createLink];
                 }
                     break;
                     
                 default:
                     break;
             }
-            
-            
-            NSDictionary *dic=[self.listArray objectAtIndex:self.selectedIndexPath.row];
-            NSString *fid=[dic objectForKey:@"fid"];
-            SendEmailViewController *sevc=[[SendEmailViewController alloc] init];
-            sevc.title=@"新邮件";
-            if (self.tableView.isEditing) {
-                sevc.fids=[self selectedIDs];
-                NSMutableArray *fileDatas=[NSMutableArray array];
-                NSArray *indexs=[self selectedIndexPaths];
-                for (NSIndexPath *indexpath in indexs) {
-                    NSDictionary *dic=[self.listArray objectAtIndex:indexpath.row];
-                    [fileDatas addObject:dic];
-                }
-                sevc.fileArray=fileDatas;
-            }else
-            {
-                sevc.fids=@[fid];
-                sevc.fileArray=@[dic];
-            }
-            if (buttonIndex==0) {
-                //站内发送
-                sevc.tyle=kTypeSentIn;
-            }else if(buttonIndex==1)
-            {
-                //站外发送
-                sevc.tyle=kTypeSendEx;
-            }else
-            {
-                return;
-            }
-            YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:sevc];
-            [self presentViewController:nav animated:YES completion:nil];
-            [self editFinished];
         }
             break;
         case kActionSheetTagSendHasDir:
@@ -2931,21 +2972,28 @@ noDirSend:
                 case 0:
                 {
                     //邮件外链
+                    [self emailLinkShared];
                 }
                     break;
                 case 1:
                 {
                     //短信分享
+                    self.shareType=kShareTypeMessage;
+                    [self createLink];
                 }
                     break;
                 case 2:
                 {
                     //复制链接
+                    self.shareType=kShareTypeCopyLink;
+                    [self createLink];
                 }
                     break;
                 case 3:
                 {
                     //其它分享
+                    self.shareType=kShareTypeOther;
+                    [self createLink];
                 }
                     break;
                     
@@ -3134,7 +3182,36 @@ noDirSend:
 {
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
+#pragma mark - MFMessageComposeViewController
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
+                 didFinishWithResult:(MessageComposeResult)result {
+	
+	NSString *resultValue=@"";
+	switch (result)
+	{
+		case MessageComposeResultCancelled:
+			resultValue = @"Result: SMS sending canceled";
+			break;
+		case MessageComposeResultSent:
+			resultValue = @"Result: SMS sent";
+			break;
+		case MessageComposeResultFailed:
+			resultValue = @"Result: SMS sending failed";
+			break;
+		default:
+			resultValue = @"Result: SMS not sent";
+			break;
+	}
+    NSLog(@"%@",resultValue);
+	[controller dismissViewControllerAnimated:YES completion:nil];
+}
 
+-(void)addSharedFileView:(NSDictionary *)dictionary
+{
+    [self.FileEmialViewDelegate addSharedFileView:dictionary];
+}
+
+#pragma mark - iPad旋转方法
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }

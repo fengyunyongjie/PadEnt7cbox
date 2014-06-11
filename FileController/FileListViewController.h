@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "QBImagePickerController.h"
 #import "EGORefreshTableHeaderView.h"
+#import "MainViewController.h"
 
 typedef enum {
     kMyndsTypeDefault,
@@ -21,6 +22,19 @@ typedef enum {
     kMyndsTypeMyShareSearch,
     kMyndsTypeShareSearch,
 } FileListType;
+typedef enum{
+    kShareTypeMessage,
+    kShareTypeCopyLink,
+    kShareTypeOther,
+    kShareTypeShare,
+}ShareType;
+
+@protocol FileEmailViewDelegate <NSObject>
+
+-(void)addSharedFileView:(NSDictionary *)dictionary;
+
+@end
+
 @interface FileListViewController : UIViewController<EGORefreshTableHeaderDelegate,UITableViewDataSource,UITableViewDelegate,QBImagePickerControllerDelegate>
 {
     EGORefreshTableHeaderView *_refreshHeaderView;
@@ -41,6 +55,10 @@ typedef enum {
 @property (strong,nonatomic) NSIndexPath *selectedIndexPath;
 @property (strong,nonatomic) NSString *tableViewSelectedFid;
 @property (assign,nonatomic) BOOL isNotRequestUpdate;
+@property (strong,nonatomic) NSArray *selectedFids;
+@property (strong,nonatomic) NSArray *selectedFiles;
+@property (assign,nonatomic) ShareType shareType;
+@property (weak,nonatomic) id<FileEmailViewDelegate> FileEmialViewDelegate;
 
 -(void)moveFileToID:(NSString *)f_id;
 -(void)commitFileToID:(NSString *)f_id sID:(NSString *)s_pid;

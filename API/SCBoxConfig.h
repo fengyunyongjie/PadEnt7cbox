@@ -16,7 +16,10 @@
 //商业版URL
 #define HOST_URL @"http://192.168.1.9/"
 //#define HOST_URL @"http://b.7cbox.cn/"
-//#define HOST_URL @"http://192.168.1.51:8080/"
+//#define HOST_URL @"http://192.168.1.55:8080/"
+//#define HOST_URL @"http://192.168.1.25:8080/"
+//#define HOST_URL @"http://192.168.1.41:8080/"
+//#define HOST_URL @"http://192.168.1.62:8080/"
 //#define HOST_URL @"http://xianzhouhe.eicp.net:81/"
 #define SERVER_URL [NSString stringWithFormat:@"%@%@",HOST_URL,@"biz/ent"]
 
@@ -102,6 +105,38 @@
 #define EMAIL_FILELIST_URI @"/email/fids"
 //站外信模板/ent/email/template
 #define EMAIL_TEMPLATE_URI @"/email/template"
+//收件箱列表
+#define RECEIVE_LIST_URI @"/sendReceive/filesReceive"
+//发件箱列表
+#define SEND_LIST_URI @"/sendReceive/filesSend"
+//发送文件
+#define SEND_FILES_URI @"/sendReceive/sendFiles"
+//收件浏览
+#define VIEW_RECEIVE_URI @"/sendReceive/viewReceive"
+//发件浏览
+#define VIEW_SEND_URI @"/sendReceive/viewSend"
+//未读邮件数量
+#define NOTREADCOUNT_URI @"/sendReceive/notReadCount"
+//邮件外链 或 快速外链
+#define CREATE_LINK_URI @"/email/createLinkMail"
+//邮件主题模版
+#define EMAIL_TITLE_URI @"/email/getEmailTitle"
+//短信模版
+#define TEMPLATE_MSG_URI @"/email/template/msg"
+//手动从中转站接收附件
+#define TRANSIT_URI @"/sendReceive/getAttaFromTransit"
+//删除收件 @"/sendReceive/delFilesReceive"
+//批量删除收件
+#define DEL_RECEIVE_URI @"/sendReceive/delFilesReceiveBatch"
+//删除发件 @"/sendReceive/delFilesSend"
+//批量删除发件
+#define DEL_SEND_URI @"/sendReceive/delFilesSendBatch"
+//批量已读接口
+#define SET_READ_URI @"/sendReceive/batchUpdateRead"
+//批量删除发件箱
+#define DELFILES_SEND_USERID @"/sendReceive/delFilesSendByUserId"
+//批量标记成已读
+#define UPDATERECEIVE_ISREAD_USERID @"/sendReceive/updateReceiveIsReadByUserId"
 
 #pragma mark - 4.文件管理
 //打开网盘  文件列表/ent/file/list
@@ -122,6 +157,8 @@
 #define FM_COMMIT_URI @"/file/commit"
 //文件转存/ent/file/resave
 #define FM_RESAVE_URI @"/file/resave"
+//新加的接口，文件转存/ent/file/eresave
+#define FM_ERESAVE_URI @"/file/eresave"
 //转存文件==复制粘贴 /fm/copypaste
 #define FM_COPYPASTE @"/fm/copypaste"
 //文件下载

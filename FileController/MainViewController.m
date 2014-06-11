@@ -17,6 +17,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "MyTabBarViewController.h"
 #import "MySplitViewController.h"
+#import "CustomJinDu.h"
 
 #define AUTHOR_MENU @"AuthorMenus"
 @interface MainViewController()<SCBFileManagerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
@@ -47,16 +48,18 @@
 }
 - (void)viewDidLayoutSubviews
 {
-//    NSLog(@"view frame:%@",NSStringFromCGRect(self.view.frame));
-//    CGRect r=self.tableView.frame;
-//    r.size=self.view.frame.size;
-//    [self.tableView setFrame:r];
+    CGSize winSize=[UIScreen mainScreen].bounds.size;
+    
+    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+        self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height-49);
+    }else
+    {
+        self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height-49-64);
+    }
 }
 - (void)viewDidAppear:(BOOL)animated
 {
-//    CGSize winSize=[UIScreen mainScreen].bounds.size;
-//    //self.view.frame=CGRectMake(0, 64, winSize.width,winSize.height-64 );
-//    self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height);
+
 }
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
@@ -79,7 +82,7 @@
     self.tableView.dataSource=self;
     [self.view addSubview:self.tableView];
     self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    if (self.type==kTypeCommit||self.type==kTypeResave||self.type==kTypeUpload||self.type==kTypeMove||self.type==kTypeCopy) {
+    if (self.type==kTypeCommit||self.type==kTypeResave||self.type==kTypeUpload||self.type==kTypeMove||self.type==kTypeCopy||self.type==kTypeShare) {
         [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dissmissSelf:)]];
     }else
     {
@@ -99,7 +102,7 @@
         //初始化返回按钮
         UIButton*backButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,35,29)];
         [backButton setImage:[UIImage imageNamed:@"title_back.png"] forState:UIControlStateNormal];
-        [backButton addTarget:self.navigationController action:@selector(popViewControllerAnimated:) forControlEvents:UIControlEventTouchUpInside];
+        [backButton addTarget:self.navigationController action:@selector(popViewControllerAnimated:) forControlEvents:UIControlEventTouchDown];
         UIBarButtonItem *backItem=[[UIBarButtonItem alloc] initWithCustomView:backButton];
         self.backBarButtonItem=backItem;
         
@@ -152,6 +155,11 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [self updateFileList];
+    self.view.userInteractionEnabled = NO;
+    [UIView animateWithDuration:0.2 animations:^{} completion:^(BOOL bl){
+        self.view.userInteractionEnabled = YES;
+    }];
+    
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
@@ -202,6 +210,10 @@
             break;
         case kTypeUpload:
             item=@"upload";
+            [self.fm authorMenus:item];
+            break;
+        case kTypeShare:
+            item=@"shareFile";
             [self.fm authorMenus:item];
             break;
         default:
@@ -303,8 +315,8 @@
         CGRect titleRect=CGRectMake(70, 10, 200, 21);
         CGRect detailRect=CGRectMake(70, 30, 200, 21);
         if (self.dirType==kTypeRoot) {
-            titleRect=CGRectMake(70, 20, 200, 21);
-            detailRect=CGRectMake(170, 20, 200, 21);
+            titleRect=CGRectMake(70, 20, 115, 21);
+            detailRect=CGRectMake(190, 20, 115, 21);
         }
         UILabel *textLabel=[[UILabel alloc] initWithFrame:titleRect];
         UILabel *detailTextLabel=[[UILabel alloc] initWithFrame:detailRect];
@@ -317,7 +329,16 @@
         [textLabel setFont:[UIFont systemFontOfSize:16]];
         [detailTextLabel setFont:[UIFont systemFontOfSize:13]];
         [detailTextLabel setTextColor:[UIColor grayColor]];
+        
+        CGRect progress_rect = CGRectMake(190, 35, 115, 3);
+        CustomJinDu *jinDuView = [[CustomJinDu alloc] initWithFrame:progress_rect];
+        jinDuView.tag=4;
+        [jinDuView setFrame:progress_rect];
+        [cell.contentView addSubview:jinDuView];
     }
+    CustomJinDu *jinDuView = (CustomJinDu *)[cell.contentView viewWithTag:4];
+    [jinDuView setHidden:YES];
+    
     UIImageView *imageView=(UIImageView *)[cell.contentView viewWithTag:1];
     UILabel *textLabel=(UILabel *)[cell.contentView viewWithTag:2];
     UILabel *detailTextLabel=(UILabel *)[cell.contentView viewWithTag:3];
@@ -347,20 +368,31 @@
                 imageView.image=[UIImage imageNamed:@"bizlib.png"];
             }
             //显示工作区大小
-            NSString *totalspace=[dic objectForKey:@"totalspace"];
-            NSString *usedspace=[dic objectForKey:@"usedspace"];
+            float totalspace=[[dic objectForKey:@"totalspace"] floatValue];
+            float usedspace=[[dic objectForKey:@"usedspace"] floatValue];
             NSString *totalspacestr=[dic objectForKey:@"totalspacestr"];
             NSString *usedspacestr=[dic objectForKey:@"usedspacestr"];
-            if (totalspacestr==nil||usedspacestr==nil) {
-                if (totalspace==nil||usedspace==nil) {
-                    detailTextLabel.text=@"1.23G/5G";
-                }else
-                {
-                    detailTextLabel.text=[NSString stringWithFormat:@"%@/%@",[YNFunctions convertSize:usedspace],[YNFunctions convertSize:totalspace]];
-                }
-            }else
+            if (totalspacestr==nil||usedspacestr==nil) {}
+            else
             {
+                CGRect detailRect=CGRectMake(70, 30, 200, 21);
+                if (self.dirType==kTypeRoot) {
+                    detailRect=CGRectMake(190, 10, 115, 21);
+                    float f = usedspace / totalspace;
+                    if(f>=0.8)
+                    {
+                        [jinDuView setCurrColor:[UIColor redColor]];
+                    }
+                    else
+                    {
+                        [jinDuView setCurrColor:[UIColor colorWithRed:73.0/255.0 green:127.0/255.0 blue:191.0/255.0 alpha:1]];
+                    }
+                    [jinDuView setCurrFloat:f];
+                    [jinDuView setHidden:NO];
+                }
+                [detailTextLabel setFrame:detailRect];
                 detailTextLabel.text=[NSString stringWithFormat:@"%@/%@",usedspacestr,totalspacestr];
+                
             }
             
         }
@@ -381,6 +413,7 @@
         vc.title=@"公司文件";
         vc.dirType=kTypeEnt;
         vc.delegate=self.delegate;
+        vc.sharedEmialViewDelegate=self;
         vc.type=self.type;
         vc.targetsArray=self.targetsArray;
         vc.isHasSelectFile=self.isHasSelectFile;
@@ -505,6 +538,11 @@
                 {
                     flVC.roletype=@"1";
                 }
+                if(self.type==kTypeShare)
+                {
+                    flVC.shareType=kShareTypeShare;
+                }
+                flVC.FileEmialViewDelegate=self;
                 AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
                 appDelegate.file_url = flVC.title;
                 appDelegate.old_file_url = flVC.title;
@@ -672,6 +710,13 @@
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
+-(void)addSharedFileView:(NSDictionary *)dictionary
+{
+    [self.sharedEmialViewDelegate addSharedFileView:dictionary];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - iPad 转屏代码
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }

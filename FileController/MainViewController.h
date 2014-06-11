@@ -18,11 +18,18 @@ typedef enum {
     kTypeCopy,
     kTypeMove,
     kTypeUpload,
+    kTypeShare,
 } MainType;
 typedef enum {
     kTypeRoot,
     kTypeEnt,
 }DirType;
+
+@protocol SharedEmailViewDelegate <NSObject>
+
+-(void)addSharedFileView:(NSDictionary *)dictionary;
+
+@end
 
 @interface MainViewController : UIViewController<EGORefreshTableHeaderDelegate,UITableViewDataSource,UITableViewDelegate,QBImagePickerControllerDelegate>
 {
@@ -36,4 +43,6 @@ typedef enum {
 @property(assign,nonatomic) DirType dirType;
 @property (strong,nonatomic) NSArray *targetsArray;
 @property (assign,nonatomic) BOOL isHasSelectFile;
+@property(weak,nonatomic) id<SharedEmailViewDelegate> sharedEmialViewDelegate;
+
 @end

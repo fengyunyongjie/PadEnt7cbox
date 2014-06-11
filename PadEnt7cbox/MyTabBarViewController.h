@@ -13,5 +13,5 @@
 @property(nonatomic,strong) UILabel *label;
 @property(nonatomic,strong) UIImageView *tagImageView;
 -(void)addUploadNumber:(NSInteger)count;
-
+-(void)setHasEmailTagHidden:(BOOL)isHidden;
 @end

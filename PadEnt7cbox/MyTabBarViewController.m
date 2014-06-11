@@ -11,6 +11,7 @@
 #import "SettingViewController.h"
 #import "UpDownloadViewController.h"
 #import "EmailListViewController.h"
+#import "SCBEmailManager.h"
 
 @interface MyTabBarViewController ()
 
@@ -40,7 +41,9 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
-    [self setHasEmailTagHidden:NO];
+    SCBEmailManager *em=[[SCBEmailManager alloc] init];
+    em.delegate=self;
+    [em notReadCount];
 }
 - (void)viewDidLoad
 {
@@ -163,5 +166,18 @@
         [imageView setHidden:YES];
     }
 }
-
+#pragma mark -SCBEmailManagerDelegate
+-(void)networkError
+{
+}
+-(void)notReadCountSucceed:(NSDictionary *)datadic
+{
+    int notread=[[datadic objectForKey:@"notread"] intValue];
+    if (notread>0) {
+        [self setHasEmailTagHidden:NO];
+    }else
+    {
+        [self setHasEmailTagHidden:YES];
+    }
+}
 @end

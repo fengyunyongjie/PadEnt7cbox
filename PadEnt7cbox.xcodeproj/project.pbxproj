@@ -674,9 +674,6 @@
 				29C0D54318CDB70400056CB9 /* icon_hasnew_tag@2x.png */,
 				29C0D54418CDB70400056CB9 /* title_alldel@2x.png */,
 				29C0D54518CDB70400056CB9 /* title_read@2x.png */,
-				296EBB25188F7134006CDAC3 /* file_folder_comp@2x.png */,
-				29AF89B6188E142F00A71A0E /* bt_save_nor@2x.png */,
-				29AF89B7188E142F00A71A0E /* bt_save_se@2x.png */,
 				29135DEF188CF35800A951CE /* bizfiles@2x.png */,
 				29135DF0188CF35800A951CE /* bizlib@2x.png */,
 				29135DF5188CF35800A951CE /* bk_select@2x.png */,
@@ -1792,8 +1789,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: yunfei ma (2838Z979QM)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PadEnt7cbox/PadEnt7cbox-Prefix.pch";
 				INFOPLIST_FILE = "PadEnt7cbox/PadEnt7cbox-Info.plist";
@@ -1817,8 +1814,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Xi'an ZhouHe Network Technology Co., Ltd. (3N53M83M5K)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PadEnt7cbox/PadEnt7cbox-Prefix.pch";
 				INFOPLIST_FILE = "PadEnt7cbox/PadEnt7cbox-Info.plist";

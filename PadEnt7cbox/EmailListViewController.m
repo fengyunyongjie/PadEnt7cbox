@@ -17,18 +17,18 @@
 #import "AppDelegate.h"
 
 enum{
-    kActionSheetTagDeleteOne
+    kActionSheetTagDeleteOne,
+    kActionSheetTagDeletaAll,
 };
 
 @interface EmailListViewController ()<SCBEmailManagerDelegate,UIAlertViewDelegate,UIActionSheetDelegate,CustomSelectButtonDelegate>
 @property (strong,nonatomic) SCBEmailManager *em;
 @property(strong,nonatomic) MBProgressHUD *hud;
-@property(strong,nonatomic) UISegmentedControl *segmentedControl;
 @property (strong,nonatomic) UIToolbar *moreEditBar;
-@property (strong,nonatomic) CustomSelectButton *customSelectButton;
 @end
 
 @implementation EmailListViewController
+@synthesize customSelectButton,isShowEmail;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -53,14 +53,17 @@ enum{
     self.tableView.dataSource=self;
     [self.view addSubview:self.tableView];
     self.tableView.frame=CGRectMake(0, 50, self.view.frame.size.width, self.view.frame.size.height);
-    self.segmentedControl=[[UISegmentedControl alloc] initWithItems:@[@"收件箱(1)",@"发件箱"]];
-    self.segmentedControl.frame=CGRectMake(80, 12, 160, 25);
-//    [self.segmentedControl setTintColor:[UIColor whiteColor]];
-    [self.segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-//    [self.segmentedControl setHidden:YES];
-//    [self.navigationItem setTitleView:self.segmentedControl];
-    [self.view addSubview:self.segmentedControl];
-    [self.segmentedControl setSelectedSegmentIndex:0];
+    
+    isShowEmail = YES;
+    CGRect customRect = CGRectMake(0, 0, 320, 40);
+    self.customSelectButton = [[CustomSelectButton alloc] initWithFrame:customRect leftText:@"收件箱" rightText:@"发件箱" isShowLeft:isShowEmail];
+    [self.customSelectButton setDelegate:self];
+    UIColor *stbgColor=[UIColor whiteColor]; //[UIColor colorWithRed:229/255.0f green:229/255.0f blue:229/255.0f alpha:1]; //[UIColor lightGrayColor]
+    UIColor *stTextColor=[UIColor colorWithRed:85/255.0f green:103/255.0f blue:126/255.0f alpha:1];
+    [self.customSelectButton setBackgroundColor:stbgColor];
+    [self.customSelectButton.left_button setTitleColor:stTextColor forState:UIControlStateNormal];
+    [self.customSelectButton.right_button setTitleColor:stTextColor forState:UIControlStateNormal];
+    [self.view addSubview:self.customSelectButton];
     
     NSMutableArray *items=[NSMutableArray array];
     UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,20,40)];
@@ -70,20 +73,8 @@ enum{
     UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
     [items addObject:rightItem1];
     
-    //    if (![self.roletype isEqualToString:@"1"] && ![self.roletype isEqualToString:@"2"])
-    //    {
-    //        UIButton*rightButton2 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,30,40)];
-    //        [rightButton2 setImage:[UIImage imageNamed:@"title_upload_nor@2x.png"] forState:UIControlStateNormal];
-    //        [rightButton2 setBackgroundImage:[UIImage imageNamed:@"title_bk.png"] forState:UIControlStateHighlighted];
-    //        [rightButton2 addTarget:self action:@selector(uploadAction:) forControlEvents:UIControlEventTouchUpInside];
-    //        UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithCustomView:rightButton2];
-    //        [items addObject:rightItem2];
-    //    }
     self.rightItems=items;
     self.navigationItem.rightBarButtonItems = items;
-    
-//    UIBarButtonItem *editItem=[[UIBarButtonItem alloc] initWithTitleStr:@"编辑" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)];
-//    [self.navigationItem setRightBarButtonItem:editItem];
     
     if (_refreshHeaderView==nil) {
         EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
@@ -92,13 +83,6 @@ enum{
 		_refreshHeaderView = view;
     }
     [_refreshHeaderView refreshLastUpdatedDate];
-    
-    CGRect customRect = CGRectMake(0, 0, 320, 30);
-    self.customSelectButton = [[CustomSelectButton alloc] initWithFrame:customRect leftText:@"已接收" rightText:@"已发送" isShowLeft:YES];
-    [self.customSelectButton setDelegate:self];
-    [self.customSelectButton setBackgroundColor:[UIColor lightGrayColor]];
-    [self.view addSubview:self.customSelectButton];
-    [self.customSelectButton setHidden:YES];
     
     //左右滑动效果
     UISwipeGestureRecognizer *recognizer;
@@ -116,11 +100,14 @@ enum{
         temporaryBarButtonItem.title = @"";
         self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
     }
-    [self.view setBackgroundColor:[UIColor whiteColor]];
 }
 -(void)viewWillAppear:(BOOL)animated
 {
     [self updateEmailList];
+    self.view.userInteractionEnabled = NO;
+    [UIView animateWithDuration:0.2 animations:^{} completion:^(BOOL bl){
+        self.view.userInteractionEnabled = YES;
+    }];
 }
 -(void)viewDidLayoutSubviews
 {
@@ -144,12 +131,9 @@ enum{
 
 -(void)isSelectedLeft:(BOOL)bl
 {
-    if (bl) {
-        self.segmentedControl.selectedSegmentIndex=0;
-    }else
-    {
-        self.segmentedControl.selectedSegmentIndex=1;
-    }
+    isShowEmail = bl;
+    
+    [self updateEmailList];
     if (self.tableView.isEditing) {
         [self editAction:nil];
     }
@@ -207,49 +191,16 @@ enum{
 #pragma mark - 操作方法
 - (void)updateEmailList
 {
-    //加载本地缓存文件
-    NSString *dataFilePath=[YNFunctions getDataCachePath];
-    dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:@"EmailList"]];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:dataFilePath])
-    {
-        NSError *jsonParsingError=nil;
-        NSData *data=[NSData dataWithContentsOfFile:dataFilePath];
-        self.dataDic=[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
-        if (self.dataDic) {
-            NSArray *emails=(NSArray *)[self.dataDic objectForKey:@"emails"];
-            NSMutableArray *tempInArray=[NSMutableArray array];
-            NSMutableArray *tempOutArray=[NSMutableArray array];
-            for (NSDictionary *dic in emails)
-            {
-                int etype=[[dic objectForKey:@"etype"] intValue];
-                //etype	邮件类型	String，0为收件箱，1为发件箱
-                if (etype ==0) {
-                    [tempInArray addObject:dic];
-                }else if(etype==1)
-                {
-                    [tempOutArray addObject:dic];
-                }else
-                {
-                    NSLog(@"邮件类型出错：%d",etype);
-                }
-            }
-            self.inArray=tempInArray;
-            self.outArray=tempOutArray;
-            [self.tableView reloadData];
-        }
-    }
-
     [self.em cancelAllTask];
     self.em=nil;
     self.em=[[SCBEmailManager alloc] init];
     [self.em setDelegate:self];
-//    if (self.segmentedControl.selectedSegmentIndex==0) {
-//        [self.em listEmailWithType:@"0"];
-//    }else
-//    {
-//        [self.em listEmailWithType:@"1"];
-//    }
-    [self.em listEmailWithType:@"2"];
+    if (isShowEmail) {
+        [self.em receiveListWithCursor:0 offset:0 subject:@""];
+    }else
+    {
+        [self.em sendListWithCursor:0 offset:0 subject:@""];
+    }
 }
 - (void)operateUpdate
 {
@@ -266,14 +217,13 @@ enum{
         self.menuView=nil;
     }
     if (!self.menuView) {
-        int Height=1024;
-        self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, Height, Height)];
+        self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height)];
         //[self.menuView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
-        UIControl *grayView=[[UIControl alloc] initWithFrame:CGRectMake(0, 64, Height, Height)];
+        UIControl *grayView=[[UIControl alloc] initWithFrame:CGRectMake(0, 64, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height)];
         [grayView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
         [grayView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
         [self.menuView addSubview:grayView];
-        CGSize btnSize=CGSizeMake(320, 45);
+        CGSize btnSize=CGSizeMake(self.menuView.frame.size.width, 45);
         UIButton *btnNewFinder,*btnEdit,*btnSort,*btnUpload,*btnClearAll;
         UIColor *titleColor=[UIColor colorWithRed:83/255.0f green:113/255.0f blue:190/255.0f alpha:1];
         btnUpload=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnSize.width, btnSize.height)];
@@ -304,7 +254,7 @@ enum{
         [btnEdit addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
         
         NSMutableArray *array=[NSMutableArray array];
-        if (self.segmentedControl.selectedSegmentIndex==0) {
+        if (isShowEmail) {
             [array addObject:btnUpload];
         }else
         {
@@ -332,7 +282,7 @@ enum{
         //        [self.menuView addSubview:btnSort];
         
         [self.menuView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
-        [self.tabBarController.view.superview addSubview:self.menuView];
+        [self.tabBarController.view addSubview:self.menuView];
         [self.menuView setHidden:YES];
     }
     [self.menuView setHidden:!self.menuView.hidden];
@@ -341,25 +291,26 @@ enum{
 {
     [self.menuView setHidden:YES];
 }
--(void)segmentAction:(UISegmentedControl *)seg
-{
-    [self updateEmailList];
-    if (self.tableView.isEditing) {
-        [self editAction:nil];
-    }
-}
+
 -(void)markAllAsRead:(id)sender
 {
+    [self toSetAllRead:sender];
     [self hideMenu];
 }
 -(void)clearAllEmail:(id)sender
 {
     [self hideMenu];
+    if ((isShowEmail&&self.inArray.count!=0)||((!isShowEmail)&&self.outArray.count!=0)) {
+        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"是否要删除所有内容" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles: nil];
+        [actionSheet setTag:kActionSheetTagDeletaAll];
+        [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }
 }
 -(void)selectAllCell:(id)sender
 {
     NSArray *array=nil;
-    if (self.segmentedControl.selectedSegmentIndex==0) {
+    if (isShowEmail) {
         array=self.inArray;
     }else
     {
@@ -375,7 +326,7 @@ enum{
 -(void)deselectAllCell:(id)sender
 {
     NSArray *array=nil;
-    if (self.segmentedControl.selectedSegmentIndex==0) {
+    if (isShowEmail) {
         array=self.inArray;
     }else
     {
@@ -397,7 +348,7 @@ enum{
 -(NSArray *)selectedIDs
 {
     NSArray *array;
-    if (self.segmentedControl.selectedSegmentIndex==0) {
+    if (isShowEmail) {
         array=self.inArray;
     }else
     {
@@ -406,10 +357,62 @@ enum{
     NSMutableArray *ids=[[NSMutableArray alloc] init];
     for (NSIndexPath *indexpath in [self selectedIndexPaths]) {
         NSDictionary *dic=[array objectAtIndex:indexpath.row];
-        NSString *fid=[dic objectForKey:@"eid"];
+        NSString *fid;
+        if (isShowEmail) {
+            fid=[dic objectForKey:@"re_id"];
+        }else
+        {
+            fid=[dic objectForKey:@"send_id"];
+        }
+
         [ids addObject:fid];
     }
     return ids;
+}
+-(void)toResend:(id)sender
+{
+    
+}
+-(void)toSetAllRead:(id)sender
+{
+    [self.em cancelAllTask];
+    self.em=[[SCBEmailManager alloc] init];
+    self.em.delegate=self;
+    if (isShowEmail) {
+        [self.em updateReceiveIsReadByUserID];
+    }
+    [self editFinished];
+}
+-(void)toSetRead:(id)sender
+{
+    if (self.tableView.editing) {
+        NSArray *array=[self selectedIDs];
+        NSLog(@"%@",array);
+        if (array.count==0) {
+            if (self.hud) {
+                [self.hud removeFromSuperview];
+            }
+            self.hud=nil;
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+            [self.view.superview addSubview:self.hud];
+            [self.hud show:NO];
+            self.hud.labelText=@"未选中任何邮件";
+            self.hud.mode=MBProgressHUDModeText;
+            self.hud.margin=10.f;
+            [self.hud show:YES];
+            [self.hud hide:YES afterDelay:1.0f];
+            return;
+        }
+    }
+    
+    [self.em cancelAllTask];
+    self.em=[[SCBEmailManager alloc] init];
+    self.em.delegate=self;
+    if (isShowEmail) {
+        [self.em setReadWithIDs:[self selectedIDs]];
+    }
+    [self editFinished];
+
 }
 -(void)toDelete:(id)sender
 {
@@ -542,30 +545,30 @@ enum{
 //        [btn_markReaded setTitle:@"标为已读" forState:UIControlStateNormal];
         [btn_markReaded setImage:[UIImage imageNamed:@"read_nor.png"] forState:UIControlStateNormal];
         [btn_markReaded setImage:[UIImage imageNamed:@"read_se.png"] forState:UIControlStateHighlighted];
-        [btn_markReaded addTarget:self action:@selector(toDelete:) forControlEvents:UIControlEventTouchUpInside];
+        [btn_markReaded addTarget:self action:@selector(toSetRead:) forControlEvents:UIControlEventTouchUpInside];
         item_markReaded=[[UIBarButtonItem alloc] initWithCustomView:btn_markReaded];
         
         btn_Resend =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 25)];
 //        [btn_Resend setTitle:@"重新发送" forState:UIControlStateNormal];
         [btn_Resend setImage:[UIImage imageNamed:@"resend_nor.png"] forState:UIControlStateNormal];
         [btn_Resend setImage:[UIImage imageNamed:@"resend_se.png"] forState:UIControlStateHighlighted];
-        [btn_Resend addTarget:self action:@selector(toDelete:) forControlEvents:UIControlEventTouchUpInside];
+        [btn_Resend addTarget:self action:@selector(toResend:) forControlEvents:UIControlEventTouchUpInside];
         item_Resend=[[UIBarButtonItem alloc] initWithCustomView:btn_Resend];
         
         
         item_flexible=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        if (self.segmentedControl.selectedSegmentIndex==0) {
+        if (isShowEmail) {
             [self.moreEditBar setItems:@[item_flexible,item_markReaded,item_flexible,item_del,item_flexible]];
         }else
         {
-            [self.moreEditBar setItems:@[item_flexible,item_Resend,item_flexible,item_del,item_flexible]];
+            [self.moreEditBar setItems:@[item_flexible,item_del,item_flexible]];
         }
     }
 }
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.segmentedControl.selectedSegmentIndex==0) {
+    if (isShowEmail) {
         //收件箱
         if (self.inArray) {
             return self.inArray.count;
@@ -577,7 +580,7 @@ enum{
             return self.outArray.count;
         }
     }
-    return 1;
+    return 0;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -634,12 +637,16 @@ enum{
     UILabel *lab_fileNum=(UILabel *)[cell.contentView viewWithTag:6];
     UIImageView *file_tag=(UIImageView *)[cell.contentView viewWithTag:7];
     NSDictionary *dic;
-    if (self.segmentedControl.selectedSegmentIndex==0) {
+    NSString *econtent;
+    int emailCount=0;
+    NSString *sendTime;
+    int readstate=-1;
+    if (isShowEmail) {
         //收件箱
         if (self.inArray) {
             dic=[self.inArray objectAtIndex:indexPath.row];
             if (dic) {
-                NSString *sender=(NSString *)[dic objectForKey:@"sender"];
+                NSString *sender=(NSString *)[dic objectForKey:@"sendUserTrueName"];
                  if (![sender isKindOfClass:NSClassFromString(@"NSNull")]) {
                     lab_role.text=sender;
                 }else
@@ -649,13 +656,18 @@ enum{
                 
             }
         }
+        lab_title.text=[dic objectForKey:@"re_subject"];
+        econtent=[dic objectForKey:@"re_message"];
+        emailCount=[[dic objectForKey:@"re_atta_num"] intValue];
+        sendTime=[dic objectForKey:@"re_sendtime"];
+        readstate=[[dic objectForKey:@"re_isread"] intValue];
     }else
     {
         //发件箱
         if (self.outArray) {
             dic=[self.outArray objectAtIndex:indexPath.row];
             if (dic) {
-                NSString *sender=(NSString *)[dic objectForKey:@"receivelist"];
+                NSString *sender=(NSString *)[dic objectForKey:@"send_receive_usernames"];
                 if (![sender isKindOfClass:NSClassFromString(@"NSNull")]) {
                     lab_role.text=sender;
                 }else
@@ -664,15 +676,18 @@ enum{
                 }
             }
         }
+        lab_title.text=[dic objectForKey:@"send_subject"];
+        econtent=[dic objectForKey:@"send_message"];
+        emailCount=[[dic objectForKey:@"send_atta_num"] intValue];
+        sendTime=[dic objectForKey:@"send_sendtime"];
     }
     if (dic) {
 //        cell.textLabel.text=[dic objectForKey:@"etitle"];
 //        cell.detailTextLabel.text=[dic objectForKey:@"sendtime"];
-        lab_title.text=[dic objectForKey:@"etitle"];
+        
         if ([lab_title.text isEqualToString:@""]) {
             lab_title.text=@"(无标题)";
         }
-        NSString *econtent=[dic objectForKey:@"econtent"];
         if ([econtent isKindOfClass:NSClassFromString(@"NSNull")]) {
             
             lab_econtent.text=@"(无内容)";
@@ -683,12 +698,12 @@ enum{
         {
             lab_econtent.text=econtent;
         }
-        lab_fileNum.text=@"3个文件";
+        lab_fileNum.text=[NSString stringWithFormat:@"%d个文件",emailCount];
 //        lab_time.text=[dic objectForKey:@"sendtime"];
         NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
         NSDateFormatter *oldDateFormatter=[[NSDateFormatter alloc] init];
         [oldDateFormatter setDateFormat:@"yyyy-MM-dd HH:mm"];
-        NSDate *oldDate=[oldDateFormatter dateFromString:[dic objectForKey:@"sendtime"]];
+        NSDate *oldDate=[oldDateFormatter dateFromString:sendTime];
         NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:[NSDate date]];
         NSInteger thisYear= [components year];
         NSDateComponents *oldComponents = [[NSCalendar currentCalendar] components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:oldDate];
@@ -701,8 +716,6 @@ enum{
         }
         lab_time.text=[dateFormatter stringFromDate:oldDate];
         
-        int readstate=-1;
-        readstate=[[dic objectForKey:@"readstate"] intValue];
         if (readstate==0) {
 //            cell.imageView.image=[UIImage imageNamed:@"mail_unread.png"];
             unread_tag.image=[UIImage imageNamed:@"mail_unread.png"];
@@ -737,29 +750,43 @@ enum{
         return;
     }
     NSDictionary *dic;
-    if (self.segmentedControl.selectedSegmentIndex==0) {
+    NSString *eid;
+    NSString *etype;
+    NSString *title;
+    if (isShowEmail) {
         //收件箱
         if (self.inArray) {
             dic=[self.inArray objectAtIndex:indexPath.row];
         }
+        eid=[dic objectForKey:@"re_id"];
+        NSString *re_receivetime = [dic objectForKey:@"re_receivetime"];
+        if((NSNull *)re_receivetime == [NSNull null])
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"个人空间已满或该主题包含的文件过期，请登录www.icoffer.cn处理。" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            [alert show];
+            return;
+        }
+        
+        etype=@"0";
+        title=[dic objectForKey:@"re_subject"];
     }else
     {
         //发件箱
         if (self.outArray) {
             dic=[self.outArray objectAtIndex:indexPath.row];
         }
+        eid=[dic objectForKey:@"send_id"];
+        etype=@"1";
+        title=[dic objectForKey:@"send_subject"];
     }
     if (dic) {
-        NSString *eid=[dic objectForKey:@"eid"];
-        NSString *etype=[dic objectForKey:@"etype"];
         EmailDetailViewController *edvc=[[EmailDetailViewController alloc] init];
         edvc.eid=eid;
         edvc.etype=etype;
-        edvc.title=[dic objectForKey:@"etitle"];
-        [edvc setHidesBottomBarWhenPushed:YES];
+        edvc.title=@"";
+        //[edvc setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:edvc animated:YES];
     }
-
 }
 
 
@@ -810,7 +837,19 @@ enum{
 }
 -(void)removeEmailSucceed
 {
-    [self operateUpdate];
+    [self updateEmailList];
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=@"操作成功";
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
 }
 -(void)removeEmailFail
 {
@@ -827,6 +866,38 @@ enum{
     self.hud.margin=10.f;
     [self.hud show:YES];
     [self.hud hide:YES afterDelay:1.0f];
+}
+-(void)receiveListSucceed:(NSDictionary *)datadic
+{
+    [self doneLoadingTableViewData];
+    self.dataDic=datadic;
+    if (self.dataDic) {
+        self.inArray=(NSArray *)[self.dataDic objectForKey:@"list"];
+        [self.tableView reloadData];
+        int notread=[[self.dataDic objectForKey:@"notread"] intValue];
+        if (notread>0) {
+            
+            [self.customSelectButton.left_button setTitle:[NSString stringWithFormat:@"收件箱(%d)",notread] forState:UIControlStateNormal];
+            if ([(MyTabBarViewController *)self.tabBarController respondsToSelector:@selector(setHasEmailTagHidden:)]) {
+                [(MyTabBarViewController *)self.tabBarController setHasEmailTagHidden:NO];
+            }
+        }else
+        {
+            [self.customSelectButton.left_button setTitle:[NSString stringWithFormat:@"收件箱"] forState:UIControlStateNormal];
+            if ([(MyTabBarViewController *)self.tabBarController respondsToSelector:@selector(setHasEmailTagHidden:)]) {
+                [(MyTabBarViewController *)self.tabBarController setHasEmailTagHidden:YES];
+            }
+        }
+    }
+}
+-(void)sendListSucceed:(NSDictionary *)datadic
+{
+    [self doneLoadingTableViewData];
+    self.dataDic=datadic;
+    if (self.dataDic) {
+        self.outArray=(NSArray *)[self.dataDic objectForKey:@"list"];
+        [self.tableView reloadData];
+    }
 }
 -(void)listEmailSucceed:(NSDictionary *)datadic
 {
@@ -871,21 +942,6 @@ enum{
         [self updateEmailList];
     }
     NSLog(@"openFinderSucess:");
-//    if (self.dataDic)
-//    {
-//        NSString *dataFilePath=[YNFunctions getDataCachePath];
-//        dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:self.f_id]];
-//        
-//        NSError *jsonParsingError=nil;
-//        NSData *data=[NSJSONSerialization dataWithJSONObject:self.dataDic options:0 error:&jsonParsingError];
-//        BOOL isWrite=[data writeToFile:dataFilePath atomically:YES];
-//        if (isWrite) {
-//            NSLog(@"写入文件成功：%@",dataFilePath);
-//        }else
-//        {
-//            NSLog(@"写入文件失败：%@",dataFilePath);
-//        }
-//    }
 }
 #pragma mark - UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -897,11 +953,41 @@ enum{
                 [self.em cancelAllTask];
                 self.em=[[SCBEmailManager alloc] init];
                 self.em.delegate=self;
-                if (self.segmentedControl.selectedSegmentIndex==0) {
-                    [self.em removeEmailWithIDs:[self selectedIDs] type:@"0"];
+                if (isShowEmail) {
+                    [self.em delReceiveWithID:[self selectedIDs]];
                 }else
                 {
-                    [self.em removeEmailWithIDs:[self selectedIDs] type:@"1"];
+                    [self.em delSendWithID:[self selectedIDs]];
+                }
+            }
+            [self editFinished];
+            break;
+        }
+        case  kActionSheetTagDeletaAll:
+        {
+            if (buttonIndex==0) {
+                NSMutableArray *ids=[NSMutableArray array];
+                if (isShowEmail) {
+                    for (NSDictionary *dic in self.inArray) {
+                        NSString *fid=[dic objectForKey:@"re_id"];
+                        [ids addObject:fid];
+                    }
+                }else
+                {
+                    for (NSDictionary *dic in self.outArray) {
+                        NSString *fid=[dic objectForKey:@"send_id"];
+                        [ids addObject:fid];
+                    }
+                }
+                [self.em cancelAllTask];
+                self.em=[[SCBEmailManager alloc] init];
+                self.em.delegate=self;
+                if (isShowEmail) {
+                    [self.em delReceiveWithID:ids];
+                }else
+                {
+//                    [self.em delSendWithID:ids];
+                    [self.em delFilesSendByUserId];
                 }
             }
             [self editFinished];

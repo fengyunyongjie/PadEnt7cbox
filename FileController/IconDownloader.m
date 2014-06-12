@@ -23,7 +23,20 @@
     assert(self.fileStream == nil);         // ditto
     assert(self.filePath == nil);           // ditto
     
-    NSString *fthumb=[self.data_dic objectForKey:@"fthumb"];
+    NSString *fthumb = nil;
+    if([self.data_dic objectForKey:@"fthumb"])
+    {
+        fthumb=[self.data_dic objectForKey:@"fthumb"];
+    }
+    else if([self.data_dic objectForKey:@"atta_file_thumb"])
+    {
+        fthumb=[self.data_dic objectForKey:@"atta_file_thumb"];
+    }
+    if(fthumb==nil)
+    {
+        return;
+    }
+    
     url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",HOST_URL,fthumb]];
     NSLog(@"下载文件：%@",url);
     success=(url!=nil);
@@ -31,7 +44,7 @@
         //如果Url为URL 提示无效的URL
         NSLog(@"无效的URL");
     }else{
-        NSString *fthumb=[self.data_dic objectForKey:@"fthumb"];
+
         //compressaddr =[YNFunctions picFileNameFromURL:compressaddr];
         NSString *path=[YNFunctions getIconCachePath];
         fthumb=[YNFunctions picFileNameFromURL:fthumb];

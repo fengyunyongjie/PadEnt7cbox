@@ -13,7 +13,7 @@
 #import "YNNavigationController.h"
 #import "PhotoLookViewController.h"
 
-@interface MySplitViewController ()
+@interface MySplitViewController ()<UISplitViewControllerDelegate>
 
 @end
 
@@ -38,7 +38,7 @@
     UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:detailVC];
     [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
     self.viewControllers=@[myTabVC,nav];
-    self.delegate=detailVC;
+    self.delegate=self;
 }
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
@@ -53,5 +53,9 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+#pragma mark - UISplitViewControllerDelegate
+- (BOOL)splitViewController:(UISplitViewController *)svc shouldHideViewController:(UIViewController *)vc inOrientation:(UIInterfaceOrientation)orientation
+{
+    return NO;
+}
 @end

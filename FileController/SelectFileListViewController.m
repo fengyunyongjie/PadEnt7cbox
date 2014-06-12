@@ -24,6 +24,7 @@
 @end
 
 @implementation SelectFileListViewController
+@synthesize isLoading;
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
@@ -265,11 +266,17 @@
 }
 - (void)moveFileToHere:(id)sender
 {
+    if(isLoading)
+    {
+        return;
+    }
+    isLoading = YES;
     switch (self.type) {
         case kSelectTypeDefault:
         case kSelectTypeMove:
             if (![self.roletype isEqualToString:@"2"]&&[self.f_id intValue]==0&&self.isHasSelectFile) {
                 [self.delegate showMessage:@"权限不允许"];
+                isLoading = NO;
                 return;
                 
             }
@@ -279,6 +286,7 @@
         case kSelectTypeCopy:
             if (![self.roletype isEqualToString:@"2"]&&[self.f_id intValue]==0&&self.isHasSelectFile) {
                 [self.delegate showMessage:@"权限不允许"];
+                isLoading = NO;
                 return;
                 
             }
@@ -297,6 +305,7 @@
         {
             if (![self.roletype isEqualToString:@"2"]&&[self.f_id intValue]==0) {
                 [self.delegate showMessage:@"权限不允许"];
+                isLoading = NO;
                 return;
             }
             
@@ -307,10 +316,31 @@
             [self.delegate uploadSpid:self.spid];
             [self.delegate uploadFiledId:self.f_id];
         }
+            break;
+        case kSelectTypeShare:
+        {
+            if (![self.roletype isEqualToString:@"2"]&&[self.f_id intValue]==0) {
+                if (self.hud) {
+                    [self.hud removeFromSuperview];
+                }
+                self.hud=nil;
+                self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+                [self.view.superview addSubview:self.hud];
+                [self.hud show:NO];
+                self.hud.labelText=@"权限不允许";
+                self.hud.mode=MBProgressHUDModeText;
+                self.hud.margin=10.f;
+                [self.hud show:YES];
+                [self.hud hide:YES afterDelay:1.0f];
+                isLoading = NO;
+                return;
+            }
+        }
         default:
             break;
     }
     [self dismissViewControllerAnimated:YES completion:nil];
+    isLoading = NO;
     for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
     {
         UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
@@ -483,6 +513,7 @@
                 flVC.title=[dic objectForKey:@"fname"];
                 flVC.fcmd=[dic objectForKey:@"fcmd"];
                 flVC.delegate=self.delegate;
+                flVC.roletype=self.roletype;
                 flVC.type=self.type;
                 flVC.targetsArray=self.targetsArray;
                 flVC.isHasSelectFile=self.isHasSelectFile;
@@ -656,7 +687,9 @@
 //    [self dismissViewControllerAnimated:YES completion:^(void){
 //        [self.delegate showMessage:@"操作失败"];
 //    }];
-    [self.delegate showMessage:@"操作失败"];
+    if ([(NSObject *)self.delegate respondsToSelector:@selector(showMessage:)]) {
+        [self.delegate showMessage:@"操作失败"];
+    }
     [self.navigationController popToViewController:(UIViewController *)self.delegate animated:YES];
 //    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
 //    {
@@ -690,7 +723,9 @@
 //    [self dismissViewControllerAnimated:YES completion:^(void){
 //        [self.delegate operateUpdate];
 //    }];
-    [self.delegate showMessage:@"操作成功"];
+    if ([(NSObject *)self.delegate respondsToSelector:@selector(showMessage:)]) {
+        [self.delegate showMessage:@"操作成功"];
+    }
     [self.delegate operateUpdate];
     [self.navigationController popToViewController:(UIViewController *)self.delegate animated:YES];
 //    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
@@ -708,6 +743,24 @@
 //        }
 //    }
 }
+
+-(void)showMessage:(NSString *)message
+{
+    [self.hud show:NO];
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=message;
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1];
+}
+
 #pragma mark - UIAlertViewDelegate Methods
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {

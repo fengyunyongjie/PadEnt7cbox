@@ -1245,6 +1245,15 @@
                             [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
                             [viewCon.view addSubview:look.view];
                             [viewCon addChildViewController:look];
+                        }else
+                        {
+                            DetailViewController *viewCon = [[DetailViewController alloc] init];
+                            [NavigationController setViewControllers:@[viewCon] animated:NO];
+                            viewCon.isFileManager = NO;
+                            [viewCon removeAllView];
+                            [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
+                            [viewCon.view addSubview:look.view];
+                            [viewCon addChildViewController:look];
                         }
                     }
                     else
@@ -1261,6 +1270,15 @@
                         if([detailView isKindOfClass:[DetailViewController class]])
                         {
                             DetailViewController *viewCon = (DetailViewController *)detailView;
+                            viewCon.isFileManager = NO;
+                            [viewCon removeAllView];
+                            [viewCon.view addSubview:openFileView.view];
+                            [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
+                            [viewCon addChildViewController:openFileView];
+                        }else
+                        {
+                            DetailViewController *viewCon = [[DetailViewController alloc] init];
+                            [NavigationController setViewControllers:@[viewCon] animated:NO];
                             viewCon.isFileManager = NO;
                             [viewCon removeAllView];
                             [viewCon.view addSubview:openFileView.view];
@@ -1353,6 +1371,15 @@
                             [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
                             [viewCon.view addSubview:look.view];
                             [viewCon addChildViewController:look];
+                        }else
+                        {
+                            DetailViewController *viewCon = [[DetailViewController alloc] init];
+                            [NavigationController setViewControllers:@[viewCon] animated:NO];
+                            viewCon.isFileManager = NO;
+                            [viewCon removeAllView];
+                            [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
+                            [viewCon.view addSubview:look.view];
+                            [viewCon addChildViewController:look];
                         }
                     }
                     else
@@ -1369,6 +1396,15 @@
                         if([detailView isKindOfClass:[DetailViewController class]])
                         {
                             DetailViewController *viewCon = (DetailViewController *)detailView;
+                            viewCon.isFileManager = NO;
+                            [viewCon removeAllView];
+                            [viewCon.view addSubview:openFileView.view];
+                            [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
+                            [viewCon addChildViewController:openFileView];
+                        }else
+                        {
+                            DetailViewController *viewCon = [[DetailViewController alloc] init];
+                            [NavigationController setViewControllers:@[viewCon] animated:NO];
                             viewCon.isFileManager = NO;
                             [viewCon removeAllView];
                             [viewCon.view addSubview:openFileView.view];

@@ -351,51 +351,55 @@
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-    if([detailView isKindOfClass:[DetailViewController class]])
-    {
-        DetailViewController *viewCon = (DetailViewController *)detailView;
-        DownList *demo = [tableArray objectAtIndex:currPage];
-        [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete withIsHaveDown:isHaveDownload];
-        if(viewCon.isFileManager)
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+        if (![detailView isKindOfClass:[DetailViewController class]]) {
+            detailView = [[DetailViewController alloc] init];
+            [NavigationController setViewControllers:@[detailView] animated:NO];
+        }
+        if([detailView isKindOfClass:[DetailViewController class]])
         {
-            AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-            UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
-            for(int i=NavigationController2.viewControllers.count-1;i>=0;i--)
+            DetailViewController *viewCon = (DetailViewController *)detailView;
+            DownList *demo = [tableArray objectAtIndex:currPage];
+            [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete withIsHaveDown:isHaveDownload];
+            if(viewCon.isFileManager)
             {
-                FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
-                if([fileList isKindOfClass:[FileListViewController class]])
+                AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+                UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
+                for(int i=NavigationController2.viewControllers.count-1;i>=0;i--)
                 {
-                    fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:demo.d_file_id];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                    [fileList updateSelected];
-                    });
-                    break;
+                    FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
+                    if([fileList isKindOfClass:[FileListViewController class]])
+                    {
+                        fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:demo.d_file_id];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                        [fileList updateSelected];
+                        });
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+                UINavigationController *NavigationController3 = [[tabbar viewControllers] objectAtIndex:2];
+                for(int i=NavigationController3.viewControllers.count-1;i>=0;i--)
+                {
+                    UpDownloadViewController *upDownLoad = [NavigationController3.viewControllers objectAtIndex:i];
+                    if([upDownLoad isKindOfClass:[UpDownloadViewController class]])
+                    {
+                        upDownLoad.selectTableViewFid = [NSString formatNSStringForOjbect:demo.d_file_id];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                        [upDownLoad updateSelected];
+                        });
+                        break;
+                    }
                 }
             }
         }
-        else
-        {
-            AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-            UINavigationController *NavigationController3 = [[tabbar viewControllers] objectAtIndex:2];
-            for(int i=NavigationController3.viewControllers.count-1;i>=0;i--)
-            {
-                UpDownloadViewController *upDownLoad = [NavigationController3.viewControllers objectAtIndex:i];
-                if([upDownLoad isKindOfClass:[UpDownloadViewController class]])
-                {
-                    upDownLoad.selectTableViewFid = [NSString formatNSStringForOjbect:demo.d_file_id];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                    [upDownLoad updateSelected];
-                    });
-                    break;
-                }
-            }
-        }
-    }
     });
 }
 

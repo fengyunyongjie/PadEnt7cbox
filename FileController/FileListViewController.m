@@ -615,11 +615,11 @@ typedef enum{
                 //选中了文件夹，禁用分享;
                 //            UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
                 //            [item setEnabled:NO];
-                canSend=NO;
+//                canSend=NO;
                 canDown=NO;
             }
         }
-        [item_send setEnabled:canSend];
+//        [item_send setEnabled:canSend];
         [item_download setEnabled:canDown];
     }
     [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消全选" style:UIBarButtonItemStylePlain target:self action:@selector(deselectAllCell:)]];
@@ -854,6 +854,7 @@ typedef enum{
             [self.moreEditBar setItems:theArray];
         }
     }
+    [self.moreEditBar setHidden:!isHideTabBar];
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
@@ -2171,17 +2172,14 @@ noDirSend:
                     OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
                     openFileView.isNotLook = YES;
                     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-                    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-                    if([detailView isKindOfClass:[DetailViewController class]])
-                    {
-                        DetailViewController *viewCon = (DetailViewController *)detailView;
-                        viewCon.isFileManager = YES;
-                        [viewCon removeAllView];
-                        [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
-                        [viewCon.view addSubview:openFileView.view];
-                        [viewCon addChildViewController:openFileView];
-                    }
+                    UINavigationController *nav = [app.splitVC.viewControllers lastObject];
+                    DetailViewController *viewCon=[[DetailViewController alloc] init];
+                    viewCon.isFileManager = YES;
+                    [viewCon removeAllView];
+                    [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
+                    [viewCon.view addSubview:openFileView.view];
+                    [viewCon addChildViewController:openFileView];
+                    [nav setViewControllers:@[viewCon] animated:NO];
                     return;
                 }
                 int row = 0;
@@ -2228,17 +2226,26 @@ noDirSend:
                             look.isHaveDownload=[self hasCmdInFcmd:@"download"];
                         }
                         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-                        if([detailView isKindOfClass:[DetailViewController class]])
-                        {
-                            DetailViewController *viewCon = (DetailViewController *)detailView;
-                            viewCon.isFileManager = YES;
-                            [viewCon removeAllView];
-                            [viewCon showPhotoView:fname withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
-                            [viewCon.view addSubview:look.view];
-                            [viewCon addChildViewController:look];
-                        }
+//                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
+//                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+//                        if([detailView isKindOfClass:[DetailViewController class]])
+//                        {
+//                            DetailViewController *viewCon = (DetailViewController *)detailView;
+//                            viewCon.isFileManager = YES;
+//                            [viewCon removeAllView];
+//                            [viewCon showPhotoView:fname withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
+//                            [viewCon.view addSubview:look.view];
+//                            [viewCon addChildViewController:look];
+//                        }
+                        
+                        UINavigationController *nav = [app.splitVC.viewControllers lastObject];
+                        DetailViewController *viewCon=[[DetailViewController alloc] init];
+                        viewCon.isFileManager = YES;
+                        [viewCon removeAllView];
+                        [viewCon showPhotoView:fname withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
+                        [viewCon.view addSubview:look.view];
+                        [viewCon addChildViewController:look];
+                        [nav setViewControllers:@[viewCon] animated:NO];
                     }
                 }
             }
@@ -2255,17 +2262,15 @@ noDirSend:
                     OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
                     openFileView.isNotLook = YES;
                     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-                    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-                    if([detailView isKindOfClass:[DetailViewController class]])
-                    {
-                        DetailViewController *viewCon = (DetailViewController *)detailView;
-                        viewCon.isFileManager = YES;
-                        [viewCon removeAllView];
-                        [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
-                        [viewCon.view addSubview:openFileView.view];
-                        [viewCon addChildViewController:openFileView];
-                    }
+
+                    UINavigationController *nav = [app.splitVC.viewControllers lastObject];
+                    DetailViewController *viewCon=[[DetailViewController alloc] init];
+                    viewCon.isFileManager = YES;
+                    [viewCon removeAllView];
+                    [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
+                    [viewCon.view addSubview:openFileView.view];
+                    [viewCon addChildViewController:openFileView];
+                    [nav setViewControllers:@[viewCon] animated:NO];
                     return;
                 }
                 NSString *file_id=[dic objectForKey:@"fid"];
@@ -2286,17 +2291,15 @@ noDirSend:
                 openFileView.title = f_name;
                 
                 AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-                UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-                if([detailView isKindOfClass:[DetailViewController class]])
-                {
-                    DetailViewController *viewCon = (DetailViewController *)detailView;
-                    viewCon.isFileManager = YES;
-                    [viewCon removeAllView];
-                    [viewCon showOtherView:openFileView.title withIsHave:isHaveDelete withIsHaveDown:NO];
-                    [viewCon.view addSubview:openFileView.view];
-                    [viewCon addChildViewController:openFileView];
-                }
+                
+                UINavigationController *nav = [app.splitVC.viewControllers lastObject];
+                DetailViewController *viewCon=[[DetailViewController alloc] init];
+                viewCon.isFileManager = YES;
+                [viewCon removeAllView];
+                [viewCon showOtherView:openFileView.title withIsHave:isHaveDelete withIsHaveDown:NO];
+                [viewCon.view addSubview:openFileView.view];
+                [viewCon addChildViewController:openFileView];
+                [nav setViewControllers:@[viewCon] animated:NO];
             }
         }
     }
@@ -2374,6 +2377,7 @@ noDirSend:
                 //iPhone, present activity view controller as is.
                 [self presentViewController:activityViewController animated:YES completion:nil];
             }
+            [self presentViewController:activityViewController animated:YES completion:nil];
         }
             break;
         default:

@@ -151,6 +151,10 @@
         {
             DetailViewController *viewCon = (DetailViewController *)detailView;
             viewCon.navigationItem.leftBarButtonItem = nil;
+        }else
+        {
+            DetailViewController *viewCon = [[DetailViewController alloc] init];
+            [NavigationController setViewControllers:@[viewCon] animated:NO];
         }
         return;
     }
@@ -202,6 +206,10 @@
         {
             DetailViewController *viewCon = (DetailViewController *)detailView;
             viewCon.navigationItem.leftBarButtonItem = nil;
+        }else
+        {
+            DetailViewController *viewCon = [[DetailViewController alloc] init];
+            [NavigationController setViewControllers:@[viewCon] animated:NO];
         }
     }
     
@@ -212,6 +220,11 @@
     if([detailView isKindOfClass:[DetailViewController class]])
     {
         DetailViewController *viewCon = (DetailViewController *)detailView;
+        [viewCon setDataDic:self.dataDic];
+    }else
+    {
+        DetailViewController *viewCon = [[DetailViewController alloc] init];
+        [NavigationController setViewControllers:@[viewCon] animated:NO];
         [viewCon setDataDic:self.dataDic];
     }
 }
@@ -286,6 +299,15 @@
     if([detailView isKindOfClass:[DetailViewController class]])
     {
         DetailViewController *viewCon = (DetailViewController *)detailView;
+        [viewCon removeAllView];
+        [viewCon.view addSubview:browser.view];
+        [viewCon showOtherView:browser.title withIsHave:self.isHaveDelete withIsHaveDown:self.isHaveDownload];
+        [viewCon addChildViewController:browser];
+        [viewCon showFullView];
+    }else
+    {
+        DetailViewController *viewCon = [[DetailViewController alloc] init];
+        [NavigationController setViewControllers:@[viewCon] animated:NO];
         [viewCon removeAllView];
         [viewCon.view addSubview:browser.view];
         [viewCon showOtherView:browser.title withIsHave:self.isHaveDelete withIsHaveDown:self.isHaveDownload];

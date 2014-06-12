@@ -392,7 +392,17 @@
 {
     self.fm_type=kFMTypeCommitOrResave;
     self.activeData=[NSMutableData data];
-    NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,FM_RESAVE_URI]];
+    NSString *urlString;
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    if(app.isFileShare)
+    {
+        urlString = FM_ERESAVE_URI;
+    }
+    else
+    {
+        urlString = FM_RESAVE_URI;
+    }
+    NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,urlString]];
     NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
     NSMutableString *body=[[NSMutableString alloc] init];
     NSString *fids=[f_ids componentsJoinedByString:@"&fids[]="];

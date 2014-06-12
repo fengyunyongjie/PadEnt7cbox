@@ -16,6 +16,7 @@ typedef enum {
     kSelectTypeResave,
     kSelectTypeCommit,
     kSelectTypeUpload,
+    kSelectTypeShare,
 } SelectType;
 @protocol SelectFileListDelegate;
 @interface SelectFileListViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
@@ -35,6 +36,8 @@ typedef enum {
 @property (weak,nonatomic) id<SelectFileListDelegate> delegate;
 @property (assign,nonatomic) SelectType type;
 @property (assign,nonatomic) BOOL isHasSelectFile;
+@property (nonatomic,assign) BOOL isLoading;
+
 @end
 
 @protocol SelectFileListDelegate

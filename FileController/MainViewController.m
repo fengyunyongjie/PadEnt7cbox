@@ -48,14 +48,14 @@
 }
 - (void)viewDidLayoutSubviews
 {
-    CGSize winSize=[UIScreen mainScreen].bounds.size;
-    
-    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height-49);
-    }else
-    {
-        self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height-49-64);
-    }
+//    CGSize winSize=[UIScreen mainScreen].bounds.size;
+//    
+//    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+//        self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height-49);
+//    }else
+//    {
+//        self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height-49-64);
+//    }
 }
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -160,8 +160,8 @@
         self.view.userInteractionEnabled = YES;
     }];
     
-    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+//    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+//    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 
 - (void)didReceiveMemoryWarning
@@ -717,44 +717,44 @@
 }
 
 #pragma mark - iPad 转屏代码
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
-}
-
-//视图旋转完成之后自动调用
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UIActionSheet *actionsheet = [app.action_array lastObject];
-    if(actionsheet)
-    {
-        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
-        [actionsheet showInView:[[UIApplication sharedApplication] keyWindow]];
-    }
-}
-
--(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-    
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49);
-        }else
-        {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49);
-        }
-    }
-    else
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49);
-        }else
-        {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49);
-        }
-    }
-}
+//-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+//    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+//}
+//
+////视图旋转完成之后自动调用
+//-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    UIActionSheet *actionsheet = [app.action_array lastObject];
+//    if(actionsheet)
+//    {
+//        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
+//        [actionsheet showInView:[[UIApplication sharedApplication] keyWindow]];
+//    }
+//}
+//
+//-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+//{
+//    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+//    
+//    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+//    {
+//        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+//            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49);
+//        }else
+//        {
+//            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49);
+//        }
+//    }
+//    else
+//    {
+//        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+//            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49);
+//        }else
+//        {
+//            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49);
+//        }
+//    }
+//}
 
 @end

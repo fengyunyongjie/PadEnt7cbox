@@ -1017,6 +1017,12 @@ typedef enum{
         DetailViewController *viewCon = (DetailViewController *)detailView;
         viewCon.isFileManager = YES;
         [viewCon removeAllView];
+    }else
+    {
+        DetailViewController *viewCon = [[DetailViewController alloc] init];
+        [NavigationController setViewControllers:@[viewCon] animated:NO];
+        viewCon.isFileManager = YES;
+        [viewCon removeAllView];
     }
 }
 #pragma mark - UIActionSheetDelegate

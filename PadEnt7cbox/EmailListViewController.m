@@ -25,6 +25,8 @@ enum{
 @property (strong,nonatomic) SCBEmailManager *em;
 @property(strong,nonatomic) MBProgressHUD *hud;
 @property (strong,nonatomic) UIToolbar *moreEditBar;
+@property (strong,nonatomic) UILabel * notingLabel;
+@property (strong,nonatomic) UIView *nothingView;
 @end
 
 @implementation EmailListViewController
@@ -40,6 +42,13 @@ enum{
 }
 - (void)viewDidAppear:(BOOL)animated
 {
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    
+    self.view.userInteractionEnabled = NO;
+    [UIView animateWithDuration:0.2 animations:^{} completion:^(BOOL bl){
+        self.view.userInteractionEnabled = YES;
+    }];
 }
 - (void)viewDidLoad
 {
@@ -52,7 +61,7 @@ enum{
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
     [self.view addSubview:self.tableView];
-    self.tableView.frame=CGRectMake(0, 50, self.view.frame.size.width, self.view.frame.size.height);
+    self.tableView.frame=CGRectMake(0, 40, self.view.frame.size.width, self.view.frame.size.height);
     
     isShowEmail = YES;
     CGRect customRect = CGRectMake(0, 0, 320, 40);
@@ -111,16 +120,10 @@ enum{
 }
 -(void)viewDidLayoutSubviews
 {
-    CGRect r=self.view.frame;
-    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
-    self.view.frame=r;
-    self.tableView.frame=CGRectMake(0, 50, self.view.frame.size.width, self.view.frame.size.height-49-50);
-    if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.tableView.frame=CGRectMake(0, 30, self.view.frame.size.width, self.view.frame.size.height-49-64-30);
-        self.moreEditBar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
-    }
-    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
-    NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
+//    CGRect r=self.view.frame;
+//    self.tableView.frame=CGRectMake(0, 40, self.view.frame.size.width, self.view.frame.size.height-60-40);
+//    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
+//    NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
 }
 - (void)didReceiveMemoryWarning
 {
@@ -217,13 +220,14 @@ enum{
         self.menuView=nil;
     }
     if (!self.menuView) {
-        self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height)];
+        int Height=1024;
+        self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, Height, Height)];
         //[self.menuView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
-        UIControl *grayView=[[UIControl alloc] initWithFrame:CGRectMake(0, 64, self.navigationController.view.frame.size.width, self.navigationController.view.frame.size.height)];
+        UIControl *grayView=[[UIControl alloc] initWithFrame:CGRectMake(0, 64, Height, Height)];
         [grayView setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
         [grayView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
         [self.menuView addSubview:grayView];
-        CGSize btnSize=CGSizeMake(self.menuView.frame.size.width, 45);
+        CGSize btnSize=CGSizeMake(320, 45);
         UIButton *btnNewFinder,*btnEdit,*btnSort,*btnUpload,*btnClearAll;
         UIColor *titleColor=[UIColor colorWithRed:83/255.0f green:113/255.0f blue:190/255.0f alpha:1];
         btnUpload=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnSize.width, btnSize.height)];
@@ -282,7 +286,7 @@ enum{
         //        [self.menuView addSubview:btnSort];
         
         [self.menuView addTarget:self action:@selector(hideMenu) forControlEvents:UIControlEventTouchUpInside];
-        [self.tabBarController.view addSubview:self.menuView];
+        [self.tabBarController.view.superview addSubview:self.menuView];
         [self.menuView setHidden:YES];
     }
     [self.menuView setHidden:!self.menuView.hidden];
@@ -480,28 +484,7 @@ enum{
         [appleDate.myTabBarVC.imageView setHidden:NO];
     }
     //isHideTabBar=!isHideTabBar;
-    for(UIView *view in self.tabBarController.view.subviews)
-    {
-        if([view isKindOfClass:[UITabBar class]])
-        {
-            if (isHideTabBar) { //if hidden tabBar
-                [view setFrame:CGRectMake(view.frame.origin.x,[[UIScreen mainScreen]bounds].size.height+10, view.frame.size.width, view.frame.size.height)];
-            }else {
-                NSLog(@"isHideTabBar %@",NSStringFromCGRect(view.frame));
-                [view setFrame:CGRectMake(view.frame.origin.x, [[UIScreen mainScreen]bounds].size.height-49, view.frame.size.width, view.frame.size.height)];
-            }
-        }else
-        {
-            if (isHideTabBar) {
-                NSLog(@"%@",NSStringFromCGRect(view.frame));
-                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, [[UIScreen mainScreen]bounds].size.height)];
-                NSLog(@"%@",NSStringFromCGRect(view.frame));
-            }else {
-                NSLog(@"%@",NSStringFromCGRect(view.frame));
-                [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width,[[UIScreen mainScreen]bounds].size.height-49)];
-            }
-        }
-    }
+    [self.tabBarController.tabBar setHidden:isHideTabBar];
     
     //隐藏返回按钮
     if (isHideTabBar) {
@@ -519,10 +502,7 @@ enum{
         self.moreEditBar=nil;
     }
     if (!self.moreEditBar) {
-        self.moreEditBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0, ([[UIScreen mainScreen] bounds].size.height-49)-self.view.frame.origin.y, 320, 49)];
-        if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.moreEditBar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
-        }
+        self.moreEditBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0, self.tabBarController.view.frame.size.height-56, 320, 56)];
         [self.moreEditBar setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
             [self.moreEditBar setBarTintColor:[UIColor blueColor]];
@@ -530,7 +510,7 @@ enum{
         {
             [self.moreEditBar setTintColor:[UIColor blueColor]];
         }
-        [self.view addSubview:self.moreEditBar];
+        [self.tabBarController.view addSubview:self.moreEditBar];
         //发送 删除 提交 移动 全选
         UIButton *btn_del,*btn_markReaded,*btn_Resend;
         UIBarButtonItem *item_del,*item_flexible,*item_markReaded,*item_Resend;
@@ -564,6 +544,7 @@ enum{
             [self.moreEditBar setItems:@[item_flexible,item_del,item_flexible]];
         }
     }
+    [self.moreEditBar setHidden:!isHideTabBar];
 }
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -785,7 +766,9 @@ enum{
         edvc.etype=etype;
         edvc.title=@"";
         //[edvc setHidesBottomBarWhenPushed:YES];
-        [self.navigationController pushViewController:edvc animated:YES];
+        UINavigationController *nav=(UINavigationController *)[self.splitViewController.viewControllers lastObject];
+        [nav setViewControllers:@[edvc]];
+//        [self.navigationController pushViewController:edvc animated:YES];
     }
 }
 
@@ -997,5 +980,95 @@ enum{
             break;
     }
 }
+#pragma mark - iPad旋转方法
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+}
 
+//视图旋转完成之后自动调用
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIActionSheet *actionsheet = [app.action_array lastObject];
+    if(actionsheet)
+    {
+        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
+        [actionsheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }
+}
+
+-(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    CGRect view_rect = self.view.frame;
+    view_rect.size.width = 320;
+    [self.view setFrame:view_rect];
+    CGRect editView_rect = self.moreEditBar.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            editView_rect.origin.y = 768-56;
+        }
+        else
+        {
+            editView_rect.origin.y = 768-56;
+        }
+    }
+    else
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            editView_rect.origin.y = 1024-56;
+        }
+        else
+        {
+            editView_rect.origin.y = 1024-56;
+        }
+    }
+    [self.moreEditBar setFrame:editView_rect];
+    
+    
+    CGRect self_rect = self.tableView.frame;
+    self_rect.size.width = 320;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self_rect.size.height = 768-56-64-self.customSelectButton.frame.size.height;
+        }
+        else
+        {
+            self_rect.size.height = 768-56-64-self.customSelectButton.frame.size.height;
+        }
+    }
+    else
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self_rect.size.height = 1024-56-64-self.customSelectButton.frame.size.height;
+        }
+        else
+        {
+            self_rect.size.height = 1024-56-64-self.customSelectButton.frame.size.height;
+        }
+    }
+    [self.tableView setFrame:self_rect];
+    
+    CGRect notLabel_rect = self.notingLabel.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        notLabel_rect.origin.y = (768-56-64-40)/2;
+    }
+    else
+    {
+        notLabel_rect.origin.y = (1024-56-64-40)/2;
+    }
+    [self.notingLabel setFrame:notLabel_rect];
+    
+    CGRect noting_rect = self.nothingView.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        noting_rect.size.height = 768-56-64;
+    }
+    else
+    {
+        noting_rect.size.height = 1024-56-64;
+    }
+    [self.nothingView setFrame:noting_rect];
+}
 @end

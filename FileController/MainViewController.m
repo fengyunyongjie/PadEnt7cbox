@@ -521,7 +521,26 @@
                 [self.navigationController pushViewController:flVC animated:YES];
             }
             
-        }else
+        }else if(self.type==kTypeDefault)
+        {
+            dic=[self.listArray objectAtIndex:indexPath.row];
+            if (self.dirType==kTypeEnt)
+            {
+                dic=[self.listArray objectAtIndex:indexPath.row+1];
+            }
+            if (dic) {
+                FileListViewController *flVC=[[FileListViewController alloc] init];
+                flVC.spid=[dic objectForKey:@"spid"];
+                flVC.f_id=@"0";
+                flVC.title=[dic objectForKey:@"spname"];
+                flVC.roletype=@"2"; //2为我的文件夹 1为企业文件夹
+                if (self.dirType==kTypeEnt)
+                {
+                    flVC.roletype=@"1";
+                }
+                [self.navigationController pushViewController:flVC animated:YES];
+            }
+        }else if (self.type==kTypeShare)
         {
             dic=[self.listArray objectAtIndex:indexPath.row];
             if (self.dirType==kTypeEnt)
@@ -548,6 +567,7 @@
                 appDelegate.old_file_url = flVC.title;
                 [self.navigationController pushViewController:flVC animated:YES];
             }
+
         }
     }
 }

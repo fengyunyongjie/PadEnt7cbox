@@ -2145,6 +2145,18 @@ noDirSend:
             if(![fisdir isEqualToString:@"0"] && self.shareType==kShareTypeShare)
             {
                 [self addSharedFileView:dic];
+            }else if([fisdir isEqualToString:@"0"]&&self.shareType==kShareTypeShare){
+                FileListViewController *flVC=[[FileListViewController alloc] init];
+                flVC.spid=self.spid;
+                flVC.roletype=self.roletype;
+                flVC.f_id=[dic objectForKey:@"fid"];
+                flVC.title=[dic objectForKey:@"fname"];
+                flVC.fcmd=[dic objectForKey:@"fcmd"];
+                
+                flVC.shareType=kShareTypeShare;
+                flVC.FileEmialViewDelegate=self.FileEmialViewDelegate;
+                
+                [self.navigationController pushViewController:flVC animated:YES];
             }else
             if ([fisdir isEqualToString:@"0"]) {
                 FileListViewController *flVC=[[FileListViewController alloc] init];
@@ -2366,6 +2378,10 @@ noDirSend:
                 picker.messageComposeDelegate = self;
                 [picker setBody:text];
                 [self presentViewController:picker animated:YES completion:nil];
+            }else
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"iMessage未启用，请到［设置］中开启！" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                [alert show];
             }
         }
             break;
@@ -2373,10 +2389,10 @@ noDirSend:
         {
             NSString *text=[NSString stringWithFormat:template,[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"],link];
             UIActivityViewController *activityViewController=[[UIActivityViewController alloc] initWithActivityItems:@[text] applicationActivities:nil];
-            if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-                //iPhone, present activity view controller as is.
-                [self presentViewController:activityViewController animated:YES completion:nil];
-            }
+//            if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+//                //iPhone, present activity view controller as is.
+//                [self presentViewController:activityViewController animated:YES completion:nil];
+//            }
             [self presentViewController:activityViewController animated:YES completion:nil];
         }
             break;

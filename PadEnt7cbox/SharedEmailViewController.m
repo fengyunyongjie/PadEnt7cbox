@@ -168,6 +168,7 @@
 
 @interface SharedEmailViewController()<UIActionSheetDelegate,UIScrollViewDelegate,SCBEmailManagerDelegate,UITextFieldDelegate,UITextViewDelegate,UIAlertViewDelegate>
 @property (strong,nonatomic) MBProgressHUD *hud;
+@property (strong,nonatomic) UIPopoverController *popoverFileSelectController;
 - (void)resizeViews;
 @end
 
@@ -772,9 +773,18 @@
     viewController.sharedEmialViewDelegate=self;
     YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:viewController];
     [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
-    [nav.navigationBar setTintColor:[UIColor whiteColor]];
-    [self presentViewController:nav animated:YES completion:nil];
+//    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+//    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+//    [self presentViewController:nav animated:YES completion:nil];
+    if (![self.popoverFileSelectController isPopoverVisible]) {
+        self.popoverFileSelectController=[[UIPopoverController alloc] initWithContentViewController:nav];
+        [self.popoverFileSelectController presentPopoverFromRect:CGRectMake(0, 0, 320, 768) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    }
+    else
+    {
+        //Dismiss if the button is tapped while pop over is visible
+        [self.popoverFileSelectController dismissPopoverAnimated:YES];
+    }
 }
 
 -(void)fileListSucceed:(NSData *)data
@@ -823,6 +833,11 @@
 {
     [self.fileArray addObject:dictionary];
     [self reloadFiles];
+    if(self.popoverFileSelectController.isPopoverVisible)
+    {
+        //Dismiss if the button is tapped while pop over is visible
+        [self.popoverFileSelectController dismissPopoverAnimated:YES];
+    }
 }
 
 @end

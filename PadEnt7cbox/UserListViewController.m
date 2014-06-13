@@ -56,8 +56,6 @@
 -(void)viewDidLayoutSubviews
 {
     CGRect r=self.view.frame;
-    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
-    self.view.frame=r;
     if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
         self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-[self.toolbar frame].size.height);
     }else
@@ -65,11 +63,11 @@
         self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-64-[self.toolbar frame].size.height);
     }
     
-    if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-        self.toolbar.frame=CGRectMake(0, [UIScreen mainScreen].bounds.size.height-64-49, 320, 49);
+    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+        self.toolbar.frame=CGRectMake(0, self.view.frame.size.height-[self.toolbar frame].size.height, self.view.frame.size.width, 49);
     }else
     {
-        self.toolbar.frame=CGRectMake(0, ([[UIScreen mainScreen] bounds].size.height-49)-self.view.frame.origin.y, 320, 49);
+        self.toolbar.frame=CGRectMake(0, [self.toolbar frame].size.height-self.view.frame.origin.y, 320, 49);
     }
 }
 
@@ -206,7 +204,7 @@
 
 -(void)cancel:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - Table view data source

@@ -989,7 +989,7 @@ typedef enum{
         [self presentViewController:nav animated:YES completion:nil];
     }
 }
-//企业分享
+//内部分享
 -(void)qiyeShared
 {
     SharedEmailViewController *sevc=[[SharedEmailViewController alloc] init];
@@ -1115,7 +1115,7 @@ hasDirSend:
     }
 noDirSend:
     {
-        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"企业分享",@"邮件分享",@"短信分享",@"复制链接",@"其它分享",nil];
+        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"内部分享",@"邮件分享",@"短信分享",@"复制链接",@"其它分享",nil];
         [actionSheet setTag:kActionSheetTagSend];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
@@ -2949,7 +2949,7 @@ noDirSend:
             switch (buttonIndex) {
                 case 0:
                 {
-                    //企业分享
+                    //内部分享
                     [self qiyeShared];
                 }
                     break;

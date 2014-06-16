@@ -43,6 +43,35 @@
     }
     return self;
 }
+-(void)viewWillLayoutSubviews
+{
+    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+    CGRect r=self.view.frame;
+    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.view.frame=CGRectMake(0, 64, 320, 768-49);
+            self.tableView.frame=CGRectMake(0, 0, 320, 768-49-64);
+            self.toolbar.frame=CGRectMake(0, 768-49-64, 320, 49);
+        }else
+        {
+            self.tableView.frame=CGRectMake(0, 0, 320, 768-49-64-20);
+            self.toolbar.frame=CGRectMake(0, 768-49-20, 320, 49);
+        }
+    }
+    else
+    {
+        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+            self.view.frame=CGRectMake(0, 64, 320, 1024-49);
+            self.tableView.frame=CGRectMake(0, 0, 320, 1024-49-64);
+            self.toolbar.frame=CGRectMake(0, 1024-49-64, 320, 49);
+        }else
+        {
+            self.tableView.frame=CGRectMake(0, 0, 320, 1024-49-64-20);
+            self.toolbar.frame=CGRectMake(0, 1024-49-20, 320, 49);
+        }
+    }
+}
 - (void)viewWillAppear:(BOOL)animated
 {
     [self updateFileList];
@@ -50,8 +79,8 @@
 }
 - (void)viewDidAppear:(BOOL)animated
 {
-    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+//    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+//    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
 }
 - (void)viewDidLoad
 {
@@ -78,12 +107,12 @@
     //Reposition and resize the receiver
     [toolbar setFrame:rectArea];
     //Add the toolbar as a subview to the navigation controller.
-    [self.tabBarController.view addSubview:toolbar];
+    [self.view addSubview:toolbar];
     self.toolbar=toolbar;
     [self.toolbar setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
     
-    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+//    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+//    [self updateViewToInterfaceOrientation:toInterfaceOrientation];
     
     UIButton *btn_download ,*btn_resave;
     UIBarButtonItem  *item_download, *item_resave;
@@ -250,7 +279,9 @@
     }
     self.fm_move.delegate=self;
     [self.fm_move moveFileIDs:self.targetsArray toPID:f_id sID:spid];
-    [self.delegate editFinished];
+    if ([(NSObject *)self.delegate respondsToSelector:@selector(editFinished)] ) {
+        [self.delegate editFinished];
+    }
 }
 -(void)copyFileToID:(NSString *)f_id spid:(NSString *)spid;
 {
@@ -262,7 +293,9 @@
     }
     self.fm_move.delegate=self;
     [self.fm_move resaveFileIDs:self.targetsArray toPID:f_id sID:spid];
-    [self.delegate editFinished];
+    if ([(NSObject *)self.delegate respondsToSelector:@selector(editFinished)] ) {
+        [self.delegate editFinished];
+    }
 }
 - (void)moveFileToHere:(id)sender
 {
@@ -726,22 +759,24 @@
     if ([(NSObject *)self.delegate respondsToSelector:@selector(showMessage:)]) {
         [self.delegate showMessage:@"操作成功"];
     }
-    [self.delegate operateUpdate];
-    [self.navigationController popToViewController:(UIViewController *)self.delegate animated:YES];
-//    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
-//    {
-//        UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
-//        if([viewController isKindOfClass:[FileListViewController class]])
-//        {
-//            [self.navigationController popToViewController:viewController animated:YES];
-//            break;
-//        }
-//        else if([viewController isKindOfClass:[QBAssetCollectionViewController class]])
-//        {
-//            [self.navigationController popToViewController:viewController animated:YES];
-//            break;
-//        }
-//    }
+    if ([(NSObject *)self.delegate respondsToSelector:@selector(operateUpdate)]) {
+        [self.delegate operateUpdate];
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
+    {
+        UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];
+        if([viewController isKindOfClass:[FileListViewController class]])
+        {
+            [self.navigationController popToViewController:viewController animated:YES];
+            break;
+        }
+        else if([viewController isKindOfClass:[QBAssetCollectionViewController class]])
+        {
+            [self.navigationController popToViewController:viewController animated:YES];
+            break;
+        }
+    }
 }
 
 -(void)showMessage:(NSString *)message
@@ -785,39 +820,6 @@
 
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-    
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49-64);
-        }else
-        {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49-64-20);
-        }
-        if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.toolbar.frame=CGRectMake(0, 768-49-20, 320, 49);
-        }else
-        {
-            self.toolbar.frame=CGRectMake(0, 768-49, 320, 49);
-        }
-    }
-    else
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49-64);
-        }else
-        {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49-64-20);
-        }
-        if (![YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.toolbar.frame=CGRectMake(0, 1024-49-20, 320, 49);
-        }else
-        {
-            self.toolbar.frame=CGRectMake(0, 1024-49, 320, 49);
-        }
-    }
 }
 
 @end

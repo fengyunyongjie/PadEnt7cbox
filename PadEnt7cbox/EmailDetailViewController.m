@@ -280,8 +280,9 @@
 -(void)viewDidLayoutSubviews
 {
     CGRect r=self.view.frame;
-    self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-self.moreEditBar.frame.size.height);
+    self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     self.moreEditBar.frame=CGRectMake(0, self.view.frame.size.height-self.moreEditBar.frame.size.height, self.view.frame.size.width, self.moreEditBar.frame.size.height);
+    [self.moreEditBar setHidden:YES];
     [self reloadFiles];
 }
 - (void)didReceiveMemoryWarning
@@ -533,6 +534,10 @@
     flvc.delegate=self;
     flvc.type=kTypeResave;
     UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:flvc];
+    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+    //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+    [nav.navigationBar setTintColor:[UIColor whiteColor]];
     [self presentViewController:nav animated:YES completion:nil];
 }
 -(void)loadEmail

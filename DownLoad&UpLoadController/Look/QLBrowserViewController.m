@@ -55,16 +55,23 @@
 // returns the item that the preview controller should preview
 - (id <QLPreviewItem>) previewController: (QLPreviewController *) controller previewItemAtIndex: (NSInteger) index
 {
+    NSURL *fileURL = nil;
     NSString *fmime=[[self.fileName pathExtension] lowercaseString];
     if ([fmime isEqualToString:@"txt"]) {
         NSStringEncoding encode = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingMacChineseSimp);
         NSString *text=[NSString stringWithContentsOfFile:self.filePath encoding:encode error:nil];
-        [text writeToFile:[self.filePath stringByAppendingString:@".txt"] atomically:YES encoding:CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF16) error:nil];
+        bool result=[text writeToFile:[self.filePath stringByAppendingString:@".txt"] atomically:YES encoding:CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF16) error:nil];
+        if (result) {
+            fileURL=[NSURL fileURLWithPath:[self.filePath stringByAppendingString:@".txt"]];
+        }else
+        {
+            fileURL=[NSURL fileURLWithPath:self.filePath];
+        }
+    }else
+    {
+        fileURL=[NSURL fileURLWithPath:self.filePath];
     }
-    NSURL *fileURL = nil;
-    fileURL=[NSURL fileURLWithPath:[self.filePath stringByAppendingString:@".txt"]];
     return fileURL;
-
 }
 #pragma mark - QLPreviewControllerDelegate
 @end

@@ -45,7 +45,7 @@
 @synthesize contentView2=_contentView2;
 @synthesize separator = _separator;
 @synthesize sourceArray = _sourceArray;
-@synthesize selectButton,isShowSelectButton;
+@synthesize selectButton,isShowSelectButton,changeLabel;
 
 #pragma mark Init
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -87,11 +87,19 @@
 	[self addSubview:_tokenField];
     
 	CGFloat tokenFieldBottom = CGRectGetMaxY(_tokenField.frame);
+    
+    self.changeLabel = [[UILabel alloc] initWithFrame:CGRectMake(7, tokenFieldBottom+2, self.bounds.size.width-70, 40)];
+    [self.changeLabel setTextColor:[UIColor grayColor]];
+    [self.changeLabel setFont:[UIFont systemFontOfSize:16]];
+    [self.changeLabel setTextAlignment:NSTextAlignmentLeft];
+    [self.changeLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+    [self.changeLabel setHighlighted:YES];
+    [self.changeLabel setText:@"选择接收人"];
+    [self addSubview:self.changeLabel];
+    
     self.selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.selectButton setFrame:CGRectMake(0, tokenFieldBottom+2, 320, 40)];
-    [self.selectButton setTitle:@"选择接收人" forState:UIControlStateNormal];
-    [self.selectButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    [self.selectButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.selectButton setFrame:CGRectMake(self.bounds.size.width-60, tokenFieldBottom+2-5, 53, 50)];
+    [self.selectButton setBackgroundImage:[UIImage imageNamed:@"arrow_left1.png"] forState:UIControlStateNormal];
     [self.selectButton.titleLabel setTextAlignment:NSTextAlignmentLeft];
     
     [self addSubview:self.selectButton];
@@ -113,7 +121,7 @@
 	
 	// This view is created for convenience, because it resizes and moves with the rest of the subviews.
 	_contentView = [[UIView alloc] initWithFrame:CGRectMake(0, titleFieldBottom + 1, self.bounds.size.width,
-														   CVIEW_HEIGHT)];
+                                                            CVIEW_HEIGHT)];
     CGFloat contentViewBottom = CGRectGetMaxY(_contentView.frame);
     _contentView2=[[UIView alloc] initWithFrame:CGRectMake(0, contentViewBottom, self.bounds.size.width,
 														   self.bounds.size.height - contentViewBottom)];
@@ -150,12 +158,45 @@
 	[self bringSubviewToFront:_tokenField];
 	[self updateContentSize];
 }
-
+- (void)resetSize
+{
+    _tokenField = [[TITokenField alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 42)];
+    CGFloat tokenFieldBottom = CGRectGetMaxY(_tokenField.frame);
+    self.changeLabel.frame =CGRectMake(7, tokenFieldBottom+2, self.bounds.size.width-70, 40);
+    [self.selectButton setFrame:CGRectMake(self.bounds.size.width-60, tokenFieldBottom+2-5, 53, 50)];
+    if(isShowSelectButton)
+    {
+        tokenFieldBottom+=41;
+    }
+	_separator = [[UIView alloc] initWithFrame:CGRectMake(0, tokenFieldBottom, self.bounds.size.width, 1)];
+    self.titileField.frame=CGRectMake(10, tokenFieldBottom+1,self.bounds.size.width-20, 42);
+    CGFloat titleFieldBottom = CGRectGetMaxY(self.titileField.frame);
+    _separator2=[[UIView alloc] initWithFrame:CGRectMake(0, titleFieldBottom, self.bounds.size.width, 1)];
+    // This view is created for convenience, because it resizes and moves with the rest of the subviews.
+	_contentView = [[UIView alloc] initWithFrame:CGRectMake(0, titleFieldBottom + 1, self.bounds.size.width,
+                                                            CVIEW_HEIGHT)];
+    CGFloat contentViewBottom = CGRectGetMaxY(_contentView.frame);
+    _contentView2=[[UIView alloc] initWithFrame:CGRectMake(0, contentViewBottom, self.bounds.size.width,
+														   self.bounds.size.height - contentViewBottom)];
+//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+//		
+//		UITableViewController * tableViewController = [[UITableViewController alloc] initWithStyle:UITableViewStylePlain];
+//		[tableViewController.tableView setDelegate:self];
+//		[tableViewController.tableView setDataSource:self];
+//		[tableViewController setContentSizeForViewInPopover:CGSizeMake(400, 400)];
+//		
+//		_resultsTable = tableViewController.tableView;
+//		
+//		_popoverController = [[UIPopoverController alloc] initWithContentViewController:tableViewController];
+//	}
+//	else
+//	{
+//		_resultsTable.frame = CGRectMake(0, tokenFieldBottom + 1, self.bounds.size.width, 10);
+//	}
+}
 #pragma mark Property Overrides
 - (void)setFrame:(CGRect)frame {
-	
 	[super setFrame:frame];
-	
 	CGFloat width = frame.size.width;
 	[_separator setFrame:((CGRect){_separator.frame.origin, {width, _separator.bounds.size.height}})];
     [_separator2 setFrame:((CGRect){_separator2.frame.origin,{width,_separator2.bounds.size.height}})];
@@ -199,9 +240,9 @@
 }
 
 - (void)updateContentSize {
-//    CGFloat contentViewBottom = CGRectGetMaxY(_contentView.frame);
-//    _contentView2=[[UIView alloc] initWithFrame:CGRectMake(0, contentViewBottom, self.bounds.size.width,
-//														   _contentView2.bounds.size.height)];
+    //    CGFloat contentViewBottom = CGRectGetMaxY(_contentView.frame);
+    //    _contentView2=[[UIView alloc] initWithFrame:CGRectMake(0, contentViewBottom, self.bounds.size.width,
+    //														   _contentView2.bounds.size.height)];
 	[self setContentSize:CGSizeMake(self.bounds.size.width, CGRectGetMaxY(_contentView2.frame) + 1)];
 }
 
@@ -289,8 +330,11 @@
     if(isShowSelectButton)
     {
         tokenFieldBottom += 40;
-        CGRect selectRect = CGRectMake(0, _tokenField.frame.origin.y+_tokenField.frame.size.height+2, 320, 40);
+        CGRect selectRect = CGRectMake(260, _tokenField.frame.origin.y+_tokenField.frame.size.height+2-5, 53, 50);
         [self.selectButton setFrame:selectRect];
+        CGRect changeRect = CGRectMake(7, _tokenField.frame.origin.y+_tokenField.frame.size.height+2, 250, 40);
+        [self.changeLabel setFrame:changeRect];
+        
     }
 	[_separator setFrame:((CGRect){{_separator.frame.origin.x, tokenFieldBottom}, _separator.bounds.size})];
 	[_resultsTable setFrame:((CGRect){{_resultsTable.frame.origin.x, (tokenFieldBottom + 1)}, _resultsTable.bounds.size})];
@@ -404,7 +448,7 @@
     UITextPosition * position = [_tokenField positionFromPosition:_tokenField.beginningOfDocument offset:2];
 	
 	[_popoverController presentPopoverFromRect:[_tokenField caretRectForPosition:position] inView:_tokenField
-					 permittedArrowDirections:UIPopoverArrowDirectionUp animated:animated];
+                      permittedArrowDirections:UIPopoverArrowDirectionUp animated:animated];
 }
 
 #pragma mark Other
@@ -477,6 +521,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 @synthesize selectedToken = _selectedToken;
 @synthesize tokenizingCharacters = _tokenizingCharacters;
 @synthesize forcePickSearchResult = _forcePickSearchResult;
+@synthesize tyle;
 
 #pragma mark Init
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -580,6 +625,10 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 
 #pragma mark Event Handling
 - (BOOL)becomeFirstResponder {
+    if(self.tyle == kTypeTokenIn)
+    {
+        return NO;
+    }
 	return (_editable ? [super becomeFirstResponder] : NO);
 }
 
@@ -588,7 +637,11 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (void)didEndEditing {
-	
+    if(tyle == kTypeTokenIn)
+    {
+        return;
+    }
+    
 	[_selectedToken setSelected:NO];
 	_selectedToken = nil;
 	
@@ -679,7 +732,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 		
 		if (![_tokens containsObject:token]) {
 			[_tokens addObject:token];
-		
+            
 			if ([delegate respondsToSelector:@selector(tokenField:didAddToken:)]){
 				[delegate tokenField:self didAddToken:token];
 			}
@@ -744,7 +797,10 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (void)tokenizeText {
-	
+	if(tyle == kTypeTokenIn)
+    {
+        return;
+    }
 	__block BOOL textChanged = NO;
 	
 	if (![self.text isEqualToString:kTextEmpty] && ![self.text isEqualToString:kTextHidden] && !_forcePickSearchResult){
@@ -856,7 +912,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 			label = [[UILabel alloc] initWithFrame:CGRectZero];
 			[label setTextColor:[UIColor colorWithWhite:0.5 alpha:1]];
 			[self setLeftView:label];
-
+            
 			[self setLeftViewMode:UITextFieldViewModeAlways];
 		}
 		
@@ -880,7 +936,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 		if (!label || ![label isKindOfClass:[UILabel class]]){
 			label = [[UILabel alloc] initWithFrame:CGRectMake(_tokenCaret.x + 3, _tokenCaret.y + 2, self.rightView.bounds.size.width, self.rightView.bounds.size.height)];
 			[label setTextColor:[UIColor colorWithWhite:0.75 alpha:1]];
-			 _placeHolderLabel = label;
+            _placeHolderLabel = label;
             [self addSubview: _placeHolderLabel];
 		}
 		
@@ -994,7 +1050,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-	
+	NSLog(@"string:----------%@",string);
 	if (_tokenField.tokens.count && [string isEqualToString:@""] && [_tokenField.text isEqualToString:kTextEmpty]){
 		[_tokenField selectToken:[_tokenField.tokens lastObject]];
 		return NO;
@@ -1018,7 +1074,6 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-	
 	[_tokenField tokenizeText];
 	
 	if ([_delegate respondsToSelector:@selector(textFieldShouldReturn:)]){

@@ -39,6 +39,7 @@
         self.imageView=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 70, 70)];
         self.nameLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 30)];
         self.nameLabel.lineBreakMode=NSLineBreakByTruncatingMiddle;
+        self.nameLabel.textAlignment=NSTextAlignmentCenter;
         self.nameLabel.font=[UIFont systemFontOfSize:12];
         [self addSubview:self.imageView];
         [self addSubview:self.nameLabel];
@@ -88,18 +89,31 @@
                     [self startIconDownload:dic forIndexPath:nil];
                 }
             }else if ([fmime isEqualToString:@"doc"]||
-                      [fmime isEqualToString:@"docx"])
+                      [fmime isEqualToString:@"docx"]||
+                      [fmime isEqualToString:@"rtf"])
             {
-                self.imageView.image = [UIImage imageNamed:@"file_doc.png"];
+                self.imageView.image = [UIImage imageNamed:@"file_word.png"];
+            }
+            else if ([fmime isEqualToString:@"xls"]||
+                     [fmime isEqualToString:@"xlsx"])
+            {
+                self.imageView.image = [UIImage imageNamed:@"file_excel.png"];
             }else if ([fmime isEqualToString:@"mp3"])
             {
                 self.imageView.image = [UIImage imageNamed:@"file_music.png"];
-            }else if ([fmime isEqualToString:@"mov"])
+            }else if ([fmime isEqualToString:@"mov"]||
+                      [fmime isEqualToString:@"mp4"]||
+                      [fmime isEqualToString:@"avi"]||
+                      [fmime isEqualToString:@"rmvb"])
             {
                 self.imageView.image = [UIImage imageNamed:@"file_moving.png"];
-            }else if ([fmime isEqualToString:@"ppt"])
+            }else if ([fmime isEqualToString:@"pdf"])
             {
-                self.imageView.image = [UIImage imageNamed:@"file_other.png"];
+                self.imageView.image = [UIImage imageNamed:@"file_pdf.png"];
+            }else if ([fmime isEqualToString:@"ppt"]||
+                      [fmime isEqualToString:@"pptx"])
+            {
+                self.imageView.image = [UIImage imageNamed:@"file_ppt.png"];
             }else if([fmime isEqualToString:@"txt"])
             {
                 self.imageView.image = [UIImage imageNamed:@"file_txt.png"];
@@ -190,7 +204,11 @@
     }
     return self;
 }
-
+-(void)viewDidLayoutSubviews
+{
+    [self resizeViews];
+    [_tokenFieldView resetSize];
+}
 - (void)viewDidLoad
 {
     UIBarButtonItem *cancel=[[UIBarButtonItem alloc] initWithTitleStr:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction:)];
@@ -202,23 +220,28 @@
         self.edgesForExtendedLayout = UIRectEdgeNone;
     
 	[self.view setBackgroundColor:[UIColor whiteColor]];
-    [self.navigationItem setTitle:@"文件分享"];
 	
 	_tokenFieldView = [[TITokenFieldView alloc] initWithFrame:self.view.bounds];
     if(tyle==kTypeShareIn)
     {
+        [self.navigationItem setTitle:@"内部分享"];
         [_tokenFieldView setIsShowSelectButton:YES];
         [_tokenFieldView setup];
         [_tokenFieldView.selectButton addTarget:self action:@selector(clickSelected:) forControlEvents:UIControlEventTouchDown];
         [_tokenFieldView.selectButton setHidden:NO];
+        [_tokenFieldView.changeLabel setHidden:NO];
         [_tokenFieldView.tokenField setPlaceholder:@""];
+        _tokenFieldView.tokenField.tyle = kTypeTokenIn;
     }
     else
     {
+        [self.navigationItem setTitle:@"邮件分享"];
         [_tokenFieldView setup];
         [_tokenFieldView setIsShowSelectButton:NO];
         [_tokenFieldView.selectButton setHidden:YES];
+        [_tokenFieldView.changeLabel setHidden:YES];
         [_tokenFieldView.tokenField setPlaceholder:@"          使用“换行”来区分多个联系人"];
+        _tokenFieldView.tokenField.tyle = kTypeTokenEx;
     }
 	[self.view addSubview:_tokenFieldView];
 	
@@ -252,7 +275,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	
-	[_tokenFieldView becomeFirstResponder];
+//	[_tokenFieldView becomeFirstResponder];
     [self getEmailTemplate];
 }
 
@@ -309,13 +332,29 @@
     
     int row=self.fileArray.count/4,column=self.fileArray.count%4;
     FileView *fv=[[FileView alloc] initWithFrame:CGRectMake(column*(self.view.bounds.size.width/4), row*(100)+20, self.view.bounds.size.width/4, 100)];
-    [fv setDic:nil];
+    for (int i=0; i<self.fileArray.count; i++) {
+        
+        if (i==self.fileArray.count) {
+            [fv setButton];
+            [fv setIndex:i];
+        }else
+        {
+            NSDictionary *dic = [self.fileArray objectAtIndex:i];
+            NSString *fisdir=[dic objectForKey:@"fisdir"];
+            if (![fisdir isEqualToString:@"0"]) {
+                [fv setDic:nil];
+            }
+            [fv setIndex:i];
+            [fv addTarget:self action:@selector(fileTouch:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        
+    }
     [fv.addFileButton addTarget:self action:@selector(clickedButton) forControlEvents:UIControlEventTouchDown];
     [fv setIndex:self.fileArray.count];
     [fv addTarget:self action:@selector(addFileView:) forControlEvents:UIControlEventTouchUpInside];
     [_filesView addSubview:fv];
     
-	CGFloat newHeight = (self.fileArray.count/4+1)*100+40;
+	CGFloat newHeight = (self.fileArray.count/4+1)*100+90;
 	CGRect newTextFrame = _tokenFieldView.contentView2.frame;
 	newTextFrame.size.height = newHeight;
     [_tokenFieldView.contentView2 setFrame:newTextFrame];
@@ -409,10 +448,10 @@
         [tokenField removeToken:token];
         return;
     }
-    if (tokenField.tokenTitles.count>10) {
-        [tokenField removeToken:token];
-        return;
-    }
+//    if (tokenField.tokenTitles.count>10) {
+//        [tokenField removeToken:token];
+//        return;
+//    }
 }
 - (BOOL)tokenField:(TITokenField *)tokenField willRemoveToken:(TIToken *)token {
 	
@@ -519,24 +558,25 @@
     recevers=[_tokenFieldView.tokenTitles componentsJoinedByString:@";"];
     eTitle=_tokenFieldView.titileField.text;
     eContent=_messageView.text;
-    if (_tokenFieldView.tokenTitles.count>10)
-    {
-        if (self.hud) {
-            [self.hud removeFromSuperview];
-        }
-        self.hud=nil;
-        self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-        [self.view.superview addSubview:self.hud];
-        [self.hud show:NO];
-        self.hud.labelText=@"收件人数量不能超过10个";
-        //self.hud.labelText=error_info;
-        self.hud.mode=MBProgressHUDModeText;
-        self.hud.margin=10.f;
-        [self.hud show:YES];
-        [self.hud hide:YES afterDelay:1.0f];
-        return NO;
-
-    }
+    //不设上限
+//    if (_tokenFieldView.tokenTitles.count>10)
+//    {
+//        if (self.hud) {
+//            [self.hud removeFromSuperview];
+//        }
+//        self.hud=nil;
+//        self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+//        [self.view.superview addSubview:self.hud];
+//        [self.hud show:NO];
+//        self.hud.labelText=@"收件人数量不能超过10个";
+//        //self.hud.labelText=error_info;
+//        self.hud.mode=MBProgressHUDModeText;
+//        self.hud.margin=10.f;
+//        [self.hud show:YES];
+//        [self.hud hide:YES afterDelay:1.0f];
+//        return NO;
+//
+//    }
     if (eTitle==nil||[eTitle isEqualToString:@""]) {
         if (self.hud) {
             [self.hud removeFromSuperview];
@@ -553,7 +593,7 @@
         [self.hud hide:YES afterDelay:1.0f];
         return NO;
     }
-    if (recevers==nil||[recevers isEqualToString:@""]) {
+    if (((recevers==nil||[recevers isEqualToString:@""]) && self.tyle == kTypeShareEx) || (self.tyle == kTypeShareIn && self.emails.count==0) ) {
         if (self.hud) {
             [self.hud removeFromSuperview];
         }
@@ -762,11 +802,18 @@
         }
     }
     [_tokenFieldView.tokenField setPlaceholder:@""];
-    _tokenFieldView.tokenField.text = tableString;
+    _tokenFieldView.changeLabel.text = tableString;
 }
 
 -(void)clickedButton
 {
+    if (self.fileArray.count == 50) {
+        UIAlertView *av=[[UIAlertView alloc] initWithTitle:@"一次最多只能分享50个文件" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [av show];
+        return;
+        
+    }
+    
     MainViewController *viewController=[[MainViewController alloc] init];
     viewController.delegate=self;
     viewController.type=kTypeShare;

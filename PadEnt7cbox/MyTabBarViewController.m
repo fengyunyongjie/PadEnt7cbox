@@ -41,6 +41,10 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [self checkNotReadEmail];
+}
+- (void)checkNotReadEmail
+{
     SCBEmailManager *em=[[SCBEmailManager alloc] init];
     em.delegate=self;
     [em notReadCount];

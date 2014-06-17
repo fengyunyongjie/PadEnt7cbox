@@ -5,7 +5,7 @@
 //  Created by fengyongning on 13-10-10.
 //  Copyright (c) 2013年 fengyongning. All rights reserved.
 //
-
+//不再使用此类    全部使用SharedEmailViewController.h
 #import <UIKit/UIKit.h>
 typedef enum {
     kTypeSentIn,        //站内发送

@@ -28,6 +28,11 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum {
+    kTypeTokenIn,        //站内发送
+    kTypeTokenEx,        //站外发送
+}kTypeTokenType;
+
 @class TITokenField, TIToken;
 
 //==========================================================
@@ -68,10 +73,12 @@
 @property (nonatomic, copy) NSArray * sourceArray;
 @property (weak, nonatomic, readonly) NSArray * tokenTitles;
 @property (nonatomic, assign) BOOL isShowSelectButton;
+@property (nonatomic, strong) UILabel *changeLabel;
 
 - (void)updateContentSize;
 - (void)setPromptText:(NSString *)text;
 - (void)setup;
+- (void)resetSize;
 @end
 
 //==========================================================
@@ -93,6 +100,7 @@ typedef enum {
 @property (nonatomic, assign) BOOL removesTokensOnEndEditing;
 @property (nonatomic, readonly) int numberOfLines;
 @property (nonatomic, strong) NSCharacterSet * tokenizingCharacters;
+@property (assign,nonatomic) kTypeTokenType tyle;
 
 - (void)addToken:(TIToken *)title;
 - (TIToken *)addTokenWithTitle:(NSString *)title;

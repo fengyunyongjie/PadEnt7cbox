@@ -17,6 +17,7 @@
 #import "SCBSession.h"
 #import "UIBarButtonItem+Yn.h"
 #import "YNNavigationController.h"
+#import "MyTabBarViewController.h"
 
 @implementation FileVieww{
     NSDictionary *_dic;
@@ -495,7 +496,7 @@
 -(void)toCopyFiles:(NSArray *)fids
 {
     MainViewController *flvc=[[MainViewController alloc] init];
-    flvc.title=@"选择复制的位置";
+    flvc.title=@"选择转存的位置";
     flvc.delegate=self;
     flvc.type=kTypeCopy;
     flvc.isHasSelectFile=YES;
@@ -630,6 +631,12 @@
     UIActionSheet *as=[[UIActionSheet alloc] initWithTitle:fv.nameLabel.text delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"下载",@"转存", nil];
     [as setTag:fv.index];
     [as showInView:[[UIApplication sharedApplication] keyWindow]];
+}
+- (void)checkNotReadEmail
+{
+    SCBEmailManager *em=[[SCBEmailManager alloc] init];
+    em.delegate=self;
+    [em notReadCount];
 }
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView              // Default is 1 if not implemented
@@ -1113,6 +1120,7 @@
 -(void)viewReceiveSucceed:(NSDictionary *)datadic
 {
     [self detailEmailSucceed:datadic];
+    [self checkNotReadEmail];
 }
 -(void)viewSendSucceed:(NSDictionary *)datadic
 {
@@ -1163,6 +1171,21 @@
         [self updateFileList];
     }
 
+}
+-(void)notReadCountSucceed:(NSDictionary *)datadic
+{
+    int notread=[[datadic objectForKey:@"notread"] intValue];
+    MyTabBarViewController *myTabVC=[self.splitViewController.viewControllers objectAtIndex:0];
+    if (notread>0) {
+        if (myTabVC) {
+            [myTabVC setHasEmailTagHidden:NO];
+        }
+    }else
+    {
+        if (myTabVC) {
+            [myTabVC setHasEmailTagHidden:YES];
+        }
+    }
 }
 #pragma mark - SCBEmailManagerDelegate
 -(void)moveUnsucess

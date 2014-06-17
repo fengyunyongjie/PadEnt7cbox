@@ -43,14 +43,18 @@
     }
     return self;
 }
--(void)viewWillLayoutSubviews
+-(void)viewDidLayoutSubviews
 {
+    [super viewDidLayoutSubviews];
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     CGRect r=self.view.frame;
+    self.view.backgroundColor=[UIColor grayColor];
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.view.frame=CGRectMake(0, 64, 320, 768-49);
+            if (self.tabBarController!=nil) {
+                self.view.frame=CGRectMake(0, 64, 320, 768-49);
+            }
             self.tableView.frame=CGRectMake(0, 0, 320, 768-49-64);
             self.toolbar.frame=CGRectMake(0, 768-49-64, 320, 49);
         }else
@@ -62,7 +66,9 @@
     else
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.view.frame=CGRectMake(0, 64, 320, 1024-49);
+            if (self.tabBarController!=nil) {
+                self.view.frame=CGRectMake(0, 64, 320, 768-49);
+            }
             self.tableView.frame=CGRectMake(0, 0, 320, 1024-49-64);
             self.toolbar.frame=CGRectMake(0, 1024-49-64, 320, 49);
         }else

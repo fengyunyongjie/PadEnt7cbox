@@ -48,14 +48,13 @@
 }
 - (void)viewDidLayoutSubviews
 {
-//    CGSize winSize=[UIScreen mainScreen].bounds.size;
-//    
-//    if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-//        self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height-49);
-//    }else
-//    {
-//        self.tableView.frame=CGRectMake(0, 0, winSize.width, self.view.frame.size.height-49-64);
-//    }
+    if (self.tabBarController==nil) {
+        self.view.backgroundColor=[UIColor grayColor];
+    }
+    if (self.type==kTypeShare) {
+        int tabBarOffset = self.tabBarController == nil ?  0 : self.tabBarController.tabBar.frame.size.height;
+        self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    }
 }
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -82,7 +81,7 @@
     self.tableView.dataSource=self;
     [self.view addSubview:self.tableView];
     self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    if (self.type==kTypeCommit||self.type==kTypeResave||self.type==kTypeUpload||self.type==kTypeMove||self.type==kTypeCopy||self.type==kTypeShare) {
+    if (self.type==kTypeCommit||self.type==kTypeResave||self.type==kTypeUpload||self.type==kTypeMove||self.type==kTypeCopy) {
         [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dissmissSelf:)]];
     }else
     {
@@ -327,7 +326,7 @@
         textLabel.tag=2;
         detailTextLabel.tag=3;
         [textLabel setFont:[UIFont systemFontOfSize:16]];
-        [detailTextLabel setFont:[UIFont systemFontOfSize:13]];
+        [detailTextLabel setFont:[UIFont systemFontOfSize:10]];
         [detailTextLabel setTextColor:[UIColor grayColor]];
         
         CGRect progress_rect = CGRectMake(190, 35, 115, 3);
@@ -392,6 +391,7 @@
                 }
                 [detailTextLabel setFrame:detailRect];
                 detailTextLabel.text=[NSString stringWithFormat:@"%@/%@",usedspacestr,totalspacestr];
+//                detailTextLabel.text=[NSString stringWithFormat:@"%@/%@",@"1024.00GB",@"1024.00GB"];
                 
             }
             
@@ -754,6 +754,9 @@
 
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
+    if (self.type==kTypeShare) {
+        return;
+    }
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
     

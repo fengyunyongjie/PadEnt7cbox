@@ -116,9 +116,9 @@ typedef enum{
         }
     }
     
-    CGRect r=self.view.frame;
-    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
-    self.view.frame=r;
+//    CGRect r=self.view.frame;
+//    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
+//    self.view.frame=r;
     
     BOOL isHideTabBar = NO;
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -149,16 +149,17 @@ typedef enum{
 }
 - (void)viewDidLayoutSubviews
 {
-//    NSLog(@"view frame:%@",NSStringFromCGRect(self.view.frame));
-//    CGRect r=self.tableView.frame;
-//    r.size=self.view.frame.size;
-//    //r.size.height=self.view.frame.size.height-self.tabBarController.tabBar.frame.size.height;
-//    [self.tableView setFrame:r];
-//    if (self.moreEditBar) {
-//        [self.moreEditBar setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.tabBarController.tabBar.frame.size.height)];
-//    }
-//    r.size.height+=self.tabBarController.tabBar.frame.size.height;
-//    [self.view setFrame:r];
+    if (self.shareType==kShareTypeShare) {
+        int tabBarOffset = self.tabBarController == nil ?  0 : self.tabBarController.tabBar.frame.size.height;
+        [self.tableView setFrame:self.view.frame];
+        
+        CGRect notLabel_rect = self.notingLabel.frame;
+            notLabel_rect.origin.y = (self.view.frame.size.height-40)/2;
+        [self.notingLabel setFrame:notLabel_rect];
+        
+        CGRect noting_rect = self.view.frame;
+        [self.nothingView setFrame:noting_rect];
+    }
 }
 - (void)viewDidLoad
 {
@@ -2286,6 +2287,7 @@ noDirSend:
                         [viewCon.view addSubview:look.view];
                         [viewCon addChildViewController:look];
                         [nav setViewControllers:@[viewCon] animated:NO];
+                        nav.title=viewCon.title;
                     }
                 }
             }
@@ -3300,6 +3302,9 @@ noDirSend:
 
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
+    if (self.shareType==kShareTypeShare) {
+        return;
+    }
     CGRect view_rect = self.view.frame;
     view_rect.size.width = 320;
     [self.view setFrame:view_rect];

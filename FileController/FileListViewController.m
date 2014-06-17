@@ -636,14 +636,22 @@ typedef enum{
     }
     //UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
     if (isDis) {
-        //[item setEnabled:NO];
-        //[item_send setEnabled:NO];
+        if([self.roletype isEqualToString:@"1"])
+        {
+            [item_send setEnabled:NO];
+        }else if([self selectedIndexPaths].count>1)
+        {
+            [item_send setEnabled:NO];
+        }
         isSelectedDir=YES;
         [item_download setEnabled:NO];
     }else
     {
-        //[item setEnabled:YES];
-        //[item_send setEnabled:YES];
+        if([self.roletype isEqualToString:@"1"])
+        {
+            [item_send setEnabled:YES];
+        }
+        [item_send setEnabled:YES];
         isSelectedDir=NO;
         [item_download setEnabled:YES];
     }
@@ -1050,7 +1058,7 @@ typedef enum{
             self.hud=[[MBProgressHUD alloc] initWithView:self.view];
             [self.view.superview addSubview:self.hud];
             [self.hud show:NO];
-            self.hud.labelText=@"未选中任何文件";
+            self.hud.labelText=@"未选中任何文件（夹）";
             self.hud.mode=MBProgressHUDModeText;
             self.hud.margin=10.f;
             [self.hud show:YES];
@@ -1107,7 +1115,7 @@ typedef enum{
     }
 hasDirSend:
     {
-        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"邮件分享",@"短信分享",@"复制链接",@"其它分享",nil];
+        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"邮件分享",@"短信分享",@"复制链接",@"其他分享",nil];
         [actionSheet setTag:kActionSheetTagSendHasDir];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
@@ -1115,7 +1123,7 @@ hasDirSend:
     }
 noDirSend:
     {
-        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"内部分享",@"邮件分享",@"短信分享",@"复制链接",@"其它分享",nil];
+        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"内部分享",@"邮件分享",@"短信分享",@"复制链接",@"其他分享",nil];
         [actionSheet setTag:kActionSheetTagSend];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
@@ -1960,7 +1968,7 @@ noDirSend:
             }
             if([self hasCmd:@"publiclink" InFcmd:fcmd])
             {
-                [array addObject:item_send];
+//                [array addObject:item_send];
                 //[array addObject:item_flexible];
             }
             if([self hasCmd:@"del" InFcmd:fcmd])
@@ -2014,7 +2022,7 @@ noDirSend:
             //[array addObject:item_flexible];
             if([self hasCmdInFcmd:@"publiclink"])
             {
-                [array addObject:item_send];
+//                [array addObject:item_send];
                 //[array addObject:item_flexible];
             }
             if([self hasCmdInFcmd:@"copy"])
@@ -2121,14 +2129,34 @@ noDirSend:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.tableView.editing) {
+        
+        //判断文件夹数量 有文件夹，并且个数大于一
+        BOOL isHidden = NO;
+        NSArray *indexs=[self selectedIndexPaths];
+        for (NSIndexPath *inpath in indexs) {
+            NSDictionary *dic=[self.listArray objectAtIndex:inpath.row];
+            NSString *fisdir=[dic objectForKey:@"fisdir"];
+            if ([fisdir isEqualToString:@"0"] && indexs.count>1)
+            {
+                [item_send setEnabled:NO];
+                isHidden = YES;
+                break;
+            }
+        }
+        if(!isHidden)
+        {
+            [item_send setEnabled:YES];
+        }
+        
         tableViewSelectedTag = -1;
         NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
         NSString *fisdir=[dic objectForKey:@"fisdir"];
         if ([fisdir isEqualToString:@"0"]) {
             //选中了文件夹，禁用分享;
-//            UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
-//            [item setEnabled:NO];
-            //[item_send setEnabled:NO];
+            if([self.roletype isEqualToString:@"1"])
+            {
+                [item_send setEnabled:NO];
+            }
             isSelectedDir=YES;
             [item_download setEnabled:NO];
         }
@@ -2318,6 +2346,25 @@ noDirSend:
 }
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
     if (self.tableView.editing) {
+        
+        //判断文件夹数量 有文件夹，并且个数大于一
+        BOOL ishidden = NO;
+        NSArray *indexs=[self selectedIndexPaths];
+        for (NSIndexPath *inpath in indexs) {
+            NSDictionary *dic=[self.listArray objectAtIndex:inpath.row];
+            NSString *fisdir=[dic objectForKey:@"fisdir"];
+            if ([fisdir isEqualToString:@"0"] && indexs.count>1)
+            {
+                [item_send setEnabled:NO];
+                ishidden = YES;
+                break;
+            }
+        }
+        if(!ishidden)
+        {
+            [item_send setEnabled:YES];
+        }
+        
         BOOL isDis=NO;
         for (NSIndexPath *newIP in [self selectedIndexPaths]) {
             NSDictionary *dic=[self.listArray objectAtIndex:newIP.row];
@@ -2330,14 +2377,18 @@ noDirSend:
         }
         //UIBarButtonItem *item=(UIBarButtonItem *)[self.moreEditBar.items objectAtIndex:0];
         if (isDis) {
-            //[item setEnabled:NO];
-            //[item_send setEnabled:NO];
+            if([self.roletype isEqualToString:@"1"])
+            {
+                [item_send setEnabled:NO];
+            }
             isSelectedDir=YES;
             [item_download setEnabled:NO];
         }else
         {
-            //[item setEnabled:YES];
-            //[item_send setEnabled:YES];
+            if([self.roletype isEqualToString:@"1"])
+            {
+                [item_send setEnabled:YES];
+            }
             isSelectedDir=NO;
             [item_download setEnabled:YES];
         }

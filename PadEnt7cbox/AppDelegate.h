@@ -38,6 +38,8 @@
 @property (nonatomic,strong) InputViewController *lockScreen;
 @property (nonatomic,strong) UIView *localV;
 @property (strong,nonatomic) NSMutableArray *action_array;
+@property (strong, nonatomic) NSMutableArray *messageArray;
+
 
 -(void)finishLogin;
 -(void)finishLogout;

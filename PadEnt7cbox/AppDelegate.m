@@ -16,6 +16,8 @@
 #import "YNFunctions.h"
 #import "SCBAccountManager.h"
 #import "BackgroundRunner.h"
+#import <MessageUI/MessageUI.h>
+
 typedef enum{
     kAlertTypeNewVersion,
     kAlertTypeNoNewVersion,
@@ -24,7 +26,7 @@ typedef enum{
 }kAlertType;
 @implementation AppDelegate
 @synthesize lockScreen,localV;
-@synthesize downmange,myTabBarVC,loginVC,uploadmanage,isStopUpload,musicPlayer,file_url,isConnection,space_id,space_name,old_file_url,action_array,isFileShare;
+@synthesize downmange,myTabBarVC,loginVC,uploadmanage,isStopUpload,musicPlayer,file_url,isConnection,space_id,space_name,old_file_url,action_array,isFileShare,messageArray;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -42,6 +44,7 @@ typedef enum{
     action_array = [[NSMutableArray alloc] init];
     downmange = [[DownManager alloc] init];
     uploadmanage = [[UploadManager alloc] init];
+    self.messageArray = [[NSMutableArray alloc] init];
     UIApplication *app = [UIApplication sharedApplication];
     app.applicationIconBadgeNumber = [uploadmanage.uploadArray count];
     

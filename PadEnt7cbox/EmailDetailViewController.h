@@ -18,7 +18,7 @@
 @end;
 @interface EmailDetailViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 @property (strong,nonatomic) NSDictionary *dataDic;
-@property (strong,nonatomic) NSArray *fileArray;
+@property (strong,nonatomic) NSMutableArray *fileArray;
 @property (strong,nonatomic) UITableView *tableView;
 @property (strong,nonatomic) NSIndexPath *selectedIndexPath;
 @property (strong,nonatomic) NSString *eid;

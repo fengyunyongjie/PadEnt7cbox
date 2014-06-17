@@ -40,6 +40,7 @@
     self.imageView=[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 70, 70)];
     self.nameLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, 70, 80, 30)];
     self.nameLabel.lineBreakMode=NSLineBreakByTruncatingMiddle;
+    self.nameLabel.textAlignment = NSTextAlignmentCenter;
     self.nameLabel.font=[UIFont systemFontOfSize:12];
     [self addSubview:self.imageView];
     [self addSubview:self.nameLabel];
@@ -300,7 +301,7 @@
     {
         NSError *jsonParsingError=nil;
         NSData *data=[NSData dataWithContentsOfFile:dataFilePath];
-        self.fileArray=[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
+        self.fileArray=[NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError]];
         if (self.fileArray) {
             [self.tableView reloadData];
         }
@@ -324,7 +325,7 @@
         NSData *data=[NSData dataWithContentsOfFile:dataFilePath];
         self.dataDic=[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
         if (self.dataDic) {
-            self.fileArray=[self.dataDic objectForKey:@"list"];
+            self.fileArray=[NSMutableArray arrayWithArray:[self.dataDic objectForKey:@"list"]];
             [self.tableView reloadData];
         }
     }
@@ -430,7 +431,7 @@
             self.hud=[[MBProgressHUD alloc] initWithView:self.view];
             [self.view.superview addSubview:self.hud];
             [self.hud show:NO];
-            self.hud.labelText=@"未选中任何文件";
+            self.hud.labelText=@"未选中任何文件（夹）";
             self.hud.mode=MBProgressHUDModeText;
             self.hud.margin=10.f;
             [self.hud show:YES];
@@ -1121,7 +1122,7 @@
 {
     self.dataDic=datadic;
     if (self.dataDic) {
-        self.fileArray=[self.dataDic objectForKey:@"list"];
+        self.fileArray=[NSMutableArray arrayWithArray:[self.dataDic objectForKey:@"list"]];
         [self loadEmail];
         [self.tableView reloadData];
         NSString *dataFilePath=[YNFunctions getDataCachePath];
@@ -1145,7 +1146,7 @@
 -(void)fileListSucceed:(NSData *)data
 {
     NSError *jsonParsingError=nil;
-    self.fileArray=[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
+    self.fileArray=[NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError]];
     if (self.fileArray) {
         [self.tableView reloadData];
         NSString *dataFilePath=[YNFunctions getDataCachePath];
@@ -1332,5 +1333,21 @@
     // This will result in it being deallocated.
     [self.imageDownloadsInProgress removeObjectForKey:indexPath];
 }
+-(void)showMessage:(NSString *)message
+{
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=message;
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
+}
+
 
 @end

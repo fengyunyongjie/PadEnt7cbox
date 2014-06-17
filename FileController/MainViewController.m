@@ -213,7 +213,7 @@
             [self.fm authorMenus:item];
             break;
         case kTypeShare:
-            item=@"shareFile";
+            item=@"publiclink";
             [self.fm authorMenus:item];
             break;
         default:

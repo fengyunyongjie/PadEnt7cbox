@@ -615,10 +615,12 @@
 //    UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(10, 5, _filesView.bounds.size.width-20, 21)];
 //    label.text=@"分享内容";
 //    [_filesView addSubview:label];
+    int numPerRow=self.view.bounds.size.width/80;
+    
     for (int i=0; i<self.fileArray.count; i++) {
-        int row=i/4;
-        int column=i%4;
-        FileVieww *fv=[[FileVieww alloc] initWithFrame:CGRectMake(column*(self.view.bounds.size.width/4), row*(100)+30, self.view.bounds.size.width/4, 100)];
+        int row=i/numPerRow;
+        int column=i%numPerRow;
+        FileVieww *fv=[[FileVieww alloc] initWithFrame:CGRectMake(column*(self.view.bounds.size.width/numPerRow), row*(100)+30, self.view.bounds.size.width/numPerRow, 100)];
         [fv setDic:[self.fileArray objectAtIndex:i]];
         [fv setIndex:i];
         if ([self.etype intValue]==0) {
@@ -939,7 +941,8 @@
                 return 200;
             }else
             {
-                return (self.fileArray.count/4*100+150);
+                int numPerRow=self.view.bounds.size.width/80;
+                return (self.fileArray.count/numPerRow*100+150);
             }
             break;
         default:
@@ -1122,6 +1125,7 @@
     self.hud.margin=10.f;
     [self.hud show:YES];
     [self.hud hide:YES afterDelay:1.0f];
+    [self.navigationItem.rightBarButtonItem setEnabled:YES];
 }
 -(void)viewReceiveSucceed:(NSDictionary *)datadic
 {
@@ -1136,7 +1140,11 @@
 {
     self.dataDic=datadic;
     if (self.dataDic) {
-        self.fileArray=[NSMutableArray arrayWithArray:[self.dataDic objectForKey:@"list"]];
+        NSMutableArray *array=[NSMutableArray arrayWithArray:[self.dataDic objectForKey:@"list"]];
+        if (!array||array.count==0) {
+            return;
+        }
+        self.fileArray=array;
         [self loadEmail];
         [self.tableView reloadData];
         NSString *dataFilePath=[YNFunctions getDataCachePath];

@@ -2454,6 +2454,8 @@ noDirSend:
         {
             NSString *text=[NSString stringWithFormat:template,[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"],link];
             UIActivityViewController *activityViewController=[[UIActivityViewController alloc] initWithActivityItems:@[text] applicationActivities:nil];
+            [activityViewController setExcludedActivityTypes:[NSArray arrayWithObjects:
+                                                              UIActivityTypeMail,UIActivityTypeMessage,nil]];
 //            if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 //                //iPhone, present activity view controller as is.
 //                [self presentViewController:activityViewController animated:YES completion:nil];

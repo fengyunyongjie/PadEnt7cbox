@@ -22,6 +22,9 @@
 @interface UserListViewController ()<SCBAccountManagerDelegate>
 @property (strong,nonatomic) SCBAccountManager *am;
 @property (strong,nonatomic) MBProgressHUD *hud;
+@property (assign) NSInteger clickTimes;
+@property (assign) NSInteger selectedNum;
+@property (assign) BOOL isPlus;
 @end
 
 @implementation UserListViewController
@@ -84,6 +87,7 @@
     UIBarButtonItem *barItem=[[UIBarButtonItem alloc] initWithTitle:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAll:)];
     self.navigationItem.rightBarButtonItem=barItem;
     [self.tableView setEditing:YES];
+    self.navigationItem.title=[NSString stringWithFormat:@"已选择%d个",self.tableView.indexPathsForSelectedRows.count];
     
     self.toolbar=[[UIToolbar alloc] init];
     [self.toolbar sizeToFit];
@@ -126,6 +130,7 @@
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
             [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
         }
+        self.navigationItem.title=[NSString stringWithFormat:@"已选择%d个",self.tableView.indexPathsForSelectedRows.count];
     }
     else
     {
@@ -141,6 +146,8 @@
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
             [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
         }
+        self.navigationItem.title=[NSString stringWithFormat:@"已选择%d个",self.tableView.indexPathsForSelectedRows.count];
+
     }
 }
 
@@ -261,12 +268,14 @@
 {
     FileItem* fileItem = [self.userItems objectAtIndex:indexPath.row];
     fileItem.checked = YES;
+    self.navigationItem.title=[NSString stringWithFormat:@"已选择%d个",self.tableView.indexPathsForSelectedRows.count];
     return;
 }
 -(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FileItem* fileItem = [self.userItems objectAtIndex:indexPath.row];
     fileItem.checked = NO;
+    self.navigationItem.title=[NSString stringWithFormat:@"已选择%d个",self.tableView.indexPathsForSelectedRows.count];
     return;
 }
 

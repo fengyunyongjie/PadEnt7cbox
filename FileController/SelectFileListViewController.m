@@ -570,9 +570,9 @@
                 }else{
                     imageView.image = [UIImage imageNamed:@"file_pic.png"];
                     NSLog(@"将要下载的文件：%@",localThumbPath);
-                    if ([self hasCmdInFcmd:@"preview"]) {
+//                    if ([self hasCmdInFcmd:@"preview"]) {
                         [self startIconDownload:dic forIndexPath:indexPath];
-                    }
+//                    }
                 }
             }else if ([fmime isEqualToString:@"doc"]||
                       [fmime isEqualToString:@"docx"]||

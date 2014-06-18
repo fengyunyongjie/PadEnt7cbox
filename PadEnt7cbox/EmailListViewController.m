@@ -752,6 +752,11 @@ enum{
         
         etype=@"0";
         title=[dic objectForKey:@"re_subject"];
+        int readstate=-1;
+        readstate=[[dic objectForKey:@"re_isread"] intValue];
+        if (readstate==0) {
+            [self performSelector:@selector(updateEmailList) withObject:nil afterDelay:1.0];
+        }
     }else
     {
         //发件箱

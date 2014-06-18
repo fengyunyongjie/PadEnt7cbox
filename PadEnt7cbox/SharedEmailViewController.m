@@ -208,6 +208,7 @@
 {
     [self resizeViews];
     [_tokenFieldView resetSize];
+    [self reloadFiles];
 }
 - (void)viewDidLoad
 {
@@ -282,14 +283,14 @@
 -(void)clickSelected:(id)sender
 {
     UserListViewController *ulvc=[[UserListViewController alloc] init];
-    if(self.usrids)
-    {
-        ulvc.selectedItems = [[NSMutableArray alloc] initWithArray:self.usrids];
-    }
-    else
-    {
-        ulvc.selectedItems = [[NSMutableArray alloc] init];
-    }
+//    if(self.usrids)
+//    {
+//        ulvc.selectedItems = [[NSMutableArray alloc] initWithArray:self.usrids];
+//    }
+//    else
+//    {
+//        ulvc.selectedItems = [[NSMutableArray alloc] init];
+//    }
     ulvc.listViewDelegate=self;
     [self.navigationController pushViewController:ulvc animated:YES];
 }
@@ -314,10 +315,13 @@
     UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(10, 5, _filesView.bounds.size.width-20, 21)];
     label.text=@"分享内容";
     [_filesView addSubview:label];
+    
+    int numPerRow=self.view.bounds.size.width/80;
+    
     for (int i=0; i<self.fileArray.count; i++) {
-        int row=i/4;
-        int column=i%4;
-        FileView *fv=[[FileView alloc] initWithFrame:CGRectMake(column*(self.view.bounds.size.width/4), row*(100)+30, self.view.bounds.size.width/4, 100)];
+        int row=i/numPerRow;
+        int column=i%numPerRow;
+        FileView *fv=[[FileView alloc] initWithFrame:CGRectMake(column*(self.view.bounds.size.width/numPerRow), row*(100)+30, self.view.bounds.size.width/numPerRow, 100)];
         if (i==self.fileArray.count) {
             [fv setButton];
             [fv setIndex:i];
@@ -330,8 +334,8 @@
         [_filesView addSubview:fv];
     }
     
-    int row=self.fileArray.count/4,column=self.fileArray.count%4;
-    FileView *fv=[[FileView alloc] initWithFrame:CGRectMake(column*(self.view.bounds.size.width/4), row*(100)+20, self.view.bounds.size.width/4, 100)];
+    int row=self.fileArray.count/numPerRow,column=self.fileArray.count%numPerRow;
+    FileView *fv=[[FileView alloc] initWithFrame:CGRectMake(column*(self.view.bounds.size.width/numPerRow), row*(100)+20, self.view.bounds.size.width/numPerRow, 100)];
     for (int i=0; i<self.fileArray.count; i++) {
         
         if (i==self.fileArray.count) {
@@ -354,7 +358,7 @@
     [fv addTarget:self action:@selector(addFileView:) forControlEvents:UIControlEventTouchUpInside];
     [_filesView addSubview:fv];
     
-	CGFloat newHeight = (self.fileArray.count/4+1)*100+90;
+	CGFloat newHeight = (self.fileArray.count/numPerRow+1)*100+90;
 	CGRect newTextFrame = _tokenFieldView.contentView2.frame;
 	newTextFrame.size.height = newHeight;
     [_tokenFieldView.contentView2 setFrame:newTextFrame];

@@ -161,26 +161,25 @@
     [delete_button addTarget:self action:@selector(deleteClicked) forControlEvents:UIControlEventTouchUpInside];
     self.deleteItem = [[UIBarButtonItem alloc] initWithCustomView:delete_button];
     
-    if(titleLabel == nil)
-    {
-        CGRect title_rect = CGRectMake(0, 10, 200, 20);
-        UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-        {
-            title_rect.origin.x = (1024-320-200)/2;
-        }
-        else
-        {
-            title_rect.origin.x = (768-320-200)/2;
-        }
+//    if(titleLabel == nil)
+//    {
+//        CGRect title_rect = CGRectMake(0, 10, 200, 20);
+//        UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+//        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+//        {
+//            title_rect.origin.x = (1024-320-200)/2;
+//        }
+//        else
+//        {
+//            title_rect.origin.x = (768-320-200)/2;
+//        }
 //        titleLabel = [[UILabel alloc] initWithFrame:title_rect];
 //        [titleLabel setTextAlignment:NSTextAlignmentCenter];
 //        [titleLabel setLineBreakMode:NSLineBreakByTruncatingMiddle];
 //        [titleLabel setTextColor:[UIColor whiteColor]];
 //        [self.navigationController.navigationBar addSubview:titleLabel];
-        self.navigationItem.title=title;
-        
-    }
+//        
+//    }
     if([splitView_array count]>0)
     {
         [splitView_array removeAllObjects];
@@ -198,7 +197,7 @@
     
     
 //    [titleLabel setText:title];
-    
+    self.navigationItem.title=title;
     if(isFileManager)
     {
         self.navigationItem.rightBarButtonItems = splitView_array;

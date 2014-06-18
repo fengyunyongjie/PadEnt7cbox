@@ -146,15 +146,21 @@
 
 -(void)showPhotoView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload
 {
-    CGRect down_rect = CGRectMake(0, 0, 40, 25);
-    [self.down_button setFrame:down_rect];
+    CGRect down_rect = CGRectMake(0, 0, 30, 25);
+    
+    self.down_button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 25)];
     [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_save_nor@2x.png"] forState:UIControlStateNormal];
     [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_save_se@2x.png"] forState:UIControlStateHighlighted];
-    if(self.downItem)
-    {
-        self.downItem = nil;
-    }
+    [self.down_button addTarget:self action:@selector(clipClicked) forControlEvents:UIControlEventTouchUpInside];
     self.downItem = [[UIBarButtonItem alloc] initWithCustomView:self.down_button];
+
+    
+    UIButton *delete_button = [[UIButton alloc] initWithFrame:down_rect];
+    [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_nor@2x.png"] forState:UIControlStateNormal];
+    [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_se@2x.png"] forState:UIControlStateHighlighted];
+    [delete_button addTarget:self action:@selector(deleteClicked) forControlEvents:UIControlEventTouchUpInside];
+    self.deleteItem = [[UIBarButtonItem alloc] initWithCustomView:delete_button];
+    
     if(titleLabel == nil)
     {
         CGRect title_rect = CGRectMake(0, 10, 200, 20);
@@ -167,11 +173,13 @@
         {
             title_rect.origin.x = (768-320-200)/2;
         }
-        titleLabel = [[UILabel alloc] initWithFrame:title_rect];
-        [titleLabel setTextAlignment:NSTextAlignmentCenter];
-        [titleLabel setLineBreakMode:NSLineBreakByTruncatingMiddle];
-        [titleLabel setTextColor:[UIColor whiteColor]];
-        [self.navigationController.navigationBar addSubview:titleLabel];
+//        titleLabel = [[UILabel alloc] initWithFrame:title_rect];
+//        [titleLabel setTextAlignment:NSTextAlignmentCenter];
+//        [titleLabel setLineBreakMode:NSLineBreakByTruncatingMiddle];
+//        [titleLabel setTextColor:[UIColor whiteColor]];
+//        [self.navigationController.navigationBar addSubview:titleLabel];
+        self.navigationItem.title=title;
+        
     }
     if([splitView_array count]>0)
     {
@@ -189,7 +197,7 @@
     }
     
     
-    [titleLabel setText:title];
+//    [titleLabel setText:title];
     
     if(isFileManager)
     {
@@ -212,32 +220,38 @@
 -(void)showOtherView:(NSString *)title withIsHave:(BOOL)isHaveDelete withIsHaveDown:(BOOL)isHaveDownload;
 {
     CGRect down_rect = CGRectMake(0, 0, 30, 25);
-    [self.down_button setFrame:down_rect];
+    
+    self.down_button = [[UIButton alloc] initWithFrame:down_rect];
     [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_nor@2x.png"] forState:UIControlStateNormal];
     [self.down_button setBackgroundImage:[UIImage imageNamed:@"bt_download_se@2x.png"] forState:UIControlStateHighlighted];
-    if(self.downItem)
-    {
-        self.downItem = nil;
-    }
+    [self.down_button addTarget:self action:@selector(clipClicked) forControlEvents:UIControlEventTouchUpInside];
     self.downItem = [[UIBarButtonItem alloc] initWithCustomView:self.down_button];
-    if(titleLabel == nil)
-    {
-        CGRect title_rect = CGRectMake(0, 10, 200, 20);
-        UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-        {
-            title_rect.origin.x = (1024-320-200)/2;
-        }
-        else
-        {
-            title_rect.origin.x = (768-320-200)/2;
-        }
-        titleLabel = [[UILabel alloc] initWithFrame:title_rect];
-        [titleLabel setTextAlignment:NSTextAlignmentCenter];
-        [titleLabel setLineBreakMode:NSLineBreakByTruncatingMiddle];
-        [titleLabel setTextColor:[UIColor whiteColor]];
-        [self.navigationController.navigationBar addSubview:titleLabel];
-    }
+    
+    
+    UIButton *delete_button = [[UIButton alloc] initWithFrame:down_rect];
+    [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_nor@2x.png"] forState:UIControlStateNormal];
+    [delete_button setBackgroundImage:[UIImage imageNamed:@"bt_del_se@2x.png"] forState:UIControlStateHighlighted];
+    [delete_button addTarget:self action:@selector(deleteClicked) forControlEvents:UIControlEventTouchUpInside];
+    self.deleteItem = [[UIBarButtonItem alloc] initWithCustomView:delete_button];
+    
+//    if(titleLabel == nil)
+//    {
+//        CGRect title_rect = CGRectMake(0, 10, 200, 20);
+//        UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+//        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+//        {
+//            title_rect.origin.x = (1024-320-200)/2;
+//        }
+//        else
+//        {
+//            title_rect.origin.x = (768-320-200)/2;
+//        }
+//        titleLabel = [[UILabel alloc] initWithFrame:title_rect];
+//        [titleLabel setTextAlignment:NSTextAlignmentCenter];
+//        [titleLabel setLineBreakMode:NSLineBreakByTruncatingMiddle];
+//        [titleLabel setTextColor:[UIColor whiteColor]];
+//        [self.navigationController.navigationBar addSubview:titleLabel];
+//    }
     if([splitView_array count]>0)
     {
         [splitView_array removeAllObjects];
@@ -253,7 +267,8 @@
         splitView_array = [NSMutableArray arrayWithObjects:self.deleteItem,nil];
     }
     
-    [titleLabel setText:title];
+//    [titleLabel setText:title];
+    self.navigationItem.title=title;
     if(isFileManager)
     {
         self.navigationItem.rightBarButtonItems = splitView_array;

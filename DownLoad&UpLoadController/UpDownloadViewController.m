@@ -1404,6 +1404,7 @@
                             DetailViewController *viewCon = (DetailViewController *)detailView;
                             viewCon.isFileManager = NO;
                             [viewCon removeAllView];
+                            viewCon.dataDic=diction;
                             [viewCon.view addSubview:openFileView.view];
                             [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
                             [viewCon addChildViewController:openFileView];
@@ -1415,6 +1416,7 @@
                             [NavigationController pushViewController:viewCon animated:NO];
                             viewCon.isFileManager = NO;
                             [viewCon removeAllView];
+                            viewCon.dataDic=diction;
                             [viewCon.view addSubview:openFileView.view];
                             [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
                             [viewCon addChildViewController:openFileView];

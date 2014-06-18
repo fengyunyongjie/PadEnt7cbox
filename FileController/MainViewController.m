@@ -50,6 +50,7 @@
 {
     if (self.tabBarController==nil) {
         self.view.backgroundColor=[UIColor grayColor];
+        self.tableView.backgroundColor=[UIColor whiteColor];
     }
     if (self.type==kTypeShare) {
         int tabBarOffset = self.tabBarController == nil ?  0 : self.tabBarController.tabBar.frame.size.height;

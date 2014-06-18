@@ -2343,6 +2343,7 @@ noDirSend:
                 DetailViewController *viewCon=[[DetailViewController alloc] init];
                 viewCon.isFileManager = YES;
                 [viewCon removeAllView];
+                viewCon.dataDic=dic;
                 [viewCon showOtherView:openFileView.title withIsHave:isHaveDelete withIsHaveDown:NO];
                 [viewCon.view addSubview:openFileView.view];
                 [viewCon addChildViewController:openFileView];

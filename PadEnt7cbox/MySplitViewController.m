@@ -37,6 +37,8 @@
     DetailViewController *detailVC=[[DetailViewController alloc] init];
     UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:detailVC];
     [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    [nav.navigationBar setTintColor:[UIColor whiteColor]];
     self.viewControllers=@[myTabVC,nav];
     self.delegate=self;
 }

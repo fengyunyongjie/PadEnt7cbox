@@ -393,8 +393,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"正在发送...";
     //self.hud.labelText=error_info;
@@ -428,18 +429,7 @@
         NSArray *array=[self selectedIDs];
         NSLog(@"%@",array);
         if (array.count==0) {
-            if (self.hud) {
-                [self.hud removeFromSuperview];
-            }
-            self.hud=nil;
-            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view.superview addSubview:self.hud];
-            [self.hud show:NO];
-            self.hud.labelText=@"未选中任何文件（夹）";
-            self.hud.mode=MBProgressHUDModeText;
-            self.hud.margin=10.f;
-            [self.hud show:YES];
-            [self.hud hide:YES afterDelay:1.0f];
+            [self showMessage:@"未选中任何文件（夹）"];
             return;
         }
         
@@ -451,19 +441,7 @@
 
             BOOL isDir;
             if (fsize==0) {
-                if (self.hud)
-                {
-                    [self.hud removeFromSuperview];
-                }
-                self.hud=nil;
-                self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-                [self.view.superview addSubview:self.hud];
-                [self.hud show:NO];
-                self.hud.labelText=@"不能下载文件夹";
-                self.hud.mode=MBProgressHUDModeText;
-                self.hud.margin=10.f;
-                [self.hud show:YES];
-                [self.hud hide:YES afterDelay:1.0f];
+                [self showMessage:@"不能下载文件夹"];
                 return;
             }
         }
@@ -518,18 +496,7 @@
         NSArray *array=[self selectedIDs];
         NSLog(@"%@",array);
         if (array.count==0) {
-            if (self.hud) {
-                [self.hud removeFromSuperview];
-            }
-            self.hud=nil;
-            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view.superview addSubview:self.hud];
-            [self.hud show:NO];
-            self.hud.labelText=@"未选中任何文件（夹）";
-            self.hud.mode=MBProgressHUDModeText;
-            self.hud.margin=10.f;
-            [self.hud show:YES];
-            [self.hud hide:YES afterDelay:1.0f];
+            [self showMessage:@"未选中任何文件（夹）"];
             return;
         }
     }
@@ -1096,36 +1063,11 @@
 #pragma mark - SCBEmailManagerDelegate
 -(void)networkError
 {
-    if (self.hud) {
-        [self.hud removeFromSuperview];
-    }
-    self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
-    
-    [self.hud show:NO];
-    self.hud.labelText=@"链接失败，请检查网络";
-    self.hud.mode=MBProgressHUDModeText;
-    self.hud.margin=10.f;
-    [self.hud show:YES];
-    [self.hud hide:YES afterDelay:1.0f];
+    [self showMessage:@"链接失败，请检查网络"];
 }
 -(void)sendFilesSucceed:(NSDictionary *)datadic
 {
-    if (self.hud) {
-        [self.hud removeFromSuperview];
-    }
-    self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
-    [self.hud show:NO];
-    self.hud.labelText=@"发送成功";
-    //self.hud.labelText=error_info;
-    self.hud.mode=MBProgressHUDModeText;
-    self.hud.margin=10.f;
-    [self.hud show:YES];
-    [self.hud hide:YES afterDelay:1.0f];
-    [self.navigationItem.rightBarButtonItem setEnabled:YES];
+    [self showMessage:@"发送成功"];
 }
 -(void)viewReceiveSucceed:(NSDictionary *)datadic
 {
@@ -1204,33 +1146,11 @@
 #pragma mark - SCBEmailManagerDelegate
 -(void)moveUnsucess
 {
-    if (self.hud) {
-        [self.hud removeFromSuperview];
-    }
-    self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
-    [self.hud show:NO];
-    self.hud.labelText=@"操作失败";
-    self.hud.mode=MBProgressHUDModeText;
-    self.hud.margin=10.f;
-    [self.hud show:YES];
-    [self.hud hide:YES afterDelay:1.0f];
+    [self showMessage:@"操作失败"];
 }
 -(void)moveSucess
 {
-    if (self.hud) {
-        [self.hud removeFromSuperview];
-    }
-    self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
-    [self.hud show:NO];
-    self.hud.labelText=@"操作成功";
-    self.hud.mode=MBProgressHUDModeText;
-    self.hud.margin=10.f;
-    [self.hud show:YES];
-    [self.hud hide:YES afterDelay:1.0f];
+    [self showMessage:@"操作成功"];
 }
 -(void)operateUpdate
 {
@@ -1376,8 +1296,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=message;
     self.hud.mode=MBProgressHUDModeText;
@@ -1385,6 +1306,4 @@
     [self.hud show:YES];
     [self.hud hide:YES afterDelay:1.0f];
 }
-
-
 @end

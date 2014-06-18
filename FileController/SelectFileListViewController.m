@@ -47,7 +47,6 @@
 {
     [super viewDidLayoutSubviews];
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-    CGRect r=self.view.frame;
     self.view.backgroundColor=[UIColor grayColor];
     self.tableView.backgroundColor=[UIColor whiteColor];
     if (self.type==kSelectTypeShare) {
@@ -59,28 +58,28 @@
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
             if (self.tabBarController!=nil) {
-                self.view.frame=CGRectMake(0, 64, 320, 768-49);
+                CGRect r=self.view.frame;
+                r.size.height=768-r.origin.y;
+                r.size.width=320;
+                self.view.frame=r;
+//                self.view.frame=CGRectMake(0, 64, 320, 768-49);
             }
             self.tableView.frame=CGRectMake(0, 0, 320, 768-49-64);
             self.toolbar.frame=CGRectMake(0, 768-49-64, 320, 49);
-        }else
-        {
-            self.tableView.frame=CGRectMake(0, 0, 320, 768-49-64-20);
-            self.toolbar.frame=CGRectMake(0, 768-49-20, 320, 49);
         }
     }
     else
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
             if (self.tabBarController!=nil) {
-                self.view.frame=CGRectMake(0, 64, 320, 1024-49);
+                CGRect r=self.view.frame;
+                r.size.height=1024-r.origin.y;
+                r.size.width=320;
+                self.view.frame=r;
+//                self.view.frame=CGRectMake(0, 64, 320, 1024-49);
             }
             self.tableView.frame=CGRectMake(0, 0, 320, 1024-49-64);
             self.toolbar.frame=CGRectMake(0, 1024-49-64, 320, 49);
-        }else
-        {
-            self.tableView.frame=CGRectMake(0, 0, 320, 1024-49-64-20);
-            self.toolbar.frame=CGRectMake(0, 1024-49-20, 320, 49);
         }
     }
 }
@@ -548,7 +547,7 @@
                 fthumb =[YNFunctions picFileNameFromURL:fthumb];
                 localThumbPath=[localThumbPath stringByAppendingPathComponent:fthumb];
                 NSLog(@"是否存在文件：%@",localThumbPath);
-                if ([self hasCmdInFcmd:@"preview"]&&[[NSFileManager defaultManager] fileExistsAtPath:localThumbPath]&&[UIImage imageWithContentsOfFile:localThumbPath]!=nil) {
+                if ([[NSFileManager defaultManager] fileExistsAtPath:localThumbPath]&&[UIImage imageWithContentsOfFile:localThumbPath]!=nil) {
                     NSLog(@"存在文件：%@",localThumbPath);
                     UIImage *icon=[UIImage imageWithContentsOfFile:localThumbPath];
                     CGSize itemSize = CGSizeMake(100, 100);
@@ -803,6 +802,8 @@
         [self.hud hide:YES afterDelay:1.0f];
         return;
     }
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
 //    [self dismissViewControllerAnimated:YES completion:^(void){
 //        [self.delegate showMessage:strError];
 //    }];
@@ -843,7 +844,8 @@
     if ([(NSObject *)self.delegate respondsToSelector:@selector(showMessage:)]) {
         [self.delegate showMessage:@"操作失败"];
     }
-    [self.navigationController popToViewController:(UIViewController *)self.delegate animated:YES];
+    [self moveCancel:nil];
+//    [self.navigationController popToViewController:(UIViewController *)self.delegate animated:YES];
 //    for(int i=self.navigationController.viewControllers.count-1;i>=0;i--)
 //    {
 //        UIViewController *viewController = [self.navigationController.viewControllers objectAtIndex:i];

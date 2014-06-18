@@ -71,6 +71,7 @@ typedef enum{
 @property (strong,nonatomic) UILabel * notingLabel;
 @property (strong,nonatomic) UIView *nothingView;
 @property (strong,nonatomic) NSArray *selectedFIDs;
+@property (strong,nonatomic) UIActivityViewController *activityViewController;
 @end
 
 @implementation FileListViewController
@@ -143,6 +144,9 @@ typedef enum{
 -(void)viewWillDisappear:(BOOL)animated
 {
     [self hideMenu];
+//    if (self.activityViewController) {
+//        [self.activityViewController dismissViewControllerAnimated:NO completion:nil];
+//    }
 }
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -2453,14 +2457,16 @@ noDirSend:
         case kShareTypeOther:
         {
             NSString *text=[NSString stringWithFormat:template,[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"],link];
-            UIActivityViewController *activityViewController=[[UIActivityViewController alloc] initWithActivityItems:@[text] applicationActivities:nil];
-            [activityViewController setExcludedActivityTypes:[NSArray arrayWithObjects:
+            self.activityViewController=[[UIActivityViewController alloc] initWithActivityItems:@[text] applicationActivities:nil];
+            [self.activityViewController setExcludedActivityTypes:[NSArray arrayWithObjects:
                                                               UIActivityTypeMail,UIActivityTypeMessage,nil]];
 //            if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 //                //iPhone, present activity view controller as is.
 //                [self presentViewController:activityViewController animated:YES completion:nil];
 //            }
-            [self presentViewController:activityViewController animated:YES completion:nil];
+            [self presentViewController:self.activityViewController animated:YES completion:nil];
+//            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//            [app.window.rootViewController presentViewController:self.activityViewController animated:YES completion:nil];
         }
             break;
         default:

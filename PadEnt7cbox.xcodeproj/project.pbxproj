@@ -148,6 +148,7 @@
 		294EB51F18604FD2006E6E96 /* libPushSDK-Simulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 294EB51D18604FD2006E6E96 /* libPushSDK-Simulator.a */; };
 		294EB52018604FD2006E6E96 /* libPushSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 294EB51E18604FD2006E6E96 /* libPushSDK.a */; };
 		294EB52318605061006E6E96 /* PushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 294EB52218605061006E6E96 /* PushConfig.plist */; };
+		295FAFE019516BA900FBD461 /* read_nor1.png in Resources */ = {isa = PBXBuildFile; fileRef = 295FAFDF19516BA900FBD461 /* read_nor1.png */; };
 		296EBB26188F7134006CDAC3 /* file_folder_comp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 296EBB25188F7134006CDAC3 /* file_folder_comp@2x.png */; };
 		2982DFBD18614507009CB82D /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2982DFBB18614507009CB82D /* LoginViewController.m */; };
 		2982DFBE18614507009CB82D /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2982DFBC18614507009CB82D /* LoginViewController.xib */; };
@@ -435,6 +436,7 @@
 		294EB51E18604FD2006E6E96 /* libPushSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPushSDK.a; sourceTree = "<group>"; };
 		294EB52118605055006E6E96 /* PConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PConfig.h; sourceTree = "<group>"; };
 		294EB52218605061006E6E96 /* PushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PushConfig.plist; sourceTree = "<group>"; };
+		295FAFDF19516BA900FBD461 /* read_nor1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = read_nor1.png; sourceTree = "<group>"; };
 		296EBB25188F7134006CDAC3 /* file_folder_comp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_folder_comp@2x.png"; sourceTree = "<group>"; };
 		2982DFBA18614507009CB82D /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = SOURCE_ROOT; };
 		2982DFBB18614507009CB82D /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = SOURCE_ROOT; };
@@ -665,6 +667,7 @@
 		29135DEE188CF35800A951CE /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				295FAFDF19516BA900FBD461 /* read_nor1.png */,
 				29B704C819503776004E5840 /* arrow_left1.png */,
 				29C0D53B18CDB70400056CB9 /* add_pic@2x.png */,
 				29C0D53C18CDB70400056CB9 /* read_nor@2x.png */,
@@ -1416,6 +1419,7 @@
 				2982E098186152FE009CB82D /* Back_Normal.png in Resources */,
 				29B704C919503776004E5840 /* arrow_left1.png in Resources */,
 				29900AB91920AD86009C5357 /* login_input.png in Resources */,
+				295FAFE019516BA900FBD461 /* read_nor1.png in Resources */,
 				29135EFE188CF35900A951CE /* share_locked@2x.png in Resources */,
 				29135ECE188CF35900A951CE /* mail_readed@2x.png in Resources */,
 				29135EB2188CF35900A951CE /* grayArrow@2x.png in Resources */,

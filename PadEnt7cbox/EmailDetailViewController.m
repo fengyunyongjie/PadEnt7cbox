@@ -345,6 +345,9 @@
 }
 -(void)reSendAction:(id)sender
 {
+    UIControl *control=(UIControl *)sender;
+    [control setEnabled:NO];
+    
     NSDictionary *dic=[self.dataDic objectForKey:@"obj"];
     NSString *title;
     NSString *content;
@@ -693,25 +696,28 @@
     NSString *receiveNames;
     NSString *receiveEmails;
     NSString *time;
-    if ([self.etype intValue]==0) {
-        title=[dic objectForKey:@"re_subject"];
-        content=[dic objectForKey:@"re_message"];
-        sendName=[dic objectForKey:@"sendUserTrueName"];
-        sendEmail=[dic objectForKey:@"sendUserEmail"];
-        receiveNames=[dic objectForKey:@"re_receive_usernames"];
-        receiveEmails=[dic objectForKey:@"re_receive_emails"];
-        time=[dic objectForKey:@"re_sendtime"];
-    }else
-    {
-        title=[dic objectForKey:@"send_subject"];
-        content=[dic objectForKey:@"send_message"];
-        sendName=[dic objectForKey:@"sendUserTrueName"];
-        sendEmail=[dic objectForKey:@"sendUserEmail"];
-        receiveNames=[dic objectForKey:@"send_receive_usernames"];
-        receiveEmails=[dic objectForKey:@"send_receive_emails"];
-        time=[dic objectForKey:@"send_sendtime"];
+    if ([dic isKindOfClass:[NSDictionary class]]) {
+        if ([self.etype intValue]==0) {
+            title=[dic objectForKey:@"re_subject"];
+            content=[dic objectForKey:@"re_message"];
+            sendName=[dic objectForKey:@"sendUserTrueName"];
+            sendEmail=[dic objectForKey:@"sendUserEmail"];
+            receiveNames=[dic objectForKey:@"re_receive_usernames"];
+            receiveEmails=[dic objectForKey:@"re_receive_emails"];
+            time=[dic objectForKey:@"re_sendtime"];
+        }else
+        {
+            title=[dic objectForKey:@"send_subject"];
+            content=[dic objectForKey:@"send_message"];
+            sendName=[dic objectForKey:@"sendUserTrueName"];
+            sendEmail=[dic objectForKey:@"sendUserEmail"];
+            receiveNames=[dic objectForKey:@"send_receive_usernames"];
+            receiveEmails=[dic objectForKey:@"send_receive_emails"];
+            time=[dic objectForKey:@"send_sendtime"];
+        }
+
     }
-    switch (indexPath.row) {
+        switch (indexPath.row) {
         case 0:
         {
             if (self.titleCell==nil) {

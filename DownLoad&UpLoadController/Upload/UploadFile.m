@@ -215,7 +215,7 @@
     }
     if([array count]==0 || bl)
     {
-        NSLog(@"创建手机照片目录------------------------------");
+        NSLog(@"创建本机照片目录------------------------------");
         [self newRequestNewFold:[urlNameArray objectAtIndex:urlIndex] FID:fId];
     }
 }
@@ -299,7 +299,7 @@
     
     if(bl)
     {
-        NSLog(@"创建手机照片目录------------------------------");
+        NSLog(@"创建本机照片目录------------------------------");
         urlIndex++;
         [self newRequestNewFold:[urlNameArray objectAtIndex:urlIndex] FID:list.t_url_pid];
     }

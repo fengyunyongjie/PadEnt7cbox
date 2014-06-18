@@ -448,6 +448,8 @@ enum{
     [actionSheet setTag:kActionSheetTagDeleteOne];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array addObject:actionSheet];
 }
 -(void)editFinished;
 {
@@ -515,16 +517,16 @@ enum{
         UIButton *btn_del,*btn_markReaded,*btn_Resend;
         UIBarButtonItem *item_del,*item_flexible,*item_markReaded,*item_Resend;
         
-        btn_del =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 25)];
-        [btn_del setImage:[UIImage imageNamed:@"delx_nor.png"] forState:UIControlStateNormal];
-        [btn_del setImage:[UIImage imageNamed:@"delx_se.png"] forState:UIControlStateHighlighted];
+        btn_del =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 40)];
+        [btn_del setImage:[UIImage imageNamed:@"del_nor.png"] forState:UIControlStateNormal];
+        [btn_del setImage:[UIImage imageNamed:@"del_se.png"] forState:UIControlStateHighlighted];
         [btn_del addTarget:self action:@selector(toDelete:) forControlEvents:UIControlEventTouchUpInside];
         item_del=[[UIBarButtonItem alloc] initWithCustomView:btn_del];
         
-        btn_markReaded =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 75, 25)];
+        btn_markReaded =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
 //        [btn_markReaded setTitle:@"标为已读" forState:UIControlStateNormal];
-        [btn_markReaded setImage:[UIImage imageNamed:@"read_nor.png"] forState:UIControlStateNormal];
-        [btn_markReaded setImage:[UIImage imageNamed:@"read_se.png"] forState:UIControlStateHighlighted];
+        [btn_markReaded setImage:[UIImage imageNamed:@"read_nor1.png"] forState:UIControlStateNormal];
+        [btn_markReaded setImage:[UIImage imageNamed:@"read_nor1.png"] forState:UIControlStateHighlighted];
         [btn_markReaded addTarget:self action:@selector(toSetRead:) forControlEvents:UIControlEventTouchUpInside];
         item_markReaded=[[UIBarButtonItem alloc] initWithCustomView:btn_markReaded];
         
@@ -929,6 +931,9 @@ enum{
 #pragma mark - UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.action_array removeAllObjects];
+    
     switch ([actionSheet tag]) {
         case kActionSheetTagDeleteOne:
         {

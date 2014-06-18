@@ -160,7 +160,7 @@
 }
 - (void)resetSize
 {
-    _tokenField = [[TITokenField alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 42)];
+    _tokenField.frame = CGRectMake(0, 0, self.bounds.size.width, _tokenField.bounds.size.height);
     CGFloat tokenFieldBottom = CGRectGetMaxY(_tokenField.frame);
     self.changeLabel.frame =CGRectMake(7, tokenFieldBottom+2, self.bounds.size.width-70, 40);
     [self.selectButton setFrame:CGRectMake(self.bounds.size.width-60, tokenFieldBottom+2-5, 53, 50)];
@@ -168,16 +168,16 @@
     {
         tokenFieldBottom+=41;
     }
-	_separator = [[UIView alloc] initWithFrame:CGRectMake(0, tokenFieldBottom, self.bounds.size.width, 1)];
-    self.titileField.frame=CGRectMake(10, tokenFieldBottom+1,self.bounds.size.width-20, 42);
+	_separator.frame = CGRectMake(0, tokenFieldBottom, self.bounds.size.width, 1);
+    self.titileField.frame=CGRectMake(10, tokenFieldBottom+1,self.bounds.size.width-20, self.titileField.bounds.size.height);
     CGFloat titleFieldBottom = CGRectGetMaxY(self.titileField.frame);
-    _separator2=[[UIView alloc] initWithFrame:CGRectMake(0, titleFieldBottom, self.bounds.size.width, 1)];
+    _separator2.frame=CGRectMake(0, titleFieldBottom, self.bounds.size.width, 1);
     // This view is created for convenience, because it resizes and moves with the rest of the subviews.
-	_contentView = [[UIView alloc] initWithFrame:CGRectMake(0, titleFieldBottom + 1, self.bounds.size.width,
-                                                            CVIEW_HEIGHT)];
+	_contentView.frame =CGRectMake(0, titleFieldBottom + 1, self.bounds.size.width,
+                                                            _contentView.bounds.size.height);
     CGFloat contentViewBottom = CGRectGetMaxY(_contentView.frame);
-    _contentView2=[[UIView alloc] initWithFrame:CGRectMake(0, contentViewBottom, self.bounds.size.width,
-														   self.bounds.size.height - contentViewBottom)];
+    _contentView2.frame=CGRectMake(0, contentViewBottom, self.bounds.size.width,
+														   _contentView2.bounds.size.height);
 //    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
 //		
 //		UITableViewController * tableViewController = [[UITableViewController alloc] initWithStyle:UITableViewStylePlain];

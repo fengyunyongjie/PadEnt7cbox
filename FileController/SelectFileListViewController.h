@@ -18,6 +18,13 @@ typedef enum {
     kSelectTypeUpload,
     kSelectTypeShare,
 } SelectType;
+
+@protocol SelectFileFileEmailViewDelegate <NSObject>
+
+-(void)addSharedFileView:(NSDictionary *)dictionary;
+
+@end
+
 @protocol SelectFileListDelegate;
 @interface SelectFileListViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 @property (strong,nonatomic) NSArray *targetsArray;
@@ -37,6 +44,7 @@ typedef enum {
 @property (assign,nonatomic) SelectType type;
 @property (assign,nonatomic) BOOL isHasSelectFile;
 @property (nonatomic,assign) BOOL isLoading;
+@property (weak,nonatomic) id<SelectFileFileEmailViewDelegate> selectFileEmialViewDelegate;
 
 @end
 

@@ -102,7 +102,7 @@
 
 -(void)uploadAction:(id)sender
 {
-    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍摄照片并上传",@"从手机相册选择", nil];
+    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍摄照片并上传",@"从本机相册选择", nil];
     [actionSheet setTag:kActionSheetTagUpload];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
@@ -1638,7 +1638,7 @@
             [self presentViewController:imagePicker animated:YES completion:nil];
         }else if(buttonIndex==1)
         {
-            //手机相册
+            //本机相册
             QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
             imagePickerController.delegate = self;
             imagePickerController.allowsMultipleSelection = YES;

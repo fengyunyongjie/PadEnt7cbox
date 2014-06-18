@@ -49,6 +49,12 @@
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     CGRect r=self.view.frame;
     self.view.backgroundColor=[UIColor grayColor];
+    self.tableView.backgroundColor=[UIColor whiteColor];
+    if (self.type==kSelectTypeShare) {
+        [self.toolbar setHidden:YES];
+        self.tableView.frame=self.view.frame;
+        return;
+    }
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
@@ -67,7 +73,7 @@
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
             if (self.tabBarController!=nil) {
-                self.view.frame=CGRectMake(0, 64, 320, 768-49);
+                self.view.frame=CGRectMake(0, 64, 320, 1024-49);
             }
             self.tableView.frame=CGRectMake(0, 0, 320, 1024-49-64);
             self.toolbar.frame=CGRectMake(0, 1024-49-64, 320, 49);
@@ -243,6 +249,8 @@
         case kSelectTypeUpload:
             item=@"upload";
             break;
+        case kSelectTypeShare:
+            item=@"publiclink";
         default:
             break;
     }
@@ -524,14 +532,116 @@
         if (dic) {
             textLabel.text=[dic objectForKey:@"fname"];
             NSString *fisdir=[dic objectForKey:@"fisdir"];
+            NSString *fname=[dic objectForKey:@"fname"];
+            NSString *fmime=[[fname pathExtension] lowercaseString];
             if ([fisdir isEqualToString:@"0"]) {
                 detailTextLabel.text=[NSString stringWithFormat:@"%@",[dic objectForKey:@"fmodify"]];
                 imageView.image=[UIImage imageNamed:@"file_folder.png"];
+            }else if ([fmime isEqualToString:@"png"]||
+                      [fmime isEqualToString:@"jpg"]||
+                      [fmime isEqualToString:@"jpeg"]||
+                      [fmime isEqualToString:@"bmp"]||
+                      [fmime isEqualToString:@"gif"])
+            {
+                NSString *fthumb=[dic objectForKey:@"fthumb"];
+                NSString *localThumbPath=[YNFunctions getIconCachePath];
+                fthumb =[YNFunctions picFileNameFromURL:fthumb];
+                localThumbPath=[localThumbPath stringByAppendingPathComponent:fthumb];
+                NSLog(@"是否存在文件：%@",localThumbPath);
+                if ([self hasCmdInFcmd:@"preview"]&&[[NSFileManager defaultManager] fileExistsAtPath:localThumbPath]&&[UIImage imageWithContentsOfFile:localThumbPath]!=nil) {
+                    NSLog(@"存在文件：%@",localThumbPath);
+                    UIImage *icon=[UIImage imageWithContentsOfFile:localThumbPath];
+                    CGSize itemSize = CGSizeMake(100, 100);
+                    UIGraphicsBeginImageContext(itemSize);
+                    CGRect theR=CGRectMake(0, 0, itemSize.width, itemSize.height);
+                    if (icon.size.width>icon.size.height) {
+                        theR.size.width=icon.size.width/(icon.size.height/itemSize.height);
+                        theR.origin.x=-(theR.size.width/2)-itemSize.width;
+                    }else
+                    {
+                        theR.size.height=icon.size.height/(icon.size.width/itemSize.width);
+                        theR.origin.y=-(theR.size.height/2)-itemSize.height;
+                    }
+                    CGRect imageRect = CGRectMake(0, 0, 100, 100);
+                    [icon drawInRect:imageRect];
+                    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+                    UIGraphicsEndImageContext();
+                    imageView.image = image;
+                }else{
+                    imageView.image = [UIImage imageNamed:@"file_pic.png"];
+                    NSLog(@"将要下载的文件：%@",localThumbPath);
+                    if ([self hasCmdInFcmd:@"preview"]) {
+                        [self startIconDownload:dic forIndexPath:indexPath];
+                    }
+                }
+            }else if ([fmime isEqualToString:@"doc"]||
+                      [fmime isEqualToString:@"docx"]||
+                      [fmime isEqualToString:@"rtf"])
+            {
+                imageView.image = [UIImage imageNamed:@"file_word.png"];
             }
+            else if ([fmime isEqualToString:@"xls"]||
+                     [fmime isEqualToString:@"xlsx"])
+            {
+                imageView.image = [UIImage imageNamed:@"file_excel.png"];
+            }else if ([fmime isEqualToString:@"mp3"])
+            {
+                imageView.image = [UIImage imageNamed:@"file_music.png"];
+            }else if ([fmime isEqualToString:@"mov"]||
+                      [fmime isEqualToString:@"mp4"]||
+                      [fmime isEqualToString:@"avi"]||
+                      [fmime isEqualToString:@"rmvb"])
+            {
+                imageView.image = [UIImage imageNamed:@"file_moving.png"];
+            }else if ([fmime isEqualToString:@"pdf"])
+            {
+                imageView.image = [UIImage imageNamed:@"file_pdf.png"];
+            }else if ([fmime isEqualToString:@"ppt"]||
+                      [fmime isEqualToString:@"pptx"])
+            {
+                imageView.image = [UIImage imageNamed:@"file_ppt.png"];
+            }else if([fmime isEqualToString:@"txt"])
+            {
+                imageView.image = [UIImage imageNamed:@"file_txt.png"];
+            }
+            else
+            {
+                imageView.image = [UIImage imageNamed:@"file_other.png"];
+            }
+
         }
     }
     return cell;
 }
+
+- (void)startIconDownload:(NSDictionary *)dic forIndexPath:(NSIndexPath *)indexPath
+{
+    if (!self.imageDownloadsInProgress) {
+        self.imageDownloadsInProgress=[NSMutableDictionary dictionary];
+    }
+    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader == nil)
+    {
+        iconDownloader = [[IconDownloader alloc] init];
+        iconDownloader.data_dic=dic;
+        iconDownloader.indexPathInTableView = indexPath;
+        iconDownloader.delegate = self;
+        [self.imageDownloadsInProgress setObject:iconDownloader forKey:indexPath];
+        [iconDownloader startDownload];
+    }
+}
+
+- (void)appImageDidLoad:(NSIndexPath *)indexPath;
+{
+    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader != nil)
+    {
+        [self.tableView reloadRowsAtIndexPaths:@[iconDownloader.indexPathInTableView] withRowAnimation:UITableViewRowAnimationNone];
+    }
+    [self.imageDownloadsInProgress removeObjectForKey:indexPath];
+}
+
+
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 50;
@@ -552,12 +662,16 @@
                 flVC.title=[dic objectForKey:@"fname"];
                 flVC.fcmd=[dic objectForKey:@"fcmd"];
                 flVC.delegate=self.delegate;
+                flVC.selectFileEmialViewDelegate=self.selectFileEmialViewDelegate;
                 flVC.roletype=self.roletype;
                 flVC.type=self.type;
                 flVC.targetsArray=self.targetsArray;
                 flVC.isHasSelectFile=self.isHasSelectFile;
                 flVC.rootName = self.rootName;
                 [self.navigationController pushViewController:flVC animated:YES];
+            }else if(self.type==kSelectTypeShare)
+            {
+                [self addSharedFileView:dic];
             }
         }
     }
@@ -827,5 +941,8 @@
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
 }
-
+-(void)addSharedFileView:(NSDictionary *)dictionary
+{
+    [self.selectFileEmialViewDelegate addSharedFileView:dictionary];
+}
 @end

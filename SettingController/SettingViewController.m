@@ -284,7 +284,7 @@ typedef enum{
 }
 - (void)clearCache
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"清除缓存，释放手机空间"
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"清除缓存，释放本机空间"
                                                         message:@"下载或查看过的文件需要重新下载"
                                                        delegate:self
                                               cancelButtonTitle:@"取消"
@@ -748,7 +748,7 @@ typedef enum{
                     cell.selectionStyle = UITableViewCellSelectionStyleNone;
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     descLabel.hidden = YES;
-                    titleLabel.text = @"导入企业通讯录到手机";
+                    titleLabel.text = @"导入企业通讯录到本机";
                     m_switch.hidden = YES;
                     break;
                 case 4:
@@ -872,9 +872,9 @@ typedef enum{
                     [self clearCache];
                     break;
                 case 3:
-                    //导入企业通讯录到手机
+                    //导入企业通讯录到本机
                 {
-                    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"导入企业通讯录到手机" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"确定",nil];
+                    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"导入企业通讯录到本机" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"确定",nil];
                     [actionSheet setTag:kActionSheetTypeInContent];
                     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
                     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];

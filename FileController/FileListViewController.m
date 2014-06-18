@@ -536,7 +536,7 @@ typedef enum{
 -(void)uploadAction:(id)sender
 {
     [self hideMenu];
-    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍摄照片并上传",@"从手机相册选择", nil];
+    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍摄照片并上传",@"从本机相册选择", nil];
     [actionSheet setTag:kActionSheetTagUpload];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
@@ -1056,8 +1056,8 @@ typedef enum{
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view.superview addSubview:self.hud];
+            self.hud=[[MBProgressHUD alloc] initWithView:self.view.window];
+            [self.view.window addSubview:self.hud];
             [self.hud show:NO];
             self.hud.labelText=@"未选中任何文件（夹）";
             self.hud.mode=MBProgressHUDModeText;
@@ -1120,6 +1120,8 @@ hasDirSend:
         [actionSheet setTag:kActionSheetTagSendHasDir];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [app.action_array addObject:actionSheet];
         return;
     }
 noDirSend:
@@ -1128,6 +1130,8 @@ noDirSend:
         [actionSheet setTag:kActionSheetTagSend];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [app.action_array addObject:actionSheet];
         return;
     }
 }
@@ -1520,7 +1524,7 @@ noDirSend:
         NSString *fid_ = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
         if (self.tableView.isEditing) {
             BOOL isSelectThis=NO;
-            for (NSString *str in self.selectedFIDs) {
+            for (NSString *str in [self selectedIDs]) {
                 if ([str intValue]==[fid_ intValue]) {
                     isSelectThis=YES;
                     break;
@@ -2409,7 +2413,7 @@ noDirSend:
 -(void)createLinkSucceed:(NSDictionary *)datadic
 {
     NSString *link=[datadic objectForKey:@"msg"];
-    NSString *template=@"%@想和您分享虹盘的文件，链接地址：%@";
+    NSString *template=@"%@想和您分享icoffer的文件，链接地址：%@";
     NSLog(@"Link:%@",link);
     [self.hud hide:YES];
     switch (self.shareType) {
@@ -3185,7 +3189,7 @@ noDirSend:
                 [self presentViewController:imagePicker animated:YES completion:nil];
             }else if(buttonIndex==1)
             {
-                //手机相册
+                //本机相册
                 QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
                 AppDelegate *app_delegate = [[UIApplication sharedApplication] delegate];
                 app_delegate.file_url = [NSString formatNSStringForOjbect:app_delegate.old_file_url];

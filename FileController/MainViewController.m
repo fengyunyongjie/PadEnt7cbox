@@ -83,7 +83,7 @@
     [self.view addSubview:self.tableView];
     self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     if (self.type==kTypeCommit||self.type==kTypeResave||self.type==kTypeUpload||self.type==kTypeMove||self.type==kTypeCopy) {
-        [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dissmissSelf:)]];
+        [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(dissmissSelf:)]];
     }else
     {
         //        UIButton*rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,30,40)];
@@ -97,6 +97,8 @@
         UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
         temporaryBarButtonItem.title = @"";
         self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
+        //禁用滑动返回
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
     if (self.dirType==kTypeEnt) {
         //初始化返回按钮
@@ -127,7 +129,7 @@
 
 -(void)uploadAction:(id)sender
 {
-    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍摄照片并上传",@"从手机相册选择", nil];
+    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍摄照片并上传",@"从本机相册选择", nil];
     [actionSheet setTag:1];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
@@ -549,23 +551,21 @@
                 dic=[self.listArray objectAtIndex:indexPath.row+1];
             }
             if (dic) {
-                FileListViewController *flVC=[[FileListViewController alloc] init];
+                SelectFileListViewController *flVC=[[SelectFileListViewController alloc] init];
                 flVC.spid=[dic objectForKey:@"spid"];
                 flVC.f_id=@"0";
                 flVC.title=[dic objectForKey:@"spname"];
+                flVC.delegate=self.delegate;
+                flVC.type=kSelectTypeShare;
+                flVC.targetsArray=self.targetsArray;
+                flVC.rootName=[dic objectForKey:@"spname"];
                 flVC.roletype=@"2"; //2为我的文件夹 1为企业文件夹
+                flVC.isHasSelectFile=self.isHasSelectFile;
                 if (self.dirType==kTypeEnt)
                 {
                     flVC.roletype=@"1";
                 }
-                if(self.type==kTypeShare)
-                {
-                    flVC.shareType=kShareTypeShare;
-                }
-                flVC.FileEmialViewDelegate=self;
-                AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-                appDelegate.file_url = flVC.title;
-                appDelegate.old_file_url = flVC.title;
+                flVC.selectFileEmialViewDelegate=self;
                 [self.navigationController pushViewController:flVC animated:YES];
             }
 
@@ -681,7 +681,7 @@
                 
             }else if(buttonIndex==1)
             {
-                //手机相册
+                //本机相册
                 QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
                 imagePickerController.delegate = self;
                 imagePickerController.allowsMultipleSelection = YES;

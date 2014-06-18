@@ -71,7 +71,7 @@ typedef enum{
 @property (strong,nonatomic) UILabel * notingLabel;
 @property (strong,nonatomic) UIView *nothingView;
 @property (strong,nonatomic) NSArray *selectedFIDs;
-@property (strong,nonatomic) UIActivityViewController *activityViewController;
+@property (strong,nonatomic) UIPopoverController *activityPopover;
 @end
 
 @implementation FileListViewController
@@ -2457,16 +2457,19 @@ noDirSend:
         case kShareTypeOther:
         {
             NSString *text=[NSString stringWithFormat:template,[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"],link];
-            self.activityViewController=[[UIActivityViewController alloc] initWithActivityItems:@[text] applicationActivities:nil];
-            [self.activityViewController setExcludedActivityTypes:[NSArray arrayWithObjects:
+            UIActivityViewController * activityViewController=[[UIActivityViewController alloc] initWithActivityItems:@[text] applicationActivities:nil];
+            [activityViewController setExcludedActivityTypes:[NSArray arrayWithObjects:
                                                               UIActivityTypeMail,UIActivityTypeMessage,nil]];
-//            if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-//                //iPhone, present activity view controller as is.
-//                [self presentViewController:activityViewController animated:YES completion:nil];
-//            }
-            [self presentViewController:self.activityViewController animated:YES completion:nil];
-//            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//            [app.window.rootViewController presentViewController:self.activityViewController animated:YES completion:nil];
+            if (![self.activityPopover isPopoverVisible]) {
+                self.activityPopover = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
+                [self.activityPopover presentPopoverFromRect:self.view.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            }
+            else
+            {
+                //Dismiss if the button is tapped while pop over is visible
+                [self.activityPopover dismissPopoverAnimated:YES];
+            }
+//            [self presentViewController:self.activityViewController animated:YES completion:nil];
         }
             break;
         default:

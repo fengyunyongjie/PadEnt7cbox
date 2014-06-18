@@ -2220,7 +2220,9 @@ noDirSend:
                     [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
                     [viewCon.view addSubview:openFileView.view];
                     [viewCon addChildViewController:openFileView];
-                    [nav setViewControllers:@[viewCon] animated:NO];
+//                    [nav setViewControllers:@[viewCon] animated:NO];
+                    [nav setViewControllers:nil];
+                    [nav pushViewController:viewCon animated:NO];
                     return;
                 }
                 int row = 0;
@@ -2286,8 +2288,9 @@ noDirSend:
                         [viewCon showPhotoView:fname withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
                         [viewCon.view addSubview:look.view];
                         [viewCon addChildViewController:look];
-                        [nav setViewControllers:@[viewCon] animated:NO];
-                        nav.title=viewCon.title;
+//                        [nav setViewControllers:@[viewCon] animated:NO];
+                        [nav setViewControllers:nil];
+                        [nav pushViewController:viewCon animated:NO];
                     }
                 }
             }
@@ -2312,7 +2315,9 @@ noDirSend:
                     [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
                     [viewCon.view addSubview:openFileView.view];
                     [viewCon addChildViewController:openFileView];
-                    [nav setViewControllers:@[viewCon] animated:NO];
+//                    [nav setViewControllers:@[viewCon] animated:NO];
+                    [nav setViewControllers:nil];
+                    [nav pushViewController:viewCon animated:NO];
                     return;
                 }
                 NSString *file_id=[dic objectForKey:@"fid"];
@@ -2341,7 +2346,9 @@ noDirSend:
                 [viewCon showOtherView:openFileView.title withIsHave:isHaveDelete withIsHaveDown:NO];
                 [viewCon.view addSubview:openFileView.view];
                 [viewCon addChildViewController:openFileView];
-                [nav setViewControllers:@[viewCon] animated:NO];
+//                [nav setViewControllers:@[viewCon] animated:NO];
+                [nav setViewControllers:nil];
+                [nav pushViewController:viewCon animated:NO];
             }
         }
     }

@@ -504,7 +504,9 @@
     }else
     {
         DetailViewController *viewCon = [[DetailViewController alloc] init];
-        [NavigationController setViewControllers:@[viewCon] animated:NO];
+//        [NavigationController setViewControllers:@[viewCon] animated:NO];
+        [NavigationController setViewControllers:nil];
+        [NavigationController pushViewController:viewCon animated:NO];
     }
     MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
     UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];

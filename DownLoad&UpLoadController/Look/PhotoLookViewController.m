@@ -353,7 +353,9 @@
     }else
     {
         DetailViewController *viewCon = [[DetailViewController alloc] init];
-        [NavigationController setViewControllers:@[viewCon] animated:NO];
+//        [NavigationController setViewControllers:@[viewCon] animated:NO];
+        [NavigationController setViewControllers:nil];
+        [NavigationController pushViewController:viewCon animated:NO];
         DownList *demo = [tableArray objectAtIndex:currPage];
         [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete withIsHaveDown:isHaveDelete];
     }

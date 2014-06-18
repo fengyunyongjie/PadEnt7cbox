@@ -154,7 +154,9 @@
         }else
         {
             DetailViewController *viewCon = [[DetailViewController alloc] init];
-            [NavigationController setViewControllers:@[viewCon] animated:NO];
+//            [NavigationController setViewControllers:@[viewCon] animated:NO];
+            [NavigationController setViewControllers:nil];
+            [NavigationController pushViewController:viewCon animated:NO];
         }
         return;
     }
@@ -209,7 +211,9 @@
         }else
         {
             DetailViewController *viewCon = [[DetailViewController alloc] init];
-            [NavigationController setViewControllers:@[viewCon] animated:NO];
+//            [NavigationController setViewControllers:@[viewCon] animated:NO];
+            [NavigationController setViewControllers:nil];
+            [NavigationController pushViewController:viewCon animated:NO];
         }
     }
     
@@ -224,7 +228,9 @@
     }else
     {
         DetailViewController *viewCon = [[DetailViewController alloc] init];
-        [NavigationController setViewControllers:@[viewCon] animated:NO];
+//        [NavigationController setViewControllers:@[viewCon] animated:NO];
+        [NavigationController setViewControllers:nil];
+        [NavigationController pushViewController:viewCon animated:NO];
         [viewCon setDataDic:self.dataDic];
     }
 }
@@ -307,7 +313,9 @@
     }else
     {
         DetailViewController *viewCon = [[DetailViewController alloc] init];
-        [NavigationController setViewControllers:@[viewCon] animated:NO];
+//        [NavigationController setViewControllers:@[viewCon] animated:NO];
+        [NavigationController setViewControllers:nil];
+        [NavigationController pushViewController:viewCon animated:NO];
         [viewCon removeAllView];
         [viewCon.view addSubview:browser.view];
         [viewCon showOtherView:browser.title withIsHave:self.isHaveDelete withIsHaveDown:self.isHaveDownload];

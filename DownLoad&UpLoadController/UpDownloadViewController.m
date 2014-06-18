@@ -1248,7 +1248,9 @@
                         }else
                         {
                             DetailViewController *viewCon = [[DetailViewController alloc] init];
-                            [NavigationController setViewControllers:@[viewCon] animated:NO];
+//                            [NavigationController setViewControllers:@[viewCon] animated:NO];
+                            [NavigationController setViewControllers:nil];
+                            [NavigationController pushViewController:viewCon animated:NO];
                             viewCon.isFileManager = NO;
                             [viewCon removeAllView];
                             [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
@@ -1278,7 +1280,9 @@
                         }else
                         {
                             DetailViewController *viewCon = [[DetailViewController alloc] init];
-                            [NavigationController setViewControllers:@[viewCon] animated:NO];
+//                            [NavigationController setViewControllers:@[viewCon] animated:NO];
+                            [NavigationController setViewControllers:nil];
+                            [NavigationController pushViewController:viewCon animated:NO];
                             viewCon.isFileManager = NO;
                             [viewCon removeAllView];
                             [viewCon.view addSubview:openFileView.view];
@@ -1374,7 +1378,9 @@
                         }else
                         {
                             DetailViewController *viewCon = [[DetailViewController alloc] init];
-                            [NavigationController setViewControllers:@[viewCon] animated:NO];
+//                            [NavigationController setViewControllers:@[viewCon] animated:NO];
+                            [NavigationController setViewControllers:nil];
+                            [NavigationController pushViewController:viewCon animated:NO];
                             viewCon.isFileManager = NO;
                             [viewCon removeAllView];
                             [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
@@ -1404,7 +1410,9 @@
                         }else
                         {
                             DetailViewController *viewCon = [[DetailViewController alloc] init];
-                            [NavigationController setViewControllers:@[viewCon] animated:NO];
+//                            [NavigationController setViewControllers:@[viewCon] animated:NO];
+                            [NavigationController setViewControllers:nil];
+                            [NavigationController pushViewController:viewCon animated:NO];
                             viewCon.isFileManager = NO;
                             [viewCon removeAllView];
                             [viewCon.view addSubview:openFileView.view];

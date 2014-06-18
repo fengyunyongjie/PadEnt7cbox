@@ -1080,12 +1080,12 @@
 }
 -(void)detailEmailSucceed:(NSDictionary *)datadic
 {
-    self.dataDic=datadic;
-    if (self.dataDic) {
-        NSMutableArray *array=[NSMutableArray arrayWithArray:[self.dataDic objectForKey:@"list"]];
+    if (datadic) {
+        NSMutableArray *array=[NSMutableArray arrayWithArray:[datadic objectForKey:@"list"]];
         if (!array||array.count==0) {
             return;
         }
+        self.dataDic=datadic;
         self.fileArray=array;
         [self loadEmail];
         [self.tableView reloadData];

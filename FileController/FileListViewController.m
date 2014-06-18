@@ -1040,8 +1040,9 @@ typedef enum{
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-    [self.view.superview addSubview:self.hud];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+    [appDelegate.window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=@"正在生成链接...";
     //self.hud.labelText=error_info;
@@ -1060,8 +1061,10 @@ typedef enum{
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            self.hud=[[MBProgressHUD alloc] initWithView:self.view.window];
-            [self.view.window addSubview:self.hud];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+            [appDelegate.window addSubview:self.hud];
+
             [self.hud show:NO];
             self.hud.labelText=@"未选中任何文件（夹）";
             self.hud.mode=MBProgressHUDModeText;
@@ -2429,8 +2432,10 @@ noDirSend:
                 [self.hud removeFromSuperview];
             }
             self.hud=nil;
-            self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-            [self.view addSubview:self.hud];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            self.hud=[[MBProgressHUD alloc] initWithView:appDelegate.window];
+            [appDelegate.window addSubview:self.hud];
+
             [self.hud show:NO];
             self.hud.labelText=@"复制成功";
             self.hud.mode=MBProgressHUDModeText;

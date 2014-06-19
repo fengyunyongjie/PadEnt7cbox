@@ -12,6 +12,7 @@
 #import "MBProgressHUD.h"
 #import "UIBarButtonItem+Yn.h"
 #import "IconDownloader.h"
+#import "SelectFileListViewController.h"
 
 @implementation FileView{
     NSDictionary *_dic;
@@ -315,6 +316,7 @@
     UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(10, 5, _filesView.bounds.size.width-20, 21)];
     label.text=@"分享内容";
     [_filesView addSubview:label];
+    BOOL isFloder = NO;
     
     int numPerRow=self.view.bounds.size.width/80;
     
@@ -327,9 +329,18 @@
             [fv setIndex:i];
         }else
         {
+            NSDictionary *dic=[self.fileArray objectAtIndex:i];
+            NSString *fisdir=[dic objectForKey:@"fisdir"];
+            if ([fisdir isEqualToString:@"0"]) {
+                [fv addTarget:self action:@selector(floderTouch:) forControlEvents:UIControlEventTouchUpInside];
+            }else
+            {
+                [fv addTarget:self action:@selector(fileTouch:) forControlEvents:UIControlEventTouchUpInside];
+            }
+
             [fv setDic:[self.fileArray objectAtIndex:i]];
             [fv setIndex:i];
-            [fv addTarget:self action:@selector(fileTouch:) forControlEvents:UIControlEventTouchUpInside];
+            
         }
         [_filesView addSubview:fv];
     }
@@ -369,6 +380,40 @@
 - (void)addFileView:(id)sender
 {
     
+}
+- (void)floderTouch:(id)sender
+{
+    SelectFileListViewController *flVC=[[SelectFileListViewController alloc] init];
+    if(self.fileArray.count>0)
+    {
+        NSDictionary *dic = [self.fileArray objectAtIndex:0];
+        flVC.spid=[dic objectForKey:@"spid"];
+    }
+    flVC.f_id=@"0";
+    flVC.title=@"请选择文件夹";
+    flVC.delegate=self;
+    flVC.type=kSelectTypeFloderChange;
+    flVC.rootName=@"我的文件";
+    flVC.roletype=@"2"; //2为我的文件夹 1为企业文件夹
+    flVC.isHasSelectFile=YES;
+    flVC.isFirstView = YES;
+    flVC.selectFileEmialViewDelegate=self;
+    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flVC];
+//    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+//    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+//    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+//    [self presentViewController:nav animated:YES completion:nil];
+    
+    if (![self.popoverFileSelectController isPopoverVisible]) {
+        self.popoverFileSelectController=[[UIPopoverController alloc] initWithContentViewController:nav];
+        [self.popoverFileSelectController presentPopoverFromRect:CGRectMake(0, 0, 320, 768) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    }
+    else
+    {
+        //Dismiss if the button is tapped while pop over is visible
+        [self.popoverFileSelectController dismissPopoverAnimated:YES];
+    }
+
 }
 
 - (void)fileTouch:(id)sender
@@ -877,6 +922,17 @@
 
 -(void)addSharedFileView:(NSDictionary *)dictionary
 {
+    [self.fileArray addObject:dictionary];
+    [self reloadFiles];
+    if(self.popoverFileSelectController.isPopoverVisible)
+    {
+        //Dismiss if the button is tapped while pop over is visible
+        [self.popoverFileSelectController dismissPopoverAnimated:YES];
+    }
+}
+-(void)changeFloderView:(NSDictionary *)dictionary
+{
+    [self.fileArray removeAllObjects];
     [self.fileArray addObject:dictionary];
     [self reloadFiles];
     if(self.popoverFileSelectController.isPopoverVisible)

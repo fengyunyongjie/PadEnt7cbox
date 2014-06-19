@@ -24,7 +24,7 @@
 @end
 
 @implementation SelectFileListViewController
-@synthesize isLoading;
+@synthesize isLoading,selectFileEmialViewDelegate,isFirstView;
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
@@ -49,8 +49,15 @@
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     self.view.backgroundColor=[UIColor grayColor];
     self.tableView.backgroundColor=[UIColor whiteColor];
+    
     if (self.type==kSelectTypeShare) {
         [self.toolbar setHidden:YES];
+        self.tableView.frame=self.view.frame;
+        return;
+    }
+    if (self.type==kSelectTypeFloderChange) {
+        [self.toolbar setHidden:YES];
+        self.view.frame=self.view.bounds;
         self.tableView.frame=self.view.frame;
         return;
     }
@@ -250,6 +257,10 @@
             break;
         case kSelectTypeShare:
             item=@"publiclink";
+            break;
+        case kSelectTypeFloderChange:
+            item=@"myfile";
+            break;
         default:
             break;
     }
@@ -276,6 +287,12 @@
             break;
         case kSelectTypeUpload:
             item=@"upload";
+            break;
+        case kSelectTypeShare:
+            item=@"publiclink";
+            break;
+        case kSelectTypeFloderChange:
+            item=@"myfile";
             break;
         default:
             break;
@@ -499,7 +516,7 @@
     if (self.finderArray) {
         return self.finderArray.count;
     }
-    return 1;
+    return 0;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -523,6 +540,19 @@
         [detailTextLabel setFont:[UIFont systemFontOfSize:13]];
         [detailTextLabel setTextColor:[UIColor grayColor]];
     }
+    if(self.type==kSelectTypeFloderChange)
+    {
+        //修改accessoryType
+        UIButton *accessory=[[UIButton alloc] init];
+        [accessory setFrame:CGRectMake(10, 10, 30, 30)];
+        [accessory setTag:indexPath.row];
+        [accessory setImage:[UIImage imageNamed:@"unFileShareSelected.png"] forState:UIControlStateNormal];
+        [accessory setImage:[UIImage imageNamed:@"fileShareSelected.png"] forState:UIControlStateHighlighted];
+        [accessory setImage:[UIImage imageNamed:@"fileShareSelected.png"] forState:UIControlStateSelected];
+        [accessory  addTarget:self action:@selector(accessoryButtonPressedAction:) forControlEvents:UIControlEventTouchUpInside];
+        cell.accessoryView=accessory;
+    }
+    
     UIImageView *imageView=(UIImageView *)[cell.contentView viewWithTag:1];
     UILabel *textLabel=(UILabel *)[cell.contentView viewWithTag:2];
     UILabel *detailTextLabel=(UILabel *)[cell.contentView viewWithTag:3];
@@ -613,6 +643,18 @@
     return cell;
 }
 
+- (void)accessoryButtonPressedAction: (id)sender
+{
+    UIButton *button = (UIButton *)sender;
+    [button setSelected:YES];
+    NSIndexPath *indexPath=[NSIndexPath indexPathForRow:button.tag inSection:0];
+    if(indexPath.row>=0 && indexPath.row<self.finderArray.count)
+    {
+        NSDictionary *dic=[self.finderArray objectAtIndex:indexPath.row];
+        [self changeFloderView:dic];
+    }
+}
+
 - (void)startIconDownload:(NSDictionary *)dic forIndexPath:(NSIndexPath *)indexPath
 {
     if (!self.imageDownloadsInProgress) {
@@ -667,6 +709,7 @@
                 flVC.targetsArray=self.targetsArray;
                 flVC.isHasSelectFile=self.isHasSelectFile;
                 flVC.rootName = self.rootName;
+                flVC.isFirstView = NO;
                 [self.navigationController pushViewController:flVC animated:YES];
             }else if(self.type==kSelectTypeShare)
             {
@@ -947,4 +990,13 @@
 {
     [self.selectFileEmialViewDelegate addSharedFileView:dictionary];
 }
+-(void)changeFloderView:(NSDictionary *)dictionary
+{
+    if(isFirstView)
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    [self.selectFileEmialViewDelegate changeFloderView:dictionary];
+}
+
 @end

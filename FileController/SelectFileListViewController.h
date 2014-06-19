@@ -17,11 +17,13 @@ typedef enum {
     kSelectTypeCommit,
     kSelectTypeUpload,
     kSelectTypeShare,
+    kSelectTypeFloderChange,
 } SelectType;
 
 @protocol SelectFileFileEmailViewDelegate <NSObject>
 
 -(void)addSharedFileView:(NSDictionary *)dictionary;
+-(void)changeFloderView:(NSDictionary *)dictionary;
 
 @end
 
@@ -45,6 +47,7 @@ typedef enum {
 @property (assign,nonatomic) BOOL isHasSelectFile;
 @property (nonatomic,assign) BOOL isLoading;
 @property (weak,nonatomic) id<SelectFileFileEmailViewDelegate> selectFileEmialViewDelegate;
+@property (nonatomic,assign) BOOL isFirstView;
 
 @end
 

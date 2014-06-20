@@ -41,134 +41,76 @@
     return self;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [self download:nil];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 //    [self.view setBackgroundColor:[UIColor colorWithWhite:1 alpha:1]];
-    [self.shareItem setEnabled:NO];
-    [self.openItem setEnabled:NO];
-    self.isFinished=NO;
-	// Do any additional setup after loading the view.
-//    //顶视图
-//    float topHeigth = 20;
-//    if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
-//    {
-//        topHeigth = 0;
-//    }
-//    UIView *nbar=[[UIView alloc] initWithFrame:CGRectMake(0, topHeigth, self.view.frame.size.width, 44)];
-//    UIImageView *niv=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Bk_Title.png"]];
-//    niv.frame=nbar.frame;
-//    [nbar addSubview:niv];
-//    [self.view addSubview: nbar];
-//    //标题按钮
-//    UIButton *btnTitle=[UIButton buttonWithType:UIButtonTypeCustom];
-//    btnTitle.frame=CGRectMake(60, 0, 200, 44);
-//    [btnTitle setBackgroundImage:[UIImage imageNamed:@"Bt_Title.png"] forState:UIControlStateNormal];
-//    [btnTitle addTarget:self action:@selector(showTitleMenu:) forControlEvents:UIControlEventTouchUpInside];
-//    [nbar addSubview:btnTitle];
-//    //标题
-//    self.titleLabel=[[UILabel alloc] init];
-//    self.titleLabel.text=self.title;
-//    self.titleLabel.font=[UIFont boldSystemFontOfSize:18];
-//    self.titleLabel.textAlignment=UITextAlignmentCenter;
-//    self.titleLabel.backgroundColor=[UIColor clearColor];
-//    self.titleLabel.frame=CGRectMake(80, topHeigth, 160, 44);
-//    [nbar addSubview:self.titleLabel];
-//    //把色值转换成图片
-//    CGRect rect_image = CGRectMake(0, 0, ChangeTabWidth, 44);
-//    UIGraphicsBeginImageContext(rect_image.size);
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    CGContextSetFillColorWithColor(context,
-//                                   [hilighted_color CGColor]);
-//    CGContextFillRect(context, rect_image);
-//    UIImage * imge = [[UIImage alloc] init];
-//    imge = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//    //返回按钮
-//    if(1)
-//    {
-//        UIImage *back_image = [UIImage imageNamed:@"Bt_Back.png"];
-//        UIButton *back_button = [[UIButton alloc] initWithFrame:CGRectMake(RightButtonBoderWidth, topHeigth+(44-back_image.size.height/2)/2, back_image.size.width/2, back_image.size.height/2)];
-//        [back_button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-//        [back_button setBackgroundImage:imge forState:UIControlStateHighlighted];
-//        [back_button setImage:back_image forState:UIControlStateNormal];
-//        [nbar addSubview:back_button];
-//    }
-//    //更多按钮
-//    self.more_button = [[UIButton alloc] init];
-//    UIImage *moreImage = [UIImage imageNamed:@"Bt_More.png"];
-//    [self.more_button setFrame:CGRectMake(320-RightButtonBoderWidth-moreImage.size.width/2, (44-moreImage.size.height/2)/2, moreImage.size.width/2, moreImage.size.height/2)];
-//    [self.more_button setImage:moreImage forState:UIControlStateNormal];
-//    [self.more_button setBackgroundImage:imge forState:UIControlStateHighlighted];
-//    [self.more_button addTarget:self action:@selector(showMenu:) forControlEvents:UIControlEventTouchUpInside];
-//    [nbar addSubview:self.more_button];
-//    [self.more_button release];
-//    [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(showDoc) userInfo:nil repeats:NO];
-    [self showDoc];
-}
-
--(void)showDoc
-{
-    NSString *file_id=[self.dataDic objectForKey:@"fid"];
-    NSString *f_name=[self.dataDic objectForKey:@"fname"];
-    NSInteger fileSize = [[self.dataDic objectForKey:@"fsize"] integerValue];
-    NSString *documentDir = [YNFunctions getFMCachePath];
-    NSArray *array=[f_name componentsSeparatedByString:@"/"];
-    NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
-    [NSString CreatePath:createPath];
-    self.savePath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:self.savePath]) {
-        NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:self.savePath];
-        if(fileSize==[[handle availableData] length])
-        {
-            [self.downloadProgress setHidden:YES];
-            [self.downloadLabel setText:@"下载完成"];
-            [self.downloadLabel setHidden:NO];
-            [self.downloadBtn setHidden:YES];
-            [self.alertLabel setHidden:YES];
-            [self.openItem setEnabled:YES];
-            [self performSelector:@selector(showNewView) withObject:self afterDelay:1];
-        }
-    }
-}
-
--(void)showNewView
-{
-    QLBrowserViewController *previewController=[[QLBrowserViewController alloc] init];
-    previewController.dataSource=self;
-    previewController.delegate=self;
-    previewController.currentPreviewItemIndex=0;
-    [previewController setHidesBottomBarWhenPushed:YES];
-    [self presentViewController:previewController animated:YES completion:^(void){
-        NSLog(@"%@",previewController);
-    }];
-}
-
--(IBAction)openWithOthersApp:(id)sender
-{
-    NSString *file_id=[self.dataDic objectForKey:@"fid"];
-    NSString *f_name=[self.dataDic objectForKey:@"fname"];
-    NSString *documentDir = [YNFunctions getFMCachePath];
-    NSArray *array=[f_name componentsSeparatedByString:@"/"];
-    NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
-    [NSString CreatePath:createPath];
-    self.savePath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
-}
--(IBAction)shared:(id)sender
-{
+    self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(back:)];
     
+    self.isFinished=NO;
+    
+    [self updateUI];
+//    [self showDoc];
 }
+
+- (void)updateUI
+{
+    NSString *fname=[self.dataDic objectForKey:@"fname"];
+    NSString *fmime=[[fname pathExtension] lowercaseString];
+    UIImage *fileImage = nil;
+    if ([fmime isEqualToString:@"doc"]||
+        [fmime isEqualToString:@"docx"]||
+        [fmime isEqualToString:@"rtf"])
+    {
+        fileImage = [UIImage imageNamed:@"file_word.png"];
+    }
+    else if ([fmime isEqualToString:@"xls"]||
+             [fmime isEqualToString:@"xlsx"])
+    {
+        fileImage = [UIImage imageNamed:@"file_excel.png"];
+    }else if ([fmime isEqualToString:@"mp3"])
+    {
+        fileImage = [UIImage imageNamed:@"file_music.png"];
+    }else if ([fmime isEqualToString:@"mov"]||
+              [fmime isEqualToString:@"mp4"]||
+              [fmime isEqualToString:@"avi"]||
+              [fmime isEqualToString:@"rmvb"])
+    {
+        fileImage = [UIImage imageNamed:@"file_moving.png"];
+    }else if ([fmime isEqualToString:@"pdf"])
+    {
+        fileImage = [UIImage imageNamed:@"file_pdf.png"];
+    }else if ([fmime isEqualToString:@"ppt"]||
+              [fmime isEqualToString:@"pptx"])
+    {
+        fileImage = [UIImage imageNamed:@"file_ppt.png"];
+    }else if([fmime isEqualToString:@"txt"])
+    {
+        fileImage = [UIImage imageNamed:@"file_txt.png"];
+    }else
+    {
+        fileImage = [UIImage imageNamed:@"file_other.png"];
+    }
+    [self.iconImageView setImage:fileImage];
+}
+
 -(IBAction)download:(id)sender
 {
-    [self.downloadBtn setHidden:YES];
-    [self.alertLabel setHidden:YES];
     [self.downloadProgress setHidden:NO];
     [self.downloadLabel setHidden:NO];
-    [self.downloadProgress setProgress:0.01f];
+    [self.downloadProgress setProgress:0.0f];
+    
     NSString *fileSize = [self.dataDic objectForKey:@"filesize"];
-    [self.downloadLabel setText:[NSString stringWithFormat:@"正在下载...(0M/%@)",fileSize]];
+    
+    [self.downloadLabel setText:[NSString stringWithFormat:@"正在下载...(0B/%@)",fileSize]];
     [self toDownloading];
 }
+
 -(void)toDownloading
 {
     if (self.downImage==nil) {
@@ -183,6 +125,7 @@
         [self.downImage startDownload];
     }
 }
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -191,23 +134,19 @@
 -(void)back:(id)sender
 {
     [self.downImage cancelDownload];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
+
 #pragma mark - SCBDownloaderDelegate Methods
 -(void)appImageDidLoad:(NSInteger)indexTag urlImage:(NSString *)path index:(NSIndexPath *)indexPath
 {
     [self.downloadProgress setHidden:YES];
     [self.downloadLabel setText:@"下载完成"];
-    QLBrowserViewController *previewController=[[QLBrowserViewController alloc] init];
-    previewController.dataSource=self;
-    previewController.delegate=self;
-    
-    previewController.currentPreviewItemIndex=0;
-    [previewController setHidesBottomBarWhenPushed:YES];
-    [self presentViewController:previewController animated:YES completion:^(void){
-        NSLog(@"%@",previewController);
-    }];
-    [self.openItem setEnabled:YES];
+//    [self dismissViewControllerAnimated:NO completion:^{
+//        [self.dpDelegate downloadFinished:self.dataDic];
+//    }];
 }
+
 -(void)downFile:(NSInteger)downSize totalSize:(NSInteger)sudu
 {
     long t_size=[[self.dataDic objectForKey:@"fsize"] intValue];
@@ -217,33 +156,18 @@
     NSString *text=[NSString stringWithFormat:@"正在下载...(%@/%@)",s_size,s_tsize];
     [self.downloadLabel setText:text];
 }
-#pragma mark - UIDocumentInteractionControllerDelegate
-- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)interactionController
+
+- (void)finished
 {
-    return self;
-}
-#pragma mark - QLPreviewControllerDataSource
-// Returns the number of items that the preview controller should preview
-- (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)previewController
-{
-    return 1;
-}
-- (void)previewControllerDidDismiss:(QLPreviewController *)controller
-{
-    
-}
-// returns the item that the preview controller should preview
-- (id)previewController:(QLPreviewController *)previewController previewItemAtIndex:(NSInteger)idx
-{
-    NSLog(@"previewController ----------");
-    NSURL *fileURL = nil;
-    fileURL=[NSURL fileURLWithPath:self.savePath];
-    return fileURL;
+    [self dismissViewControllerAnimated:NO completion:^{
+        [self.dpDelegate downloadFinished:self.dataDic];
+    }];
 }
 
 - (void)downFinish:(NSString *)baseUrl
 {
-    [self showDoc];
+//    [self showDoc];
+    [self finished];
 }
 
 -(void)didFailWithError

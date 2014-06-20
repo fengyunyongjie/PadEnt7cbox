@@ -18,6 +18,9 @@
 #import "UIBarButtonItem+Yn.h"
 #import "YNNavigationController.h"
 #import "MyTabBarViewController.h"
+#import "PhotoLookViewController.h"
+#import "OtherBrowserViewController.h"
+#import "OpenFileViewController.h"
 
 @implementation FileVieww{
     NSDictionary *_dic;
@@ -600,7 +603,7 @@
 - (void)fileTouch:(id)sender
 {
     FileVieww *fv=(FileVieww *)sender;
-    UIActionSheet *as=[[UIActionSheet alloc] initWithTitle:fv.nameLabel.text delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"下载",@"转存", nil];
+    UIActionSheet *as=[[UIActionSheet alloc] initWithTitle:fv.nameLabel.text delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"预览",@"下载",@"转存", nil];
     [as setTag:fv.index];
     [as showInView:[[UIApplication sharedApplication] keyWindow]];
 }
@@ -1163,10 +1166,10 @@
     if (tag>=0) {
         NSDictionary *dic=self.fileArray[tag];
         NSString *fid=[dic objectForKey:@"atta_fileid"];
-        if (buttonIndex==1) {
+        if (buttonIndex==2) {
             //分享选中的文件
             [self toCopyFiles:@[fid]];
-        }else if(buttonIndex==0)
+        }else if(buttonIndex==1)
         {
             //下载选中的文件
             NSString *thumb = [NSString formatNSStringForOjbect:[dic objectForKey:@"atta_file_thumb"]];
@@ -1192,11 +1195,94 @@
             list.d_ure_id = [NSString formatNSStringForOjbect:[[SCBSession sharedSession] userId]];
             [tableArray addObject:list];
             [delegate.downmange addDownLists:tableArray];
+        }else if(buttonIndex==0)
+        {
+            //picture
+            NSString *fmine = [dic objectForKey:@"atta_file_mime"];
+            NSString *fmime_=[fmine lowercaseString];
+            
+            NSInteger fsize = [[dic objectForKey:@"atta_file_size"] integerValue];
+            NSString *name = [dic objectForKey:@"atta_file_name"];
+            NSString *thumb = [dic objectForKey:@"atta_file_thumb"];
+            NSString *fid = [dic objectForKey:@"atta_fileid"];
+            
+            if([fmime_ isEqualToString:@"png"]||[fmime_ isEqualToString:@"jpg"]|| [fmime_ isEqualToString:@"jpeg"]|| [fmime_ isEqualToString:@"bmp"]||[fmime_ isEqualToString:@"gif"]) {
+                DownList *list = [[DownList alloc] init];
+                list.d_file_id = fid;
+                list.d_thumbUrl = thumb;
+                if([list.d_thumbUrl length]==0)
+                {
+                    list.d_thumbUrl = @"0";
+                }
+                list.d_name = name;
+                list.d_baseUrl = [NSString get_image_save_file_path:list.d_name];
+                list.d_downSize = fsize;
+                
+                NSMutableArray *tableArray = [[NSMutableArray alloc] init];
+                [tableArray addObject:list];
+                if([tableArray count]>0)
+                {
+                    PhotoLookViewController *look = [[PhotoLookViewController alloc] init];
+                    [look setTableArray:tableArray];
+                    [self presentViewController:look animated:YES completion:nil];
+                }
+            } else {
+                NSString *documentDir = [YNFunctions getFMCachePath];
+                NSArray *array=[name componentsSeparatedByString:@"/"];
+                NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,fid];
+                [NSString CreatePath:createPath];
+                NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+                if ([[NSFileManager defaultManager] fileExistsAtPath:savedPath]) {
+                    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
+                    browser.dataSource=browser;
+                    browser.delegate=browser;
+                    browser.currentPreviewItemIndex=0;
+                    browser.title=name;
+                    browser.filePath=savedPath;
+                    browser.fileName=name;
+                    [self presentViewController:browser animated:YES completion:nil];
+                } else {
+                    OtherBrowserViewController *otherBrowser=[[OtherBrowserViewController alloc] initWithNibName:@"OtherBrowser" bundle:nil];
+                    NSArray *values = [NSArray arrayWithObjects:name,fid,[dic objectForKey:@"atta_file_size"], nil];
+                    NSArray *keys = [NSArray arrayWithObjects:@"fname",@"fid",@"fsize", nil];
+                    NSDictionary *d = [NSDictionary dictionaryWithObjects:values forKeys:keys];
+                    
+                    otherBrowser.dataDic=d;
+                    otherBrowser.title=name;
+                    otherBrowser.dpDelegate=self;
+                    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:otherBrowser];
+                    [self presentViewController:nav animated:YES completion:nil];
+//                    OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
+//                    openFileView.dataDic = dic;
+//                    openFileView.title = name;
+//                    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:openFileView];
+//                    [self presentViewController:nav animated:YES completion:nil];
+                }
+            }
         }
     }else if(tag==-1)
     {
         
     }
+}
+-(void)downloadFinished:(NSDictionary *)dataDic
+{
+    NSString *name = [dataDic objectForKey:@"fname"];
+    NSString *fid = [dataDic objectForKey:@"fid"];
+    NSString *documentDir = [YNFunctions getFMCachePath];
+    NSArray *array=[name componentsSeparatedByString:@"/"];
+    NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,fid];
+    [NSString CreatePath:createPath];
+    NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+    
+    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
+    browser.dataSource=browser;
+    browser.delegate=browser;
+    browser.currentPreviewItemIndex=0;
+    browser.title=name;
+    browser.filePath=savedPath;
+    browser.fileName=name;
+    [self presentViewController:browser animated:NO completion:nil];
 }
 #pragma mark - Deferred image loading (UIScrollViewDelegate)
 

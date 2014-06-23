@@ -17,6 +17,8 @@
 #import "SCBAccountManager.h"
 #import "BackgroundRunner.h"
 #import <MessageUI/MessageUI.h>
+#import "SCBoxConfig.h"
+#import "MF_Base64Additions.h"
 
 typedef enum{
     kAlertTypeNewVersion,
@@ -143,10 +145,50 @@ typedef enum{
 {
     NSString *userName = [[NSUserDefaults standardUserDefaults] objectForKey:@"usr_name"];
     NSString *userPwd  = [[NSUserDefaults standardUserDefaults] objectForKey:@"usr_pwd"];
-    if (userName==nil&&userPwd==nil) {
-        return NO;
+    //如果网络正常，请求登录，网络异常，则本地判断
+    NetworkStatus status = [self isConnections];
+    if(status == ReachableViaWiFi || status == ReachableViaWWAN)
+    {
+        isConnection = YES;
+        NSURL *s_url= [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,USER_LOGIN_URI]];
+        NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
+        NSMutableString *body=[[NSMutableString alloc] init];
+        NSString *mi_ma =[userPwd base64String];
+        [body appendFormat:@"usr_account=%@&usr_pwd=%@",userName,mi_ma];
+        NSMutableData *myRequestData=[NSMutableData data];
+        [myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
+        //[request setValue:CLIENT_TAG forHTTPHeaderField:@"client_tag"];
+        [request setHTTPBody:myRequestData];
+        [request setHTTPMethod:@"POST"];
+        [request setValue:CLIENT_TAG forHTTPHeaderField:@"ent_uclient"];
+        NSError *error = nil;
+        NSData *returnData = [NSURLConnection sendSynchronousRequest:request
+                                                   returningResponse:nil error:&error];
+        if(!returnData)
+        {
+            if (userName==nil&&userPwd==nil) {
+                return NO;
+            }
+            return YES;
+        }
+        NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:returnData options:NSJSONReadingMutableLeaves error:nil];
+        if ([dictionary objectForKey:@"code"] && [[dictionary objectForKey:@"code"] intValue]==0)
+        {
+            return YES;
+        }
+        else
+        {
+            return NO;
+        }
+        
     }
-    return YES;
+    else
+    {
+        if (userName==nil&&userPwd==nil) {
+            return NO;
+        }
+        return YES;
+    }
 }
 -(void)finishLogin
 {

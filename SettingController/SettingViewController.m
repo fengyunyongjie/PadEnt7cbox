@@ -27,6 +27,7 @@
 #import "PasswordList.h"
 #import "MySplitViewController.h"
 #import "DetailViewController.h"
+#import "SCBFileManager.h"
 
 typedef enum{
     kAlertTypeNewVersion,
@@ -70,6 +71,10 @@ typedef enum{
 //>ios 6.0
 - (BOOL)shouldAutorotate{
     return YES;
+}
+- (void) dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -126,7 +131,7 @@ typedef enum{
         self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
     }
     
-
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(posterDidCode10Notification:) name:PosterCode10Notification object:nil];
 }
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -947,6 +952,17 @@ typedef enum{
             break;
     }
 }
+- (void)posterDidCode10Notification:(NSNotification *)note
+{
+    [self sureExit];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@""
+                                                        message:@"无访问权限"
+                                                       delegate:nil
+                                              cancelButtonTitle:nil
+                                              otherButtonTitles:@"确定", nil];
+    [alertView show];
+
+}
 #pragma mark - UIAlertViewDelegate Methods
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -1034,7 +1050,7 @@ typedef enum{
     }
 }
 #pragma mark - UIActionSheetDelegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array removeAllObjects];

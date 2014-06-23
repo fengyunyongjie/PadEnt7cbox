@@ -13,6 +13,9 @@
 
 #import "AppDelegate.h"
 #import "APService.h"
+
+extern NSString * const PosterCode10Notification = @"PosterCode10Notification";
+
 @interface SCBFileManager()
 {
     NSURLConnection *_conn;
@@ -616,6 +619,8 @@
 //                                                          cancelButtonTitle:nil
 //                                                          otherButtonTitles:@"确定", nil];
 //                [alertView show];
+                //如果Code＝10，通告观察者，无访问权限;并退出应用程序;
+                [[NSNotificationCenter defaultCenter] postNotificationName:PosterCode10Notification object:self userInfo:dic];
             }
         }
         @catch (NSException *exception) {
@@ -754,6 +759,8 @@
 //                                                      cancelButtonTitle:nil
 //                                                      otherButtonTitles:@"确定", nil];
 //            [alertView show];
+            //如果Code＝10，通告观察者，无访问权限;并退出应用程序;
+            [[NSNotificationCenter defaultCenter] postNotificationName:PosterCode10Notification object:self userInfo:dic];
         }
     }
 

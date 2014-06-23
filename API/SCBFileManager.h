@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+extern NSString * const PosterCode10Notification;
 typedef enum {
     kFMTypeOpenFinder,
     kFMTypeOpenCategoryFile,

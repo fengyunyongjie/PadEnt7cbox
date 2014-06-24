@@ -50,6 +50,11 @@
     [self addSubview:self.nameLabel];
     
     NSString *fname=[dic objectForKey:@"atta_file_name"];
+    NSString *atta_file_size = [dic objectForKey:@"atta_file_size"];
+    if([fname isEqual:[NSNull null]] || [atta_file_size isEqual:[NSNull null]])
+    {
+        return;
+    }
     NSString *fmime=[[fname pathExtension] lowercaseString];
     if ([[dic objectForKey:@"atta_file_size"] intValue]==0) {
         self.imageView.image = [UIImage imageNamed:@"file_folder.png"];
@@ -586,8 +591,23 @@
 //    label.text=@"分享内容";
 //    [_filesView addSubview:label];
     int numPerRow=self.view.bounds.size.width/80;
-    
-    for (int i=0; i<self.fileArray.count; i++) {
+    BOOL isReSend = NO;
+    for (int i=0; i<self.fileArray.count;) {
+        NSDictionary *dic = [self.fileArray objectAtIndex:i];
+        NSLog(@"dic:%@",dic);
+        NSString *atta_deltime = [dic objectForKey:@"atta_deltime"];
+        NSString *f_state = [dic objectForKey:@"f_state"];
+        if(![f_state isEqual:[NSNull null]] && ![f_state isEqualToString:@"(null)"] && [f_state isEqualToString:@"0"])
+        {
+            isReSend = YES;
+        }
+        BOOL bl = YES;
+        if(![atta_deltime isEqual:[NSNull null]])
+        {
+            bl = NO;
+            [self.fileArray removeObjectAtIndex:i];
+            continue;
+        }
         int row=i/numPerRow;
         int column=i%numPerRow;
         FileVieww *fv=[[FileVieww alloc] initWithFrame:CGRectMake(column*(self.view.bounds.size.width/numPerRow), row*(100)+30, self.view.bounds.size.width/numPerRow, 100)];
@@ -596,8 +616,17 @@
         if ([self.etype intValue]==0) {
             [fv addTarget:self action:@selector(fileTouch:) forControlEvents:UIControlEventTouchUpInside];
         }
-        //[fv setBackgroundColor:[UIColor greenColor]];
         [_filesView addSubview:fv];
+        if(bl)
+        {
+            i++;
+        }
+    }
+    if(!isReSend)
+    {
+        UIBarButtonItem *send=[[UIBarButtonItem alloc] initWithTitleStr:@"重新发送" style:UIBarButtonItemStylePlain target:self action:@selector(reSendAction:)];
+        [send setEnabled:NO];
+        [self.navigationItem setRightBarButtonItem:send];
     }
 }
 - (void)fileTouch:(id)sender

@@ -587,9 +587,6 @@
     for (UIView *view in _filesView.subviews) {
         [view removeFromSuperview];
     }
-//    UILabel *label=[[UILabel alloc] initWithFrame:CGRectMake(10, 5, _filesView.bounds.size.width-20, 21)];
-//    label.text=@"分享内容";
-//    [_filesView addSubview:label];
     int numPerRow=self.view.bounds.size.width/80;
     BOOL isReSend = NO;
     for (int i=0; i<self.fileArray.count;) {
@@ -597,17 +594,23 @@
         NSLog(@"dic:%@",dic);
         NSString *atta_deltime = [dic objectForKey:@"atta_deltime"];
         NSString *f_state = [dic objectForKey:@"f_state"];
+        BOOL isFState = NO;
         if(![f_state isEqual:[NSNull null]] && ![f_state isEqualToString:@"(null)"] && [f_state isEqualToString:@"0"])
         {
             isReSend = YES;
         }
+        else
+        {
+            isFState = YES;
+        }
         BOOL bl = YES;
-        if(![atta_deltime isEqual:[NSNull null]])
+        if(![atta_deltime isEqual:[NSNull null]] || isFState)
         {
             bl = NO;
             [self.fileArray removeObjectAtIndex:i];
             continue;
         }
+        
         int row=i/numPerRow;
         int column=i%numPerRow;
         FileVieww *fv=[[FileVieww alloc] initWithFrame:CGRectMake(column*(self.view.bounds.size.width/numPerRow), row*(100)+30, self.view.bounds.size.width/numPerRow, 100)];

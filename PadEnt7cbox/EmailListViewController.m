@@ -523,7 +523,7 @@ enum{
         [btn_del addTarget:self action:@selector(toDelete:) forControlEvents:UIControlEventTouchUpInside];
         item_del=[[UIBarButtonItem alloc] initWithCustomView:btn_del];
         
-        btn_markReaded =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 40)];
+        btn_markReaded =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 40)];
 //        [btn_markReaded setTitle:@"标为已读" forState:UIControlStateNormal];
         [btn_markReaded setImage:[UIImage imageNamed:@"read_nor1.png"] forState:UIControlStateNormal];
         [btn_markReaded setImage:[UIImage imageNamed:@"read_nor1.png"] forState:UIControlStateHighlighted];

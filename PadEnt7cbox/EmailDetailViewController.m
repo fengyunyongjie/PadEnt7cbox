@@ -625,7 +625,7 @@
             i++;
         }
     }
-    if(!isReSend)
+    if(!isReSend || [self.fileArray count]==0)
     {
         UIBarButtonItem *send=[[UIBarButtonItem alloc] initWithTitleStr:@"重新发送" style:UIBarButtonItemStylePlain target:self action:@selector(reSendAction:)];
         [send setEnabled:NO];

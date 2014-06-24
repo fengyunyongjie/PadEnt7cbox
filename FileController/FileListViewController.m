@@ -374,6 +374,10 @@ typedef enum{
 -(void)menuAction:(id)sender
 {
     [self hideSingleBar];
+    if (self.menuView) {
+        [self.menuView removeFromSuperview];
+        self.menuView=nil;
+    }
     if (!self.menuView) {
         int Height=1024;
         self.menuView =[[UIControl alloc] initWithFrame:CGRectMake(0, 0, Height, Height)];

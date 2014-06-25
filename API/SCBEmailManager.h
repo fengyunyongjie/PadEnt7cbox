@@ -100,7 +100,7 @@ typedef enum {
 -(void)viewReceiveSucceed:(NSDictionary *)datadic;
 -(void)viewSendSucceed:(NSDictionary *)datadic;
 -(void)notReadCountSucceed:(NSDictionary *)datadic;
--(void)getEmailTitleSucceed:(NSDictionary *)datadic;
+-(void)getEmailTitleSucceed:(NSString *)title;
 -(void)createLinkSucceed:(NSDictionary *)datadic;
 -(void)getTemplateMsgSucceed:(NSDictionary *)datadic;
 -(void)getAttaSucceed:(NSDictionary *)datadic;

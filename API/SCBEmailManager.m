@@ -437,7 +437,7 @@
 //邮件外链主题模版
 -(void)getEmailTitle
 {
-    self.em_type=kEMTypeNotReadCount;
+    self.em_type=kEMTypeGetEmailTitle;
     self.activeData=[NSMutableData data];
     NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,EMAIL_TITLE_URI]];
     NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
@@ -684,7 +684,10 @@
                     [self.delegate createLinkSucceed:dic];
                     break;
                 case kEMTypeGetEmailTitle:
-                    [self.delegate getEmailTitleSucceed:dic];
+                {
+                    NSString *title=[[NSString alloc] initWithData:self.activeData encoding:NSUTF8StringEncoding];
+                    [self.delegate getEmailTitleSucceed:title];
+                }
                     break;
             }
         }

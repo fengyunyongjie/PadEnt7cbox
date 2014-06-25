@@ -278,7 +278,13 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	
 //	[_tokenFieldView becomeFirstResponder];
-    [self getEmailTemplate];
+    if (tyle==kTypeShareIn) {
+        [self getEmailTemplate];
+    }else
+    {
+        [self getEmailTitle];
+    }
+    
 }
 
 -(void)clickSelected:(id)sender
@@ -295,7 +301,12 @@
     ulvc.listViewDelegate=self;
     [self.navigationController pushViewController:ulvc animated:YES];
 }
-
+- (void)getEmailTitle
+{
+    self.em=[[SCBEmailManager alloc] init];
+    self.em.delegate=self;
+    [self.em getEmailTitle];
+}
 - (void)getEmailTemplate
 {
     self.em=[[SCBEmailManager alloc] init];
@@ -826,7 +837,11 @@
 {
     
 }
+-(void)getEmailTitleSucceed:(NSString *)title
+{
+    [_tokenFieldView.titileField setText:title];
 
+}
 #pragma mark userListViewControllerDelegate
 
 -(void)didSelectUserIDS:(NSArray *)ids Names:(NSArray *)names emails:(NSArray *)emails

@@ -591,7 +591,7 @@
     BOOL isReSend = NO;
     for (int i=0; i<self.fileArray.count;) {
         NSDictionary *dic = [self.fileArray objectAtIndex:i];
-        NSLog(@"dic:%@",dic);
+//        NSLog(@"dic:%@",dic);
         NSString *atta_deltime = [dic objectForKey:@"atta_deltime"];
         NSString *f_state = [dic objectForKey:@"f_state"];
         BOOL isFState = NO;
@@ -604,7 +604,7 @@
             isFState = YES;
         }
         BOOL bl = YES;
-        if(![atta_deltime isEqual:[NSNull null]] || isFState)
+        if(![atta_deltime isEqual:[NSNull null]])
         {
             bl = NO;
             [self.fileArray removeObjectAtIndex:i];
@@ -625,11 +625,15 @@
             i++;
         }
     }
-    if(!isReSend || [self.fileArray count]==0)
+
+    if([self.etype intValue]==1)
     {
-        UIBarButtonItem *send=[[UIBarButtonItem alloc] initWithTitleStr:@"重新发送" style:UIBarButtonItemStylePlain target:self action:@selector(reSendAction:)];
-        [send setEnabled:NO];
-        [self.navigationItem setRightBarButtonItem:send];
+        if (isReSend) {
+            [self.navigationItem.rightBarButtonItem setEnabled:YES];
+        }else
+        {
+            [self.navigationItem.rightBarButtonItem setEnabled:NO];
+        }
     }
 }
 - (void)fileTouch:(id)sender
@@ -1123,7 +1127,7 @@
         self.dataDic=datadic;
         self.fileArray=array;
         [self loadEmail];
-        [self.tableView reloadData];
+        [self reloadFiles];
         NSString *dataFilePath=[YNFunctions getDataCachePath];
         dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:[NSString stringWithFormat:@"%@.Email%@",self.eid,self.etype]]];
         

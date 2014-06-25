@@ -278,13 +278,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	
 //	[_tokenFieldView becomeFirstResponder];
-    if (tyle==kTypeShareIn) {
-        [self getEmailTemplate];
-    }else
-    {
-        [self getEmailTitle];
-    }
-    
+    [self getEmailTitle];
 }
 
 -(void)clickSelected:(id)sender

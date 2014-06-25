@@ -632,7 +632,8 @@
 //        return NO;
 //
 //    }
-    if (eTitle==nil||[eTitle isEqualToString:@""]) {
+    NSString *noSpaceString=[eTitle stringByReplacingOccurrencesOfString:@" " withString:@""];
+    if (eTitle==nil||[eTitle isEqualToString:@""]||[noSpaceString isEqualToString:@""]) {
         if (self.hud) {
             [self.hud removeFromSuperview];
         }

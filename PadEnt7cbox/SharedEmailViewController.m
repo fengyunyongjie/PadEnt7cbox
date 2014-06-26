@@ -537,7 +537,7 @@
         //NSLog(@"UserName");
         NSMutableString *stext = [textView.text mutableCopy];
         [stext replaceCharactersInRange:range withString:text];
-        return [stext length] <= 200;
+        return [stext length] <= 500;
     }
     return YES;
 }

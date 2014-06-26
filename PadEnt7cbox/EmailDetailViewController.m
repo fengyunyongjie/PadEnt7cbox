@@ -1127,7 +1127,8 @@
         self.dataDic=datadic;
         self.fileArray=array;
         [self loadEmail];
-        [self reloadFiles];
+        [self.tableView reloadData];
+//        [self reloadFiles];
         NSString *dataFilePath=[YNFunctions getDataCachePath];
         dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:[NSString stringWithFormat:@"%@.Email%@",self.eid,self.etype]]];
         

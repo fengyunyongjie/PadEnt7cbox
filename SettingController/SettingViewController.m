@@ -289,8 +289,8 @@ typedef enum{
 }
 - (void)clearCache
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"确定要清除缓存"
-                                                        message:@""
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"清除缓存，释放本机空间"
+                                                        message:@"下载或查看过的文件需要重新下载"
                                                        delegate:self
                                               cancelButtonTitle:@"取消"
                                               otherButtonTitles:@"确定", nil];

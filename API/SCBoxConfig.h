@@ -16,7 +16,7 @@
 //商业版URL
 #define HOST_URL @"http://192.168.1.9/"
 //#define HOST_URL @"http://b.7cbox.cn/"
-//#define HOST_URL @"http://192.168.1.55:8080/"
+//#define HOST_URL @"http://192.168.1.51:8080/"
 //#define HOST_URL @"http://192.168.1.25:8080/"
 //#define HOST_URL @"http://192.168.1.41:8080/"
 //#define HOST_URL @"http://192.168.1.62:8080/"
@@ -250,4 +250,41 @@
 #define LINK_RELEASE_PUB_URI @"/link/release_pub"
 //邮件分享私密外链
 #define LINK_RELEASE_EMAIL_URI @"/link/release_email"
+
+#pragma mark - 主题管理
+//新建主题
+#define SM_CREATE_SUBJECT_URI @"/subject/create_subject"
+//发布主题评论
+//#define SM_CREATE_SUBJECT_URI @""
+//查看主题列表
+#define SM_LIST_SUBJECT_URI @"/subject/list_subject"
+//发布资源到主题的主题列表
+#define SM_LIST_PUBLISH_URI @"/subject/listSubjectByUserIdToCli"
+//获取主题相关事件动态数
+#define SM_NUM_SUBJECT_URI @"/subject/sum_subject_event"
+//查看主题/动态信息
+#define SM_ACTIVITY_SUBJECT_URI @"/subjectevent/viewSubjectInfoBySubjectId"
+//主题右侧栏信息
+#define SM_INFORIGHT_SUBJECT_URI @"/subject/viewRightSubjectInfoBySubjectId"
+//动态
+#define SM_INFOLIST_SUBJECT_URI @"/subjectevent /viewSubjectInfoListByUserId"
+//获取专题动态总个数
+#define SM_SUM_SUBJECT_URI @"/subject/sum_subjects"
+#pragma mark - 资源管理1
+//发布资源
+#define SM_RESOURCES_PUBLISH_URI @"/subject/resources_publish"
+//资源列表
+#define SM_RESOURCES_LIST_URI @"/subject/resources_list"
+//发布资源评论
+#define SM_PUBLISH_COMMENT_URI @"/subject/comment_publish"
+//获取资源评论
+#define SM_COMMENT_LIST_URI  @"/subject/comment_list"
+//判断资源是否存在
+#define SM_RESOURCES_EXIST_URI @"/subject/resources_exist"
+//成员列表
+#define SM_MEMBER_LIST_URI @"/dept/getComMember"
+//查看成员信息 /viewSubjectMemberBySubjectId
+#define SM_LOOK_MEMBER_URI @"/viewSubjectMemberBySubjectId"
+//获取资源文件夹下的文件列表
+#define SM_RESOURCE_FILE_LIST_URI  @"/file/listFilesByfid"
 #endif

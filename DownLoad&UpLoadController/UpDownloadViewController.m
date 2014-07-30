@@ -1234,29 +1234,18 @@
                         [look setTableArray:tableArray];
                         look.isHaveDelete = YES;
                         look.isHaveDownload = NO;
-                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-                        if([detailView isKindOfClass:[DetailViewController class]])
-                        {
-                            DetailViewController *viewCon = (DetailViewController *)detailView;
-                            viewCon.isFileManager = NO;
-                            [viewCon removeAllView];
-                            [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
-                            [viewCon.view addSubview:look.view];
-                            [viewCon addChildViewController:look];
-                        }else
-                        {
-                            DetailViewController *viewCon = [[DetailViewController alloc] init];
-//                            [NavigationController setViewControllers:@[viewCon] animated:NO];
-                            [NavigationController setViewControllers:nil];
-                            [NavigationController pushViewController:viewCon animated:NO];
-                            viewCon.isFileManager = NO;
-                            [viewCon removeAllView];
-                            [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
-                            [viewCon.view addSubview:look.view];
-                            [viewCon addChildViewController:look];
-                        }
+                        DetailViewController *viewCon = [[DetailViewController alloc] init];
+                        viewCon.isFileManager = NO;
+                        [viewCon removeAllView];
+                        [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
+                        [viewCon.view addSubview:look.view];
+                        [viewCon addChildViewController:look];
+                        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+                        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+                        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+                        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+                        NSArray * viewControllers=self.splitViewController.viewControllers;
+                        self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
                     }
                     else
                     {
@@ -1266,29 +1255,18 @@
                         openFileView.dataDic = diction;
                         openFileView.title = f_name;
                         
-                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-                        if([detailView isKindOfClass:[DetailViewController class]])
-                        {
-                            DetailViewController *viewCon = (DetailViewController *)detailView;
-                            viewCon.isFileManager = NO;
-                            [viewCon removeAllView];
-                            [viewCon.view addSubview:openFileView.view];
-                            [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
-                            [viewCon addChildViewController:openFileView];
-                        }else
-                        {
-                            DetailViewController *viewCon = [[DetailViewController alloc] init];
-//                            [NavigationController setViewControllers:@[viewCon] animated:NO];
-                            [NavigationController setViewControllers:nil];
-                            [NavigationController pushViewController:viewCon animated:NO];
-                            viewCon.isFileManager = NO;
-                            [viewCon removeAllView];
-                            [viewCon.view addSubview:openFileView.view];
-                            [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
-                            [viewCon addChildViewController:openFileView];
-                        }
+                        DetailViewController *viewCon = [[DetailViewController alloc] init];
+                        viewCon.isFileManager = NO;
+                        [viewCon removeAllView];
+                        [viewCon.view addSubview:openFileView.view];
+                        [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
+                        [viewCon addChildViewController:openFileView];
+                        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+                        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+                        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+                        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+                        NSArray * viewControllers=self.splitViewController.viewControllers;
+                        self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
                     }
                 }else
                 {
@@ -1364,29 +1342,18 @@
                         [look setTableArray:tableArray];
                         look.isHaveDelete = YES;
                         look.isHaveDownload = NO;
-                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-                        if([detailView isKindOfClass:[DetailViewController class]])
-                        {
-                            DetailViewController *viewCon = (DetailViewController *)detailView;
-                            viewCon.isFileManager = NO;
-                            [viewCon removeAllView];
-                            [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
-                            [viewCon.view addSubview:look.view];
-                            [viewCon addChildViewController:look];
-                        }else
-                        {
-                            DetailViewController *viewCon = [[DetailViewController alloc] init];
-//                            [NavigationController setViewControllers:@[viewCon] animated:NO];
-                            [NavigationController setViewControllers:nil];
-                            [NavigationController pushViewController:viewCon animated:NO];
-                            viewCon.isFileManager = NO;
-                            [viewCon removeAllView];
-                            [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
-                            [viewCon.view addSubview:look.view];
-                            [viewCon addChildViewController:look];
-                        }
+                        DetailViewController *viewCon = [[DetailViewController alloc] init];
+                        viewCon.isFileManager = NO;
+                        [viewCon removeAllView];
+                        [viewCon showPhotoView:list.d_name withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
+                        [viewCon.view addSubview:look.view];
+                        [viewCon addChildViewController:look];
+                        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+                        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+                        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+                        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+                        NSArray * viewControllers=self.splitViewController.viewControllers;
+                        self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
                     }
                     else
                     {
@@ -1396,31 +1363,19 @@
                         openFileView.dataDic = diction;
                         openFileView.title = f_name;
                         
-                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-                        if([detailView isKindOfClass:[DetailViewController class]])
-                        {
-                            DetailViewController *viewCon = (DetailViewController *)detailView;
-                            viewCon.isFileManager = NO;
-                            [viewCon removeAllView];
-                            viewCon.dataDic=diction;
-                            [viewCon.view addSubview:openFileView.view];
-                            [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
-                            [viewCon addChildViewController:openFileView];
-                        }else
-                        {
-                            DetailViewController *viewCon = [[DetailViewController alloc] init];
-//                            [NavigationController setViewControllers:@[viewCon] animated:NO];
-                            [NavigationController setViewControllers:nil];
-                            [NavigationController pushViewController:viewCon animated:NO];
-                            viewCon.isFileManager = NO;
-                            [viewCon removeAllView];
-                            viewCon.dataDic=diction;
-                            [viewCon.view addSubview:openFileView.view];
-                            [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
-                            [viewCon addChildViewController:openFileView];
-                        }
+                        DetailViewController *viewCon = [[DetailViewController alloc] init];
+                        viewCon.isFileManager = NO;
+                        [viewCon removeAllView];
+                        viewCon.dataDic=diction;
+                        [viewCon.view addSubview:openFileView.view];
+                        [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
+                        [viewCon addChildViewController:openFileView];
+                        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+                        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+                        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+                        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+                        NSArray * viewControllers=self.splitViewController.viewControllers;
+                        self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
                     }
                 }else
                 {

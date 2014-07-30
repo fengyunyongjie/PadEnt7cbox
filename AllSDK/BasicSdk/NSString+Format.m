@@ -9,6 +9,11 @@
 #import "NSString+Format.h"
 #import "YNFunctions.h"
 
+#define Time1Min 60
+#define Time1Hour 60*60
+#define Time1Day 60*60*24
+#define Time2Day 60*60*24*2
+
 @implementation NSString (Format)
 
 +(NSString *)formatNSStringForChar:(const char *)temp
@@ -79,4 +84,72 @@
     }
 }
 
++(NSDictionary *)stringWithDictionS:(NSString *)string
+{
+    //把字符串转化成字典类型
+    NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    return dic;
+}
+
++(NSString *)getTimeFormat:(NSString *)browseTime
+{
+    NSString *formatString = nil;
+    //时间显示方式
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    double sDouble = [[dateFormatter dateFromString:browseTime] timeIntervalSince1970];
+    
+    //今天的时间
+    NSDate *todayDate = [NSDate date];
+    NSString *eString  = [dateFormatter stringFromDate:todayDate];
+    double eDouble = [[dateFormatter dateFromString:eString] timeIntervalSince1970];
+    
+    //对比时间
+    double mDouble = eDouble-sDouble;
+    if(mDouble<0)
+    {
+        mDouble = 0;
+    }
+    if(mDouble<Time1Min)
+    {
+        //1分钟内
+        formatString = [NSString stringWithFormat:@"%i秒前",(int)mDouble];
+    }
+    else if(mDouble<Time1Hour)
+    {
+        //1小时内
+        formatString = [NSString stringWithFormat:@"%i分钟前",(int)(mDouble/60)];
+    }
+    else if(mDouble<Time1Day)
+    {
+        //1天内
+        formatString = [NSString stringWithFormat:@"%i小时前",(int)(mDouble/60/60)];
+    }
+    else if(mDouble<Time2Day)
+    {
+        //2天内
+        formatString = [NSString stringWithFormat:@"1天前"];
+    }
+    else
+    {
+        formatString = [NSString formatDateString:browseTime];
+    }
+    return formatString;
+}
++(NSString *)formatDateString:(NSString *)dateString
+{
+    NSString *formatString = nil;
+    //时间显示方式
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *date = [dateFormatter dateFromString:dateString];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    formatString = [dateFormatter stringFromDate:date];
+    return formatString;
+}
 @end

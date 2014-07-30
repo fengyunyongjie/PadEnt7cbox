@@ -508,21 +508,15 @@
 -(void)openFinderUnsucess{}
 -(void)removeSucess
 {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-    if([detailView isKindOfClass:[DetailViewController class]])
-    {
-        DetailViewController *viewCon = (DetailViewController *)detailView;
-        [viewCon removeAllView];
-    }else
-    {
-        DetailViewController *viewCon = [[DetailViewController alloc] init];
-//        [NavigationController setViewControllers:@[viewCon] animated:NO];
-        [NavigationController setViewControllers:nil];
-        [NavigationController pushViewController:viewCon animated:NO];
-    }
-    MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
+    DetailViewController *viewCon = [[DetailViewController alloc] init];
+    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+    NSArray * viewControllers=self.splitViewController.viewControllers;
+    self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
+    
+    MyTabBarViewController *tabbar = [self.splitViewController.viewControllers firstObject];
     UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
     for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
     {

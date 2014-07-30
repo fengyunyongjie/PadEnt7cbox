@@ -144,20 +144,14 @@
         }
         [self.fileNameLabel setFrame:fileName_rect];
         [self.fileNameLabel setText:@"权限不足无法预览"];
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-        if([detailView isKindOfClass:[DetailViewController class]])
-        {
-            DetailViewController *viewCon = (DetailViewController *)detailView;
-            viewCon.navigationItem.leftBarButtonItem = nil;
-        }else
-        {
-            DetailViewController *viewCon = [[DetailViewController alloc] init];
-//            [NavigationController setViewControllers:@[viewCon] animated:NO];
-            [NavigationController setViewControllers:nil];
-            [NavigationController pushViewController:viewCon animated:NO];
-        }
+        AppDelegate *app=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+        DetailViewController *viewCon = [[DetailViewController alloc] init];
+        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+        NSArray * viewControllers=app.splitVC.viewControllers;
+        app.splitVC.viewControllers=@[viewControllers.firstObject,nav];
         return;
     }
     
@@ -201,38 +195,24 @@
         }
         [self.fileNameLabel setFrame:fileName_rect];
         [self.fileNameLabel setText:@"此文件无法预览"];
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-        if([detailView isKindOfClass:[DetailViewController class]])
-        {
-            DetailViewController *viewCon = (DetailViewController *)detailView;
-            viewCon.navigationItem.leftBarButtonItem = nil;
-        }else
-        {
-            DetailViewController *viewCon = [[DetailViewController alloc] init];
-//            [NavigationController setViewControllers:@[viewCon] animated:NO];
-            [NavigationController setViewControllers:nil];
-            [NavigationController pushViewController:viewCon animated:NO];
-        }
-    }
-    
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-    if([detailView isKindOfClass:[DetailViewController class]])
-    {
-        DetailViewController *viewCon = (DetailViewController *)detailView;
-        [viewCon setDataDic:self.dataDic];
-    }else
-    {
+        
+        AppDelegate *app=(AppDelegate *)[[UIApplication sharedApplication] delegate];
         DetailViewController *viewCon = [[DetailViewController alloc] init];
-//        [NavigationController setViewControllers:@[viewCon] animated:NO];
-        [NavigationController setViewControllers:nil];
-        [NavigationController pushViewController:viewCon animated:NO];
-        [viewCon setDataDic:self.dataDic];
+        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+        NSArray * viewControllers=app.splitVC.viewControllers;
+        app.splitVC.viewControllers=@[viewControllers.firstObject,nav];
     }
+    AppDelegate *app=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    DetailViewController *viewCon = [[DetailViewController alloc] init];
+    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+    NSArray * viewControllers=app.splitVC.viewControllers;
+    app.splitVC.viewControllers=@[viewControllers.firstObject,nav];
 }
 
 -(void)cancelDown
@@ -299,42 +279,19 @@
     }
     [browser.view setFrame:self_rect];
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-    if([detailView isKindOfClass:[DetailViewController class]])
-    {
-        DetailViewController *viewCon = (DetailViewController *)detailView;
-        [viewCon removeAllView];
-        [viewCon.view addSubview:browser.view];
-        [viewCon showOtherView:browser.title withIsHave:self.isHaveDelete withIsHaveDown:self.isHaveDownload];
-        [viewCon addChildViewController:browser];
-        [viewCon showFullView];
-    }else
-    {
-        DetailViewController *viewCon = [[DetailViewController alloc] init];
-//        [NavigationController setViewControllers:@[viewCon] animated:NO];
-        [NavigationController setViewControllers:nil];
-        [NavigationController pushViewController:viewCon animated:NO];
-        [viewCon removeAllView];
-        [viewCon.view addSubview:browser.view];
-        [viewCon showOtherView:browser.title withIsHave:self.isHaveDelete withIsHaveDown:self.isHaveDownload];
-        [viewCon addChildViewController:browser];
-        [viewCon showFullView];
-    }
-    
-//    MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
-//    UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
-//    for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
-//    {
-//        FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
-//        if([fileList isKindOfClass:[FileListViewController class]])
-//        {
-//            fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:file_id];
-//            [fileList.tableView reloadData];
-//            break;
-//        }
-//    }
+    AppDelegate *app=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    DetailViewController *viewCon = [[DetailViewController alloc] init];
+    [viewCon removeAllView];
+    [viewCon.view addSubview:browser.view];
+    [viewCon showOtherView:browser.title withIsHave:self.isHaveDelete withIsHaveDown:self.isHaveDownload];
+    [viewCon addChildViewController:browser];
+    [viewCon showFullView];
+    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+    NSArray * viewControllers=app.splitVC.viewControllers;
+    app.splitVC.viewControllers=@[viewControllers.firstObject,nav];
 }
 
 -(void)downFile:(NSInteger)downSize totalSize:(NSInteger)sudu

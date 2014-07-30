@@ -351,51 +351,46 @@
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-        if (![detailView isKindOfClass:[DetailViewController class]]) {
-            detailView = [[DetailViewController alloc] init];
-            [NavigationController setViewControllers:@[detailView] animated:NO];
-        }
-        if([detailView isKindOfClass:[DetailViewController class]])
-        {
-            DetailViewController *viewCon = (DetailViewController *)detailView;
-            DownList *demo = [tableArray objectAtIndex:currPage];
-            [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete withIsHaveDown:isHaveDownload];
-            if(viewCon.isFileManager)
-            {
-                AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-                UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
-                for(int i=NavigationController2.viewControllers.count-1;i>=0;i--)
+        AppDelegate *app=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+        DetailViewController *viewCon;
+        UINavigationController *nav = [app.splitVC.viewControllers lastObject];
+        if ([nav respondsToSelector:@selector(viewControllers)]) {
+            viewCon=[nav.viewControllers firstObject];
+            if ([viewCon isKindOfClass:[DetailViewController class]]) {
+                DownList *demo = [tableArray objectAtIndex:currPage];
+                [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete withIsHaveDown:isHaveDownload];
+                if(viewCon.isFileManager)
                 {
-                    FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
-                    if([fileList isKindOfClass:[FileListViewController class]])
+                    MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
+                    UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
+                    for(int i=NavigationController2.viewControllers.count-1;i>=0;i--)
                     {
-                        fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:demo.d_file_id];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                        [fileList updateSelected];
-                        });
-                        break;
+                        FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
+                        if([fileList isKindOfClass:[FileListViewController class]])
+                        {
+                            fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:demo.d_file_id];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [fileList updateSelected];
+                            });
+                            break;
+                        }
                     }
                 }
-            }
-            else
-            {
-                AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-                UINavigationController *NavigationController3 = [[tabbar viewControllers] objectAtIndex:2];
-                for(int i=NavigationController3.viewControllers.count-1;i>=0;i--)
+                else
                 {
-                    UpDownloadViewController *upDownLoad = [NavigationController3.viewControllers objectAtIndex:i];
-                    if([upDownLoad isKindOfClass:[UpDownloadViewController class]])
+                    MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
+                    UINavigationController *NavigationController3 = [[tabbar viewControllers] objectAtIndex:2];
+                    for(int i=NavigationController3.viewControllers.count-1;i>=0;i--)
                     {
-                        upDownLoad.selectTableViewFid = [NSString formatNSStringForOjbect:demo.d_file_id];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                        [upDownLoad updateSelected];
-                        });
-                        break;
+                        UpDownloadViewController *upDownLoad = [NavigationController3.viewControllers objectAtIndex:i];
+                        if([upDownLoad isKindOfClass:[UpDownloadViewController class]])
+                        {
+                            upDownLoad.selectTableViewFid = [NSString formatNSStringForOjbect:demo.d_file_id];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [upDownLoad updateSelected];
+                            });
+                            break;
+                        }
                     }
                 }
             }
@@ -967,11 +962,14 @@
          if(result)
          {
              UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-             UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-             if([detailView isKindOfClass:[DetailViewController class]])
+             if([NavigationController respondsToSelector:@selector(viewControllers)])
              {
-                 DetailViewController *viewCon = (DetailViewController *)detailView;
-                 [viewCon saveSuccess];
+                 UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                 if([detailView isKindOfClass:[DetailViewController class]])
+                 {
+                     DetailViewController *viewCon = (DetailViewController *)detailView;
+                     [viewCon saveSuccess];
+                 }
              }
          }
          else
@@ -1367,13 +1365,15 @@
                  progess2_rect.size.width = 250;
                  [self.progess2_imageView setFrame:progess2_rect];
                  [self.jindu_control setHidden:YES];
-                 AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                 AppDelegate *app=(AppDelegate *)[[UIApplication sharedApplication] delegate];
                  UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-                 UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-                 if([detailView isKindOfClass:[DetailViewController class]])
-                 {
-                     DetailViewController *viewCon = (DetailViewController *)detailView;
-                     [viewCon saveSuccess];
+                 if ([NavigationController respondsToSelector:@selector(viewControllers)]) {
+                     UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+                     if([detailView isKindOfClass:[DetailViewController class]])
+                     {
+                         DetailViewController *viewCon = (DetailViewController *)detailView;
+                         [viewCon saveSuccess];
+                 }
                  }
                  NSFileManager *fileManager = [NSFileManager defaultManager];
                  BOOL isRemove = [fileManager removeItemAtPath:baseUrl error:nil];
@@ -1449,13 +1449,15 @@
 -(void)upError
 {
     [self esc_clicked];
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    AppDelegate *app=(AppDelegate *)[[UIApplication sharedApplication] delegate];
     UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-    if([detailView isKindOfClass:[DetailViewController class]])
-    {
-        DetailViewController *viewCon = (DetailViewController *)detailView;
-        [viewCon saveFail];
+    if ([NavigationController respondsToSelector:@selector(viewControllers)]) {
+        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+        if([detailView isKindOfClass:[DetailViewController class]])
+        {
+            DetailViewController *viewCon = (DetailViewController *)detailView;
+            [viewCon saveFail];
+        }
     }
 }
 //服务器异常
@@ -1587,11 +1589,13 @@
     if([tableArray count] == 0)
     {
         UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-        if([detailView isKindOfClass:[DetailViewController class]])
-        {
-            DetailViewController *viewCon = (DetailViewController *)detailView;
-            [viewCon removeAllView];
+        if ([NavigationController respondsToSelector:@selector(viewControllers)]) {
+            UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
+            if([detailView isKindOfClass:[DetailViewController class]])
+            {
+                DetailViewController *viewCon = (DetailViewController *)detailView;
+                [viewCon removeAllView];
+            }
         }
     }
     

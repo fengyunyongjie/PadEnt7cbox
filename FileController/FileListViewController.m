@@ -30,6 +30,7 @@
 #import "PartitionViewController.h"
 #import "OpenFileViewController.h"
 #import "SCBEmailManager.h"
+#import "ShareToSubjectViewController.h"
 
 #define KCOVERTag 888
 
@@ -50,6 +51,8 @@ typedef enum{
     kActionSheetTagSendHasDir,
     kActionSheetTagSort,
     kActionSheetTagUpload,
+    kActionSheetTagSendSubject,
+    kActionSheetTagSendSubjectHasDir,
 }ActionSheetTag;
 
 @interface FileListViewController ()<SCBFileManagerDelegate,IconDownloaderDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate,SCBEmailManagerDelegate,MFMessageComposeViewControllerDelegate>
@@ -1021,6 +1024,22 @@ typedef enum{
     [self presentViewController:nav animated:YES completion:nil];
     [self editFinished];
 }
+//发布到专题
+- (void)publishToSubject {
+    
+    ShareToSubjectViewController *shareViewController = [[ShareToSubjectViewController alloc] init];
+    NSDictionary *dic = [self.listArray objectAtIndex:self.selectedIndexPath.row];
+    NSString *fisdir = [dic objectForKey:@"fisdir"];
+    shareViewController.dataDic=dic;
+    shareViewController.fisdir=fisdir;
+    shareViewController.parentSelectedIds=self.selectedFids;
+    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:shareViewController];
+    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+    nav.modalPresentationStyle=UIModalPresentationPageSheet;
+    [self presentViewController:nav animated:YES completion:nil];
+}
 -(void)emailLinkShared
 {
     SharedEmailViewController *sevc=[[SharedEmailViewController alloc] init];
@@ -1129,6 +1148,12 @@ hasDirSend:
     {
         UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"邮件分享",@"短信分享",@"复制链接",@"其他分享",nil];
         [actionSheet setTag:kActionSheetTagSendHasDir];
+        if([self.roletype isEqualToString:@"2"])
+        {
+            actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"发布到专题",@"邮件分享",@"短信分享",@"复制链接",@"其他分享",nil];
+            [actionSheet setTag:kActionSheetTagSendSubjectHasDir];
+        }
+        
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -1139,6 +1164,11 @@ noDirSend:
     {
         UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"内部分享",@"邮件分享",@"短信分享",@"复制链接",@"其他分享",nil];
         [actionSheet setTag:kActionSheetTagSend];
+        if([self.roletype isEqualToString:@"2"])
+        {
+            actionSheet=[[UIActionSheet alloc]  initWithTitle:@"选择分享方式" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles: @"发布到专题",@"内部分享",@"邮件分享",@"短信分享",@"复制链接",@"其他分享",nil];
+            [actionSheet setTag:kActionSheetTagSendSubject];
+        }
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -2227,17 +2257,18 @@ noDirSend:
                 if (![self hasCmdInFcmd:@"preview"]) {
                     OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
                     openFileView.isNotLook = YES;
-                    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    UINavigationController *nav = [app.splitVC.viewControllers lastObject];
                     DetailViewController *viewCon=[[DetailViewController alloc] init];
                     viewCon.isFileManager = YES;
                     [viewCon removeAllView];
                     [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
                     [viewCon.view addSubview:openFileView.view];
                     [viewCon addChildViewController:openFileView];
-//                    [nav setViewControllers:@[viewCon] animated:NO];
-                    [nav setViewControllers:nil];
-                    [nav pushViewController:viewCon animated:NO];
+                    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+                    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+                    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+                    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+                    NSArray * viewControllers=self.splitViewController.viewControllers;
+                    self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
                     return;
                 }
                 int row = 0;
@@ -2283,29 +2314,18 @@ noDirSend:
                             look.isHaveDelete=[self hasCmdInFcmd:@"del"];
                             look.isHaveDownload=[self hasCmdInFcmd:@"download"];
                         }
-                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//                        UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-//                        UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-//                        if([detailView isKindOfClass:[DetailViewController class]])
-//                        {
-//                            DetailViewController *viewCon = (DetailViewController *)detailView;
-//                            viewCon.isFileManager = YES;
-//                            [viewCon removeAllView];
-//                            [viewCon showPhotoView:fname withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
-//                            [viewCon.view addSubview:look.view];
-//                            [viewCon addChildViewController:look];
-//                        }
-                        
-                        UINavigationController *nav = [app.splitVC.viewControllers lastObject];
                         DetailViewController *viewCon=[[DetailViewController alloc] init];
                         viewCon.isFileManager = YES;
                         [viewCon removeAllView];
                         [viewCon showPhotoView:fname withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
                         [viewCon.view addSubview:look.view];
                         [viewCon addChildViewController:look];
-//                        [nav setViewControllers:@[viewCon] animated:NO];
-                        [nav setViewControllers:nil];
-                        [nav pushViewController:viewCon animated:NO];
+                        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+                        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+                        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+                        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+                        NSArray * viewControllers=self.splitViewController.viewControllers;
+                        self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
                     }
                 }
             }
@@ -2323,16 +2343,18 @@ noDirSend:
                     openFileView.isNotLook = YES;
                     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
-                    UINavigationController *nav = [app.splitVC.viewControllers lastObject];
                     DetailViewController *viewCon=[[DetailViewController alloc] init];
                     viewCon.isFileManager = YES;
                     [viewCon removeAllView];
                     [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
                     [viewCon.view addSubview:openFileView.view];
                     [viewCon addChildViewController:openFileView];
-//                    [nav setViewControllers:@[viewCon] animated:NO];
-                    [nav setViewControllers:nil];
-                    [nav pushViewController:viewCon animated:NO];
+                    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+                    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+                    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+                    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+                    NSArray * viewControllers=self.splitViewController.viewControllers;
+                    self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
                     return;
                 }
                 NSString *file_id=[dic objectForKey:@"fid"];
@@ -2352,9 +2374,6 @@ noDirSend:
                 openFileView.dataDic = dic;
                 openFileView.title = f_name;
                 
-                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                
-                UINavigationController *nav = [app.splitVC.viewControllers lastObject];
                 DetailViewController *viewCon=[[DetailViewController alloc] init];
                 viewCon.isFileManager = YES;
                 [viewCon removeAllView];
@@ -2362,9 +2381,12 @@ noDirSend:
                 [viewCon showOtherView:openFileView.title withIsHave:isHaveDelete withIsHaveDown:NO];
                 [viewCon.view addSubview:openFileView.view];
                 [viewCon addChildViewController:openFileView];
-//                [nav setViewControllers:@[viewCon] animated:NO];
-                [nav setViewControllers:nil];
-                [nav pushViewController:viewCon animated:NO];
+                UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+                [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+                [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+                [nav.navigationBar setTintColor:[UIColor whiteColor]];
+                NSArray * viewControllers=self.splitViewController.viewControllers;
+                self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
             }
         }
     }
@@ -3095,6 +3117,95 @@ noDirSend:
                 }
                     break;
                 case 3:
+                {
+                    //其它分享
+                    self.shareType=kShareTypeOther;
+                    [self createLink];
+                }
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+            break;
+        case kActionSheetTagSendSubject:
+        {
+            switch (buttonIndex) {
+                case 0:
+                {
+                    //分享至专题
+                    [self publishToSubject];
+                }
+                    break;
+                case 1:
+                {
+                    //内部分享
+                    [self qiyeShared];
+                }
+                    break;
+                case 2:
+                {
+                    //邮件外链
+                    [self emailLinkShared];
+                }
+                    break;
+                case 3:
+                {
+                    //短信分享
+                    self.shareType=kShareTypeMessage;
+                    [self createLink];
+                }
+                    break;
+                case 4:
+                {
+                    //复制连接
+                    self.shareType=kShareTypeCopyLink;
+                    [self createLink];
+                }
+                    break;
+                case 5:
+                {
+                    //其他分享
+                    self.shareType=kShareTypeOther;
+                    [self createLink];
+                }
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+            break;
+        case kActionSheetTagSendSubjectHasDir:
+        {
+            switch (buttonIndex) {
+                case 0:
+                {
+                    //分享至专题
+                    [self publishToSubject];
+                }
+                case 1:
+                {
+                    //邮件外链
+                    [self emailLinkShared];
+                }
+                    break;
+                case 2:
+                {
+                    //短信分享
+                    self.shareType=kShareTypeMessage;
+                    [self createLink];
+                }
+                    break;
+                case 3:
+                {
+                    //复制链接
+                    self.shareType=kShareTypeCopyLink;
+                    [self createLink];
+                }
+                    break;
+                case 4:
                 {
                     //其它分享
                     self.shareType=kShareTypeOther;

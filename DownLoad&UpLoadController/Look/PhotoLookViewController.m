@@ -341,26 +341,15 @@
             [downImage startDownload];
         });
     }
-    
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UINavigationController *NavigationController = [app.splitVC.viewControllers lastObject];
-    UIViewController *detailView = [NavigationController.viewControllers objectAtIndex:0];
-    if([detailView isKindOfClass:[DetailViewController class]])
-    {
-        DetailViewController *viewCon = (DetailViewController *)detailView;
-        DownList *demo = [tableArray objectAtIndex:currPage];
-        [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete withIsHaveDown:isHaveDelete];
-    }else
-    {
-        DetailViewController *viewCon = [[DetailViewController alloc] init];
-//        [NavigationController setViewControllers:@[viewCon] animated:NO];
-        [NavigationController setViewControllers:nil];
-        [NavigationController pushViewController:viewCon animated:NO];
-        DownList *demo = [tableArray objectAtIndex:currPage];
-        [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete withIsHaveDown:isHaveDelete];
+    AppDelegate *app=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UINavigationController *nav=[app.splitVC.viewControllers lastObject];
+    if ([nav respondsToSelector:@selector(viewControllers)]) {
+        DetailViewController *viewCon=[nav.viewControllers objectAtIndex:0];
+        if ([viewCon isKindOfClass:[DetailViewController class]]) {
+            DownList *demo = [tableArray objectAtIndex:currPage];
+            [viewCon showPhotoView:demo.d_name withIsHave:isHaveDelete withIsHaveDown:isHaveDelete];
+        }
     }
-
-//    [self loadPageColoumn:page];
 }
 
 #pragma mark 滑动隐藏

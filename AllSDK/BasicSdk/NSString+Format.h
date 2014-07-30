@@ -19,4 +19,7 @@
 + (BOOL)image_exists_FM_file_path:(NSString *)image_path;
 + (NSString*)get_image_FM_file_path:(NSString*)image_path;
 +(void)CreatePath:(NSString *)urlPath;
++(NSDictionary *)stringWithDictionS:(NSString *)string;
++(NSString *)getTimeFormat:(NSString *)browseTime;
++(NSString *)formatDateString:(NSString *)dateString;
 @end

@@ -593,7 +593,7 @@
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
     [self.activeData appendData:data];
-    NSLog(@"connection:didReceiveData:%@",data);
+    //NSLog(@"connection:didReceiveData:%@",data);
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error

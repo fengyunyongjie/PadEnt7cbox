@@ -105,7 +105,8 @@
                             </state>
                             <state key="highlighted" title="松开结束"/>
                             <connections>
-                                <action selector="endVoiceInput:" destination="-1" eventType="touchCancel" id="rtz-9l-dlP"/>
+                                <action selector="endVoiceInput:" destination="-1" eventType="touchUpInside" id="LiF-pL-gd1"/>
+                                <action selector="endVoiceInput:" destination="-1" eventType="touchUpOutside" id="PC2-Pj-QW7"/>
                                 <action selector="startVioceInput:" destination="-1" eventType="touchDown" id="hsY-jd-Rht"/>
                             </connections>
                         </button>

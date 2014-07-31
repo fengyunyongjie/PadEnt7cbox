@@ -40,8 +40,9 @@
 @end
 
 @protocol SCBSubjectManagerDelegate
-@optional
+@required
 -(void)networkError;
+@optional
 -(void)didGetSubjectList:(NSDictionary *)datadic;
 -(void)didGetSelectSubjectList:(NSDictionary *)datadic;
 -(void)didCreateSubject:(NSDictionary *)datadic;

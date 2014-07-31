@@ -512,6 +512,10 @@ extern NSString * const PosterCode10Notification = @"PosterCode10Notification";
     [request setHTTPBody:myRequestData];
     
     [request setHTTPMethod:@"POST"];
+    [request setValue:[[SCBSession sharedSession] userId] forHTTPHeaderField:@"ent_uid"];
+    [request setValue:CLIENT_TAG forHTTPHeaderField:@"ent_uclient"];
+    [request setValue:[[SCBSession sharedSession] userToken] forHTTPHeaderField:@"ent_utoken"];
+    [request setValue:[[SCBSession sharedSession] ent_utype] forHTTPHeaderField:@"ent_utype"];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
@@ -541,7 +545,7 @@ extern NSString * const PosterCode10Notification = @"PosterCode10Notification";
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
     [self.activeData appendData:data];
-    NSLog(@"connection:didReceiveData:%@",data);
+    //NSLog(@"connection:didReceiveData:%@",data);
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error

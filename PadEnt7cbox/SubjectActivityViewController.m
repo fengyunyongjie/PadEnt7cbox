@@ -12,12 +12,14 @@
 #import "SubjectActivityCell.h"
 #import "NSString+Format.h"
 #import "ActivityDetailViewController.h"
+#import "MBProgressHUD.h"
 
 @interface SubjectActivityViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate>
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) NSDictionary *dataDic;
 @property (nonatomic,strong) NSArray *listArray;
 @property (nonatomic,strong) SCBSubjectManager *sm_list;
+@property (nonatomic,strong) MBProgressHUD *hud;
 @end
 
 @implementation SubjectActivityViewController
@@ -80,6 +82,24 @@
     self.sm_list.delegate=self;
     [self.sm_list getActivityWithSubjectID:[(SubjectDetailTabBarController *)self.tabBarController subjectId]];
 }
+
+-(void)showMessage:(NSString *)message
+{
+    [self.hud show:NO];
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view.window];
+    [self.view.window addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=message;
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1];
+}
+
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -256,7 +276,7 @@
     int cellType=[[dic objectForKey:@"type"] intValue];
     cell.personLabel.text=[content objectForKey:@"eveName"];
     cell.contentLabel.text=[content objectForKey:@"eveContent"];
-    cell.timeLabel.text=[content objectForKey:@"eveTime"];
+    cell.timeLabel.text=[NSString getTimeFormat:[content objectForKey:@"eveTime"]];
     
     switch (indexPath.row) {
         case 0:
@@ -429,5 +449,9 @@
     self.dataDic=datadic;
     self.listArray=[datadic objectForKey:@"result"];
     [self.tableView reloadData];
+}
+-(void)networkError
+{
+    [self showMessage:@"链接失败，请检查网络"];
 }
 @end

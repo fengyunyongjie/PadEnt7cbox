@@ -23,6 +23,11 @@
 #import "MLAudioMeterObserver.h"
 #import "MLAudioRecorder.h"
 #import "LCVoiceHud.h"
+#import "UpLoadList.h"
+#import "SujectUpload.h"
+#import "SCBSession.h"
+#import "SCBFileManager.h"
+#import "DwonFile.h"
 
 @interface ResourceCommentViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate>{
     EmotionView    *emotionView;
@@ -223,6 +228,7 @@
 - (IBAction)startVioceInput:(id)sender {
     //录音设置
     [self setAudio];
+    
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
     //self.longTapBtn.titleLabel.text = @"松开结束";
@@ -233,10 +239,10 @@
     recordTime = 0;
     [self resetTimer];
 	timer = [NSTimer scheduledTimerWithTimeInterval:WAVE_UPDATE_FREQUENCY target:self selector:@selector(updateMeters) userInfo:nil repeats:YES];
-    [self showVoiceHudOrHide:YES];
+//    [self showVoiceHudOrHide:YES];
 }
 - (IBAction)endVoiceInput:(id)sender {
-    [self showVoiceHudOrHide:NO];
+//    [self showVoiceHudOrHide:NO];
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     [self resetTimer];
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
@@ -248,31 +254,31 @@
     audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
     //时长
     
-//    SujectUpload *newUpload = [[SujectUpload alloc] init];
-//    UpLoadList *list = [[UpLoadList alloc] init];
-//    list.t_date = @"";
-//    list.t_lenght = (NSInteger)[YNFunctions fileSizeAtPath:mp3TemporarySavePath];
-//    list.t_name = [[mp3TemporarySavePath pathComponents] lastObject];
-//    list.t_state = 0;
-//    list.t_fileUrl = mp3TemporarySavePath;
-//    list.t_url_pid = @"";
-//    list.t_url_name = @"DeviceName";
-//    list.t_file_type = 5;
-//    list.user_id = [NSString formatNSStringForOjbect:[[SCBSession sharedSession] userId]];
-//    list.file_id = @"";
-//    list.upload_size = 0;
-//    list.is_autoUpload = NO;
-//    list.is_share = NO;
-//    list.spaceId = [[SCBSession sharedSession] spaceID];
-//    newUpload.list = list;
-//    [newUpload setDelegate:self];
-//    newUpload.uploadType = SJUploadTypeCommentAudio;
-//    if(newUpload.list.t_state == 0)
-//    {
-//        newUpload.list.t_state = 0;
-//        [newUpload isNetWork];
-//    }
-//    
+    SujectUpload *newUpload = [[SujectUpload alloc] init];
+    UpLoadList *list = [[UpLoadList alloc] init];
+    list.t_date = @"";
+    list.t_lenght = (NSInteger)[YNFunctions fileSizeAtPath:mp3TemporarySavePath];
+    list.t_name = [[mp3TemporarySavePath pathComponents] lastObject];
+    list.t_state = 0;
+    list.t_fileUrl = mp3TemporarySavePath;
+    list.t_url_pid = @"";
+    list.t_url_name = @"DeviceName";
+    list.t_file_type = 5;
+    list.user_id = [NSString formatNSStringForOjbect:[[SCBSession sharedSession] userId]];
+    list.file_id = @"";
+    list.upload_size = 0;
+    list.is_autoUpload = NO;
+    list.is_share = NO;
+    list.spaceId = [[SCBSession sharedSession] spaceID];
+    newUpload.list = list;
+    [newUpload setDelegate:self];
+    newUpload.uploadType = SJUploadTypeCommentAudio;
+    if(newUpload.list.t_state == 0)
+    {
+        newUpload.list.t_state = 0;
+        [newUpload isNetWork];
+    }
+    
 //    if (self.hud) {
 //        [self.hud removeFromSuperview];
 //    }
@@ -283,6 +289,13 @@
 //    self.hud.labelText=@"正在发表...";
 //    self.hud.mode=MBProgressHUDModeIndeterminate;
 //    [self.hud show:YES];
+}
+- (void)sendAudioWithFid:(NSString *)fid
+{
+    SCBSubjectManager *sm = [[SCBSubjectManager alloc] init];
+    sm.delegate = self;
+    int len = audioPlayer.duration;
+    [sm sendCommentWithResourceId:self.resourceID subjectId:self.subjectID content:[NSString stringWithFormat:@"%@",fid] type:@"1" seconds:[NSString stringWithFormat:@"%d",len]];
 }
 - (IBAction)sendAction:(id)sender {
     if (!self.commentTextField.text||[self.commentTextField.text isEqualToString:@""]) {
@@ -327,6 +340,13 @@
     self.hud.margin=10.f;
     [self.hud show:YES];
     [self.hud hide:YES afterDelay:1];
+}
+
+- (void)getFileWithFileId:(NSString *)file_id {
+    
+    SCBFileManager *fm = [[SCBFileManager alloc] init];
+    fm.delegate = self;
+    [fm requestEntFileInfo:file_id];
 }
 
 //设置录音
@@ -398,14 +418,16 @@
     NSString *comment = [dic objectForKey:@"content"];
     NSString *publishTime = [dic objectForKey:@"publishTime"];
     NSString *type = [dic objectForKey:@"comment_type"];
-    
+    int seconds=[[dic objectForKey:@"seconds"] intValue];
     cell.personLabel.text=nameStr;
     cell.timeLabel.text=[NSString getTimeFormat:publishTime];
     cell.commentLabel.text=comment;
-    if (type.intValue == 0) {
-        
-    }else{
-        
+    if (type.intValue == 1){
+        //语音评论
+        cell.commentLabel.hidden=YES;
+        cell.audioImageView.hidden=NO;
+        cell.audioLengthLabel.hidden=NO;
+        cell.audioLengthLabel.text=[NSString stringWithFormat:@"%d''",seconds];
     }
     CGRect cellFrame = [cell frame];
     CGRect r=cell.commentLabel.frame;
@@ -422,6 +444,16 @@
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSDictionary *dic = [self.listArray objectAtIndex:indexPath.row];
+    NSString *nameStr = [dic objectForKey:@"usr_turename"];
+    NSString *comment = [dic objectForKey:@"content"];
+    NSString *publishTime = [dic objectForKey:@"publishTime"];
+    NSString *type = [dic objectForKey:@"comment_type"];
+    if (type.intValue==1) {
+        //语音评论  播放主意
+        NSString *file_id = [dic objectForKey:@"content"];
+        [self getFileWithFileId:file_id];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -532,5 +564,113 @@
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     [self.view endEditing:YES];
+}
+
+#pragma mark - SCBFileManager delegate
+- (void)getFileEntInfo:(NSDictionary *)dictionary {
+    [self downLoad:dictionary];
+}
+
+- (void)downLoad:(NSDictionary *)dic {
+    
+    NSString *file_id = [dic objectForKey:@"fid"];
+    NSString *f_name = [dic objectForKey:@"fname"];
+    NSInteger size = [[dic objectForKey:@"fsize"] integerValue];
+    DwonFile *down = [[DwonFile alloc] init];
+    [down setFile_id:file_id];
+    [down setFileName:f_name];
+    [down setFileSize:size];
+    [down setDelegate:self];
+    [down startDownload];
+}
+
+- (void)downFinish:(NSString *)baseUrl {
+    NSError *error = nil;
+    NSURL *url = [NSURL fileURLWithPath:baseUrl];
+    audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+    [audioPlayer play];
+    
+}
+-(void)downFile:(NSInteger)downSize totalSize:(NSInteger)sudu
+{}
+-(void)downCurrSize:(NSInteger)currSize
+{}
+-(void)didFailWithError
+{}
+
+#pragma mark - SubjectUploadDelegate
+//上传成功
+-(void)upFinish:(NSDictionary *)dicationary fileinfo:(UpLoadList *)list;
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        audioId = [dicationary objectForKey:@"fid"];
+        [self sendAudioWithFid:audioId];
+        [[MessageCacheFileUtil sharedInstance] deleteWithContentPath:mp3TemporarySavePath];
+        [[MessageCacheFileUtil sharedInstance] deleteWithContentPath:audioTemporarySavePath];
+    });
+}
+//上传进行时，发送上传进度数据
+-(void)upProess:(float)proress fileTag:(NSInteger)sudu
+{
+    
+}
+//文件重名
+-(void)upReName
+{
+    
+}
+//上传失败
+-(void)upError
+{
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view.superview addSubview:self.hud];
+    self.hud.labelText=@"上传失败";
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
+}
+//服务器异常
+-(void)webServiceFail
+{
+    
+}
+//上传无权限
+-(void)upNotUpload
+{
+    
+}
+//用户存储空间不足
+-(void)upUserSpaceLass
+{
+    
+}
+//等待WiFi
+-(void)upWaitWiFi
+{
+    
+}
+//网络失败
+-(void)upNetworkStop
+{
+    
+}
+//文件名过长
+-(void)upNotNameTooTheigth
+{
+}
+//上传文件大小大于1g
+-(void)upNotSizeTooBig
+{
+    
+}
+//文件名存在特殊字符
+-(void)upNotHaveXNSString
+{
+    
 }
 @end

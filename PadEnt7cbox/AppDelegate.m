@@ -371,6 +371,9 @@ typedef enum{
         NSLog(@"失败，服务端发生未知错误");
     }
 }
+-(void)checkVersionFail
+{
+}
 #pragma mark - UIAlertViewDelegate Methods
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {

@@ -72,13 +72,33 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sub_yuyin_ico.png" highlightedImage="sub_yuyin_ico_se.png" translatesAutoresizingMaskIntoConstraints="NO" id="cj6-ub-5ZP">
+                                <rect key="frame" x="20" y="49" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="CIM-q5-EZS"/>
+                                    <constraint firstAttribute="height" constant="40" id="GVZ-bW-Mdd"/>
+                                </constraints>
+                            </imageView>
+                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qvK-NQ-Y8u">
+                                <rect key="frame" x="68" y="69" width="660" height="0.0"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="cj6-ub-5ZP" firstAttribute="leading" secondItem="DRW-XD-U8R" secondAttribute="leading" constant="20" id="0ae-tM-QC5"/>
+                            <constraint firstAttribute="trailing" secondItem="qvK-NQ-Y8u" secondAttribute="trailing" constant="20" id="XIi-9p-Fsy"/>
+                            <constraint firstAttribute="centerY" secondItem="qvK-NQ-Y8u" secondAttribute="centerY" id="XhY-Bw-SSE"/>
                             <constraint firstAttribute="bottom" secondItem="Wze-Hf-MNA" secondAttribute="bottom" constant="10" id="YVA-LY-7oR"/>
                             <constraint firstAttribute="trailing" secondItem="Wze-Hf-MNA" secondAttribute="trailing" constant="20" id="hpA-Fv-2Rm"/>
                             <constraint firstItem="Wze-Hf-MNA" firstAttribute="leading" secondItem="DRW-XD-U8R" secondAttribute="leading" constant="20" id="rCs-Nl-Ufv"/>
                             <constraint firstItem="Wze-Hf-MNA" firstAttribute="top" secondItem="DRW-XD-U8R" secondAttribute="top" constant="10" id="rQ2-CH-Kh4"/>
+                            <constraint firstAttribute="centerY" secondItem="cj6-ub-5ZP" secondAttribute="centerY" id="w6B-eJ-zGb"/>
+                            <constraint firstItem="qvK-NQ-Y8u" firstAttribute="leading" secondItem="cj6-ub-5ZP" secondAttribute="trailing" constant="8" id="yuQ-B5-3po"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -93,6 +113,8 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="audioImageView" destination="cj6-ub-5ZP" id="rjQ-0T-kFB"/>
+                <outlet property="audioLengthLabel" destination="qvK-NQ-Y8u" id="dns-Di-0CN"/>
                 <outlet property="boardView" destination="9eN-Zc-TT6" id="xVw-aj-MfV"/>
                 <outlet property="boardView1" destination="DRW-XD-U8R" id="4qP-Gu-mn2"/>
                 <outlet property="commentLabel" destination="Wze-Hf-MNA" id="8pO-3v-y6y"/>
@@ -102,4 +124,8 @@
             </connections>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="sub_yuyin_ico.png" width="53" height="53"/>
+        <image name="sub_yuyin_ico_se.png" width="53" height="53"/>
+    </resources>
 </document>

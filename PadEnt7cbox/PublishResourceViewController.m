@@ -10,17 +10,22 @@
 #import "PublishResourceCell.h"
 #import <AVFoundation/AVCaptureDevice.h>
 #import <AVFoundation/AVMediaFormat.h>
-#import "FileListViewController.h"
+#import "SelectFileListViewController.h"
 #import "SCBSession.h"
 #import "MBProgressHUD.h"
 #import "YNFunctions.h"
+#import "SCBSubjectManager.h"
+#import "SujectUpload.h"
+#import "UpLoadList.h"
+#import "NSString+Format.h"
 
 
-@interface PublishResourceViewController ()<UITableViewDataSource,UITableViewDelegate>
+@interface PublishResourceViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate,ChangeFileOrFolderDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
 @property (strong,nonatomic) NSMutableArray *listArray;
 @property (strong,nonatomic) MBProgressHUD *hud;
+@property (strong,nonatomic) UIPopoverController *filePopoverController;
 
 @end
 
@@ -57,7 +62,49 @@
 
 -(IBAction)publish:(id)sender
 {
-    
+    BOOL canPublish=YES;
+    NSMutableArray *fileIDArray=[NSMutableArray array];
+    NSMutableArray *finderIDArray=[NSMutableArray array];
+    NSMutableArray *urlArray=[NSMutableArray array];
+    NSMutableArray *urlDesArray=[NSMutableArray array];
+    for (NSDictionary *dic in self.listArray) {
+        if ([[dic objectForKey:@"type"] isEqualToString:@"photo"]) {
+            NSString *fid=[dic objectForKey:@"fid"];
+            if (!fid) {
+                canPublish=NO;
+                NSString *photoName=[dic objectForKey:@"name"];
+                [self showMessage:[NSString stringWithFormat:@"照片：‘%@’未上传完成",photoName]];
+                return;
+            }else
+            {
+                [fileIDArray addObject:fid];
+            }
+        }else if([[dic objectForKey:@"type"] isEqualToString:@"url"]){
+            [urlArray addObject:[dic objectForKey:@"url"]];
+            [urlDesArray addObject:[dic objectForKey:@"name"]];
+        }else if([[dic objectForKey:@"type"] isEqualToString:@"file"]){
+            NSDictionary *fileDic=[dic objectForKey:@"fileDic"];
+            NSString *fisdir=[fileDic objectForKey:@"fisdir"];
+            if ([fisdir isEqualToString:@"0"]) {
+                [finderIDArray addObject:[fileDic objectForKey:@"fid"]];
+            }else
+            {
+                [fileIDArray addObject:[fileDic objectForKey:@"fid"]];
+            }
+        }
+    }
+    if (!canPublish) {
+        [self showMessage:@"有照片未上传完成，不能发布"];
+        return;
+    }
+    PublishResourceCell *cell=(PublishResourceCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    NSString *comment =cell.commentTextView.text;
+    if (!comment) {
+        comment=@"";
+    }
+    SCBSubjectManager *sm = [[SCBSubjectManager alloc] init];
+    sm.delegate = self;
+    [sm publishResourceWithSubjectId:@[self.subjectID] res_file:fileIDArray res_folder:finderIDArray res_url:urlArray res_descs:urlDesArray comment:comment];
 }
 
 - (IBAction)openMenu:(id)sender {
@@ -101,28 +148,30 @@
             imagePicker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
         }
         imagePicker.delegate = self;
-        imagePicker.wantsFullScreenLayout = YES;
+        imagePicker.automaticallyAdjustsScrollViewInsets = NO;
         [self presentViewController:imagePicker animated:YES completion:nil];
     }
 }
 
-- (IBAction)openFileView:(id)sender {
+- (IBAction)openFileView:(UIButton *)sender {
     self.menuView.hidden=YES;
     
-//    //选择 icoffer的我的文件目录
-//    NSLog(@"选择 icoffer的我的文件目录");
-//    FileListViewController *flvc=[[FileListViewController alloc] init];
-//    flvc.spid=[[SCBSession sharedSession] spaceID];
-//    flvc.f_id=@"0";
-//    flvc.title=@"我的文件";
-//    flvc.roletype=@"2";
-//    flvc.flType=kMyndsTypeChangeFileOrFolder;
-//    flvc.fileOrFolderDelegate=self;
-//    YNNavigationController *nav=[[YNNavigationController alloc] initWithRootViewController:flvc];
-//    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-//    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
-//    [nav.navigationBar setTintColor:[UIColor whiteColor]];
-//    [self presentViewController:nav animated:YES completion:nil];
+    //选择 icoffer的我的文件目录
+    NSLog(@"选择 icoffer的我的文件目录");
+    SelectFileListViewController *flvc=[[SelectFileListViewController alloc] init];
+    flvc.spid=[[SCBSession sharedSession] spaceID];
+    flvc.f_id=@"0";
+    flvc.title=@"请选择文件夹";
+    flvc.type=kSelectTypePublishSubject;
+    flvc.rootName=@"我的文件";
+    flvc.roletype=@"2"; //2为我的文件夹 1为企业文件夹
+    flvc.isHasSelectFile=YES;
+    flvc.isFirstView = YES;
+    flvc.publishDelegate=self;
+
+    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:flvc];
+    self.filePopoverController=[[UIPopoverController alloc] initWithContentViewController:nav];
+    [self.filePopoverController presentPopoverFromRect:sender.frame inView:sender.superview permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
 }
 
 - (IBAction)openLinkView:(id)sender {
@@ -204,6 +253,91 @@
             }else if ([type isEqualToString:@"photo"]) {
                 cell.iconImageView.image=[UIImage imageNamed:@"file_pic.png"];
                 cell.resourceNameLabel.text=[dic objectForKey:@"name"];
+            }else if([type isEqualToString:@"file"])
+            {
+                NSDictionary *fileDic=[dic objectForKey:@"fileDic"];
+                NSString *fname=[fileDic objectForKey:@"fname"];
+                NSString *fmime=[[fname pathExtension] lowercaseString];
+                NSString *fisdir=[fileDic objectForKey:@"fisdir"];
+                cell.resourceNameLabel.text=fname;
+                if ([fisdir isEqualToString:@"0"]) {
+                    cell.iconImageView.image=[UIImage imageNamed:@"file_folder.png"];
+                }else if ([fmime isEqualToString:@"png"]||
+                          [fmime isEqualToString:@"jpg"]||
+                          [fmime isEqualToString:@"jpeg"]||
+                          [fmime isEqualToString:@"bmp"]||
+                          [fmime isEqualToString:@"gif"]){
+                    NSString *fthumb=[fileDic objectForKey:@"fthumb"];
+                    NSString *localThumbPath=[YNFunctions getIconCachePath];
+                    fthumb =[YNFunctions picFileNameFromURL:fthumb];
+                    localThumbPath=[localThumbPath stringByAppendingPathComponent:fthumb];
+                    NSLog(@"是否存在文件：%@",localThumbPath);
+                    if ([[NSFileManager defaultManager] fileExistsAtPath:localThumbPath]&&[UIImage imageWithContentsOfFile:localThumbPath]!=nil) {
+                        NSLog(@"存在文件：%@",localThumbPath);
+                        UIImage *icon=[UIImage imageWithContentsOfFile:localThumbPath];
+                        CGSize itemSize = CGSizeMake(100, 100);
+                        UIGraphicsBeginImageContext(itemSize);
+                        CGRect theR=CGRectMake(0, 0, itemSize.width, itemSize.height);
+                        if (icon.size.width>icon.size.height) {
+                            theR.size.width=icon.size.width/(icon.size.height/itemSize.height);
+                            theR.origin.x=-(theR.size.width/2)-itemSize.width;
+                        }else
+                        {
+                            theR.size.height=icon.size.height/(icon.size.width/itemSize.width);
+                            theR.origin.y=-(theR.size.height/2)-itemSize.height;
+                        }
+                        CGRect imageRect = CGRectMake(0, 0, 100, 100);
+                        //                        CGSize size=icon.size;
+                        //                        if (size.width>size.height) {
+                        //                            imageRect.size.height=size.height*(30.0f/imageRect.size.width);
+                        //                            imageRect.origin.y+=(30-imageRect.size.height)/2;
+                        //                        }else{
+                        //                            imageRect.size.width=size.width*(30.0f/imageRect.size.height);
+                        //                            imageRect.origin.x+=(30-imageRect.size.width)/2;
+                        //                        }
+                        [icon drawInRect:imageRect];
+                        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+                        UIGraphicsEndImageContext();
+                        cell.iconImageView.image = image;
+                    }else{
+                        cell.iconImageView.image = [UIImage imageNamed:@"file_pic.png"];
+                        NSLog(@"将要下载的文件：%@",localThumbPath);
+//                        [self startIconDownload:dic forIndexPath:indexPath];
+                    }
+                }else if ([fmime isEqualToString:@"doc"]||
+                          [fmime isEqualToString:@"docx"]||
+                          [fmime isEqualToString:@"rtf"])
+                {
+                    cell.iconImageView.image = [UIImage imageNamed:@"file_word.png"];
+                }
+                else if ([fmime isEqualToString:@"xls"]||
+                         [fmime isEqualToString:@"xlsx"])
+                {
+                    cell.iconImageView.image = [UIImage imageNamed:@"file_excel.png"];
+                }else if ([fmime isEqualToString:@"mp3"])
+                {
+                    cell.iconImageView.image = [UIImage imageNamed:@"file_music.png"];
+                }else if ([fmime isEqualToString:@"mov"]||
+                          [fmime isEqualToString:@"mp4"]||
+                          [fmime isEqualToString:@"avi"]||
+                          [fmime isEqualToString:@"rmvb"])
+                {
+                    cell.iconImageView.image = [UIImage imageNamed:@"file_moving.png"];
+                }else if ([fmime isEqualToString:@"pdf"])
+                {
+                    cell.iconImageView.image = [UIImage imageNamed:@"file_pdf.png"];
+                }else if ([fmime isEqualToString:@"ppt"]||
+                          [fmime isEqualToString:@"pptx"])
+                {
+                    cell.iconImageView.image = [UIImage imageNamed:@"file_ppt.png"];
+                }else if([fmime isEqualToString:@"txt"])
+                {
+                    cell.iconImageView.image = [UIImage imageNamed:@"file_txt.png"];
+                }else
+                {
+                    cell.iconImageView.image = [UIImage imageNamed:@"file_other.png"];
+                }
+
             }
             [cell.delButton addTarget:self action:@selector(deleteAction:event:) forControlEvents:UIControlEventTouchUpInside];
         }
@@ -250,10 +384,37 @@
         BOOL result=[UIImageJPEGRepresentation(image, 1) writeToFile:filePath atomically:YES];
         if (result) {
             NSLog(@"文件保存成功");
+            NSLog(@"文件保存成功");
+            SujectUpload *newUpload = [[SujectUpload alloc] init];
+            UpLoadList *list = [[UpLoadList alloc] init];
+            list.t_date = @"";
+            list.t_lenght = (NSInteger)[YNFunctions fileSizeAtPath:filePath];
+            list.t_name = [[filePath pathComponents] lastObject];
+            list.t_state = 0;
+            list.t_fileUrl = filePath;
+            list.t_url_pid = @"";
+            list.t_url_name = @"DeviceName";
+            list.t_file_type = 5;
+            list.user_id = [NSString formatNSStringForOjbect:[[SCBSession sharedSession] userId]];
+            list.file_id = @"";
+            list.upload_size = 0;
+            list.is_autoUpload = NO;
+            list.is_share = NO;
+            list.spaceId = [[SCBSession sharedSession] spaceID];
+            newUpload.list = list;
+            [newUpload setDelegate:self];
+            if(newUpload.list.t_state == 0)
+            {
+                newUpload.list.t_state = 0;
+                [newUpload isNetWork];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.listArray addObject:@{@"type":@"photo",@"name":fileName,@"list":list}];
+                [self.tableView reloadData];
+            });
+
         }
     });
-    [self.listArray addObject:@{@"type":@"photo",@"name":fileName}];
-    [self.tableView reloadData];
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
@@ -280,11 +441,135 @@
         }
     }
 }
+
 #pragma mark - SCBSubjectManagerDelegate
-//-(void)didGetSubjectInfo:(NSDictionary *)datadic
-//{
-//    self.dataDic=datadic;
-//    self.listArray=[datadic objectForKey:@"joinMember"];
-//    [self.tableView reloadData];
-//}
+-(void)networkError
+{
+    [self showMessage:@"链接失败，请检查网络"];
+}
+-(void)didPublishResource:(NSDictionary *)datadic
+{
+    int code=[[datadic objectForKey:@"code"] intValue];
+    if (code==0) {
+        [self showMessage:@"发布成功"];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }else
+    {
+        [self showMessage:[NSString stringWithFormat:@"发部失败，错误码：%d",code]];
+    }
+}
+#pragma mark - ChangeFileOrFolderDelegate
+-(void)addFile:(NSDictionary *)dic
+{
+    [self.filePopoverController dismissPopoverAnimated:YES];
+    BOOL isExist=NO;
+    for (NSDictionary *d in self.listArray) {
+        if ([[d objectForKey:@"type"] isEqualToString:@"file"]) {
+            NSString *fid=[[d objectForKey:@"fileDic"] objectForKey:@"fid"];
+            if ([fid longLongValue]==[[dic objectForKey:@"fid"] longLongValue]) {
+                isExist=YES;
+                break;
+            }
+        }
+    }
+    if (isExist) {
+        [self showMessage:@"文件已经存在"];
+        return;
+    }
+    [self.listArray addObject:@{@"type":@"file",@"fileDic":dic}];
+    [self.tableView reloadData];
+}
+
+#pragma mark - //上传成功
+-(void)upFinish:(NSDictionary *)dicationary fileinfo:(UpLoadList *)list;
+{
+    if (self.hud) {
+        self.hud.labelText=@"文件上传完成";
+        self.hud.mode=MBProgressHUDModeIndeterminate;
+        self.hud.margin=10.f;
+        [UIView animateWithDuration:1.0 animations:^{
+            [self.hud removeFromSuperview];
+        }];
+    }
+    NSString *file_id = [NSString formatNSStringForOjbect:[dicationary objectForKey:@"fid"]];
+    
+    NSDictionary *theDic;
+    for (NSDictionary *dic in self.listArray) {
+        if ([[dic objectForKey:@"type"] isEqualToString:@"photo"]) {
+            if ([dic objectForKey:@"list"]==list) {
+                theDic=dic;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showMessage:[NSString stringWithFormat:@"照片：'%@' 上传完成",[dic objectForKey:@"name"]]];
+                });
+                break;
+            }
+        }
+    }
+    if (theDic) {
+        NSMutableDictionary *newDic=[NSMutableDictionary dictionaryWithDictionary:theDic];
+        [newDic setObject:file_id forKey:@"fid"];
+        int index=[self.listArray indexOfObject:theDic];
+        [self.listArray replaceObjectAtIndex:index withObject:newDic];
+    }
+}
+//上传进行时，发送上传进度数据
+-(void)upProess:(float)proress fileTag:(NSInteger)sudu
+{
+    
+}
+//文件重名
+-(void)upReName
+{
+    
+}
+//上传失败
+-(void)upError
+{
+//    if (self.hud) {
+//        self.hud.labelText=@"文件上传失败";
+//        self.hud.mode=MBProgressHUDModeIndeterminate;
+//        [UIView animateWithDuration:1.0 animations:^{
+//            [self.hud removeFromSuperview];
+//        }];
+//    }
+}
+//服务器异常
+-(void)webServiceFail
+{
+    
+}
+//上传无权限
+-(void)upNotUpload
+{
+    
+}
+//用户存储空间不足
+-(void)upUserSpaceLass
+{
+    
+}
+//等待WiFi
+-(void)upWaitWiFi
+{
+    
+}
+//网络失败
+-(void)upNetworkStop
+{
+    
+}
+//文件名过长
+-(void)upNotNameTooTheigth
+{
+}
+//上传文件大小大于1g
+-(void)upNotSizeTooBig
+{
+    
+}
+//文件名存在特殊字符
+-(void)upNotHaveXNSString
+{
+    
+}
 @end

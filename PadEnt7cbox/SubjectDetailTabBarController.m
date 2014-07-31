@@ -106,6 +106,7 @@
 -(IBAction)publishResource:(id)sender
 {
     PublishResourceViewController *publishResourceViewController=[PublishResourceViewController new];
+    publishResourceViewController.subjectID=self.subjectId;
     publishResourceViewController.modalPresentationStyle=UIModalPresentationPageSheet;
     [self presentViewController:publishResourceViewController animated:YES completion:nil];
 }

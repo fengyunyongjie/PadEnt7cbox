@@ -245,6 +245,10 @@
 #define FM_UPLOAD_NEW @"/file/upload/put"
 //新上传提交 /ent /file/upload/commit
 #define FM_UPLOAD_NEW_COMMIT @"/file/upload/commit"
+//专题上传 新上传效验 /ent /file/upload/new/verify
+#define FM_UPLOAD_CLIENT_VERIFY @"/file/upload/clientVerifyIOS"
+//专题上传 新上传提交 /file/upload/clientCommit
+#define FM_UPLOAD_CLIENTCOMMIT @"/file/upload/clientCommitIOS"
 #pragma mark - 7.分享链接
 //发布公开外链
 #define LINK_RELEASE_PUB_URI @"/link/release_pub"

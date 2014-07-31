@@ -11,11 +11,24 @@
 #import "MBProgressHud.h"
 #import "ResourceCommentViewController.h"
 #import "SubjectDetailTabBarController.h"
+#import "MainViewController.h"
+#import "SCBFileManager.h"
+#import "DownList.h"
+#import "AppDelegate.h"
+#import "SCBSession.h"
+#import "NSString+Format.h"
+#import "ResourceFinderViewController.h"
+#import "PhotoLookViewController.h"
+#import "YNFunctions.h"
+#import "QLBrowserViewController.h"
+#import "OtherBrowserViewController.h"
 
 @interface ActivityDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong,nonatomic) MBProgressHUD *hud;
 @property (strong,nonatomic) NSArray *resourceArray;
+@property (strong,nonatomic) SCBFileManager *fm_move;
+@property (strong,nonatomic) NSArray *selectids;
 @end
 
 @implementation ActivityDetailViewController
@@ -53,6 +66,36 @@
     
     NSIndexPath *indexPath= [self.tableView indexPathForRowAtPoint:currentTouchPosition];
     if (indexPath) {
+        NSDictionary *content=[NSString stringWithDictionS:[self.dic objectForKey:@"content"]];
+        NSArray *eveFileUrl = [content objectForKey:@"eveFileUrl"];
+        NSDictionary *dic=[eveFileUrl objectAtIndex:indexPath.row];
+        if (![dic objectForKey:@"resourceid"]) {
+            [self showMessage:@"该文件已被删除或取消共享。"];
+            return;
+        }
+        NSString *file_id = [NSString formatNSStringForOjbect:[dic objectForKey:@"f_id"]];
+        NSString *thumb = [NSString formatNSStringForOjbect:[dic objectForKey:@"f_thumb"]];
+        if([thumb length]==0)
+        {
+            thumb = @"0";
+        }
+        NSString *name = [NSString formatNSStringForOjbect:[dic objectForKey:@"f_name"]];
+        NSInteger fsize = [[dic objectForKey:@"file_size"] integerValue];
+        
+        DownList *list = [[DownList alloc] init];
+        list.d_name = name;
+        list.d_downSize = fsize;
+        list.d_thumbUrl = thumb;
+        list.d_file_id = file_id;
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSDate *todayDate = [NSDate date];
+        list.d_datetime = [dateFormatter stringFromDate:todayDate];
+        list.d_ure_id = [NSString formatNSStringForOjbect:[[SCBSession sharedSession] userId]];
+        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [delegate.downmange addDownLists:[NSMutableArray arrayWithObjects:list, nil]];
     }
 }
 
@@ -66,6 +109,24 @@
     
     NSIndexPath *indexPath= [self.tableView indexPathForRowAtPoint:currentTouchPosition];
     if (indexPath) {
+        NSDictionary *content=[NSString stringWithDictionS:[self.dic objectForKey:@"content"]];
+        NSArray *eveFileUrl = [content objectForKey:@"eveFileUrl"];
+        NSDictionary *dic=[eveFileUrl objectAtIndex:indexPath.row];
+        if (![dic objectForKey:@"resourceid"]) {
+            [self showMessage:@"该文件已被删除或取消共享。"];
+            return;
+        }
+        self.selectids=@[[dic objectForKey:@"f_id"]];
+        MainViewController *flvc=[[MainViewController alloc] init];
+        flvc.title=@"选择转存的位置";
+        flvc.delegate=self;
+        flvc.type=kTypeResave;
+        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:flvc];
+        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+        //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+        [self presentViewController:nav animated:YES completion:nil];
     }
 }
 
@@ -79,11 +140,37 @@
     
     NSIndexPath *indexPath= [self.tableView indexPathForRowAtPoint:currentTouchPosition];
     if (indexPath) {
-        NSDictionary *dic = self.dic;
+        NSDictionary *content=[NSString stringWithDictionS:[self.dic objectForKey:@"content"]];
+        NSArray *eveFileUrl = [content objectForKey:@"eveFileUrl"];
+        NSDictionary *dic=[eveFileUrl objectAtIndex:indexPath.row];
+        NSString *urlStr = [dic objectForKey:@"url"];
+        NSString *f_isdir=[dic objectForKey:@"f_isdir"];
+        
+        NSMutableDictionary *resourceDic=[NSMutableDictionary dictionary];
+        
+        if (![dic objectForKey:@"resourceid"]) {
+            [self showMessage:@"该文件已被删除或取消共享。"];
+            return;
+        }
+        [resourceDic setObject:[dic objectForKey:@"resourceid"] forKey:@"resource_id"];
+        if (urlStr) {
+            [resourceDic setObject:@3 forKey:@"type"];
+            [resourceDic setObject:[dic objectForKey:@"url"] forKey:@"details"];
+            [resourceDic setObject:[dic objectForKey:@"urlTitle"] forKey:@"file_name"];
+        }else if([f_isdir intValue]==0)
+        {
+            [resourceDic setObject:@1 forKey:@"type"];
+            [resourceDic setObject:[dic objectForKey:@"f_name"] forKey:@"file_name"];
+        }else
+        {
+            [resourceDic setObject:@2 forKey:@"type"];
+            [resourceDic setObject:[dic objectForKey:@"f_name"] forKey:@"file_name"];
+            [resourceDic setObject:[dic objectForKey:@"f_thumb"] forKey:@"f_thumb"];
+        }
         
         ResourceCommentViewController *resourceCommentViewController=[ResourceCommentViewController new];
-        resourceCommentViewController.resourceID=[dic objectForKey:@"resource_id"];
-        resourceCommentViewController.resourceDic=dic;
+        resourceCommentViewController.resourceID=[dic objectForKey:@"resourceid"];
+        resourceCommentViewController.resourceDic=resourceDic;
         resourceCommentViewController.subjectID=[(SubjectDetailTabBarController *)self.tabBarController subjectId];
         resourceCommentViewController.modalPresentationStyle=UIModalPresentationPageSheet;
         [self presentViewController:resourceCommentViewController animated:YES completion:nil];
@@ -106,6 +193,19 @@
     [self.hud show:YES];
     [self.hud hide:YES afterDelay:1];
 }
+
+-(void)resaveFileToID:(NSString *)f_id spid:(NSString *)spid
+{
+    if (self.fm_move) {
+        [self.fm_move cancelAllTask];
+    }else
+    {
+        self.fm_move=[[SCBFileManager alloc] init];
+    }
+    self.fm_move.delegate=self;
+    [self.fm_move resaveFileIDs:self.selectids toPID:f_id sID:spid];
+}
+
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 {
@@ -159,7 +259,7 @@
         }
         cell.personLabel.text=[content objectForKey:@"eveName"];
         cell.contentLabel.text=[content objectForKey:@"eveContent"];
-        cell.timeLabel.text=[content objectForKey:@"eveTime"];
+        cell.timeLabel.text=[NSString getTimeFormat:[content objectForKey:@"eveTime"]];
         
         if (indexPath.row==0) {
             cell.personLabel.hidden=NO;
@@ -311,8 +411,103 @@
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-}
+    if (indexPath.section!=1) {
+        return;
+    }
+    NSDictionary *content=[NSString stringWithDictionS:[self.dic objectForKey:@"content"]];
+    NSArray *eveFileUrl = [content objectForKey:@"eveFileUrl"];
+    NSDictionary *dic=[eveFileUrl objectAtIndex:indexPath.row];
+    NSString *urlStr = [dic objectForKey:@"url"];
+    NSString *f_isdir=[dic objectForKey:@"f_isdir"];
+    
+    NSMutableDictionary *resourceDic=[NSMutableDictionary dictionary];
+    
+    if (![dic objectForKey:@"resourceid"]) {
+        [self showMessage:@"该文件已被删除或取消共享。"];
+        return;
+    }
+    [resourceDic setObject:[dic objectForKey:@"resourceid"] forKey:@"resource_id"];
+    if (urlStr) {
+        //打开链接
+        NSString *urlString = [dic objectForKey:@"url"];
+        if (![urlString hasPrefix:@"http://"]) {
+            urlString = [NSString stringWithFormat:@"http://%@",urlString];
+        }
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
 
+    }else if([f_isdir intValue]==0)
+    {
+        //打开目录
+        ResourceFinderViewController *finderViewController=[ResourceFinderViewController new];
+        finderViewController.subjectID=[(SubjectDetailTabBarController *)self.tabBarController subjectId];
+        finderViewController.fID=[dic objectForKey:@"file_id"];
+        finderViewController.title=[dic objectForKey:@"f_name"];
+        [self.navigationController pushViewController:finderViewController animated:YES];
+    }else
+    {
+        NSString *fname=[dic objectForKey:@"f_name"];
+        NSString *fmime=[[dic objectForKey:@"f_mime"] lowercaseString];
+        NSString *fid=[dic objectForKey:@"f_id"];
+        //打开文件
+        if ([fmime isEqualToString:@"png"]||
+            [fmime isEqualToString:@"jpg"]||
+            [fmime isEqualToString:@"jpeg"]||
+            [fmime isEqualToString:@"bmp"]||
+            [fmime isEqualToString:@"gif"]){
+            //打开图片
+            DownList *list = [[DownList alloc] init];
+            list.d_file_id = fid;
+            list.d_thumbUrl = [dic objectForKey:@"f_thumb"];
+            if([list.d_thumbUrl length]==0)
+            {
+                list.d_thumbUrl = @"0";
+            }
+            list.d_name = fname;
+            list.d_baseUrl = [NSString get_image_save_file_path:list.d_name];
+            list.d_downSize = [[dic objectForKey:@"file_size"] intValue];
+            
+            NSMutableArray *tableArray = [[NSMutableArray alloc] init];
+            [tableArray addObject:list];
+            if([tableArray count]>0)
+            {
+                PhotoLookViewController *look = [[PhotoLookViewController alloc] init];
+                [look setTableArray:tableArray];
+                [self presentViewController:look animated:YES completion:nil];
+            }
+        }else
+        {
+            //打开其它文件
+            NSString *fname=[dic objectForKey:@"f_name"];
+            NSString *fid=[dic objectForKey:@"f_id"];
+            NSString *documentDir = [YNFunctions getFMCachePath];
+            NSArray *array=[fname componentsSeparatedByString:@"/"];
+            NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,fid];
+            [NSString CreatePath:createPath];
+            NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:savedPath]) {
+                QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
+                browser.dataSource=browser;
+                browser.delegate=browser;
+                browser.currentPreviewItemIndex=0;
+                browser.title=fname;
+                browser.filePath=savedPath;
+                browser.fileName=fname;
+                [self presentViewController:browser animated:YES completion:nil];
+            } else {
+                OtherBrowserViewController *otherBrowser=[[OtherBrowserViewController alloc] initWithNibName:@"OtherBrowser" bundle:nil];
+                NSArray *values = [NSArray arrayWithObjects:fname,fid,[dic objectForKey:@"file_size"], nil];
+                NSArray *keys = [NSArray arrayWithObjects:@"fname",@"fid",@"fsize", nil];
+                NSDictionary *d = [NSDictionary dictionaryWithObjects:values forKeys:keys];
+                
+                otherBrowser.dataDic=d;
+                otherBrowser.title=fname;
+                otherBrowser.dpDelegate=self;
+                UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:otherBrowser];
+                [self presentViewController:nav animated:YES completion:nil];
+            }
+        }
+    }
+}
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
@@ -323,10 +518,40 @@
 {
     return 10;
 }
+
 #pragma mark - SCBSubjectManager delegate
 -(void)networkError
 {
     [self showMessage:@"链接失败，请检查网络"];
 }
 
+#pragma mark - SCBFileManagerDelegate
+-(void)moveUnsucess
+{
+    [self showMessage:@"操作失败"];
+}
+-(void)moveSucess
+{
+    [self showMessage:@"操作成功"];
+}
+#pragma mark -DownloadProgressDelegate
+-(void)downloadFinished:(NSDictionary *)dataDic
+{
+    NSString *name = [dataDic objectForKey:@"fname"];
+    NSString *fid = [dataDic objectForKey:@"fid"];
+    NSString *documentDir = [YNFunctions getFMCachePath];
+    NSArray *array=[name componentsSeparatedByString:@"/"];
+    NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,fid];
+    [NSString CreatePath:createPath];
+    NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+    
+    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
+    browser.dataSource=browser;
+    browser.delegate=browser;
+    browser.currentPreviewItemIndex=0;
+    browser.title=name;
+    browser.filePath=savedPath;
+    browser.fileName=name;
+    [self presentViewController:browser animated:NO completion:nil];
+}
 @end

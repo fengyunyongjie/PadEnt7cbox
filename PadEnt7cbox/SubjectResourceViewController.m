@@ -18,12 +18,18 @@
 #import "PhotoLookViewController.h"
 #import "QLBrowserViewController.h"
 #import "OtherBrowserViewController.h"
+#import "MBProgressHUD.h"
+#import "MainViewController.h"
+#import "SCBFileManager.h"
 
 @interface SubjectResourceViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate>
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) NSDictionary *dataDic;
 @property (nonatomic,strong) NSArray *listArray;
 @property (nonatomic,strong) SCBSubjectManager *sm_list;
+@property (nonatomic,strong) MBProgressHUD *hud;
+@property (nonatomic,strong) SCBFileManager *fm_move;
+@property (nonatomic,strong) NSArray *selectids;
 @end
 
 @implementation SubjectResourceViewController
@@ -86,6 +92,35 @@
     self.sm_list=[SCBSubjectManager new];
     self.sm_list.delegate=self;
     [self.sm_list getResourceListWithSubjectId:[(SubjectDetailTabBarController *)self.tabBarController subjectId] resourceUserIds:@"" resourceType:@"" resourceTitil:@""];
+}
+
+-(void)showMessage:(NSString *)message
+{
+    [self.hud show:NO];
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view.window];
+    [self.view.window addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=message;
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1];
+}
+
+-(void)resaveFileToID:(NSString *)f_id spid:(NSString *)spid
+{
+    if (self.fm_move) {
+        [self.fm_move cancelAllTask];
+    }else
+    {
+        self.fm_move=[[SCBFileManager alloc] init];
+    }
+    self.fm_move.delegate=self;
+    [self.fm_move resaveFileIDs:self.selectids toPID:f_id sID:spid];
 }
 
 #pragma mark - UITableViewDataSource
@@ -315,6 +350,19 @@
     
     NSIndexPath *indexPath= [self.tableView indexPathForRowAtPoint:currentTouchPosition];
     if (indexPath) {
+        NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
+        self.selectids=@[[dic objectForKey:@"file_id"]];
+        MainViewController *flvc=[[MainViewController alloc] init];
+        flvc.title=@"选择转存的位置";
+        flvc.delegate=self;
+        flvc.type=kTypeResave;
+        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:flvc];
+        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+        //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+        [self presentViewController:nav animated:YES completion:nil];
+
     }
 }
 
@@ -347,6 +395,11 @@
     [self.tableView reloadData];
 }
 
+-(void)networkError
+{
+    [self showMessage:@"链接失败，请检查网络"];
+}
+
 #pragma mark -DownloadProgressDelegate
 -(void)downloadFinished:(NSDictionary *)dataDic
 {
@@ -366,5 +419,15 @@
     browser.filePath=savedPath;
     browser.fileName=name;
     [self presentViewController:browser animated:NO completion:nil];
+}
+
+#pragma mark - SCBFileManagerDelegate
+-(void)moveUnsucess
+{
+    [self showMessage:@"操作失败"];
+}
+-(void)moveSucess
+{
+    [self showMessage:@"操作成功"];
 }
 @end

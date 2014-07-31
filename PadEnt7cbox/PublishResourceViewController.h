@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface PublishResourceViewController : UIViewController
-
+@property (strong,nonatomic) NSString *subjectID;
 @end

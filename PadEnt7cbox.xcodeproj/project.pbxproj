@@ -259,6 +259,8 @@
 		296B763B197F3FBF008D0C9C /* SubjectTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 296B7639197F3FBF008D0C9C /* SubjectTitleCell.m */; };
 		296B763C197F3FBF008D0C9C /* SubjectTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 296B763A197F3FBF008D0C9C /* SubjectTitleCell.xib */; };
 		296EBB26188F7134006CDAC3 /* file_folder_comp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 296EBB25188F7134006CDAC3 /* file_folder_comp@2x.png */; };
+		29704EB0198A2C81008E2435 /* SujectUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 29704EAF198A2C81008E2435 /* SujectUpload.m */; };
+		29704EB2198A4B8D008E2435 /* sub_yuyin_ico_se.png in Resources */ = {isa = PBXBuildFile; fileRef = 29704EB1198A4B8D008E2435 /* sub_yuyin_ico_se.png */; };
 		2981E929196D359A003E346B /* SubjectActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2981E928196D359A003E346B /* SubjectActivityViewController.m */; };
 		2981E92C196D35DF003E346B /* SubjectResourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2981E92B196D35DF003E346B /* SubjectResourceViewController.m */; };
 		2981E92F196D35FD003E346B /* SubjectInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2981E92E196D35FD003E346B /* SubjectInfoViewController.m */; };
@@ -732,6 +734,9 @@
 		296B7639197F3FBF008D0C9C /* SubjectTitleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubjectTitleCell.m; sourceTree = "<group>"; };
 		296B763A197F3FBF008D0C9C /* SubjectTitleCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SubjectTitleCell.xib; sourceTree = "<group>"; };
 		296EBB25188F7134006CDAC3 /* file_folder_comp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_folder_comp@2x.png"; sourceTree = "<group>"; };
+		29704EAE198A2C81008E2435 /* SujectUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SujectUpload.h; sourceTree = "<group>"; };
+		29704EAF198A2C81008E2435 /* SujectUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SujectUpload.m; sourceTree = "<group>"; };
+		29704EB1198A4B8D008E2435 /* sub_yuyin_ico_se.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sub_yuyin_ico_se.png; sourceTree = "<group>"; };
 		2981E927196D359A003E346B /* SubjectActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubjectActivityViewController.h; sourceTree = "<group>"; };
 		2981E928196D359A003E346B /* SubjectActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubjectActivityViewController.m; sourceTree = "<group>"; };
 		2981E92A196D35DF003E346B /* SubjectResourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubjectResourceViewController.h; sourceTree = "<group>"; };
@@ -1045,6 +1050,7 @@
 				299557E5198208C10010CF8F /* del_ico_nor.png */,
 				299557E6198208C10010CF8F /* del_ico_sel.png */,
 				299557E7198208C10010CF8F /* sub_yuyin_ico.png */,
+				29704EB1198A4B8D008E2435 /* sub_yuyin_ico_se.png */,
 				299557E8198208C10010CF8F /* sub_bt_comment_nor.png */,
 				299557E9198208C10010CF8F /* sub_bt_comment_sel.png */,
 				299557EA198208C10010CF8F /* sub_bt_copy_nor.png */,
@@ -1932,6 +1938,8 @@
 				295ACA9B19873ACD00031826 /* ResourceCommentCell.h */,
 				295ACA9C19873ACD00031826 /* ResourceCommentCell.m */,
 				295ACA9D19873ACD00031826 /* ResourceCommentCell.xib */,
+				29704EAE198A2C81008E2435 /* SujectUpload.h */,
+				29704EAF198A2C81008E2435 /* SujectUpload.m */,
 			);
 			name = Subject;
 			sourceTree = "<group>";
@@ -2229,6 +2237,7 @@
 				2995582B198248DA0010CF8F /* resource_resave_se.png in Resources */,
 				29135EA7188CF35900A951CE /* file_doc@2x.png in Resources */,
 				29C0D54618CDB70400056CB9 /* add_pic@2x.png in Resources */,
+				29704EB2198A4B8D008E2435 /* sub_yuyin_ico_se.png in Resources */,
 				29135EB9188CF35900A951CE /* guide2.png in Resources */,
 				29135F08188CF35900A951CE /* title_bk@2x.png in Resources */,
 				29135E93188CF35900A951CE /* bk_selectTop.png in Resources */,
@@ -2337,6 +2346,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29704EB0198A2C81008E2435 /* SujectUpload.m in Sources */,
 				29C74254197919DE003C4EC0 /* PublishResourceViewController.m in Sources */,
 				2982E060186152F5009CB82D /* PhotoLookViewController.m in Sources */,
 				295C38671987A7730068AB52 /* FaceView.m in Sources */,

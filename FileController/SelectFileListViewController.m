@@ -55,7 +55,7 @@
         self.tableView.frame=self.view.frame;
         return;
     }
-    if (self.type==kSelectTypeFloderChange) {
+    if (self.type==kSelectTypeFloderChange||self.type==kSelectTypePublishSubject) {
         [self.toolbar setHidden:YES];
         self.view.frame=self.view.bounds;
         self.tableView.frame=self.view.frame;
@@ -194,6 +194,14 @@
 #pragma mark - 操作方法
 - (void)updateFileList
 {
+    if (self.type==kSelectTypePublishSubject) {
+        [self.fm cancelAllTask];
+        self.fm=nil;
+        self.fm=[[SCBFileManager alloc] init];
+        [self.fm setDelegate:self];
+        [self.fm openFinderWithID:self.f_id sID:self.spid authModelId:@"2"];
+        return;
+    }
     //加载本地缓存文件
     //    NSString *dataFilePath=[YNFunctions getDataCachePath];
     //    dataFilePath=[dataFilePath stringByAppendingPathComponent:[YNFunctions getFileNameWithFID:[NSString stringWithFormat:@"%@_%@",self.spid,self.f_id]]];
@@ -540,7 +548,7 @@
         [detailTextLabel setFont:[UIFont systemFontOfSize:13]];
         [detailTextLabel setTextColor:[UIColor grayColor]];
     }
-    if(self.type==kSelectTypeFloderChange)
+    if(self.type==kSelectTypeFloderChange||self.type==kSelectTypePublishSubject)
     {
         //修改accessoryType
         UIButton *accessory=[[UIButton alloc] init];
@@ -651,7 +659,12 @@
     if(indexPath.row>=0 && indexPath.row<self.finderArray.count)
     {
         NSDictionary *dic=[self.finderArray objectAtIndex:indexPath.row];
-        [self changeFloderView:dic];
+        if (self.type==kSelectTypeFloderChange) {
+            [self changeFloderView:dic];
+        }else if(self.type==kSelectTypePublishSubject)
+        {
+            [self addFileToPublish:dic];
+        }
     }
 }
 
@@ -704,6 +717,7 @@
                 flVC.fcmd=[dic objectForKey:@"fcmd"];
                 flVC.delegate=self.delegate;
                 flVC.selectFileEmialViewDelegate=self.selectFileEmialViewDelegate;
+                flVC.publishDelegate=self.publishDelegate;
                 flVC.roletype=self.roletype;
                 flVC.type=self.type;
                 flVC.targetsArray=self.targetsArray;
@@ -714,6 +728,9 @@
             }else if(self.type==kSelectTypeShare)
             {
                 [self addSharedFileView:dic];
+            }else if(self.type==kSelectTypePublishSubject)
+            {
+                [self addFileToPublish:dic];
             }
         }
     }
@@ -739,6 +756,12 @@
 }
 -(void)openFinderSucess:(NSDictionary *)datadic
 {
+    if (self.type==kSelectTypePublishSubject) {
+        self.dataDic=datadic;
+        self.finderArray=(NSArray *)[self.dataDic objectForKey:@"files"];
+        [self.tableView reloadData];
+        return;
+    }
     self.dataDic=datadic;
     if (self.dataDic) {
         //        self.listArray=(NSArray *)[self.dataDic objectForKey:@"files"];
@@ -989,6 +1012,10 @@
 -(void)addSharedFileView:(NSDictionary *)dictionary
 {
     [self.selectFileEmialViewDelegate addSharedFileView:dictionary];
+}
+-(void)addFileToPublish:(NSDictionary *)dictionary
+{
+    [self.publishDelegate addFile:dictionary];
 }
 -(void)changeFloderView:(NSDictionary *)dictionary
 {

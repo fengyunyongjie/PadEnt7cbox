@@ -29,6 +29,7 @@ typedef enum{
     kShareTypeShare,
 }ShareType;
 
+
 @protocol FileEmailViewDelegate <NSObject>
 
 -(void)addSharedFileView:(NSDictionary *)dictionary;

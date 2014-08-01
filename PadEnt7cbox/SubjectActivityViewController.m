@@ -13,6 +13,8 @@
 #import "NSString+Format.h"
 #import "ActivityDetailViewController.h"
 #import "MBProgressHUD.h"
+#import "MyTabBarViewController.h"
+#import "SubjectListViewController.h"
 
 @interface SubjectActivityViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate>
 @property (nonatomic,strong) UITableView *tableView;
@@ -218,9 +220,12 @@
     NSString *persons=[content objectForKey:@"object"];
     NSString *personsNum=[content objectForKey:@"number"];
     NSString *action=[content objectForKey:@"action"];
-    
+    NSString *eveType=[content objectForKey:@"eveType"];
+    NSString *eveSeconds=[content objectForKey:@"eveSeconds"];
     NSArray *eveFileUrl = [content objectForKey:@"eveFileUrl"];
+    
     NSDictionary *fileDic = [eveFileUrl firstObject];
+    
     NSString *f_id=[fileDic objectForKey:@"f_id"];
     NSString *urlTitle=[fileDic objectForKey:@"urlTitle"];
     NSString *url=[fileDic objectForKey:@"url"];
@@ -304,6 +309,13 @@
                     cell.linkLabel.text=url;
                     cell.linkLabel.hidden=NO;
                 }
+            }else if(cellType==5&&eveType&&eveType.intValue==1)
+            {
+                cell.contentLabel.hidden=YES;
+                cell.resourceImageView.hidden=NO;
+                cell.resourceLabel.hidden=NO;
+                cell.resourceImageView.image=[UIImage imageNamed:@"sub_yuyin_ico.png"];
+                cell.resourceLabel.text=[NSString stringWithFormat:@"%@''",eveSeconds];
             }
         }
             break;
@@ -449,6 +461,15 @@
     self.dataDic=datadic;
     self.listArray=[datadic objectForKey:@"result"];
     [self.tableView reloadData];
+    MyTabBarViewController *myTabVC=[self.splitViewController.viewControllers objectAtIndex:0];
+    [myTabVC checkSubjectActivityCount];
+//    UINavigationController *nav=(UINavigationController *)myTabVC.viewControllers[2];
+//    if ([nav respondsToSelector:@selector(viewControllers)]) {
+//        SubjectListViewController *subjectVC=(SubjectListViewController *)nav.viewControllers.firstObject;
+//        if ([subjectVC respondsToSelector:@selector(updateList)]) {
+//            [subjectVC updateList];
+//        }
+//    }
 }
 -(void)networkError
 {

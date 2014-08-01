@@ -52,6 +52,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *sendButton;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong,nonatomic) MBProgressHUD *hud;
+@property (weak, nonatomic) IBOutlet UIView *voiceHUDView;
 
 @property (strong,nonatomic) NSArray *listArray;
 @property (strong,nonatomic) NSDictionary *dataDic;
@@ -240,8 +241,10 @@
     [self resetTimer];
 	timer = [NSTimer scheduledTimerWithTimeInterval:WAVE_UPDATE_FREQUENCY target:self selector:@selector(updateMeters) userInfo:nil repeats:YES];
 //    [self showVoiceHudOrHide:YES];
+    self.voiceHUDView.hidden=NO;
 }
 - (IBAction)endVoiceInput:(id)sender {
+    self.voiceHUDView.hidden=YES;
 //    [self showVoiceHudOrHide:NO];
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     [self resetTimer];
@@ -313,6 +316,7 @@
         self.voiceInputButton.hidden=NO;
         self.commentTextField.hidden=YES;
         self.sendButton.hidden=YES;
+        [self.view endEditing:YES];
     }else
     {
         self.voiceInputButton.hidden=YES;
@@ -596,7 +600,9 @@
 -(void)downCurrSize:(NSInteger)currSize
 {}
 -(void)didFailWithError
-{}
+{
+    [self showMessage:@"播放语音失败"];
+}
 
 #pragma mark - SubjectUploadDelegate
 //上传成功
@@ -604,7 +610,9 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         audioId = [dicationary objectForKey:@"fid"];
-        [self sendAudioWithFid:audioId];
+        if (audioId) {
+            [self sendAudioWithFid:audioId];
+        }
         [[MessageCacheFileUtil sharedInstance] deleteWithContentPath:mp3TemporarySavePath];
         [[MessageCacheFileUtil sharedInstance] deleteWithContentPath:audioTemporarySavePath];
     });

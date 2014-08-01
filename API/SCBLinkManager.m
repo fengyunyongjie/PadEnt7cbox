@@ -111,7 +111,7 @@
     // Release the connection now that it's finished
     // call our delegate and tell it that our icon is ready for display
     //[delegate fileDidDownload:self.index];
-    NSLog(@"%@",[[NSString alloc] initWithData:self.activeData encoding:NSUTF8StringEncoding]);
+//    NSLog(@"%@",[[NSString alloc] initWithData:self.activeData encoding:NSUTF8StringEncoding]);
     NSError *jsonParsingError=nil;
     
     NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:self.activeData options:0 error:&jsonParsingError];

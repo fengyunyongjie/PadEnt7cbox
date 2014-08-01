@@ -14,4 +14,5 @@
 @property(nonatomic,strong) UIImageView *tagImageView;
 -(void)addUploadNumber:(NSInteger)count;
 -(void)setHasEmailTagHidden:(BOOL)isHidden;
+- (void)checkSubjectActivityCount;
 @end

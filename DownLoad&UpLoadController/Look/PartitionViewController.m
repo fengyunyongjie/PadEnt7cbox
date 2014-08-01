@@ -379,7 +379,7 @@
                 else
                 {
                     MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
-                    UINavigationController *NavigationController3 = [[tabbar viewControllers] objectAtIndex:2];
+                    UINavigationController *NavigationController3 = [[tabbar viewControllers] objectAtIndex:3];
                     for(int i=NavigationController3.viewControllers.count-1;i>=0;i--)
                     {
                         UpDownloadViewController *upDownLoad = [NavigationController3.viewControllers objectAtIndex:i];

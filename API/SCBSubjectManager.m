@@ -81,11 +81,11 @@ typedef enum {
     NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
     NSMutableString *body=[[NSMutableString alloc] init];
     [body appendFormat:@"subj_name=%@",name];
-    [body appendFormat:@"&subj_remarks=%@",info];
+    [body appendFormat:@"&subj_comment=%@",info];
     [body appendFormat:@"&subj_is_publish=%@",isPublish?@"1":@"0"];
     [body appendFormat:@"&subj_is_adduser=%@",isAddUser?@"1":@"0"];
     for (NSString *userid in members) {
-        [body appendFormat:@"&members[]=%@",userid];
+        [body appendFormat:@"&membersid[]=%@",userid];
     }
     NSLog(@"%@",body);
     NSMutableData *myRequestData=[NSMutableData data];
@@ -380,7 +380,7 @@ typedef enum {
         NSLog(@"请求得到的数据为空");
         return;
     }
-    NSLog(@"%@",[[NSString alloc] initWithData:self.activeData encoding:NSUTF8StringEncoding]);
+//    NSLog(@"%@",[[NSString alloc] initWithData:self.activeData encoding:NSUTF8StringEncoding]);
     NSError *jsonParsingError=nil;
     
     NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:self.activeData options:0 error:&jsonParsingError];

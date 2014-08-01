@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface SubjectListViewController : UIViewController
-
+-(void)updateList;
 @end

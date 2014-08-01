@@ -14,6 +14,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "AppDelegate.h"
 #import "Reachability.h"
+#import "NSString+Format.h"
 
 #define SomeDataSize 1024*200
 

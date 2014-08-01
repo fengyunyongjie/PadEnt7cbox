@@ -14,6 +14,7 @@
                 <outlet property="sendButton" destination="mbj-Fs-M4Q" id="dL7-P1-whd"/>
                 <outlet property="tableView" destination="a8S-rJ-kFC" id="E6r-Wr-Z12"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="voiceHUDView" destination="Fad-xs-138" id="Jk9-4q-Wdt"/>
                 <outlet property="voiceInputButton" destination="vhK-Hh-WgQ" id="ziH-fb-xun"/>
             </connections>
         </placeholder>
@@ -175,20 +176,39 @@
                         <constraint firstAttribute="centerY" secondItem="xxx-F1-9xu" secondAttribute="centerY" id="yna-SF-Wat"/>
                     </constraints>
                 </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fad-xs-138">
+                    <rect key="frame" x="0.0" y="0.0" width="768" height="964"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mic_talk_358x358.png" translatesAutoresizingMaskIntoConstraints="NO" id="8Cc-KO-eHg">
+                            <rect key="frame" x="295" y="393" width="179" height="179"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" red="0.88855229591836737" green="0.88855229591836737" blue="0.88855229591836737" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="centerY" secondItem="8Cc-KO-eHg" secondAttribute="centerY" id="iYT-mY-upG"/>
+                        <constraint firstAttribute="centerX" secondItem="8Cc-KO-eHg" secondAttribute="centerX" id="vhb-Hw-OSQ"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="Fad-xs-138" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="1Mf-E0-iOl"/>
                 <constraint firstAttribute="trailing" secondItem="2OH-oq-KA1" secondAttribute="trailing" id="6vL-yf-lKI"/>
                 <constraint firstAttribute="bottom" secondItem="KVh-rf-OE7" secondAttribute="bottom" id="CGD-oF-d9o"/>
                 <constraint firstItem="2OH-oq-KA1" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="EKj-vl-3al"/>
                 <constraint firstAttribute="trailing" secondItem="KVh-rf-OE7" secondAttribute="trailing" id="GUH-ks-pNb"/>
                 <constraint firstItem="2OH-oq-KA1" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Hge-mE-RJM"/>
                 <constraint firstItem="KVh-rf-OE7" firstAttribute="top" secondItem="a8S-rJ-kFC" secondAttribute="bottom" id="K9q-ca-cLE"/>
+                <constraint firstAttribute="trailing" secondItem="Fad-xs-138" secondAttribute="trailing" id="NFW-Vv-Iic"/>
                 <constraint firstItem="cuy-lM-vRb" firstAttribute="top" secondItem="2OH-oq-KA1" secondAttribute="bottom" id="W4i-gf-CQz"/>
                 <constraint firstItem="KVh-rf-OE7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="YzO-4Y-trV"/>
+                <constraint firstItem="KVh-rf-OE7" firstAttribute="top" secondItem="Fad-xs-138" secondAttribute="bottom" id="eCf-xC-tmv"/>
                 <constraint firstItem="cuy-lM-vRb" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="fF2-hF-01M"/>
                 <constraint firstAttribute="trailing" secondItem="a8S-rJ-kFC" secondAttribute="trailing" id="fV6-AC-MdV"/>
                 <constraint firstItem="a8S-rJ-kFC" firstAttribute="top" secondItem="cuy-lM-vRb" secondAttribute="bottom" id="hpj-0n-m5J"/>
+                <constraint firstItem="Fad-xs-138" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="kCF-4W-RoE"/>
                 <constraint firstItem="a8S-rJ-kFC" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="yTo-zB-Scn"/>
                 <constraint firstAttribute="trailing" secondItem="cuy-lM-vRb" secondAttribute="trailing" id="z4H-VU-Ayo"/>
             </constraints>
@@ -196,6 +216,7 @@
         </view>
     </objects>
     <resources>
+        <image name="mic_talk_358x358.png" width="179" height="179"/>
         <image name="sub_jianpan_up.png" width="57" height="56"/>
         <image name="sub_publish.png" width="118" height="65"/>
         <image name="sub_voiceInput_up.png" width="527" height="66"/>

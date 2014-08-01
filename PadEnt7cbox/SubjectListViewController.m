@@ -18,7 +18,7 @@
 @interface SubjectListViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate>
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) NSDictionary *dataDic;
-@property (nonatomic,strong) NSArray *listArray;
+@property (nonatomic,strong) NSMutableArray *listArray;
 @property (nonatomic,strong) SCBSubjectManager *sm_list;
 @property (strong,nonatomic) MBProgressHUD *hud;
 @end
@@ -122,7 +122,7 @@
     NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
     NSString *name = [dic objectForKey:@"name"];
     int commentCount=[[dic objectForKey:@"subj_comment_sum"] intValue];
-    NSString *createTime = [dic objectForKey:@"createTime"];
+    NSString *createTime = [dic objectForKey:@"happenTime"];
     NSString *closeTime = [dic objectForKey:@"closeTime"];
     
     cell.titleLabel.text=name;
@@ -148,9 +148,7 @@
     }
     else
     {
-        NSString *userName = [dic objectForKey:@"subject_user_name"];
-        NSString *suserName = [[SCBSession sharedSession] userName];
-        if([userName isEqualToString:suserName])
+        if([dic objectForKey:@"isMaster"]&&[[dic objectForKey:@"isMaster"] intValue]==0)
         {
             [cell.iconImageView setImage:[UIImage imageNamed:@"mycreate.png"]];
         }
@@ -167,11 +165,20 @@
     NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
     NSString *subjectId=[[dic objectForKey:@"subject_id"] stringValue];
     NSString *subjectTitle=[dic objectForKey:@"name"];
+    int activitySum=[[dic objectForKey:@"subj_comment_sum"] intValue];
     NSArray * viewControllers=self.splitViewController.viewControllers;
     SubjectDetailTabBarController *detailController=[[SubjectDetailTabBarController alloc] init];
     detailController.subjectId=subjectId;
     detailController.subjectTitle=subjectTitle;
     self.splitViewController.viewControllers=@[viewControllers.firstObject,detailController];
+    
+    if (activitySum>0) {
+        NSMutableDictionary *mDic=[NSMutableDictionary dictionaryWithDictionary:dic];
+        [mDic setObject:@0 forKey:@"subj_comment_sum"];
+        [self.listArray replaceObjectAtIndex:indexPath.row withObject:mDic];
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -181,7 +188,7 @@
 -(void)didGetSubjectList:(NSDictionary *)datadic
 {
     self.dataDic=datadic;
-    self.listArray=[self.dataDic objectForKey:@"list_subject"];
+    self.listArray=[NSMutableArray arrayWithArray:[self.dataDic objectForKey:@"list_subject"]];
     [self.tableView reloadData];
 }
 

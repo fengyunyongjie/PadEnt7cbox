@@ -18,6 +18,7 @@
 #import "MyTabBarViewController.h"
 #import "MySplitViewController.h"
 #import "CustomJinDu.h"
+#import "NSString+Format.h"
 
 #define AUTHOR_MENU @"AuthorMenus"
 @interface MainViewController()<SCBFileManagerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>

@@ -13,6 +13,7 @@
 #import "EmailListViewController.h"
 #import "SubjectListViewController.h"
 #import "SCBEmailManager.h"
+#import "SCBSubjectManager.h"
 
 @interface MyTabBarViewController ()
 
@@ -43,6 +44,13 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [self checkNotReadEmail];
+    [self checkSubjectActivityCount];
+}
+- (void)checkSubjectActivityCount
+{
+    SCBSubjectManager *sm=[SCBSubjectManager new];
+    sm.delegate=self;
+    [sm getSubjectSum];
 }
 - (void)checkNotReadEmail
 {
@@ -145,47 +153,69 @@
 -(void)setHasEmailTagHidden:(BOOL)isHidden
 {
     if (!self.tagImageView) {
-        self.tagImageView=[[UIImageView alloc] initWithFrame:CGRectMake(130, 6, 10, 10)];
+        self.tagImageView=[[UIImageView alloc] initWithFrame:CGRectMake(110, 6, 10, 10)];
         self.tagImageView.image=[UIImage imageNamed:@"icon_hasnew_tag.png"];
         [self.tabBar addSubview:self.tagImageView];
     }
     [self.tagImageView setHidden:isHidden];
 }
+-(void)setSubjectActivityCount:(int)count
+{
+    if (count<=0) {
+         [[self.viewControllers[2] tabBarItem] setBadgeValue:nil];
+    }else if(count<=99)
+    {
+        [[self.viewControllers[2] tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d",count]];
+    }else
+    {
+        [[self.viewControllers[2] tabBarItem] setBadgeValue:[NSString stringWithFormat:@"99+"]];
+    }
+}
 -(void)addUploadNumber:(NSInteger)count
 {
-    if(!imageView)
+//    if(!imageView)
+//    {
+//        CGRect imageRect = CGRectMake(225, -10, 35, 35);
+//        imageView = [[UIImageView alloc] initWithFrame:imageRect];
+//        
+//        if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
+//        {
+//            [imageView setImage:[UIImage imageNamed:@"icon_checked_grid.png"]];
+//        }
+//        else
+//        {
+//            [imageView setImage:[UIImage imageNamed:@"icon_checked_gridIpad.png"]];
+//        }
+//        CGRect labelRect = CGRectMake(5, 2, 25, 30);
+//        label = [[UILabel alloc] initWithFrame:labelRect];
+//        [label setBackgroundColor:[UIColor clearColor]];
+//        [label setTextColor:[UIColor whiteColor]];
+//        [label setFont:[UIFont boldSystemFontOfSize:11]];
+//        [label setTextAlignment:NSTextAlignmentCenter];
+//        [label setLineBreakMode:NSLineBreakByTruncatingTail];
+//        [imageView addSubview:label];
+//        [self.tabBar addSubview:imageView];
+//    }
+//    if(count>0)
+//    {
+//        [label setText:[NSString stringWithFormat:@"%i",count]];
+//        [imageView setHidden:NO];
+//    }
+//    else
+//    {
+//        [label setText:@""];
+//        [imageView setHidden:YES];
+//    }
+    if (count<=0) {
+        [[self.viewControllers[3] tabBarItem] setBadgeValue:nil];
+    }else if(count<=99)
     {
-        CGRect imageRect = CGRectMake(205, -10, 35, 35);
-        imageView = [[UIImageView alloc] initWithFrame:imageRect];
-        
-        if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
-        {
-            [imageView setImage:[UIImage imageNamed:@"icon_checked_grid.png"]];
-        }
-        else
-        {
-            [imageView setImage:[UIImage imageNamed:@"icon_checked_gridIpad.png"]];
-        }
-        CGRect labelRect = CGRectMake(5, 2, 25, 30);
-        label = [[UILabel alloc] initWithFrame:labelRect];
-        [label setBackgroundColor:[UIColor clearColor]];
-        [label setTextColor:[UIColor whiteColor]];
-        [label setFont:[UIFont boldSystemFontOfSize:11]];
-        [label setTextAlignment:NSTextAlignmentCenter];
-        [label setLineBreakMode:NSLineBreakByTruncatingTail];
-        [imageView addSubview:label];
-        [self.tabBar addSubview:imageView];
-    }
-    if(count>0)
+        [[self.viewControllers[3] tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%d",count]];
+    }else
     {
-        [label setText:[NSString stringWithFormat:@"%i",count]];
-        [imageView setHidden:NO];
+        [[self.viewControllers[3] tabBarItem] setBadgeValue:[NSString stringWithFormat:@"99+"]];
     }
-    else
-    {
-        [label setText:@""];
-        [imageView setHidden:YES];
-    }
+
 }
 #pragma mark -SCBEmailManagerDelegate
 -(void)networkError
@@ -199,6 +229,13 @@
     }else
     {
         [self setHasEmailTagHidden:YES];
+    }
+}
+#pragma mark -SCBSubjectManagerDelegate
+-(void)didGetSubjectSum:(NSDictionary *)datadic
+{
+    if ([datadic objectForKey:@"num"]) {
+        [self setSubjectActivityCount:[[datadic objectForKey:@"num"]intValue]];
     }
 }
 @end

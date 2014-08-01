@@ -147,7 +147,7 @@
 //创建主题成功
 -(void)didCreateSubject:(NSDictionary *)datadic
 {
-    if ([datadic objectForKey:@"sub_id"]) {
+    if ([[datadic objectForKey:@"code"] intValue]==0) {
         [self showMessage:@"创建成功"];
         [self dismissViewControllerAnimated:YES completion:nil];
     }else

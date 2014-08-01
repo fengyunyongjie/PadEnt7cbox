@@ -197,7 +197,7 @@ static SCBAccountManager *_sharedAccountManager;
 // causes the image to be displayed.
 {
     NSLog(@"connectionDidFinishLoading");
-    NSLog(@"%@",[[NSString alloc] initWithData:self.activeData encoding:NSUTF8StringEncoding]);
+//    NSLog(@"%@",[[NSString alloc] initWithData:self.activeData encoding:NSUTF8StringEncoding]);
     NSError *jsonParsingError=nil;
     if (self.activeData==nil) {
         NSLog(@"!!!数据错误!!");

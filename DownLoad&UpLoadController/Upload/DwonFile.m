@@ -12,7 +12,7 @@
 #import "SCBSession.h"
 #import "MF_Base64Additions.h"
 #import "Reachability.h"
-
+#import "NSString+Format.h"
 @implementation DwonFile
 @synthesize delegate,downsize,imageConnection,imageViewIndex,file_id,index,showType,indexPath,isStop,macTimeOut,fileSize,fileName,file_path;
 

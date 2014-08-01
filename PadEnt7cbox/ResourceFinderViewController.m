@@ -18,6 +18,7 @@
 #import "DownList.h"
 #import "AppDelegate.h"
 #import "SCBSession.h"
+#import "NSString+Format.h"
 
 @interface ResourceFinderViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate,IconDownloaderDelegate,DownloadProgressDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;

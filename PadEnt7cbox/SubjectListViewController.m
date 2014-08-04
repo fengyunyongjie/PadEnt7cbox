@@ -148,7 +148,7 @@
     }
     else
     {
-        if([dic objectForKey:@"isMaster"]&&[[dic objectForKey:@"isMaster"] intValue]==0)
+        if([dic objectForKey:@"isMaster"]&&[[dic objectForKey:@"isMaster"] intValue]==1)
         {
             [cell.iconImageView setImage:[UIImage imageNamed:@"mycreate.png"]];
         }
@@ -166,6 +166,12 @@
     NSString *subjectId=[[dic objectForKey:@"subject_id"] stringValue];
     NSString *subjectTitle=[dic objectForKey:@"name"];
     int activitySum=[[dic objectForKey:@"subj_comment_sum"] intValue];
+    NSString *closeTime = [dic objectForKey:@"closeTime"];
+    if([closeTime length]>0)
+    {
+        [self showMessage:@"请在www.icoffer.cn恢复专题"];
+        return;
+    }
     NSArray * viewControllers=self.splitViewController.viewControllers;
     SubjectDetailTabBarController *detailController=[[SubjectDetailTabBarController alloc] init];
     detailController.subjectId=subjectId;

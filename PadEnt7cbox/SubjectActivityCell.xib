@@ -161,7 +161,7 @@
                                     <constraint firstAttribute="height" constant="21" id="9Qe-IR-SXr"/>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="300" id="oql-GN-c6J"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" red="0.14901961386203766" green="0.21176472306251526" blue="0.4901961088180542" alpha="1" colorSpace="deviceRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>

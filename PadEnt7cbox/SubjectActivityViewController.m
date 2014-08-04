@@ -54,6 +54,10 @@
     [self.view addSubview:self.tableView];
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
+    
+    UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
+    temporaryBarButtonItem.title = @"";
+    self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
 }
 
 -(void)viewDidLayoutSubviews

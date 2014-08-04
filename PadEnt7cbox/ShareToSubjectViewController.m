@@ -35,6 +35,10 @@
     self.commentTextView.layer.borderWidth=0.5f;
     self.commentTextView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
     
+    UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
+    temporaryBarButtonItem.title = @"";
+    self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
+    
     UIBarButtonItem *cancelItem=[[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(cancelAction:)];
     UIBarButtonItem *nextItem=[[UIBarButtonItem alloc] initWithTitle:@"下一步" style:UIBarButtonItemStylePlain target:self action:@selector(nextAction:)];
     self.navigationItem.leftBarButtonItem=cancelItem;

@@ -298,6 +298,9 @@
     SCBSubjectManager *sm = [[SCBSubjectManager alloc] init];
     sm.delegate = self;
     int len = audioPlayer.duration;
+    if (len<1) {
+        len=1;
+    }
     [sm sendCommentWithResourceId:self.resourceID subjectId:self.subjectID content:[NSString stringWithFormat:@"%@",fid] type:@"1" seconds:[NSString stringWithFormat:@"%d",len]];
 }
 - (IBAction)sendAction:(id)sender {
@@ -326,7 +329,9 @@
 }
 
 - (IBAction)cancelAction:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self.delegate updateList];
+    }];
 }
 
 -(void)showMessage:(NSString *)message

@@ -15,5 +15,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *resourceNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *linkLabel;
 @property (weak, nonatomic) IBOutlet UIButton *delButton;
+@property (weak, nonatomic) IBOutlet UILabel *placeholderLabel;
 
 @end

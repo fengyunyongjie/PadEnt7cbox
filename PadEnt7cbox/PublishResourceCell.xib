@@ -13,13 +13,20 @@
                 <rect key="frame" x="0.0" y="0.0" width="768" height="79"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="说点什么吧..." translatesAutoresizingMaskIntoConstraints="NO" id="xBc-Ua-ZOd">
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xBc-Ua-ZOd">
                         <rect key="frame" x="10" y="10" width="748" height="59"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                     </textView>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="说点什么吧..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xXx-cJ-Mts">
+                        <rect key="frame" x="15" y="15" width="89" height="21"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="xBc-Ua-ZOd" secondAttribute="bottom" constant="10" id="087-6p-wHy"/>
@@ -30,6 +37,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="commentTextView" destination="xBc-Ua-ZOd" id="ua8-2f-W7L"/>
+                <outlet property="placeholderLabel" destination="xXx-cJ-Mts" id="iZb-3f-iR2"/>
             </connections>
         </tableViewCell>
         <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="igS-Pf-Xr6" customClass="PublishResourceCell">

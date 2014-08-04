@@ -43,6 +43,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
+    temporaryBarButtonItem.title = @"";
+    self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -246,9 +249,6 @@
     NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
     NSString *fisdir=[dic objectForKey:@"type"];
     NSString *fname = [dic objectForKey:@"file_name"];
-    NSString *fmime=[dic objectForKey:@"file_mime"];
-
-    fmime = [fmime lowercaseString];
     if (fisdir.intValue == 1) {
         //打开目录
         ResourceFinderViewController *finderViewController=[ResourceFinderViewController new];
@@ -258,6 +258,9 @@
         [self.navigationController pushViewController:finderViewController animated:YES];
     }else
     {
+        NSString *fmime=[dic objectForKey:@"file_mime"];
+        
+        fmime = [fmime lowercaseString];
         if ([fmime isEqualToString:@"png"]||
             [fmime isEqualToString:@"jpg"]||
             [fmime isEqualToString:@"jpeg"]||

@@ -140,15 +140,15 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UY7-rv-mh4">
-                            <rect key="frame" x="20" y="0.0" width="50" height="50"/>
+                            <rect key="frame" x="20" y="5" width="40" height="40"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="50" id="JO0-sA-1TE"/>
-                                <constraint firstAttribute="height" constant="50" id="eee-I2-h89"/>
+                                <constraint firstAttribute="width" constant="40" id="JO0-sA-1TE"/>
+                                <constraint firstAttribute="height" constant="40" id="eee-I2-h89"/>
                             </constraints>
                         </imageView>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xxx-F1-9xu">
-                            <rect key="frame" x="78" y="14" width="42" height="21"/>
+                            <rect key="frame" x="68" y="14" width="42" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="21" id="VNo-Tf-73V"/>
@@ -158,7 +158,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="www.baidu.com" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ve0-QO-m8f">
-                            <rect key="frame" x="128" y="15" width="124" height="21"/>
+                            <rect key="frame" x="118" y="15" width="124" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>

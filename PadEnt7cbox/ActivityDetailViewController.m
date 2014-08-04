@@ -61,6 +61,10 @@ typedef enum{
     // Do any additional setup after loading the view from its nib.
     NSDictionary *content = [NSString stringWithDictionS:[self.dic objectForKey:@"content"]];
     self.resourceArray = [content objectForKey:@"eveFileUrl"];
+    
+    UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
+    temporaryBarButtonItem.title = @"";
+    self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
 }
 
 - (void)didReceiveMemoryWarning

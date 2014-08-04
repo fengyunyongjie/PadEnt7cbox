@@ -141,7 +141,7 @@
             cell.personLabel.text=[dic objectForKey:@"usr_turename"];
             if ([[dic objectForKey:@"isMaster"] intValue]==0) {
                 cell.headLabel.text=@"成员：";
-                cell.personLabel.textColor=[UIColor lightGrayColor];
+                cell.personLabel.textColor=[UIColor blackColor];
             }
         }
         return cell;

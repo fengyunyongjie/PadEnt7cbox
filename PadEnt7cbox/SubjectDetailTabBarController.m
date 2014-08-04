@@ -64,6 +64,8 @@
     
     UISegmentedControl *segmentedControl=[[UISegmentedControl alloc] initWithItems:@[@"动态",@"资源",@"信息"]];
     segmentedControl.frame=CGRectMake(0, 0, 360, 36);
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:16],NSFontAttributeName, nil];
+    [segmentedControl setTitleTextAttributes:dic forState:UIControlStateNormal];
     segmentedControl.tintColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bk_ti.png"]];
     [segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
     UIBarButtonItem *itemSegment=[[UIBarButtonItem alloc] initWithCustomView:segmentedControl];

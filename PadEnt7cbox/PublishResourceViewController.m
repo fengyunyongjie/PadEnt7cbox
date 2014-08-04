@@ -20,12 +20,13 @@
 #import "NSString+Format.h"
 
 
-@interface PublishResourceViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate,ChangeFileOrFolderDelegate>
+@interface PublishResourceViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate,ChangeFileOrFolderDelegate,UITextViewDelegate,UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
 @property (strong,nonatomic) NSMutableArray *listArray;
 @property (strong,nonatomic) MBProgressHUD *hud;
 @property (strong,nonatomic) UIPopoverController *filePopoverController;
+@property (weak, nonatomic) UILabel *placeholderLabel;
 
 @end
 
@@ -102,6 +103,10 @@
     if (!comment) {
         comment=@"";
     }
+    if (fileIDArray.count==0&&comment.length==0&&finderIDArray.count==0&&urlArray.count==0) {
+        [self showMessage:@"请选择资源或说点什么"];
+        return;
+    }
     SCBSubjectManager *sm = [[SCBSubjectManager alloc] init];
     sm.delegate = self;
     [sm publishResourceWithSubjectId:@[self.subjectID] res_file:fileIDArray res_folder:finderIDArray res_url:urlArray res_descs:urlDesArray comment:comment];
@@ -112,6 +117,10 @@
 }
 
 - (IBAction)openCameraView:(id)sender {
+    if (self.listArray.count>=10) {
+        [self showMessage:@"最多可添加10个文件"];
+        return;
+    }
     self.menuView.hidden=YES;
     //拍照上传
     NSLog(@"拍照上传");
@@ -154,8 +163,11 @@
 }
 
 - (IBAction)openFileView:(UIButton *)sender {
+    if (self.listArray.count>=10) {
+        [self showMessage:@"最多可添加10个文件"];
+        return;
+    }
     self.menuView.hidden=YES;
-    
     //选择 icoffer的我的文件目录
     NSLog(@"选择 icoffer的我的文件目录");
     SelectFileListViewController *flvc=[[SelectFileListViewController alloc] init];
@@ -175,6 +187,10 @@
 }
 
 - (IBAction)openLinkView:(id)sender {
+    if (self.listArray.count>=10) {
+        [self showMessage:@"最多可添加10个文件"];
+        return;
+    }
     self.menuView.hidden=YES;
     //创建超链接
     UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"新建链接" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
@@ -183,6 +199,9 @@
     [[alert textFieldAtIndex:0] setPlaceholder:@"请输入名称"];
     [[alert textFieldAtIndex:1] setPlaceholder:@"请输入网址"];
     [[alert textFieldAtIndex:1] setSecureTextEntry:NO];
+    [[alert textFieldAtIndex:0] setDelegate:self];
+    [[alert textFieldAtIndex:1] setDelegate:self];
+    [[alert textFieldAtIndex:1] setText:@"http://"];
     [alert show];
 }
 -(void)showMessage:(NSString *)message
@@ -230,6 +249,8 @@
         if (cell==nil) {
             cell=[[[NSBundle mainBundle] loadNibNamed:@"PublishResourceCell"  owner:self options:nil] firstObject];
             cell.backgroundColor=[UIColor clearColor];
+            cell.commentTextView.delegate=self;
+            self.placeholderLabel=cell.placeholderLabel;
         }
         return cell;
     }else
@@ -455,7 +476,7 @@
         [self dismissViewControllerAnimated:YES completion:nil];
     }else
     {
-        [self showMessage:[NSString stringWithFormat:@"发部失败，错误码：%d",code]];
+        [self showMessage:[NSString stringWithFormat:@"操作失败"]];
     }
 }
 #pragma mark - ChangeFileOrFolderDelegate
@@ -571,5 +592,56 @@
 -(void)upNotHaveXNSString
 {
     
+}
+#pragma mark - UITextViewDelegate
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+    self.placeholderLabel.hidden = YES;
+    return YES;
+}
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView
+{
+    if (textView.text.length > 0) {
+        self.placeholderLabel.hidden = YES;
+    } else {
+        self.placeholderLabel.hidden = NO;
+    }
+    return YES;
+}
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    
+    //textview.text less than 60
+//    if (textView == commentTextView) {
+        NSMutableString *textString = [textView.text mutableCopy];
+        [textString replaceCharactersInRange:range withString:text];
+        return [textString length] <= 60;
+//    }
+    
+//    return YES;
+}
+
+#pragma mark - UITextFieldDelegate
+//- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+//{
+//    [self.touchButton setHidden:NO];
+//    return YES;
+//}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
+{
+    //url name must less than 60
+    if (textField.tag==110) {
+        NSMutableString *text = [textField.text mutableCopy];
+        [text replaceCharactersInRange:range withString:string];
+        return [text length] <= 60;
+        
+    } else if (textField.tag == 111) {
+        //url must less than 255
+        NSMutableString *text = [textField.text mutableCopy];
+        [text replaceCharactersInRange:range withString:string];
+        return [text length] <= 255;
+    }
+    return YES;
 }
 @end

@@ -62,6 +62,10 @@
     [self.view addSubview:self.tableView];
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
+    
+    UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
+    temporaryBarButtonItem.title = @"";
+    self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
 }
 
 -(void)viewDidLayoutSubviews
@@ -382,6 +386,7 @@
         resourceCommentViewController.resourceID=[dic objectForKey:@"resource_id"];
         resourceCommentViewController.resourceDic=dic;
         resourceCommentViewController.subjectID=[(SubjectDetailTabBarController *)self.tabBarController subjectId];
+        resourceCommentViewController.delegate=self;
         resourceCommentViewController.modalPresentationStyle=UIModalPresentationPageSheet;
         [self presentViewController:resourceCommentViewController animated:YES completion:nil];
     }

@@ -18,11 +18,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="P66-hw-Xay">
-                                <rect key="frame" x="10" y="5" width="50" height="50"/>
+                                <rect key="frame" x="10" y="10" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="kGa-51-1zf"/>
-                                    <constraint firstAttribute="width" constant="50" id="njE-wh-egP"/>
+                                    <constraint firstAttribute="height" constant="40" id="kGa-51-1zf"/>
+                                    <constraint firstAttribute="width" constant="40" id="njE-wh-egP"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XZQ-cb-xyO">
@@ -65,7 +65,7 @@
                                 <state key="highlighted" image="resource_download_se.png"/>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="企业管理方案标准" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Az6-sE-KuH">
-                                <rect key="frame" x="70" y="6" width="136" height="21"/>
+                                <rect key="frame" x="60" y="6" width="136" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="360" id="UFb-kw-YAR"/>
@@ -75,7 +75,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IMy-R3-a7i">
-                                <rect key="frame" x="214" y="9" width="30" height="16"/>
+                                <rect key="frame" x="204" y="9" width="30" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="Ak4-jE-0mI"/>
@@ -88,7 +88,7 @@
                                 </state>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="400.31KB" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9gp-Fs-tVo">
-                                <rect key="frame" x="144" y="28" width="68" height="21"/>
+                                <rect key="frame" x="134" y="28" width="68" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="Rrt-Ob-S92"/>
@@ -98,7 +98,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2014-03-28 21:32" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bbx-mb-bxr">
-                                <rect key="frame" x="334" y="28" width="123" height="21"/>
+                                <rect key="frame" x="332" y="28" width="123" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="123" id="Bn1-um-Swc"/>
@@ -109,7 +109,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="安波儿童" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rvy-sS-qsr">
-                                <rect key="frame" x="70" y="29" width="64" height="21"/>
+                                <rect key="frame" x="60" y="29" width="64" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="0RT-OL-0ZA"/>
@@ -134,7 +134,7 @@
                             <constraint firstItem="Az6-sE-KuH" firstAttribute="leading" secondItem="P66-hw-Xay" secondAttribute="trailing" constant="10" id="haE-Xc-vg2"/>
                             <constraint firstItem="XZQ-cb-xyO" firstAttribute="leading" secondItem="EvL-VR-5Bn" secondAttribute="trailing" constant="10" id="hqg-SG-5iI"/>
                             <constraint firstItem="EvL-VR-5Bn" firstAttribute="leading" secondItem="mgH-yq-apc" secondAttribute="trailing" constant="10" id="oHS-fP-9O0"/>
-                            <constraint firstItem="mgH-yq-apc" firstAttribute="leading" secondItem="bbx-mb-bxr" secondAttribute="trailing" constant="8" id="pfu-Rq-Yko"/>
+                            <constraint firstItem="mgH-yq-apc" firstAttribute="leading" secondItem="bbx-mb-bxr" secondAttribute="trailing" constant="10" id="pfu-Rq-Yko"/>
                             <constraint firstItem="IMy-R3-a7i" firstAttribute="top" secondItem="aOl-a9-Pny" secondAttribute="top" constant="9" id="r5Y-8m-yun"/>
                             <constraint firstItem="P66-hw-Xay" firstAttribute="leading" secondItem="aOl-a9-Pny" secondAttribute="leading" constant="10" id="wrS-2g-c6o"/>
                             <constraint firstAttribute="trailing" secondItem="XZQ-cb-xyO" secondAttribute="trailing" constant="10" id="xk1-bh-GGC"/>
@@ -172,6 +172,6 @@
         <image name="resource_download_se.png" width="49" height="48"/>
         <image name="resource_resave.png" width="49" height="48"/>
         <image name="resource_resave_se.png" width="49" height="48"/>
-        <image name="sub_comment.png" width="43" height="23"/>
+        <image name="sub_comment.png" width="50" height="27"/>
     </resources>
 </document>

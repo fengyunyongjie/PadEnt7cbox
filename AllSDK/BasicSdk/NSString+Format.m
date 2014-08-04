@@ -109,6 +109,28 @@
     
     //对比时间
     double mDouble = eDouble-sDouble;
+    
+    //计算今天的时间
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *component = [calendar components:NSEraCalendarUnit| NSYearCalendarUnit| NSMonthCalendarUnit| NSDayCalendarUnit| NSHourCalendarUnit| NSMinuteCalendarUnit | NSSecondCalendarUnit| NSWeekCalendarUnit | NSWeekdayCalendarUnit | NSWeekdayOrdinalCalendarUnit | NSQuarterCalendarUnit | NSWeekOfMonthCalendarUnit | NSWeekOfYearCalendarUnit | NSYearForWeekOfYearCalendarUnit fromDate:[dateFormatter dateFromString:browseTime]];
+    
+    NSDateComponents *todayComponent = [calendar components:NSEraCalendarUnit| NSYearCalendarUnit| NSMonthCalendarUnit| NSDayCalendarUnit| NSHourCalendarUnit| NSMinuteCalendarUnit | NSSecondCalendarUnit| NSWeekCalendarUnit | NSWeekdayCalendarUnit | NSWeekdayOrdinalCalendarUnit | NSQuarterCalendarUnit | NSWeekOfMonthCalendarUnit | NSWeekOfYearCalendarUnit | NSYearForWeekOfYearCalendarUnit fromDate:[dateFormatter dateFromString:eString]];
+    BOOL isToday = NO;
+    if(todayComponent.year == component.year)
+    {
+        if(todayComponent.month == component.month)
+        {
+            if(todayComponent.week == component.week)
+            {
+                //今天
+                if(todayComponent.weekday == component.weekday)
+                {
+                    isToday = YES;
+                }
+            }
+        }
+    }
+    
     if(mDouble<0)
     {
         mDouble = 0;
@@ -116,22 +138,22 @@
     if(mDouble<Time1Min)
     {
         //1分钟内
-        formatString = [NSString stringWithFormat:@"%i秒前",(int)mDouble];
+        formatString = [NSString stringWithFormat:@"1分钟前"];
     }
     else if(mDouble<Time1Hour)
     {
         //1小时内
         formatString = [NSString stringWithFormat:@"%i分钟前",(int)(mDouble/60)];
     }
-    else if(mDouble<Time1Day)
+    else if(isToday)
     {
-        //1天内
-        formatString = [NSString stringWithFormat:@"%i小时前",(int)(mDouble/60/60)];
-    }
-    else if(mDouble<Time2Day)
-    {
-        //2天内
-        formatString = [NSString stringWithFormat:@"1天前"];
+        NSDateFormatter *dateFormatterNew = [[NSDateFormatter alloc] init];
+        [dateFormatterNew setDateFormat:@"HH"];
+        NSDate *dateNew = [dateFormatter dateFromString:browseTime];
+        NSString *hour = [dateFormatterNew stringFromDate:dateNew];
+        [dateFormatterNew setDateFormat:@"mm"];
+        NSString *minute = [dateFormatterNew stringFromDate:dateNew];;
+        formatString = [NSString stringWithFormat:@"今天 %@:%@",hour,minute];
     }
     else
     {

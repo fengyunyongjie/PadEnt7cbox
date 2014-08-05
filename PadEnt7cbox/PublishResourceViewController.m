@@ -20,13 +20,14 @@
 #import "NSString+Format.h"
 
 
-@interface PublishResourceViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate,ChangeFileOrFolderDelegate,UITextViewDelegate,UITextFieldDelegate>
+@interface PublishResourceViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate,ChangeFileOrFolderDelegate,UITextViewDelegate,UITextFieldDelegate,UIActionSheetDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
 @property (strong,nonatomic) NSMutableArray *listArray;
 @property (strong,nonatomic) MBProgressHUD *hud;
 @property (strong,nonatomic) UIPopoverController *filePopoverController;
 @property (weak, nonatomic) UILabel *placeholderLabel;
+@property (strong,nonatomic) NSIndexPath *selectIndexPath;
 
 @end
 
@@ -59,6 +60,28 @@
 {
 //    [self.view setHidden:YES];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+//检查链接格式是否合法
+- (BOOL)isURLValid:(NSString *)urlString {
+    NSError *error = nil;
+    NSMutableArray *matchsarr = [[NSMutableArray alloc]init];
+    NSString *expression =  @"((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern: expression options:NSRegularExpressionCaseInsensitive error:&error];
+    [regex enumerateMatchesInString:urlString options:0 range:NSMakeRange(0, [urlString length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        NSRange newrange = [result range];
+        
+        NSString *match = [urlString substringWithRange:newrange];
+        
+        NSURL *url = [NSURL URLWithString:match];
+        [matchsarr addObject:url];
+    }
+     ];
+    if (matchsarr.count > 0) {
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 -(IBAction)publish:(id)sender
@@ -103,7 +126,8 @@
     if (!comment) {
         comment=@"";
     }
-    if (fileIDArray.count==0&&comment.length==0&&finderIDArray.count==0&&urlArray.count==0) {
+    NSString *spaceStr = [comment stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (fileIDArray.count==0&&spaceStr.length==0&&finderIDArray.count==0&&urlArray.count==0) {
         [self showMessage:@"请选择资源或说点什么"];
         return;
     }
@@ -388,8 +412,10 @@
     
     NSIndexPath *indexPath= [self.tableView indexPathForRowAtPoint:currentTouchPosition];
     if (indexPath) {
-        [self.listArray removeObjectAtIndex:indexPath.row];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        self.selectIndexPath=indexPath;
+        UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"是否要删除选中的内容" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles: nil];
+        [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
     }
 }
 #pragma mark - UIImagePickerControllerDelegate
@@ -452,9 +478,14 @@
         UITextField *urlTextField = [alertView textFieldAtIndex:1];
         if([nameTextField.text length]>0 && [urlTextField.text length]>0)
         {
-            //创建连接
-            [self.listArray addObject:@{@"type":@"url",@"name":nameTextField.text,@"url":urlTextField.text}];
-            [self.tableView reloadData];
+            if ([self isURLValid:urlTextField.text]) {
+                //创建连接
+                [self.listArray addObject:@{@"type":@"url",@"name":nameTextField.text,@"url":urlTextField.text}];
+                [self.tableView reloadData];
+            }else
+            {
+                [self showMessage:@"链接格式非法"];
+            }
         }
         else
         {
@@ -643,5 +674,18 @@
         return [text length] <= 255;
     }
     return YES;
+}
+
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex==0)
+    {
+        if (self.selectIndexPath) {
+            [self.listArray removeObjectAtIndex:self.selectIndexPath.row];
+            [self.tableView deleteRowsAtIndexPaths:@[self.selectIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
+    }
 }
 @end

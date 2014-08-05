@@ -26,7 +26,7 @@
                                 </constraints>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uUM-E0-gF6">
-                                <rect key="frame" x="60" y="15" width="638" height="21"/>
+                                <rect key="frame" x="60" y="15" width="604" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="She-bT-Hhb"/>
@@ -36,7 +36,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qLh-83-c1k">
-                                <rect key="frame" x="708" y="10" width="30" height="30"/>
+                                <rect key="frame" x="672" y="10" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="1V5-fS-a7l"/>
@@ -48,16 +48,31 @@
                                 </state>
                                 <state key="highlighted" image="resource_download_se.png"/>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jZQ-OH-VGG">
+                                <rect key="frame" x="710" y="10" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="7RV-UQ-Sfn"/>
+                                    <constraint firstAttribute="width" constant="30" id="Fjk-mG-Q8k"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <state key="normal" image="resource_resave.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted" image="resource_resave_se.png"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="jZQ-OH-VGG" secondAttribute="trailing" constant="8" id="KFx-pV-ju6"/>
+                            <constraint firstItem="qLh-83-c1k" firstAttribute="leading" secondItem="uUM-E0-gF6" secondAttribute="trailing" constant="8" id="Lg1-9Q-gOe"/>
                             <constraint firstAttribute="centerY" secondItem="cYo-Eb-yhN" secondAttribute="centerY" id="M6U-Kv-NuH"/>
-                            <constraint firstItem="qLh-83-c1k" firstAttribute="leading" secondItem="uUM-E0-gF6" secondAttribute="trailing" constant="10" id="VBQ-Bf-ohe"/>
+                            <constraint firstItem="jZQ-OH-VGG" firstAttribute="leading" secondItem="qLh-83-c1k" secondAttribute="trailing" constant="8" id="Syv-Pb-YPG"/>
                             <constraint firstAttribute="centerY" secondItem="qLh-83-c1k" secondAttribute="centerY" id="Zz2-Z5-ePe"/>
+                            <constraint firstAttribute="centerY" secondItem="jZQ-OH-VGG" secondAttribute="centerY" id="dYW-Cd-P3D"/>
                             <constraint firstAttribute="centerY" secondItem="uUM-E0-gF6" secondAttribute="centerY" id="hTL-yO-j1z"/>
                             <constraint firstItem="uUM-E0-gF6" firstAttribute="leading" secondItem="cYo-Eb-yhN" secondAttribute="trailing" constant="10" id="jtT-Gx-QqX"/>
                             <constraint firstItem="cYo-Eb-yhN" firstAttribute="leading" secondItem="A3Q-2p-Lct" secondAttribute="leading" constant="10" id="jys-c8-QSl"/>
-                            <constraint firstAttribute="trailing" secondItem="qLh-83-c1k" secondAttribute="trailing" constant="10" id="vhP-RH-0Rd"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -73,11 +88,14 @@
                 <outlet property="downloadButton" destination="qLh-83-c1k" id="U3x-BK-XtC"/>
                 <outlet property="fileNameLabel" destination="uUM-E0-gF6" id="O0e-V9-vtG"/>
                 <outlet property="iconImageView" destination="cYo-Eb-yhN" id="JCC-T3-idc"/>
+                <outlet property="resaveButton" destination="jZQ-OH-VGG" id="hwi-jG-7cL"/>
             </connections>
         </tableViewCell>
     </objects>
     <resources>
         <image name="resource_download.png" width="49" height="48"/>
         <image name="resource_download_se.png" width="49" height="48"/>
+        <image name="resource_resave.png" width="49" height="48"/>
+        <image name="resource_resave_se.png" width="49" height="48"/>
     </resources>
 </document>

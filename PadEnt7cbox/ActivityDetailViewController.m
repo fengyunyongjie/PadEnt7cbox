@@ -636,7 +636,7 @@ typedef enum{
                 //打开目录
                 ResourceFinderViewController *finderViewController=[ResourceFinderViewController new];
                 finderViewController.subjectID=[(SubjectDetailTabBarController *)self.tabBarController subjectId];
-                finderViewController.fID=[dic objectForKey:@"file_id"];
+                finderViewController.fID=[dic objectForKey:@"f_id"];
                 finderViewController.title=[dic objectForKey:@"f_name"];
                 [self.navigationController pushViewController:finderViewController animated:YES];
             }else
@@ -691,7 +691,7 @@ typedef enum{
                         [self presentViewController:browser animated:YES completion:nil];
                     } else {
                         OtherBrowserViewController *otherBrowser=[[OtherBrowserViewController alloc] initWithNibName:@"OtherBrowser" bundle:nil];
-                        NSArray *values = [NSArray arrayWithObjects:fname,fid,fsize, nil];
+                        NSArray *values = [NSArray arrayWithObjects:fname,fid,@(fsize), nil];
                         NSArray *keys = [NSArray arrayWithObjects:@"fname",@"fid",@"fsize", nil];
                         NSDictionary *d = [NSDictionary dictionaryWithObjects:values forKeys:keys];
                         

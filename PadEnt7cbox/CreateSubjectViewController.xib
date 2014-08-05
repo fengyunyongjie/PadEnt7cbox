@@ -10,6 +10,7 @@
                 <outlet property="isAddUserButton" destination="eBF-YT-GFr" id="Fig-cA-l0b"/>
                 <outlet property="isShareButton" destination="yHM-WF-3NB" id="FrW-V9-Kug"/>
                 <outlet property="numbersTextField" destination="mMU-57-WYp" id="fza-rV-P8k"/>
+                <outlet property="publishItem" destination="J3Z-hA-Hc6" id="mLp-pR-0VG"/>
                 <outlet property="subjectNameTextField" destination="Lad-ml-ijO" id="g9c-xN-ZTS"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>

@@ -11,4 +11,5 @@
 @interface SubjectDetailTabBarController : UITabBarController
 @property (nonatomic,strong) NSString *subjectId;
 @property (nonatomic,strong) NSString *subjectTitle;
+@property (nonatomic,assign) BOOL isPublish;
 @end

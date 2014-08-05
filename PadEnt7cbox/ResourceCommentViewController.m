@@ -282,16 +282,16 @@
         [newUpload isNetWork];
     }
     
-//    if (self.hud) {
-//        [self.hud removeFromSuperview];
-//    }
-//    self.hud=nil;
-//    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
-//    [self.view.superview addSubview:self.hud];
-//    [self.hud show:NO];
-//    self.hud.labelText=@"正在发表...";
-//    self.hud.mode=MBProgressHUDModeIndeterminate;
-//    [self.hud show:YES];
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=@"正在发表中，请稍等";
+    self.hud.mode=MBProgressHUDModeIndeterminate;
+    [self.hud show:YES];
 }
 - (void)sendAudioWithFid:(NSString *)fid
 {
@@ -304,7 +304,8 @@
     [sm sendCommentWithResourceId:self.resourceID subjectId:self.subjectID content:[NSString stringWithFormat:@"%@",fid] type:@"1" seconds:[NSString stringWithFormat:@"%d",len]];
 }
 - (IBAction)sendAction:(id)sender {
-    if (!self.commentTextField.text||[self.commentTextField.text isEqualToString:@""]) {
+     NSString *spaceStr = [self.commentTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (!self.commentTextField.text||[self.commentTextField.text isEqualToString:@""]||spaceStr.length<=0) {
         [self showMessage:@"请输入回复内容"];
         return;
     }
@@ -650,27 +651,27 @@
 //服务器异常
 -(void)webServiceFail
 {
-    
+    [self.hud show:NO];
 }
 //上传无权限
 -(void)upNotUpload
 {
-    
+    [self.hud show:NO];
 }
 //用户存储空间不足
 -(void)upUserSpaceLass
 {
-    
+    [self.hud show:NO];
 }
 //等待WiFi
 -(void)upWaitWiFi
 {
-    
+    [self.hud show:NO];
 }
 //网络失败
 -(void)upNetworkStop
 {
-    
+    [self.hud show:NO];
 }
 //文件名过长
 -(void)upNotNameTooTheigth

@@ -31,6 +31,7 @@
 #import "OpenFileViewController.h"
 #import "SCBEmailManager.h"
 #import "ShareToSubjectViewController.h"
+#import "NSString+Format.h"
 
 #define KCOVERTag 888
 
@@ -252,20 +253,17 @@ typedef enum{
 	
 	[self reloadTableViewDataSource];
 //	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
-	
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
 	
 	return _reloading; // should return if data source model is reloading
-	
 }
 
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
-	
 	return [NSDate date]; // should return date data source was last changed
-	
 }
+
 #pragma mark - 操作方法
 - (void)updateFileList
 {

@@ -10,11 +10,15 @@
 #import "SubUserListViewController.h"
 #import "SCBSubjectManager.h"
 #import "MBProgressHUD.h"
+#import "MyTabBarViewController.h"
+#import "AppDelegate.h"
+#import "SubjectListViewController.h"
 
 @interface CreateSubjectViewController ()<SubUserListDelegate,SCBSubjectManagerDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *subjectNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *numbersTextField;
 @property (weak, nonatomic) IBOutlet UITextField *contentTextField;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *publishItem;
 
 @property (weak, nonatomic) IBOutlet UIButton *isAddUserButton;
 @property (weak, nonatomic) IBOutlet UIButton *isShareButton;
@@ -62,34 +66,33 @@
         SCBSubjectManager *sm = [[SCBSubjectManager alloc] init];
         sm.delegate = self;
         [sm createSubjectWithName:self.subjectNameTextField.text info:self.contentTextField.text isPublish:self.isShareButton.isSelected isAddUser:self.isAddUserButton.isSelected members:self.selectedIds];
+        [(UIBarButtonItem*)sender setEnabled:NO];
+        if (self.hud) {
+            [self.hud removeFromSuperview];
+        }
+        self.hud=nil;
+        self.hud=[[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:self.hud];
+        [self.hud show:NO];
+        self.hud.labelText=@"正在新建中，请稍等";
+        self.hud.mode=MBProgressHUDModeIndeterminate;
+        [self.hud show:YES];
     }
 }
 //检查输入是否合法
 - (BOOL)checkTextisValid {
     
     BOOL isValid = YES;
-    if (self.hud) {
-        [self.hud removeFromSuperview];
-    }
-    self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view.window];
-    self.hud.mode=MBProgressHUDModeText;
-    [self.view.window addSubview:self.hud];
-    
     NSString *subject = self.subjectNameTextField.text;
     NSString *memberStr = self.numbersTextField.text;
-    if ([subject isEqualToString:@""]) {
-        self.hud.labelText = @"请输入专题名称";
+    
+    NSString *spaceStr = [subject stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if ([subject isEqualToString:@""]||spaceStr.length<=0) {
         isValid = NO;
-        [self.hud show:NO];
-        [self.hud show:YES];
-        [self.hud hide:YES afterDelay:1.0f];
+        [self showMessage:@"请输入专题名称"];
     } else if ([memberStr isEqualToString:@""]) {
-        self.hud.labelText = @"请选择成员";
+        [self showMessage:@"请选择成员"];
         isValid = NO;
-        [self.hud show:NO];
-        [self.hud show:YES];
-        [self.hud hide:YES afterDelay:1.0f];
     }
     return isValid;
 }
@@ -148,17 +151,29 @@
 -(void)didCreateSubject:(NSDictionary *)datadic
 {
     if ([[datadic objectForKey:@"code"] intValue]==0) {
-        [self showMessage:@"创建成功"];
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self showMessage:@"新建成功"];
+        [self dismissViewControllerAnimated:YES completion:^{
+            AppDelegate *delegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+            MyTabBarViewController *myTabVC=(MyTabBarViewController *)[(UISplitViewController *)delegate.splitVC viewControllers].firstObject;
+            UINavigationController *nav=(UINavigationController *)myTabVC.viewControllers[2];
+            if ([nav respondsToSelector:@selector(viewControllers)]) {
+                SubjectListViewController *subjectVC=(SubjectListViewController *)nav.viewControllers.firstObject;
+                if ([subjectVC respondsToSelector:@selector(updateList)]) {
+                    [subjectVC updateList];
+                }
+            }
+        }];
     }else
     {
-        [self showMessage:@"创建失败"];
+        [self.publishItem setEnabled:YES];
+        [self showMessage:@"新建失败"];
     }
     
     
 }
 -(void)networkError
 {
+    [self.publishItem setEnabled:YES];
     [self showMessage:@"链接失败，请检查网络"];
 }
 #pragma mark - UITextFieldDelegate

@@ -11,4 +11,5 @@
 @interface ResourceFinderViewController : UIViewController
 @property (strong,nonatomic) NSString *subjectID;
 @property (strong,nonatomic) NSString *fID;
+@property (assign,nonatomic) BOOL isPublisher;
 @end

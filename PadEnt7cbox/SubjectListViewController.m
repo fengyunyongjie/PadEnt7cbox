@@ -21,6 +21,8 @@
 @property (nonatomic,strong) NSMutableArray *listArray;
 @property (nonatomic,strong) SCBSubjectManager *sm_list;
 @property (strong,nonatomic) MBProgressHUD *hud;
+@property (strong,nonatomic) UILabel * notingLabel;
+@property (strong,nonatomic) UIView *nothingView;
 @end
 
 @implementation SubjectListViewController
@@ -167,6 +169,8 @@
     NSString *subjectTitle=[dic objectForKey:@"name"];
     int activitySum=[[dic objectForKey:@"subj_comment_sum"] intValue];
     NSString *closeTime = [dic objectForKey:@"closeTime"];
+    BOOL isMaster=[[dic objectForKey:@"isMaster"] boolValue];
+    BOOL isPublish=[[dic objectForKey:@"isPublish"] boolValue];
     if([closeTime length]>0)
     {
         [self showMessage:@"请在www.icoffer.cn恢复专题"];
@@ -176,6 +180,7 @@
     SubjectDetailTabBarController *detailController=[[SubjectDetailTabBarController alloc] init];
     detailController.subjectId=subjectId;
     detailController.subjectTitle=subjectTitle;
+    detailController.isPublish=(isMaster||isPublish);
     self.splitViewController.viewControllers=@[viewControllers.firstObject,detailController];
     
     if (activitySum>0) {
@@ -190,12 +195,41 @@
 {
     return 50;
 }
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 5;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 5;
+}
 #pragma mark - SCBSubjectManagerDelegate
 -(void)didGetSubjectList:(NSDictionary *)datadic
 {
     self.dataDic=datadic;
     self.listArray=[NSMutableArray arrayWithArray:[self.dataDic objectForKey:@"list_subject"]];
-    [self.tableView reloadData];
+    if (self.listArray.count>0) {
+        [self.nothingView setHidden:YES];
+        [self.tableView reloadData];
+    }else
+    {
+        if (!self.nothingView) {
+            self.nothingView=[[UIView alloc] initWithFrame:self.tableView.frame];
+            [self.nothingView setBackgroundColor:[UIColor whiteColor]];
+            [self.view addSubview:self.nothingView];
+            
+            CGRect notingRect = CGRectMake(0, (self.view.frame.size.height-40)/2, 320, 40);
+            self.notingLabel = [[UILabel alloc] initWithFrame:notingRect];
+            [self.notingLabel setTextColor:[UIColor grayColor]];
+            [self.notingLabel setFont:[UIFont systemFontOfSize:18]];
+            [self.notingLabel setTextAlignment:NSTextAlignmentCenter];
+            [self.nothingView addSubview:self.notingLabel];
+        }
+        [self.view bringSubviewToFront:self.nothingView];
+        [self.nothingView setHidden:NO];
+        [self.notingLabel setText:@"立即新建一个专题，邀请同事参与吧"];
+    }
+    
 }
 
 -(void)networkError

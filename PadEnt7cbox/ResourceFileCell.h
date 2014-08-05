@@ -12,6 +12,7 @@
 @property (weak, nonatomic) IBOutlet UIView *boardView;
 @property (weak, nonatomic) IBOutlet UIImageView *iconImageView;
 @property (weak, nonatomic) IBOutlet UIButton *downloadButton;
+@property (weak, nonatomic) IBOutlet UIButton *resaveButton;
 @property (weak, nonatomic) IBOutlet UILabel *fileNameLabel;
 
 @end

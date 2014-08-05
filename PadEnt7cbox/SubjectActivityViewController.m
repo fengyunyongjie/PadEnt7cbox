@@ -15,8 +15,12 @@
 #import "MBProgressHUD.h"
 #import "MyTabBarViewController.h"
 #import "SubjectListViewController.h"
+#import "EGORefreshTableHeaderView.h"
 
-@interface SubjectActivityViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate>
+@interface SubjectActivityViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate,EGORefreshTableHeaderDelegate>{
+    EGORefreshTableHeaderView *_refreshHeaderView;
+    BOOL _reloading;
+}
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) NSDictionary *dataDic;
 @property (nonatomic,strong) NSArray *listArray;
@@ -58,11 +62,21 @@
     UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
     temporaryBarButtonItem.title = @"";
     self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
+    
+    if (_refreshHeaderView==nil) {
+        EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
+		view.delegate = self;
+		[self.tableView addSubview:view];
+		_refreshHeaderView = view;
+    }
+    [_refreshHeaderView refreshLastUpdatedDate];
 }
 
 -(void)viewDidLayoutSubviews
 {
-    self.tableView.frame=self.view.bounds;
+    CGRect r=self.view.bounds;
+    r.size.height=self.view.bounds.size.height-55;
+    self.tableView.frame=r;
 }
 
 - (void)didReceiveMemoryWarning
@@ -383,8 +397,8 @@
         {
             //加入专题
             cell.personLabel.text=[content objectForKey:@"inviter"];
-            if (persons.length>36) {
-                cell.sayLabel.text=[NSString stringWithFormat:@"%@ %@... 共%@人 %@",title,[persons substringToIndex:35],personsNum,action];
+            if (persons.length>30) {
+                cell.sayLabel.text=[NSString stringWithFormat:@"%@ %@... 共%@人 %@",title,[persons substringToIndex:29],personsNum,action];
             }else
             {
                 cell.sayLabel.text=[NSString stringWithFormat:@"%@ %@ 共%@人 %@",title,persons,personsNum,action];
@@ -413,13 +427,13 @@
         case 10:
         {
             //修改专题名称
-            cell.sayLabel.text=[NSString stringWithFormat:@"%@",title];
+            cell.sayLabel.text=[NSString stringWithFormat:@"%@:%@",title,[content objectForKey:@"subjectName"]];
         }
             break;
         case 11:
         {
             //修改专题权限
-            cell.sayLabel.text=[NSString stringWithFormat:@"%@",title];
+            cell.sayLabel.text=[NSString stringWithFormat:@"%@:%@",title,[content objectForKey:@"subjectAuth"]];
         }
             break;
         case 12:
@@ -440,6 +454,12 @@
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSDictionary *dic=[self.listArray objectAtIndex:indexPath.section];
+    int cellType=[[dic objectForKey:@"type"] intValue];
+    if (cellType>=7) {
+        //cellType为7～13 无法进入动态详情
+        return;
+    }
     ActivityDetailViewController *advc=[ActivityDetailViewController new];
     advc.dic=[self.listArray objectAtIndex:indexPath.section];
     advc.title=@"专题动态详情";
@@ -467,16 +487,57 @@
     [self.tableView reloadData];
     MyTabBarViewController *myTabVC=[self.splitViewController.viewControllers objectAtIndex:0];
     [myTabVC checkSubjectActivityCount];
-//    UINavigationController *nav=(UINavigationController *)myTabVC.viewControllers[2];
-//    if ([nav respondsToSelector:@selector(viewControllers)]) {
-//        SubjectListViewController *subjectVC=(SubjectListViewController *)nav.viewControllers.firstObject;
-//        if ([subjectVC respondsToSelector:@selector(updateList)]) {
-//            [subjectVC updateList];
-//        }
-//    }
+    [self doneLoadingTableViewData];
 }
 -(void)networkError
 {
     [self showMessage:@"链接失败，请检查网络"];
+    [self doneLoadingTableViewData];
+}
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+
+- (void)reloadTableViewDataSource{
+	
+	//  should be calling your tableviews data source model to reload
+	//  put here just for demo
+	_reloading = YES;
+    [self updateList];
+}
+
+- (void)doneLoadingTableViewData{
+	
+	//  model should call this when its done loading
+	_reloading = NO;
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+	
+}
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	
+	[self reloadTableViewDataSource];
+    //	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	
+	return _reloading; // should return if data source model is reloading
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	return [NSDate date]; // should return date data source was last changed
+}
+
+#pragma mark - Deferred image loading (UIScrollViewDelegate)
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+	
+	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    
+}
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 @end

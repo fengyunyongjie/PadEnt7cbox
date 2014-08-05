@@ -30,6 +30,39 @@
 {
     self.tabBarView.frame=self.tabBar.frame;
 }
+- (void)viewWillAppear:(BOOL)animated
+{
+    if(!self.tabBarView)
+    {
+        UIToolbar *tabBarView=[UIToolbar new];
+        tabBarView.frame=self.tabBar.frame;
+        [self.view addSubview:tabBarView];
+        self.tabBarView=tabBarView;
+        UISegmentedControl *segmentedControl=[[UISegmentedControl alloc] initWithItems:@[@"动态",@"资源",@"信息"]];
+        segmentedControl.frame=CGRectMake(0, 0, 360, 36);
+        NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:16],NSFontAttributeName, nil];
+        [segmentedControl setTitleTextAttributes:dic forState:UIControlStateNormal];
+        segmentedControl.tintColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bk_ti.png"]];
+        [segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+        UIBarButtonItem *itemSegment=[[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
+        UIBarButtonItem *itemFlexible=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        UIButton *addButton=[[UIButton alloc] init];
+        [addButton setTitle:@"发布资源" forState:UIControlStateNormal];
+        [addButton setTitleColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bk_ti.png"]] forState:UIControlStateNormal];
+        [addButton setFrame:CGRectMake(0, 0, 120, 36)];
+        [addButton addTarget:self action:@selector(publishResource:) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *itemAdd=[[UIBarButtonItem alloc] initWithCustomView:addButton];
+        //target:self action:@selector(publishResource:)];
+        if (self.isPublish) {
+            [self.tabBarView setItems:@[itemFlexible,itemSegment,itemFlexible,itemAdd]];
+        }else
+        {
+            [self.tabBarView setItems:@[itemFlexible,itemSegment,itemFlexible]];
+        }
+        [segmentedControl setSelectedSegmentIndex:0];
+    }
+    [super viewWillAppear:animated];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -57,29 +90,6 @@
     
     self.viewControllers=@[nav1,nav2,nav3];
 //    self.tabBar.hidden=YES;
-    UIToolbar *tabBarView=[UIToolbar new];
-    tabBarView.frame=self.tabBar.frame;
-    [self.view addSubview:tabBarView];
-    self.tabBarView=tabBarView;
-    
-    UISegmentedControl *segmentedControl=[[UISegmentedControl alloc] initWithItems:@[@"动态",@"资源",@"信息"]];
-    segmentedControl.frame=CGRectMake(0, 0, 360, 36);
-    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:16],NSFontAttributeName, nil];
-    [segmentedControl setTitleTextAttributes:dic forState:UIControlStateNormal];
-    segmentedControl.tintColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bk_ti.png"]];
-    [segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-    UIBarButtonItem *itemSegment=[[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
-    UIBarButtonItem *itemFlexible=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIButton *addButton=[[UIButton alloc] init];
-    [addButton setTitle:@"发布资源" forState:UIControlStateNormal];
-    [addButton setTitleColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bk_ti.png"]] forState:UIControlStateNormal];
-    [addButton setFrame:CGRectMake(0, 0, 120, 36)];
-    [addButton addTarget:self action:@selector(publishResource:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *itemAdd=[[UIBarButtonItem alloc] initWithCustomView:addButton];
-//target:self action:@selector(publishResource:)];
-    
-    [self.tabBarView setItems:@[itemFlexible,itemSegment,itemFlexible,itemAdd]];
-    [segmentedControl setSelectedSegmentIndex:0];
 }
 
 - (void)didReceiveMemoryWarning

@@ -19,6 +19,8 @@
 #import "AppDelegate.h"
 #import "SCBSession.h"
 #import "NSString+Format.h"
+#import "MainViewController.h"
+#import "SCBFileManager.h"
 
 @interface ResourceFinderViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate,IconDownloaderDelegate,DownloadProgressDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -26,6 +28,8 @@
 @property(strong,nonatomic) NSArray *listArray;
 @property (strong,nonatomic) MBProgressHUD *hud;
 @property (strong,nonatomic) NSMutableDictionary *imageDownloadsInProgress;
+@property (strong,nonatomic) NSArray *selectids;
+@property (nonatomic,strong) SCBFileManager *fm_move;
 @end
 
 @implementation ResourceFinderViewController
@@ -130,7 +134,31 @@
     
     NSIndexPath *indexPath= [self.tableView indexPathForRowAtPoint:currentTouchPosition];
     if (indexPath) {
+        NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
+        self.selectids=@[[dic objectForKey:@"file_id"]];
+        MainViewController *flvc=[[MainViewController alloc] init];
+        flvc.title=@"选择转存的位置";
+        flvc.delegate=self;
+        flvc.type=kTypeResave;
+        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:flvc];
+        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+        //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+        [self presentViewController:nav animated:YES completion:nil];
     }
+}
+
+-(void)resaveFileToID:(NSString *)f_id spid:(NSString *)spid
+{
+    if (self.fm_move) {
+        [self.fm_move cancelAllTask];
+    }else
+    {
+        self.fm_move=[[SCBFileManager alloc] init];
+    }
+    self.fm_move.delegate=self;
+    [self.fm_move resaveFileIDs:self.selectids toPID:f_id sID:spid];
 }
 
 #pragma mark - UITableViewDataSource
@@ -156,6 +184,7 @@
     NSString *fname=[dic objectForKey:@"file_name"];
     cell.fileNameLabel.text=fname;
     [cell.downloadButton addTarget:self action:@selector(downloadAction:event:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.resaveButton addTarget:self action:@selector(resaveAction:event:) forControlEvents:UIControlEventTouchUpInside];
     if (fisdir.intValue == 1) {
         //文件夹
         cell.iconImageView.image=[UIImage imageNamed:@"file_folder.png"];
@@ -166,6 +195,7 @@
             //可以转存
         }
     }else{
+        cell.resaveButton.hidden=YES;
         NSString *fmime=[dic objectForKey:@"file_mime"];
         fmime = [fmime lowercaseString];
         if ([fmime isEqualToString:@"png"]||
@@ -254,6 +284,7 @@
         ResourceFinderViewController *finderViewController=[ResourceFinderViewController new];
         finderViewController.subjectID=self.subjectID;
         finderViewController.fID=[dic objectForKey:@"file_id"];
+        finderViewController.isPublisher=self.isPublisher;
         finderViewController.title=fname;
         [self.navigationController pushViewController:finderViewController animated:YES];
     }else
@@ -406,5 +437,15 @@
     browser.filePath=savedPath;
     browser.fileName=name;
     [self presentViewController:browser animated:NO completion:nil];
+}
+
+#pragma mark - SCBFileManagerDelegate
+-(void)moveUnsucess
+{
+    [self showMessage:@"操作失败"];
+}
+-(void)moveSucess
+{
+    [self showMessage:@"操作成功"];
 }
 @end

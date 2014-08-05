@@ -155,7 +155,9 @@
     
     NSString *fname = [dic objectForKey:@"file_name"];
     NSString *fmime = [[fname pathExtension] lowercaseString];
-    
+    if ([[dic objectForKey:@"isPublisher"] boolValue]) {
+//        cell.resaveButton.hidden=YES;
+    }
     int file_type = [[dic objectForKey:@"type"] intValue];
     if(file_type == 1) {
         cell.iconImageView.image = [UIImage imageNamed:@"file_folder.png"];
@@ -366,7 +368,6 @@
         //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
         [nav.navigationBar setTintColor:[UIColor whiteColor]];
         [self presentViewController:nav animated:YES completion:nil];
-
     }
 }
 

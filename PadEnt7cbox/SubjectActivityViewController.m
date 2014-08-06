@@ -268,7 +268,7 @@
     NSString *urlTitle=[fileDic objectForKey:@"urlTitle"];
     NSString *url=[fileDic objectForKey:@"url"];
     NSString *f_name = [fileDic objectForKey:@"f_name"];
-    NSString *f_mime = [fileDic objectForKey:@"f_mime"];
+    NSString *f_mime = [[fileDic objectForKey:@"f_mime"] lowercaseString];
     NSString *f_isdir=[fileDic objectForKey:@"f_isdir"];
     if ([f_isdir intValue]==0) {
         //文件夹

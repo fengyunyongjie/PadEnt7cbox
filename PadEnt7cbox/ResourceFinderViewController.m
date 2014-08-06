@@ -195,7 +195,7 @@
             //可以转存
         }
     }else{
-        cell.resaveButton.hidden=YES;
+//        cell.resaveButton.hidden=YES;
         NSString *fmime=[dic objectForKey:@"file_mime"];
         fmime = [fmime lowercaseString];
         if ([fmime isEqualToString:@"png"]||

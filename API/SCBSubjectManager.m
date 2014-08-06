@@ -248,10 +248,15 @@ typedef enum {
     self.activeData=[NSMutableData data];
     NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,SM_PUBLISH_COMMENT_URI]];
     NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
+    NSString *result = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                           (CFStringRef)aContent,
+                                                                           NULL,
+                                                                           CFSTR("!*'();:@&=+$,/?%#[]"),
+                                                                           kCFStringEncodingUTF8));
     NSMutableString *body=[[NSMutableString alloc] init];
     [body appendFormat:@"resource_id=%@",res_id];
     [body appendFormat:@"&subject_id=%@",sub_id];
-    [body appendFormat:@"&content=%@",aContent];
+    [body appendFormat:@"&content=%@",result];
     [body appendFormat:@"&comment_type=%@",comment_type];
     if ([comment_type isEqualToString:@"1"]) {
         [body appendFormat:@"&seconds=%@",audioLen];

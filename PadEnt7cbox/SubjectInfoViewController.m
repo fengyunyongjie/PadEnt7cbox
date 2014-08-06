@@ -121,7 +121,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section==0&&indexPath.row==0) {
+    if (indexPath.section==0) {
         static NSString *cellIdentifier = @"Cell";
         SubjectInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (cell==nil) {

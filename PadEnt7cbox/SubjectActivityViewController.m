@@ -513,7 +513,7 @@
 -(void)didGetActivity:(NSDictionary *)datadic
 {
     self.dataDic=datadic;
-    self.listArray=[datadic objectForKey:@"result"];
+    self.listArray=[self formatTableArray:[datadic objectForKey:@"result"]];
     [self.tableView reloadData];
     MyTabBarViewController *myTabVC=[self.splitViewController.viewControllers objectAtIndex:0];
     [myTabVC checkSubjectActivityCount];
@@ -523,6 +523,19 @@
 {
     [self showMessage:@"链接失败，请检查网络"];
     [self doneLoadingTableViewData];
+}
+-(NSMutableArray *)formatTableArray:(NSMutableArray *)tableA
+{
+    NSMutableArray *formatTableArray = [[NSMutableArray alloc] init];
+    for (int i=0;i<tableA.count; i++) {
+        NSDictionary *dict = [tableA objectAtIndex:i];
+        NSDictionary *content = [NSString stringWithDictionS:[dict objectForKey:@"content"]];
+        if(content && ![content isEqual:[NSNull null]])
+        {
+            [formatTableArray addObject:dict];
+        }
+    }
+    return formatTableArray;
 }
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods

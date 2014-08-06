@@ -59,7 +59,6 @@
                 <outlet property="boardView1" destination="MPI-Th-gah" id="CvB-76-wlp"/>
                 <outlet property="headLabel" destination="r4X-Gc-5Lg" id="e6q-fi-EQm"/>
                 <outlet property="personLabel" destination="1zW-Tb-6NJ" id="7ne-WK-jNq"/>
-                <outlet property="subjectInfoTextView" destination="pDG-AE-hOk" id="wgX-Ux-KIs"/>
             </connections>
         </tableViewCell>
         <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="148" id="GIo-g9-SEk" customClass="SubjectInfoCell">
@@ -111,6 +110,9 @@
                     <constraint firstItem="MPI-Th-gah" firstAttribute="top" secondItem="w71-k8-W0O" secondAttribute="top" id="lNx-KW-FlL"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="subjectInfoTextView" destination="pDG-AE-hOk" id="aMv-Vo-zYi"/>
+            </connections>
         </tableViewCell>
     </objects>
 </document>

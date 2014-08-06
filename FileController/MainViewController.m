@@ -83,7 +83,7 @@
     self.tableView.dataSource=self;
     [self.view addSubview:self.tableView];
     self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    if (self.type==kTypeCommit||self.type==kTypeResave||self.type==kTypeUpload||self.type==kTypeMove||self.type==kTypeCopy) {
+    if (self.dirType==kTypeRoot&&(self.type==kTypeCommit||self.type==kTypeResave||self.type==kTypeUpload||self.type==kTypeMove||self.type==kTypeCopy)) {
         [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(dissmissSelf:)]];
     }else
     {

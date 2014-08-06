@@ -229,7 +229,6 @@
         [self.nothingView setHidden:NO];
         [self.notingLabel setText:@"立即新建一个专题，邀请同事参与吧"];
     }
-    
 }
 
 -(void)networkError

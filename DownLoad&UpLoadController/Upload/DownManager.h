@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "DownList.h"
 #import "DwonFile.h"
-
+extern NSString *const DownloaderDidFinishDownloadingNotification;
+extern NSString *const DownloaderDidNotFinishDownloadingNotification;
 @interface DownManager : NSObject<DownloaderDelegate>
 
 @property(strong,nonatomic) NSMutableArray *downingArray;

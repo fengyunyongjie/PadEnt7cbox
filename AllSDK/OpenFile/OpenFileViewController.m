@@ -16,6 +16,7 @@
 #import "MyTabBarViewController.h"
 #import "DetailViewController.h"
 #import "FileListViewController.h"
+#import "NSString+format.h"
 
 @interface OpenFileViewController ()
 
@@ -283,8 +284,10 @@
     DetailViewController *viewCon = [[DetailViewController alloc] init];
     [viewCon removeAllView];
     [viewCon.view addSubview:browser.view];
+    browser.view.frame=viewCon.view.bounds;
     [viewCon showOtherView:browser.title withIsHave:self.isHaveDelete withIsHaveDown:self.isHaveDownload];
     [viewCon addChildViewController:browser];
+    viewCon.dataDic=self.dataDic;
     [viewCon showFullView];
     UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
     [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];

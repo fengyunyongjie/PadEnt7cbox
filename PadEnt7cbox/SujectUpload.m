@@ -233,6 +233,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 connection = [uploderDemo requestUploadFile:finishName startSkip:[NSString stringWithFormat:@"%i",list.upload_size] skip:[NSString stringWithFormat:@"%i",total] Image:file_data];
             });
+        }else
+        {
+            NSLog(@"数据大小为零");
         }
     }
     else

@@ -23,6 +23,7 @@
 #import "QLBrowserViewController.h"
 #import "OtherBrowserViewController.h"
 #import "SCBSubjectManager.h"
+#import "IconDownloader.h"
 
 typedef enum{
     kActionTypeOpen,
@@ -42,6 +43,7 @@ typedef enum{
 @property (strong,nonatomic) NSArray *selectids;
 @property (assign,nonatomic) ActionType actionType;
 @property (strong,nonatomic) NSIndexPath *selectedIndexPath;
+@property (strong,nonatomic) NSMutableDictionary *imageDownloadsInProgress;
 @end
 
 @implementation ActivityDetailViewController
@@ -255,6 +257,23 @@ typedef enum{
     [fm requestEntFileInfo:file_id];
 }
 
+- (void)startIconDownload:(NSDictionary *)dic forIndexPath:(NSIndexPath *)indexPath
+{
+    if (!self.imageDownloadsInProgress) {
+        self.imageDownloadsInProgress=[NSMutableDictionary dictionary];
+    }
+    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader == nil)
+    {
+        iconDownloader = [[IconDownloader alloc] init];
+        iconDownloader.data_dic=dic;
+        iconDownloader.indexPathInTableView = indexPath;
+        iconDownloader.delegate = self;
+        [self.imageDownloadsInProgress setObject:iconDownloader forKey:indexPath];
+        [iconDownloader startDownload];
+    }
+}
+
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 {
@@ -427,7 +446,18 @@ typedef enum{
                      [f_mime isEqualToString:@"bmp"]||
                      [f_mime isEqualToString:@"gif"])
             {
-                cell.iconImageView.image = [UIImage imageNamed:@"file_pic.png"];
+                NSString *fthumb=[fileDic objectForKey:@"f_thumb"];
+                NSString *localThumbPath=[YNFunctions getIconCachePath];
+                fthumb =[YNFunctions picFileNameFromURL:fthumb];
+                localThumbPath=[localThumbPath stringByAppendingPathComponent:fthumb];
+                UIImage *image=[UIImage imageWithContentsOfFile:localThumbPath];
+                if (image) {
+                    cell.iconImageView.image=image;
+                }else{
+                    cell.iconImageView.image = [UIImage imageNamed:@"file_pic.png"];
+                    [self startIconDownload:@{@"fthumb":[fileDic objectForKey:@"f_thumb"]} forIndexPath:indexPath];
+                }
+
             }else if ([f_mime isEqualToString:@"doc"]||
                       [f_mime isEqualToString:@"docx"]||
                       [f_mime isEqualToString:@"rtf"])
@@ -839,6 +869,7 @@ typedef enum{
 {
     [self showMessage:@"播放语音失败"];
 }
+
 #pragma mark -DownloadProgressDelegate
 -(void)downloadFinished:(NSDictionary *)dataDic
 {
@@ -858,5 +889,18 @@ typedef enum{
     browser.filePath=savedPath;
     browser.fileName=name;
     [self presentViewController:browser animated:NO completion:nil];
+}
+
+#pragma mark - IconDownloaderDelegate
+- (void)appImageDidLoad:(NSIndexPath *)indexPath;
+{
+    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader != nil)
+    {
+        [self.tableView reloadRowsAtIndexPaths:@[iconDownloader.indexPathInTableView] withRowAnimation:UITableViewRowAnimationNone];
+    }
+    // Remove the IconDownloader from the in progress list.
+    // This will result in it being deallocated.
+    [self.imageDownloadsInProgress removeObjectForKey:indexPath];
 }
 @end

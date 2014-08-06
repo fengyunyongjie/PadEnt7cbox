@@ -16,7 +16,8 @@
 #import "MySplitViewController.h"
 #import "LoginViewController.h"
 #import "NSString+Format.h"
-
+NSString *const DownloaderDidFinishDownloadingNotification=@"DownloaderDidFinishDownloadingNotification";
+NSString *const DownloaderDidNotFinishDownloadingNotification=@"DownloaderDidNotFinishDownloadingNotification";
 @implementation DownManager
 @synthesize downingArray,isOpenedDown,isStart,isStopCurrDown,file,isAutoStart;
 
@@ -238,6 +239,7 @@
     if([downingArray count]>0)
     {
         DownList *list = [downingArray objectAtIndex:0];
+        [[NSNotificationCenter defaultCenter] postNotificationName:DownloaderDidFinishDownloadingNotification object:self userInfo:@{@"fname":list.d_name}];
         list.d_baseUrl = [NSString formatNSStringForOjbect:baseUrl];
         list.d_state = 1;
         NSDate *todayDate = [NSDate date];
@@ -278,6 +280,7 @@
     if([downingArray count]>0 && isOpenedDown)
     {
         DownList *list = [downingArray objectAtIndex:0];
+        [[NSNotificationCenter defaultCenter] postNotificationName:DownloaderDidNotFinishDownloadingNotification object:self userInfo:@{@"fname":list.d_name}];
         list.d_state = 5;
         list.is_Onece = YES;
         [list deleteDownList];

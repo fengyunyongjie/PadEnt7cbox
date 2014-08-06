@@ -13,9 +13,11 @@
 - (void)awakeFromNib
 {
     // Initialization code
-    self.boardView.layer.borderWidth=0.5f;
+    int scale=[UIScreen mainScreen].scale;
+    float lineWidth=1.0f/scale;
+    self.boardView.layer.borderWidth=lineWidth;;
     self.boardView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
-    self.boardView1.layer.borderWidth=0.5f;
+    self.boardView1.layer.borderWidth=lineWidth;;
     self.boardView1.layer.borderColor=[[UIColor lightGrayColor] CGColor];
     self.commentLabel.numberOfLines=0;
 }

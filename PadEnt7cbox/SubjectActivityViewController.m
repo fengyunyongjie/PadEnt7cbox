@@ -16,6 +16,8 @@
 #import "MyTabBarViewController.h"
 #import "SubjectListViewController.h"
 #import "EGORefreshTableHeaderView.h"
+#import "YNFunctions.h"
+#import "IconDownloader.h"
 
 @interface SubjectActivityViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate,EGORefreshTableHeaderDelegate>{
     EGORefreshTableHeaderView *_refreshHeaderView;
@@ -26,6 +28,7 @@
 @property (nonatomic,strong) NSArray *listArray;
 @property (nonatomic,strong) SCBSubjectManager *sm_list;
 @property (nonatomic,strong) MBProgressHUD *hud;
+@property (strong,nonatomic) NSMutableDictionary *imageDownloadsInProgress;
 @end
 
 @implementation SubjectActivityViewController
@@ -101,6 +104,23 @@
     self.sm_list=[SCBSubjectManager new];
     self.sm_list.delegate=self;
     [self.sm_list getActivityWithSubjectID:[(SubjectDetailTabBarController *)self.tabBarController subjectId]];
+}
+
+- (void)startIconDownload:(NSDictionary *)dic forIndexPath:(NSIndexPath *)indexPath
+{
+    if (!self.imageDownloadsInProgress) {
+        self.imageDownloadsInProgress=[NSMutableDictionary dictionary];
+    }
+    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader == nil)
+    {
+        iconDownloader = [[IconDownloader alloc] init];
+        iconDownloader.data_dic=dic;
+        iconDownloader.indexPathInTableView = indexPath;
+        iconDownloader.delegate = self;
+        [self.imageDownloadsInProgress setObject:iconDownloader forKey:indexPath];
+        [iconDownloader startDownload];
+    }
 }
 
 -(void)showMessage:(NSString *)message
@@ -260,7 +280,17 @@
              [f_mime isEqualToString:@"bmp"]||
              [f_mime isEqualToString:@"gif"])
     {
-        cell.resourceImageView.image = [UIImage imageNamed:@"file_pic.png"];
+        NSString *fthumb=[fileDic objectForKey:@"f_thumb"];
+        NSString *localThumbPath=[YNFunctions getIconCachePath];
+        fthumb =[YNFunctions picFileNameFromURL:fthumb];
+        localThumbPath=[localThumbPath stringByAppendingPathComponent:fthumb];
+        UIImage *image=[UIImage imageWithContentsOfFile:localThumbPath];
+        if (image) {
+            cell.resourceImageView.image=image;
+        }else{
+            [self startIconDownload:@{@"fthumb":[fileDic objectForKey:@"f_thumb"]} forIndexPath:indexPath];
+            cell.resourceImageView.image = [UIImage imageNamed:@"file_pic.png"];
+        }
     }else if ([f_mime isEqualToString:@"doc"]||
               [f_mime isEqualToString:@"docx"]||
               [f_mime isEqualToString:@"rtf"])
@@ -456,8 +486,8 @@
 {
     NSDictionary *dic=[self.listArray objectAtIndex:indexPath.section];
     int cellType=[[dic objectForKey:@"type"] intValue];
-    if (cellType>=7) {
-        //cellType为7～13 无法进入动态详情
+    if (cellType>=6) {
+        //cellType为6～13 无法进入动态详情
         return;
     }
     ActivityDetailViewController *advc=[ActivityDetailViewController new];
@@ -540,4 +570,18 @@
 {
     [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
+
+#pragma mark - IconDownloaderDelegate
+- (void)appImageDidLoad:(NSIndexPath *)indexPath;
+{
+    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader != nil)
+    {
+        [self.tableView reloadRowsAtIndexPaths:@[iconDownloader.indexPathInTableView] withRowAnimation:UITableViewRowAnimationNone];
+    }
+    // Remove the IconDownloader from the in progress list.
+    // This will result in it being deallocated.
+    [self.imageDownloadsInProgress removeObjectForKey:indexPath];
+}
+
 @end

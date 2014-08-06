@@ -83,11 +83,14 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeKeyBoard:) name:UIKeyboardWillChangeFrameNotification object:nil];
     
-    self.commentTextField.layer.borderWidth=0.5f;
+    int scale=[UIScreen mainScreen].scale;
+    float lineWidth=1.0f/scale;
+    
+    self.commentTextField.layer.borderWidth=lineWidth;;
     self.commentTextField.layer.borderColor=[[UIColor lightGrayColor] CGColor];
     self.commentTextField.layer.cornerRadius=3;
     
-    self.voiceInputButton.layer.borderWidth=0.5f;
+    self.voiceInputButton.layer.borderWidth=lineWidth;;
     self.voiceInputButton.layer.borderColor=[[UIColor lightGrayColor] CGColor];
     self.voiceInputButton.layer.cornerRadius=3;
     
@@ -256,6 +259,11 @@
     NSURL *url = [NSURL fileURLWithPath:mp3TemporarySavePath];
     audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
     //时长
+    
+    if ((NSInteger)[YNFunctions fileSizeAtPath:mp3TemporarySavePath]==0) {
+        NSLog(@"录音时间太短");
+        return;
+    }
     
     SujectUpload *newUpload = [[SujectUpload alloc] init];
     UpLoadList *list = [[UpLoadList alloc] init];

@@ -32,7 +32,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.commentTextView.layer.borderWidth=0.5f;
+    int scale=[UIScreen mainScreen].scale;
+    float lineWidth=1.0f/scale;
+    
+    self.commentTextView.layer.borderWidth=lineWidth;;
     self.commentTextView.layer.borderColor=[[UIColor lightGrayColor] CGColor];
     
     UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];

@@ -298,6 +298,14 @@
             }else if ([type isEqualToString:@"photo"]) {
                 cell.iconImageView.image=[UIImage imageNamed:@"file_pic.png"];
                 cell.resourceNameLabel.text=[dic objectForKey:@"name"];
+                
+                NSString *fthumb=[dic objectForKey:@"fthumb"];
+                NSString *localThumbPath=[YNFunctions getIconCachePath];
+                localThumbPath=[localThumbPath stringByAppendingPathComponent:fthumb];
+                UIImage *image=[UIImage imageWithContentsOfFile:localThumbPath];
+                if (image) {
+                    cell.iconImageView.image=image;
+                }
             }else if([type isEqualToString:@"file"])
             {
                 NSDictionary *fileDic=[dic objectForKey:@"fileDic"];
@@ -347,7 +355,7 @@
                     }else{
                         cell.iconImageView.image = [UIImage imageNamed:@"file_pic.png"];
                         NSLog(@"将要下载的文件：%@",localThumbPath);
-//                        [self startIconDownload:dic forIndexPath:indexPath];
+//                        [self startIconDownload:fileDic forIndexPath:indexPath];
                     }
                 }else if ([fmime isEqualToString:@"doc"]||
                           [fmime isEqualToString:@"docx"]||
@@ -399,7 +407,7 @@
         return 100;
     }else
     {
-        return 44;
+        return 50;
     }
 }
 - (void)deleteAction:(UIButton *)sender event:(id)event
@@ -428,6 +436,16 @@
     filePath=[filePath stringByAppendingPathComponent:fileName];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         UIImage *image=[info objectForKey:UIImagePickerControllerOriginalImage];
+        
+        UIGraphicsBeginImageContext(CGSizeMake(100, 100));
+        [image drawInRect:CGRectMake(0, 0, 100, 100)];
+        UIImage *iconImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+         NSString *iconFileName= [NSString stringWithFormat:@"%@.png",[[NSUUID UUID] UUIDString]];
+        NSString *iconFilePath=[YNFunctions getIconCachePath];
+        iconFilePath=[iconFilePath stringByAppendingPathComponent:iconFileName];
+        [UIImagePNGRepresentation(iconImage) writeToFile:iconFilePath atomically:YES];
+        
         BOOL result=[UIImageJPEGRepresentation(image, 1) writeToFile:filePath atomically:YES];
         if (result) {
             NSLog(@"文件保存成功");
@@ -456,7 +474,7 @@
                 [newUpload isNetWork];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.listArray addObject:@{@"type":@"photo",@"name":fileName,@"list":list}];
+                [self.listArray addObject:@{@"type":@"photo",@"name":fileName,@"fthumb":iconFileName,@"list":list}];
                 [self.tableView reloadData];
             });
 

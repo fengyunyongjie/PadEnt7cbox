@@ -15,6 +15,7 @@
 #import "MySplitViewController.h"
 #import "FileListViewController.h"
 #import "MyTabBarViewController.h"
+#import "NSString+Format.h"
 
 #define kActionSheetDeleteFile 1024
 #define kActionSheetDeletePhoto 1025

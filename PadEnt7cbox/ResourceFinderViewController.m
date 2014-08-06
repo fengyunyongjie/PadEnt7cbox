@@ -208,31 +208,12 @@
             NSString *localThumbPath=[YNFunctions getIconCachePath];
             fthumb =[YNFunctions picFileNameFromURL:fthumb];
             localThumbPath=[localThumbPath stringByAppendingPathComponent:fthumb];
-            NSLog(@"是否存在文件：%@",localThumbPath);
-            if ([[NSFileManager defaultManager] fileExistsAtPath:localThumbPath]&&[UIImage imageWithContentsOfFile:localThumbPath]!=nil) {
-                NSLog(@"存在文件：%@",localThumbPath);
-                UIImage *icon=[UIImage imageWithContentsOfFile:localThumbPath];
-                CGSize itemSize = CGSizeMake(100, 100);
-                UIGraphicsBeginImageContext(itemSize);
-                CGRect theR=CGRectMake(0, 0, itemSize.width, itemSize.height);
-                if (icon.size.width>icon.size.height) {
-                    theR.size.width=icon.size.width/(icon.size.height/itemSize.height);
-                    theR.origin.x=-(theR.size.width/2)-itemSize.width;
-                }else
-                {
-                    theR.size.height=icon.size.height/(icon.size.width/itemSize.width);
-                    theR.origin.y=-(theR.size.height/2)-itemSize.height;
-                }
-                CGRect imageRect = CGRectMake(0, 0, 100, 100);
-                [icon drawInRect:imageRect];
-                UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-                cell.iconImageView.image = image;
+            UIImage *image=[UIImage imageWithContentsOfFile:localThumbPath];
+            if (image) {
+                cell.iconImageView.image=image;
             }else{
+                [self startIconDownload:@{@"fthumb":[dic objectForKey:@"file_thumb"]} forIndexPath:indexPath];
                 cell.iconImageView.image = [UIImage imageNamed:@"file_pic.png"];
-                NSLog(@"将要下载的文件：%@",localThumbPath);
-                [self startIconDownload:dic forIndexPath:indexPath];
-                
             }
         }else if ([fmime isEqualToString:@"doc"]||
                   [fmime isEqualToString:@"docx"]||

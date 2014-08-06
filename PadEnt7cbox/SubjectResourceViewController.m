@@ -21,6 +21,9 @@
 #import "MBProgressHUD.h"
 #import "MainViewController.h"
 #import "SCBFileManager.h"
+#import "IconDownloader.h"
+#import "AppDelegate.h"
+#import "SCBSession.h"
 
 @interface SubjectResourceViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate>
 @property (nonatomic,strong) UITableView *tableView;
@@ -30,6 +33,9 @@
 @property (nonatomic,strong) MBProgressHUD *hud;
 @property (nonatomic,strong) SCBFileManager *fm_move;
 @property (nonatomic,strong) NSArray *selectids;
+@property (strong,nonatomic) UILabel * notingLabel;
+@property (strong,nonatomic) UIView *nothingView;
+@property (strong,nonatomic) NSMutableDictionary *imageDownloadsInProgress;
 @end
 
 @implementation SubjectResourceViewController
@@ -127,6 +133,23 @@
     [self.fm_move resaveFileIDs:self.selectids toPID:f_id sID:spid];
 }
 
+- (void)startIconDownload:(NSDictionary *)dic forIndexPath:(NSIndexPath *)indexPath
+{
+    if (!self.imageDownloadsInProgress) {
+        self.imageDownloadsInProgress=[NSMutableDictionary dictionary];
+    }
+    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader == nil)
+    {
+        iconDownloader = [[IconDownloader alloc] init];
+        iconDownloader.data_dic=dic;
+        iconDownloader.indexPathInTableView = indexPath;
+        iconDownloader.delegate = self;
+        [self.imageDownloadsInProgress setObject:iconDownloader forKey:indexPath];
+        [iconDownloader startDownload];
+    }
+}
+
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -177,30 +200,12 @@
             NSString *localThumbPath=[YNFunctions getIconCachePath];
             fthumb =[YNFunctions picFileNameFromURL:fthumb];
             localThumbPath=[localThumbPath stringByAppendingPathComponent:fthumb];
-            
-            if ([[NSFileManager defaultManager] fileExistsAtPath:localThumbPath]&&[UIImage imageWithContentsOfFile:localThumbPath]!=nil) {
-                
-                UIImage *icon=[UIImage imageWithContentsOfFile:localThumbPath];
-                CGSize itemSize = CGSizeMake(100, 100);
-                UIGraphicsBeginImageContext(itemSize);
-                CGRect theR=CGRectMake(0, 0, itemSize.width, itemSize.height);
-                if (icon.size.width>icon.size.height) {
-                    theR.size.width=icon.size.width/(icon.size.height/itemSize.height);
-                    theR.origin.x=-(theR.size.width/2)-itemSize.width;
-                }else
-                {
-                    theR.size.height=icon.size.height/(icon.size.width/itemSize.width);
-                    theR.origin.y=-(theR.size.height/2)-itemSize.height;
-                }
-                CGRect imageRect = CGRectMake(0, 0, 100, 100);
-                [icon drawInRect:imageRect];
-                UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-                cell.iconImageView.image = image;
+            UIImage *image=[UIImage imageWithContentsOfFile:localThumbPath];
+            if (image) {
+                cell.iconImageView.image=image;
             }else{
+                [self startIconDownload:@{@"fthumb":[dic objectForKey:@"file_thumb"]} forIndexPath:indexPath];
                 cell.iconImageView.image = [UIImage imageNamed:@"file_pic.png"];
-                NSLog(@"将要下载的文件：%@",localThumbPath);
-//                [self startIconDownload:dic forIndexPath:indexPath];
             }
             
         }else if ([fmime isEqualToString:@"doc"]||
@@ -343,6 +348,30 @@
     
     NSIndexPath *indexPath= [self.tableView indexPathForRowAtPoint:currentTouchPosition];
     if (indexPath) {
+        NSDictionary *dic=[self.listArray objectAtIndex:indexPath.row];
+        NSString *file_id = [NSString formatNSStringForOjbect:[dic objectForKey:@"file_id"]];
+        NSString *thumb = [NSString formatNSStringForOjbect:[dic objectForKey:@"file_thumb"]];
+        if([thumb length]==0)
+        {
+            thumb = @"0";
+        }
+        NSString *name = [NSString formatNSStringForOjbect:[dic objectForKey:@"file_name"]];
+        NSInteger fsize = [[dic objectForKey:@"file_size"] integerValue];
+        
+        DownList *list = [[DownList alloc] init];
+        list.d_name = name;
+        list.d_downSize = fsize;
+        list.d_thumbUrl = thumb;
+        list.d_file_id = file_id;
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSDate *todayDate = [NSDate date];
+        list.d_datetime = [dateFormatter stringFromDate:todayDate];
+        list.d_ure_id = [NSString formatNSStringForOjbect:[[SCBSession sharedSession] userId]];
+        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [delegate.downmange addDownLists:[NSMutableArray arrayWithObjects:list, nil]];
     }
 }
 
@@ -398,7 +427,27 @@
 {
     self.dataDic=datadic;
     self.listArray=[datadic objectForKey:@"list"];
-    [self.tableView reloadData];
+    if (self.listArray.count>0) {
+        [self.nothingView setHidden:YES];
+        [self.tableView reloadData];
+    }else
+    {
+        if (!self.nothingView) {
+            self.nothingView=[[UIView alloc] initWithFrame:self.tableView.frame];
+            [self.nothingView setBackgroundColor:[UIColor whiteColor]];
+            [self.view addSubview:self.nothingView];
+            
+            CGRect notingRect = CGRectMake(0, (self.view.frame.size.height-40)/2, self.nothingView.bounds.size.width, 40);
+            self.notingLabel = [[UILabel alloc] initWithFrame:notingRect];
+            [self.notingLabel setTextColor:[UIColor grayColor]];
+            [self.notingLabel setFont:[UIFont systemFontOfSize:18]];
+            [self.notingLabel setTextAlignment:NSTextAlignmentCenter];
+            [self.nothingView addSubview:self.notingLabel];
+        }
+        [self.view bringSubviewToFront:self.nothingView];
+        [self.nothingView setHidden:NO];
+        [self.notingLabel setText:@"暂无文件"];
+    }
 }
 
 -(void)networkError
@@ -435,5 +484,34 @@
 -(void)moveSucess
 {
     [self showMessage:@"操作成功"];
+}
+
+#pragma mark - IconDownloaderDelegate
+- (void)appImageDidLoad:(NSIndexPath *)indexPath;
+{
+    IconDownloader *iconDownloader = [self.imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader != nil)
+    {
+        [self.tableView reloadRowsAtIndexPaths:@[iconDownloader.indexPathInTableView] withRowAnimation:UITableViewRowAnimationNone];
+    }
+    // Remove the IconDownloader from the in progress list.
+    // This will result in it being deallocated.
+    [self.imageDownloadsInProgress removeObjectForKey:indexPath];
+}
+
+-(void)downFileSuccess:(NSString *)name
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self showMessage:[NSString stringWithFormat:@"%@ 下载完成",name]];
+//        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//        delegate.downmange.managerDelegate = nil;
+    });
+}
+
+-(void)downFileunSuccess:(NSString *)name
+{
+    [self showMessage:[NSString stringWithFormat:@"%@ 下载失败",name]];
+//    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    delegate.downmange.managerDelegate = nil;
 }
 @end

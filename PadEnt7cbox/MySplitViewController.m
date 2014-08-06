@@ -12,9 +12,11 @@
 #import "MainViewController.h"
 #import "YNNavigationController.h"
 #import "PhotoLookViewController.h"
+#import "DownManager.h"
+#import "MBProgressHUD.h"
 
 @interface MySplitViewController ()<UISplitViewControllerDelegate>
-
+@property (strong,nonatomic) MBProgressHUD *hud;
 @end
 
 @implementation MySplitViewController
@@ -29,6 +31,12 @@
     return self;
 }
 
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:DownloaderDidFinishDownloadingNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:DownloaderDidNotFinishDownloadingNotification object:nil];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -41,6 +49,39 @@
     [nav.navigationBar setTintColor:[UIColor whiteColor]];
     self.viewControllers=@[myTabVC,nav];
     self.delegate=self;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFinish:) name:DownloaderDidFinishDownloadingNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFail:) name:DownloaderDidNotFinishDownloadingNotification object:nil];
+}
+
+-(void)showMessage:(NSString *)message
+{
+    [self.hud show:NO];
+    if (self.hud) {
+        [self.hud removeFromSuperview];
+    }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.view.window];
+    [self.view.window addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=message;
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1];
+}
+
+-(void)downloadFinish:(NSNotification *)note{
+    NSString *fname=[note.userInfo objectForKey:@"fname"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self showMessage:[NSString stringWithFormat:@"%@ 下载完成",fname]];
+    });
+}
+-(void)downloadFail:(NSNotification *)note{
+    NSString *fname=[note.userInfo objectForKey:@"fname"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self showMessage:[NSString stringWithFormat:@"%@ 下载失败",fname]];
+    });
 }
 - (UIStatusBarStyle)preferredStatusBarStyle
 {

@@ -28,6 +28,7 @@
 #import "MySplitViewController.h"
 #import "DetailViewController.h"
 #import "SCBFileManager.h"
+#import "NSString+Format.h"
 
 typedef enum{
     kAlertTypeNewVersion,

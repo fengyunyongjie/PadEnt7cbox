@@ -585,7 +585,7 @@ extern NSString * const PosterCode10Notification = @"PosterCode10Notification";
         return;
     }
     
-//    NSLog(@"%@",[[NSString alloc] initWithData:self.activeData encoding:NSUTF8StringEncoding]);
+    NSLog(@"%@",[[NSString alloc] initWithData:self.activeData encoding:NSUTF8StringEncoding]);
     NSError *jsonParsingError=nil;
     
     NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:self.activeData options:0 error:&jsonParsingError];
@@ -646,7 +646,7 @@ extern NSString * const PosterCode10Notification = @"PosterCode10Notification";
         {
             [self.delegate operateSucess:dic];
         }
-    }else if ([[dic objectForKey:@"code"] intValue]==0) {
+    }else if ([dic objectForKey:@"code"]&&[[dic objectForKey:@"code"] intValue]==0) {
         NSLog(@"操作成功 数据大小：%d",[self.activeData length]);
         if (self.delegate) {
             switch (self.fm_type) {

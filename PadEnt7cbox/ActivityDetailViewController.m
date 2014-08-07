@@ -780,6 +780,8 @@ typedef enum{
             flvc.title=@"选择转存的位置";
             flvc.delegate=self;
             flvc.type=kTypeCopy;
+            flvc.targetsArray=self.selectids;
+            flvc.isHasSelectFile=![[dic objectForKey:@"f_isdir"] intValue]==0;
             UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:flvc];
             [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
             [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];

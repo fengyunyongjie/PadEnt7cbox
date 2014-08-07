@@ -32,6 +32,7 @@
 #import "SCBEmailManager.h"
 #import "ShareToSubjectViewController.h"
 #import "NSString+Format.h"
+#import "SubjectDetailTabBarController.h"
 
 #define KCOVERTag 888
 
@@ -3525,6 +3526,10 @@ noDirSend:
 {
     if(self.tableView.editing)
     {
+        return;
+    }
+    UIViewController *vc=self.splitViewController.viewControllers.lastObject;
+    if ([vc isKindOfClass:[SubjectDetailTabBarController class]]) {
         return;
     }
     if(tableViewSelectedTag!=-1 && self.listArray.count>tableViewSelectedTag)

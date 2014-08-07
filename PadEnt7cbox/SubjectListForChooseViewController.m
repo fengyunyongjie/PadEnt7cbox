@@ -138,8 +138,9 @@
         [self.hud removeFromSuperview];
     }
     self.hud=nil;
-    self.hud=[[MBProgressHUD alloc] initWithView:self.view.window];
-    [self.view.window addSubview:self.hud];
+    UIWindow *window=[[UIApplication sharedApplication] keyWindow];
+    self.hud=[[MBProgressHUD alloc] initWithView:window];
+    [window addSubview:self.hud];
     [self.hud show:NO];
     self.hud.labelText=message;
     self.hud.mode=MBProgressHUDModeText;
@@ -150,7 +151,7 @@
 
 #pragma mark - UITableView Delegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return self.sectionArray.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

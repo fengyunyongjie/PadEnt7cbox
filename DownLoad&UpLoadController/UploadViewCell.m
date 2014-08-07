@@ -13,6 +13,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "AppDelegate.h"
 #import "YNFunctions.h"
+#import "NSString+Format.h"
 
 @implementation UploadViewCell
 @synthesize button_dele_button,imageView,contentView,label_name;
@@ -281,7 +282,7 @@
                 imageV = [UIImage imageNamed:@"file_excel.png"];
             }else if ([fmime isEqualToString:@"mp3"])
             {
-                imageView.image = [UIImage imageNamed:@"file_music.png"];
+                imageV = [UIImage imageNamed:@"file_music.png"];
             }else if ([fmime isEqualToString:@"mov"]||
                       [fmime isEqualToString:@"mp4"]||
                       [fmime isEqualToString:@"avi"]||

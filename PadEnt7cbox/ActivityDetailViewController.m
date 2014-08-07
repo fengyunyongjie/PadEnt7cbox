@@ -407,6 +407,7 @@ typedef enum{
                 cell.resourceImageView.hidden=NO;
                 cell.resourceLabel.hidden=NO;
                 cell.resourceImageView.image=[UIImage imageNamed:@"sub_yuyin_ico.png"];
+                cell.resourceImageView.highlightedImage=[UIImage imageNamed:@"sub_yuyin_ico_se.png"];
                 cell.resourceLabel.text=[NSString stringWithFormat:@"%@''",eveSeconds];
             }
         }
@@ -777,7 +778,7 @@ typedef enum{
             MainViewController *flvc=[[MainViewController alloc] init];
             flvc.title=@"选择转存的位置";
             flvc.delegate=self;
-            flvc.type=kTypeResave;
+            flvc.type=kTypeCopy;
             UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:flvc];
             [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
             [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];

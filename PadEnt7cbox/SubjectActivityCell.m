@@ -33,6 +33,7 @@
     {
         self.boardView1.backgroundColor=[UIColor whiteColor];
     }
+    [self.resourceImageView setHighlighted:selected];
 }
 
 @end

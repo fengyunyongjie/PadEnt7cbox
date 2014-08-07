@@ -18,6 +18,11 @@
 #import "SujectUpload.h"
 #import "UpLoadList.h"
 #import "NSString+Format.h"
+#import "AppDelegate.h"
+#import "MySplitViewController.h"
+#import "SubjectDetailTabBarController.h"
+#import "SubjectActivityViewController.h"
+#import "SubjectResourceViewController.h"
 
 
 @interface PublishResourceViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate,ChangeFileOrFolderDelegate,UITextViewDelegate,UITextFieldDelegate,UIActionSheetDelegate>
@@ -522,7 +527,20 @@
     int code=[[datadic objectForKey:@"code"] intValue];
     if (code==0) {
         [self showMessage:@"发布成功"];
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:^{
+            AppDelegate *delegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+            UIViewController *controller=delegate.splitVC.viewControllers.lastObject;
+            if ([controller isKindOfClass:[SubjectDetailTabBarController class]]) {
+                UINavigationController * nav=(UINavigationController *)[(SubjectDetailTabBarController *)controller selectedViewController];
+                if ([nav respondsToSelector:@selector(viewControllers)]) {
+                    UIViewController *viewController=nav.viewControllers.firstObject;
+                    if ([viewController respondsToSelector:@selector(updateList)]) {
+                        [(SubjectResourceViewController *)viewController updateList];
+                    }
+                }
+                
+            }
+        }];
     }else
     {
         [self showMessage:[NSString stringWithFormat:@"操作失败"]];

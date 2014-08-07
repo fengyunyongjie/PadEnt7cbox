@@ -390,7 +390,7 @@
         MainViewController *flvc=[[MainViewController alloc] init];
         flvc.title=@"选择转存的位置";
         flvc.delegate=self;
-        flvc.type=kTypeResave;
+        flvc.type=kTypeCopy;
         UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:flvc];
         [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
         [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];

@@ -39,7 +39,8 @@ __strong static WelcomeViewController *_welcommeVC;
         CGRect hidden_rect = CGRectMake(imageWidth*2+(imageWidth-201)/2-10, imageHeigth-200, 201, 52);
         hidden_rect.origin.y = imageHeigth-120;
         [hidden_button setFrame:hidden_rect];
-        [pageCtrl setFrame:CGRectMake((768-200)/2, imageHeigth-60, 200, 49)];
+//        [pageCtrl setFrame:CGRectMake((768-200)/2, imageHeigth-60, 200, 49)];
+        [pageCtrl setFrame:CGRectMake((1024-200)/2, imageHeigth-60, 200, 49)];
     }
     else
     {
@@ -123,6 +124,7 @@ __strong static WelcomeViewController *_welcommeVC;
     
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    self.view.autoresizesSubviews=NO;
     
     CGRect self_rect = CGRectMake(0, 0, imageWidth, imageHeigth);
     [self.view setFrame:self_rect];
@@ -167,12 +169,12 @@ __strong static WelcomeViewController *_welcommeVC;
         }
     }
     
-    UIPageControl *_pageCtrl=[[UIPageControl alloc] initWithFrame:CGRectMake((imageWidth-200)/2, imageHeigth-60, 200, 49)];
-    [_pageCtrl setNumberOfPages:3];
-    [_pageCtrl addTarget:self action:@selector(clicked_page:) forControlEvents:UIControlEventTouchUpInside];
-    [_pageCtrl setPageIndicatorTintColor:[UIColor colorWithRed:142/255.0f green:142/255.0f blue:142/255.0f alpha:1]];
-    [_pageCtrl setCurrentPageIndicatorTintColor:[UIColor colorWithRed:31/255.0f green:58/255.0f blue:125/255.0f alpha:1]];
-    pageCtrl = _pageCtrl;
+    UIPageControl *pc=[[UIPageControl alloc] init];
+    [pc setNumberOfPages:3];
+    [pc addTarget:self action:@selector(clicked_page:) forControlEvents:UIControlEventTouchUpInside];
+    [pc setPageIndicatorTintColor:[UIColor colorWithRed:142/255.0f green:142/255.0f blue:142/255.0f alpha:1]];
+    [pc setCurrentPageIndicatorTintColor:[UIColor colorWithRed:31/255.0f green:58/255.0f blue:125/255.0f alpha:1]];
+    pageCtrl = pc;
     [self.view addSubview:pageCtrl];
     
     UIButton *button=[[UIButton alloc] initWithFrame:CGRectMake(imageWidth*2+(imageWidth-201)/2, imageHeigth-200, 201, 52)];

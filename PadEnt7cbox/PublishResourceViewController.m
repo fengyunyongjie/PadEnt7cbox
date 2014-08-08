@@ -186,7 +186,7 @@
             imagePicker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
         }
         imagePicker.delegate = self;
-        imagePicker.automaticallyAdjustsScrollViewInsets = NO;
+        imagePicker.wantsFullScreenLayout = YES;
         [self presentViewController:imagePicker animated:YES completion:nil];
     }
 }
@@ -486,11 +486,13 @@
 
         }
     });
-    [picker dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:^{
+    }];
 }
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [picker dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:^{
+    }];
 }
 #pragma mark - UIAlertViewDelegate
 

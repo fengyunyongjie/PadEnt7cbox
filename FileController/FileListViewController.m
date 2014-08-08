@@ -82,6 +82,10 @@ typedef enum{
 @implementation FileListViewController
 @synthesize dataDic,listArray,finderArray,selectArray,f_id,fcmd,spid,roletype,flType,imageDownloadsInProgress,tableView,selectedIndexPath,tableViewSelectedFid,isNotRequestUpdate;
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
@@ -3391,11 +3395,15 @@ noDirSend:
             }
         }
     });
-    [picker dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:^{
+        [self.navigationController loadView];
+    }];
 }
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [picker dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:^{
+        [self.navigationController loadView];
+    }];
 }
 #pragma mark - MFMessageComposeViewController
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller

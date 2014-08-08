@@ -129,7 +129,15 @@
             cell=[[[NSBundle mainBundle] loadNibNamed:@"SubjectInfoCell"  owner:self options:nil] lastObject];
             cell.backgroundColor=[UIColor clearColor];
         }
-        cell.subjectInfoTextView.text=[self.dataDic objectForKey:@"details"];
+        NSString *info=[self.dataDic objectForKey:@"details"];
+        if ([info isEqualToString:@""]) {
+            info=@"没有任何信息...";
+            cell.subjectInfoTextView.textColor=[UIColor groupTableViewBackgroundColor];
+        }else
+        {
+            cell.subjectInfoTextView.textColor=[UIColor blackColor];
+        }
+        cell.subjectInfoTextView.text=info;
         return cell;
     }else
     {

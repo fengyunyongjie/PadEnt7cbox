@@ -132,7 +132,7 @@
         NSString *info=[self.dataDic objectForKey:@"details"];
         if ([info isEqualToString:@""]) {
             info=@"没有任何信息...";
-            cell.subjectInfoTextView.textColor=[UIColor groupTableViewBackgroundColor];
+            cell.subjectInfoTextView.textColor=[UIColor lightGrayColor];
         }else
         {
             cell.subjectInfoTextView.textColor=[UIColor blackColor];

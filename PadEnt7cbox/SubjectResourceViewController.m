@@ -338,7 +338,14 @@
 {
     return 60;
 }
-
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 5;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 5;
+}
 - (void)downloadAction:(id)sender event:(id)event
 {
     NSSet *touches =[event allTouches];

@@ -169,6 +169,16 @@
         return 44;
     }
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 5;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 5;
+}
+
 #pragma mark - SCBSubjectManagerDelegate
 -(void)didGetSubjectInfo:(NSDictionary *)datadic
 {

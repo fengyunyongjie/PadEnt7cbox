@@ -165,33 +165,34 @@ extern NSString * const PosterCode10Notification = @"PosterCode10Notification";
     
     _conn=[[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
--(void)searchWithQueryparam:(NSString *)f_queryparam
+-(void)searchWithQueryparam:(NSString *)f_queryparam infpid:(NSString *)fpid withspid:(NSString *)spid
 {
     self.fm_type=kFMTypeSearch;
     self.activeData=[NSMutableData data];
     NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,FM_SEARCH_URI]];
+    NSLog(@"%@",s_url);
     NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
     NSMutableString *body=[[NSMutableString alloc] init];
-    NSString *s_id;
-    if(isFamily)
-    {
-        s_id = [[SCBSession sharedSession] homeID];
+    NSString *desc=[YNFunctions getDesc];
+    NSString *order=@"asc";
+    if ([desc isEqualToString:@"time"]) {
+        order=@"desc";
     }
-    else
-    {
-        s_id=[[SCBSession sharedSession] spaceID];
-    }
-    [body appendFormat:@"f_pid=%@&f_queryparam=%@&cursor=%d&offset=%d&space_id=%@&type=%@",@"1",f_queryparam,0,-1,s_id,@"1"];
+    [body appendFormat:@"spid=%@&fpid=%@&cursor=%d&offset=%d&order=%@&desc=%@&qstr=%@",spid,fpid,0,0,order,desc,f_queryparam];
     NSLog(@"%@",body);
     NSMutableData *myRequestData=[NSMutableData data];
     [myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [request setValue:[[SCBSession sharedSession] userId] forHTTPHeaderField:@"usr_id"];
-    [request setValue:CLIENT_TAG forHTTPHeaderField:@"client_tag"];
-    [request setValue:[[SCBSession sharedSession] userToken] forHTTPHeaderField:@"usr_token"];
     [request setHTTPBody:myRequestData];
     [request setHTTPMethod:@"POST"];
-    _conn=[[NSURLConnection alloc] initWithRequest:request delegate:self] ;
+    [request setValue:[[SCBSession sharedSession] userId] forHTTPHeaderField:@"ent_uid"];
+    [request setValue:CLIENT_TAG forHTTPHeaderField:@"ent_uclient"];
+    [request setValue:[[SCBSession sharedSession] userToken] forHTTPHeaderField:@"ent_utoken"];
+    [request setValue:[[SCBSession sharedSession] ent_utype] forHTTPHeaderField:@"ent_utype"];
+    NSLog(@"ent_uid:%@",[[SCBSession sharedSession] userId]);
+    NSLog(@"ent_uid:%@",[[SCBSession sharedSession] userToken]);
+    NSLog(@"ent_uid:%@",[[SCBSession sharedSession] ent_utype]);
+    _conn=[[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 -(void)newFinderWithName:(NSString *)f_name pID:(NSString*)f_pid sID:(NSString *)s_id;
 {

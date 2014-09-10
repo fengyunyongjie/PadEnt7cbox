@@ -60,7 +60,7 @@ typedef enum {
 //移除/fm/rm
 -(void)removeFileWithIDs:(NSArray*)f_ids;
 //搜索/fm/search
--(void)searchWithQueryparam:(NSString *)f_queryparam;
+-(void)searchWithQueryparam:(NSString *)f_queryparam infpid:(NSString *)fpid withspid:(NSString *)spid;
 //根据类别查看文件夹/fm/category_dir
 -(void)openFinderWithCategory:(NSString *)category;
 //查看类别文件/fm/category_file

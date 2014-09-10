@@ -21,6 +21,7 @@
 #import "PhotoLookViewController.h"
 #import "OtherBrowserViewController.h"
 #import "OpenFileViewController.h"
+#import "NSString+Format.h"
 
 @implementation FileVieww{
     NSDictionary *_dic;

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2906647119AC312500D8548C /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2906646F19AC312500D8548C /* Model.xcdatamodeld */; };
 		29135E8C188CF35900A951CE /* bizfiles@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29135DEF188CF35800A951CE /* bizfiles@2x.png */; };
 		29135E8D188CF35900A951CE /* bizlib@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29135DF0188CF35800A951CE /* bizlib@2x.png */; };
 		29135E92188CF35900A951CE /* bk_select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29135DF5188CF35800A951CE /* bk_select@2x.png */; };
@@ -128,6 +129,7 @@
 		2918784F187D01B900577921 /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2918784E187D01B900577921 /* OpenFileViewController.m */; };
 		29187851187D295C00577921 /* icon_checked_gridIpad.png in Resources */ = {isa = PBXBuildFile; fileRef = 29187850187D295C00577921 /* icon_checked_gridIpad.png */; };
 		29187854187D5A6F00577921 /* nothing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 29187853187D5A6F00577921 /* nothing.mp3 */; };
+		2930EBDE19AB210900B51883 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2930EBDD19AB210900B51883 /* Storyboard.storyboard */; };
 		29496BBD196630A6005485F8 /* SubjectDetailTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29496BBC196630A6005485F8 /* SubjectDetailTabBarController.m */; };
 		294EB4ED18604E68006E6E96 /* SCBAccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 294EB4DF18604E68006E6E96 /* SCBAccountManager.m */; };
 		294EB4EE18604E68006E6E96 /* SCBDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 294EB4E118604E68006E6E96 /* SCBDownloader.m */; };
@@ -448,6 +450,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2906647019AC312500D8548C /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		29135DEF188CF35800A951CE /* bizfiles@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bizfiles@2x.png"; sourceTree = "<group>"; };
 		29135DF0188CF35800A951CE /* bizlib@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bizlib@2x.png"; sourceTree = "<group>"; };
 		29135DF5188CF35800A951CE /* bk_select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bk_select@2x.png"; sourceTree = "<group>"; };
@@ -570,6 +573,7 @@
 		2918784E187D01B900577921 /* OpenFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFileViewController.m; sourceTree = "<group>"; };
 		29187850187D295C00577921 /* icon_checked_gridIpad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_checked_gridIpad.png; sourceTree = "<group>"; };
 		29187853187D5A6F00577921 /* nothing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = nothing.mp3; sourceTree = "<group>"; };
+		2930EBDD19AB210900B51883 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		29496BBB196630A6005485F8 /* SubjectDetailTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubjectDetailTabBarController.h; sourceTree = "<group>"; };
 		29496BBC196630A6005485F8 /* SubjectDetailTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubjectDetailTabBarController.m; sourceTree = "<group>"; };
 		294EB4DE18604E68006E6E96 /* SCBAccountManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCBAccountManager.h; sourceTree = "<group>"; };
@@ -1824,6 +1828,8 @@
 				2982DFD5186150C3009CB82D /* IconDownloader.m */,
 				2982DFD1186150BC009CB82D /* MainViewController.h */,
 				2982DFD2186150BC009CB82D /* MainViewController.m */,
+				2906646F19AC312500D8548C /* Model.xcdatamodeld */,
+				2930EBDD19AB210900B51883 /* Storyboard.storyboard */,
 			);
 			name = FileController;
 			path = ../FileController;
@@ -2170,6 +2176,7 @@
 				295C38E71987A79B0068AB52 /* 51.gif in Resources */,
 				295C38E41987A79B0068AB52 /* 48.gif in Resources */,
 				29135F09188CF35900A951CE /* title_bk_ti@2x.png in Resources */,
+				2930EBDE19AB210900B51883 /* Storyboard.storyboard in Resources */,
 				295C38CC1987A79B0068AB52 /* 24.gif in Resources */,
 				295C38B61987A79B0068AB52 /* 2.gif in Resources */,
 				295C38DB1987A79B0068AB52 /* 39.gif in Resources */,
@@ -2407,6 +2414,7 @@
 				2982DFD6186150C3009CB82D /* IconDownloader.m in Sources */,
 				299CFC88186810E90060855B /* PasswordList.m in Sources */,
 				2981E929196D359A003E346B /* SubjectActivityViewController.m in Sources */,
+				2906647119AC312500D8548C /* Model.xcdatamodeld in Sources */,
 				2982E051186152A8009CB82D /* CustomJinDu.m in Sources */,
 				295C38491987A5920068AB52 /* CafRecordWriter.m in Sources */,
 				29F13E1C1964F06600482D3D /* SubjectListViewController.m in Sources */,
@@ -2699,6 +2707,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2906646F19AC312500D8548C /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2906647019AC312500D8548C /* Model.xcdatamodel */,
+			);
+			currentVersion = 2906647019AC312500D8548C /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 298423BF185ECE1F002AC1D0 /* Project object */;
 }

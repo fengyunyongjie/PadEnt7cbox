@@ -165,7 +165,7 @@
 #define FM_DOWNLOAD_URI @"/file/download"
 #define FM_DOWNLOAD_NEW_URI @"/fm/download/new"
 //搜索/fm/search
-#define FM_SEARCH_URI @"/fm/search"
+#define FM_SEARCH_URI @"/file/search"
 //缩略图下载
 #define FM_DOWNLOAD_THUMB_URI @"/fm/download/thumb"
 //新缩略图下载

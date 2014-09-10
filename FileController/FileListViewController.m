@@ -57,7 +57,7 @@ typedef enum{
     kActionSheetTagSendSubjectHasDir,
 }ActionSheetTag;
 
-@interface FileListViewController ()<SCBFileManagerDelegate,IconDownloaderDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate,SCBEmailManagerDelegate,MFMessageComposeViewControllerDelegate>
+@interface FileListViewController ()<SCBFileManagerDelegate,IconDownloaderDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate,SCBEmailManagerDelegate,MFMessageComposeViewControllerDelegate,UISearchBarDelegate>
 {
     UIBarButtonItem *item_send,*item_download;
     BOOL isSelectedDir;
@@ -77,6 +77,9 @@ typedef enum{
 @property (strong,nonatomic) UIView *nothingView;
 @property (strong,nonatomic) NSArray *selectedFIDs;
 @property (strong,nonatomic) UIPopoverController *activityPopover;
+@property (strong,nonatomic) UISearchDisplayController *sdc;
+@property (strong,nonatomic) UISearchBar *searchBar;
+@property (assign,nonatomic) BOOL isSearch;
 @end
 
 @implementation FileListViewController
@@ -178,6 +181,7 @@ typedef enum{
 {
     [super viewDidLoad];
     tableViewSelectedTag = -1;
+    self.isSearch=NO;
     // Do any additional setup after loading the view from its nib.
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
         [self setEdgesForExtendedLayout:UIRectEdgeNone];
@@ -189,10 +193,11 @@ typedef enum{
     self.tableView.dataSource=self;
     [self.view addSubview:self.tableView];
     self.tableView.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    
     if(self.shareType!=kShareTypeShare)
     {
         NSMutableArray *items=[NSMutableArray array];
+        UIBarButtonItem *searchBarItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(activeSearch)];
+        [items addObject:searchBarItem];
         UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,20,40)];
         [rightButton1 setImage:[UIImage imageNamed:@"title_more.png"] forState:UIControlStateNormal];
         [rightButton1 setBackgroundImage:[UIImage imageNamed:@"title_more_se.png"] forState:UIControlStateHighlighted];
@@ -358,6 +363,19 @@ typedef enum{
     }
     [self.fm operateUpdateWithID:self.f_id sID:self.spid authModelId:authModelID];
 }
+- (void)searchWithTitle:(NSString *)title
+{
+    [self.fm cancelAllTask];
+    self.fm=nil;
+    self.fm=[[SCBFileManager alloc] init];
+    [self.fm setDelegate:self];
+    NSString *authModelID=self.roletype;
+    if ([authModelID isEqualToString:@"1"]&&[self.f_id intValue]==0) {
+        authModelID=@"0";
+    }
+    [self.fm searchWithQueryparam:title infpid:self.f_id withspid:self.spid];
+
+}
 -(void)handelSingleTap:(UITapGestureRecognizer*)gestureRecognizer{
     [self hideMenu];
     [self hideSingleBar];
@@ -376,6 +394,53 @@ typedef enum{
         UIButton *button=(UIButton *) cell.accessoryView;
         [button setSelected:NO];
     }
+}
+-(void)setSearchBarHide:(BOOL) isHide animated:(BOOL)animated
+{
+    if (isHide) {
+//        if (self.searchBar.hidden) {
+//            return;
+//        }
+        NSLog(@"tableView:%@",NSStringFromCGRect(self.tableView.frame));
+        [UIView animateWithDuration:0.25f animations:^(){
+            self.tableView.frame=CGRectMake(0, 0, 320, 648);
+            self.searchBar.hidden=YES;
+            NSLog(@"tableView:%@",NSStringFromCGRect(self.tableView.frame));
+        }];
+        
+    }else
+    {
+//        if (!self.searchBar.hidden) {
+//            return;
+//        }
+        NSLog(@"tableView:%@",NSStringFromCGRect(self.tableView.frame));
+        [UIView animateWithDuration:0.25f animations:^(){
+            self.tableView.frame=CGRectMake(0,44, 320, 604);
+            self.searchBar.hidden=NO;
+            NSLog(@"tableView:%@",NSStringFromCGRect(self.tableView.frame));
+        }];
+        
+    }
+}
+-(void)cancelSearch
+{
+    self.isSearch=NO;
+    self.navigationItem.leftBarButtonItem=nil;
+    self.navigationItem.rightBarButtonItems=self.rightItems;
+    [self setSearchBarHide:YES animated:YES];
+}
+-(void)activeSearch
+{
+    self.isSearch=YES;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(cancelSearch)];
+    self.navigationItem.rightBarButtonItems=@[[[UIBarButtonItem alloc] initWithTitle:@"多选" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)]];
+    if (!self.searchBar) {
+        self.searchBar=[UISearchBar new];
+        self.searchBar.delegate=self;
+        self.searchBar.frame=CGRectMake(0, 0, self.view.frame.size.width, 44);
+        [self.view addSubview:self.searchBar];
+    }
+    [self setSearchBarHide:NO animated:YES];
 }
 -(void)menuAction:(id)sender
 {
@@ -738,6 +803,9 @@ typedef enum{
         [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)]];
         [self.navigationItem setRightBarButtonItems:@[]];
         [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAllCell:)]];
+        if (self.isSearch) {
+            [self setSearchBarHide:YES animated:YES];
+        }
     }else
     {
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
@@ -750,6 +818,11 @@ typedef enum{
         if(self.moreEditBar)
         {
             [self.moreEditBar setHidden:YES];
+        }
+        if (self.isSearch) {
+            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(cancelSearch)];
+            self.navigationItem.rightBarButtonItems=@[[[UIBarButtonItem alloc] initWithTitle:@"多选" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)]];
+            [self setSearchBarHide:NO animated:YES];
         }
     }
     
@@ -2528,6 +2601,7 @@ noDirSend:
     [self.hud hide:YES afterDelay:1.0f];
     [self doneLoadingTableViewData];
 }
+
 -(void)openFinderSucess:(NSDictionary *)datadic
 {
     if (self.tableView.isEditing) {
@@ -2624,6 +2698,10 @@ noDirSend:
         //[self.tableView setHidden:NO];
         [self.notingLabel setText:@"暂无文件"];
     }
+}
+-(void)searchSucess:(NSDictionary *)datadic
+{
+    [self openFinderSucess:datadic];
 }
 -(void)newFinderSucess
 {
@@ -3504,7 +3582,9 @@ noDirSend:
             self_rect.size.height = 1024-56-64;
         }
     }
-    [self.tableView setFrame:self_rect];
+    if (!self.isSearch) {
+        [self.tableView setFrame:self_rect];
+    }
     
     CGRect notLabel_rect = self.notingLabel.frame;
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
@@ -3593,4 +3673,18 @@ noDirSend:
     }
 }
 
+#pragma mark - UISearchBarDelegate
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    NSString *title=searchBar.text;
+    if (![title isEqualToString:@""]) {
+        [self searchWithTitle:title];
+        [searchBar endEditing:YES];
+    }
+}
 @end

@@ -138,6 +138,11 @@ enum{
     return rt;
 }
 
+- (IBAction)showPassword:(UIButton *)sender {
+    [sender setSelected:!sender.isSelected];
+    [self.passwordTextField setSecureTextEntry:!sender.isSelected];
+}
+
 - (IBAction)login:(id)sender
 {
     if (isMustUpdate) {

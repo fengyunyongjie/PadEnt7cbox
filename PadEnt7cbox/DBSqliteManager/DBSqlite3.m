@@ -64,6 +64,14 @@
         if (sqlite3_exec(contactDB, (const char *)[CreatePasswordList UTF8String], NULL, NULL, &errMsg)!=SQLITE_OK) {
             NSLog(@"errMsg:%s",errMsg);
         }
+        //通讯录
+        if (sqlite3_exec(contactDB, (const char *)[CreateAddressBookUserList UTF8String], NULL, NULL, &errMsg)!=SQLITE_OK) {
+        }
+        if (sqlite3_exec(contactDB, (const char *)[CreateAddressBookDeptList UTF8String], NULL, NULL, &errMsg)!=SQLITE_OK) {
+        }
+        if (sqlite3_exec(contactDB, (const char *)[CreateRecentPhoneList UTF8String], NULL, NULL, &errMsg)!=SQLITE_OK) {
+        }
+
         sqlite3_close(contactDB);
     }
     else
@@ -124,5 +132,31 @@
     return bl;
 }
 
-
+-(BOOL)deleteAddressBookList
+{
+    __block BOOL bl = FALSE;
+    const char *dbpath = [self.databasePath UTF8String];
+    if (sqlite3_open(dbpath, &contactDB)==SQLITE_OK) {
+        sqlite3_exec(contactDB,"BEGIN TRANSACTION",0,0,0);  //事务开始
+        NSMutableString *format = [[NSMutableString alloc] initWithFormat:DeleteUserListSql];
+        [format appendString:DeleteDeptListSql];
+        NSString *s = [[NSString alloc] initWithUTF8String:[format UTF8String]];
+        const char *insert_stmt = (char *) [s UTF8String];
+        int success  = sqlite3_exec(contactDB, insert_stmt , 0, 0, 0 );
+        if (success != SQLITE_OK) {
+            bl = FALSE;
+        }
+        success = sqlite3_exec(contactDB,"COMMIT",0,0,nil); //COMMIT
+        
+        if (success == SQLITE_ERROR) {
+            bl = FALSE;
+        }
+        else
+        {
+            bl = TRUE;
+        }
+    }
+    sqlite3_close(contactDB);
+    return bl;
+}
 @end

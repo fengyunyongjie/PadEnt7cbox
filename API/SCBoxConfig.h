@@ -14,8 +14,8 @@
 #define RESPONSE_TIMEOUT 10
 #define CONNECT_MAX 60*3
 //商业版URL
-//#define HOST_URL @"http://192.168.1.9/"
-#define HOST_URL @"http://b.7cbox.cn/"
+#define HOST_URL @"http://192.168.1.9/"
+//#define HOST_URL @"http://b.7cbox.cn/"
 //#define HOST_URL @"http://192.168.1.51:8080/"
 //#define HOST_URL @"http://192.168.1.25:8080/"
 //#define HOST_URL @"http://192.168.1.41:8080/"
@@ -291,4 +291,8 @@
 #define SM_LOOK_MEMBER_URI @"/viewSubjectMemberBySubjectId"
 //获取资源文件夹下的文件列表
 #define SM_RESOURCE_FILE_LIST_URI  @"/file/listFilesByfid"
+
+//通讯录信息列表
+#define DEPT_FIND_ALLDEPTSYS @"/dept/findAllDeptSys"
+
 #endif

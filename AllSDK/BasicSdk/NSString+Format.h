@@ -22,4 +22,10 @@
 +(NSDictionary *)stringWithDictionS:(NSString *)string;
 +(NSString *)getTimeFormat:(NSString *)browseTime;
 +(NSString *)formatDateString:(NSString *)dateString;
++(NSString *)formatAddressBookDateString:(NSString *)dateString;
++(NSString *)getAddressBookTimeFormat:(NSString *)browseTime;
++(CGFloat)getTextWidth:(NSString *)text andFont:(UIFont *)font;
++(CGFloat)getTitleWidth:(NSString *)text andFont:(UIFont *)font;
++(CGFloat)getNameWidth:(NSString *)text andFont:(UIFont *)font;
++(CGFloat)getTextHeigth:(NSString *)text andFont:(UIFont *)font;
 @end

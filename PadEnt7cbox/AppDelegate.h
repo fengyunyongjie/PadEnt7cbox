@@ -39,6 +39,7 @@
 @property (nonatomic,strong) UIView *localV;
 @property (strong,nonatomic) NSMutableArray *action_array;
 @property (strong, nonatomic) NSMutableArray *messageArray;
+@property (nonatomic, assign) BOOL notWriteUIViewController;
 
 
 -(void)finishLogin;

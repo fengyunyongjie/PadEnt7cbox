@@ -18,6 +18,18 @@
 #define CreateDownList @"CREATE TABLE IF NOT EXISTS DownList(d_id INTEGER PRIMARY KEY AUTOINCREMENT,d_name TEXT,d_state INTEGER,d_thumbUrl TEXT,d_baseUrl TEXT,d_file_id TEXT,d_downSize INTEGER,d_datetime TEXT,D_ure_id TEXT,Is_Onece BLOB)"
 #define CreatePasswordList @"CREATE TABLE IF NOT EXISTS PasswordList(p_id INTEGER PRIMARY KEY AUTOINCREMENT,p_text TEXT,p_fail_count INTEGER,p_ure_id TEXT,IS_OPEN INTEGER)"
 
+//通讯录成员信息
+#define CreateAddressBookUserList @"CREATE TABLE IF NOT EXISTS AddressBookUserList(user_id INTEGER PRIMARY KEY AUTOINCREMENT,user_account TEXT,user_pwd TEXT,user_totalSize INTEGER,user_userSize INTEGER,user_createTime TEXT,user_state INTEGER,user_passwordCheck INTEGER,ent_id INTEGER,dept_id INTEGER,user_trueName TEXT,user_birthdayDate TEXT,user_sex INTEGER,user_phone TEXT,user_picPath TEXT,user_post TEXT)"
+//通讯录成员部门信息
+#define CreateAddressBookDeptList @"CREATE TABLE IF NOT EXISTS AddressBookDeptList(user_id INTEGER PRIMARY KEY AUTOINCREMENT,dept_id INTEGER,dept_pid INTEGER,dept_pid_path TEXT,dept_name TEXT,dept_number INTEGER,ent_id INTEGER)"
+
+//最近通话记录信息
+#define CreateRecentPhoneList @"CREATE TABLE IF NOT EXISTS RecentPhoneList(user_id INTEGER PRIMARY KEY AUTOINCREMENT,user_account TEXT,user_pwd TEXT,user_totalSize INTEGER,user_userSize INTEGER,user_createTime TEXT,user_state INTEGER,user_passwordCheck INTEGER,ent_id INTEGER,dept_id INTEGER,user_trueName TEXT,user_birthdayDate TEXT,user_sex INTEGER,user_phone TEXT,user_picPath TEXT,user_post TEXT,call_phone_account TEXT)"
+
+//删除通讯录信息
+#define DeleteUserListSql @"DELETE FROM AddressBookUserList;"
+#define DeleteDeptListSql @"DELETE FROM AddressBookDeptList;"
+
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
 
@@ -35,5 +47,6 @@
 -(id)init;
 -(void)cleanSql;
 -(BOOL)isHaveTable:(NSString *)name;
+-(BOOL)deleteAddressBookList;
 
 @end

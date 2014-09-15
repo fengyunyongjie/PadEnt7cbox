@@ -35,7 +35,6 @@
 @property(strong,nonatomic) UIButton *btnStart;
 @property(strong,nonatomic) NSMutableArray *selectAllIds;
 @property(strong,nonatomic) NSMutableDictionary *imageDownloadsInProgress;
-@property(strong,nonatomic) UILabel *notingLabel;
 @property(strong,nonatomic) UIButton *btn_del;
 @property(strong,nonatomic) NSString *selectTableViewFid;
 @property(assign,nonatomic) BOOL isMultEditing;

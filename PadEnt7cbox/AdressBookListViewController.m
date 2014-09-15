@@ -1260,7 +1260,8 @@ static float imageHeight = 100;
 //用户信息
 -(void)requestSuccessAddressBookUser:(NSDictionary *)dictionary
 {
-    NSDictionary *diction = [(NSArray *)dictionary firstObject];
+    NSArray *list=[dictionary objectForKey:@"list"];
+    NSDictionary *diction = [list firstObject];
     NSMutableArray *userArray = [diction objectForKey:@"user"];
     AddressBookUser *adUser = [[AddressBookUser alloc] init];
     [adUser deleteAddressBookList];

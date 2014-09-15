@@ -33,6 +33,7 @@
 #import "ShareToSubjectViewController.h"
 #import "NSString+Format.h"
 #import "SubjectDetailTabBarController.h"
+#import "CutomNothingView.h"
 
 #define KCOVERTag 888
 
@@ -73,8 +74,7 @@ typedef enum{
 @property (strong,nonatomic) UIBarButtonItem *titleRightBtn;
 @property (strong,nonatomic) NSArray *rightItems;
 @property (strong,nonatomic) UIBarButtonItem *backBarButtonItem;
-@property (strong,nonatomic) UILabel * notingLabel;
-@property (strong,nonatomic) UIView *nothingView;
+@property (strong,nonatomic) CutomNothingView *nothingView;
 @property (strong,nonatomic) NSArray *selectedFIDs;
 @property (strong,nonatomic) UIPopoverController *activityPopover;
 @property (strong,nonatomic) UISearchDisplayController *sdc;
@@ -168,13 +168,6 @@ typedef enum{
     if (self.shareType==kShareTypeShare) {
         int tabBarOffset = self.tabBarController == nil ?  0 : self.tabBarController.tabBar.frame.size.height;
         [self.tableView setFrame:self.view.frame];
-        
-        CGRect notLabel_rect = self.notingLabel.frame;
-            notLabel_rect.origin.y = (self.view.frame.size.height-40)/2;
-        [self.notingLabel setFrame:notLabel_rect];
-        
-        CGRect noting_rect = self.view.frame;
-        [self.nothingView setFrame:noting_rect];
     }
 }
 - (void)viewDidLoad
@@ -300,47 +293,17 @@ typedef enum{
         }
     }
     if (self.listArray.count<=0) {
-        if(self.notingLabel == nil)
-        {
-            UIInterfaceOrientation toInterfaceOrientation = [self interfaceOrientation];
-            CGRect noting_rect = CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height);
-            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-            {
-                noting_rect.size.height = 768-56-64;
-            }
-            else
-            {
-                noting_rect.size.height = 1024-56-64;
-            }
-            self.nothingView=[[UIView alloc] initWithFrame:noting_rect];
-            [self.nothingView setBackgroundColor:[UIColor whiteColor]];
-            [self.tableView addSubview:self.nothingView];
-            
-            CGRect notLabel_rect = CGRectMake(0, 300, 320, 40);
-            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-            {
-                notLabel_rect.origin.y = (768-56-64-40)/2;
-            }
-            else
-            {
-                notLabel_rect.origin.y = (1024-56-64-40)/2;
-            }
-            self.notingLabel = [[UILabel alloc] initWithFrame:notLabel_rect];
-            [self.notingLabel setTextColor:[UIColor grayColor]];
-            [self.notingLabel setFont:[UIFont systemFontOfSize:18]];
-            [self.notingLabel setTextAlignment:NSTextAlignmentCenter];
-            [self.nothingView addSubview:self.notingLabel];
+        if (!self.nothingView) {
+            [self createNothingView];
         }
         [self.tableView bringSubviewToFront:self.nothingView];
-        [self.nothingView setHidden:NO];
-        [self.notingLabel setText:@"加载中,请稍等……"];
+        [self.nothingView notHiddenView];
+        [self.nothingView.notingLabel setText:@"加载中,请稍等……"];
     }else
     {
-        [self.tableView bringSubviewToFront:self.nothingView];
-        [self.nothingView setHidden:YES];
-        [self.notingLabel setText:@"加载中,请稍等……"];
+        [self.nothingView hiddenView];
     }
-
+    
     [self.fm cancelAllTask];
     self.fm=nil;
     self.fm=[[SCBFileManager alloc] init];
@@ -402,6 +365,7 @@ typedef enum{
 //            return;
 //        }
         NSLog(@"tableView:%@",NSStringFromCGRect(self.tableView.frame));
+        [self.searchBar endEditing:YES];
         [UIView animateWithDuration:0.25f animations:^(){
             self.tableView.frame=CGRectMake(0, 0, 320, 648);
             self.searchBar.hidden=YES;
@@ -428,6 +392,13 @@ typedef enum{
     self.navigationItem.leftBarButtonItem=nil;
     self.navigationItem.rightBarButtonItems=self.rightItems;
     [self setSearchBarHide:YES animated:YES];
+    if (_refreshHeaderView==nil) {
+        EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
+		view.delegate = self;
+		[self.tableView addSubview:view];
+		_refreshHeaderView = view;
+    }
+    [self updateFileList];
 }
 -(void)activeSearch
 {
@@ -437,10 +408,14 @@ typedef enum{
     if (!self.searchBar) {
         self.searchBar=[UISearchBar new];
         self.searchBar.delegate=self;
+        [self.searchBar setPlaceholder:@"搜索"];
+//        self.searchBar.showsCancelButton=YES;
         self.searchBar.frame=CGRectMake(0, 0, self.view.frame.size.width, 44);
         [self.view addSubview:self.searchBar];
     }
     [self setSearchBarHide:NO animated:YES];
+    [_refreshHeaderView removeFromSuperview];
+    _refreshHeaderView=nil;
 }
 -(void)menuAction:(id)sender
 {
@@ -1553,6 +1528,20 @@ noDirSend:
     }
     [self editFinished];
 }
+-(void)createNothingView
+{
+    if (!self.nothingView) {
+        float boderHeigth = 20;
+        float labelHeight = 40;
+        float imageHeight = 100;
+        CGRect nothingRect = CGRectMake(0, (564-(labelHeight+imageHeight+boderHeigth))/2, 320, labelHeight+imageHeight+boderHeigth);
+        self.nothingView = [[CutomNothingView alloc] initWithFrame:nothingRect boderHeigth:boderHeigth labelHeight:labelHeight imageHeight:imageHeight];
+        [self.tableView addSubview:self.nothingView];
+        [self.tableView bringSubviewToFront:self.nothingView];
+        [self.nothingView hiddenView];
+        [self.nothingView.notingLabel setText:@"加载中,请稍等……"];
+    }
+}
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -2653,55 +2642,31 @@ noDirSend:
         }
     }
     if (self.listArray.count<=0) {
-        if(self.notingLabel == nil)
-        {
-            UIInterfaceOrientation toInterfaceOrientation = [self interfaceOrientation];
-            
-            CGRect noting_rect = CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height);
-            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-            {
-                noting_rect.size.height = 768-56-64;
-            }
-            else
-            {
-                noting_rect.size.height = 1024-56-64;
-            }
-            self.nothingView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
-            [self.nothingView setBackgroundColor:[UIColor whiteColor]];
-            [self.tableView addSubview:self.nothingView];
-            
-            CGRect notLabel_rect = CGRectMake(0, 300, 320, 40);
-            if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-            {
-                notLabel_rect.origin.y = (768-56-64-40)/2;
-            }
-            else
-            {
-                notLabel_rect.origin.y = (1024-56-64-40)/2;
-            }
-            self.notingLabel = [[UILabel alloc] initWithFrame:notLabel_rect];
-            [self.notingLabel setTextColor:[UIColor grayColor]];
-            [self.notingLabel setFont:[UIFont systemFontOfSize:18]];
-            [self.notingLabel setTextAlignment:NSTextAlignmentCenter];
-            [self.nothingView addSubview:self.notingLabel];
-            
-            //[self.notingLabel setHidden:YES];
+        if (!self.nothingView) {
+            [self createNothingView];
         }
         [self.tableView bringSubviewToFront:self.nothingView];
-        [self.nothingView setHidden:NO];
-        //[self.tableView setHidden:YES];
-        [self.notingLabel setText:@"暂无文件"];
+        [self.nothingView notHiddenView];
+        [self.nothingView.notingLabel setText:@"暂无文件"];
     }else
     {
-        [self.tableView bringSubviewToFront:self.nothingView];
-        [self.nothingView setHidden:YES];
-        //[self.tableView setHidden:NO];
-        [self.notingLabel setText:@"暂无文件"];
+        [self.nothingView hiddenView];
     }
 }
 -(void)searchSucess:(NSDictionary *)datadic
 {
     [self openFinderSucess:datadic];
+    if (self.listArray.count<=0) {
+        if (!self.nothingView) {
+            [self createNothingView];
+        }
+        [self.tableView bringSubviewToFront:self.nothingView];
+        [self.nothingView notHiddenView];
+        [self.nothingView.notingLabel setText:@"未找到与搜索匹配的内容"];
+    }else
+    {
+        [self.nothingView hiddenView];
+    }
 }
 -(void)newFinderSucess
 {
@@ -3585,28 +3550,6 @@ noDirSend:
     if (!self.isSearch) {
         [self.tableView setFrame:self_rect];
     }
-    
-    CGRect notLabel_rect = self.notingLabel.frame;
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        notLabel_rect.origin.y = (768-56-64-40)/2;
-    }
-    else
-    {
-        notLabel_rect.origin.y = (1024-56-64-40)/2;
-    }
-    [self.notingLabel setFrame:notLabel_rect];
-    
-    CGRect noting_rect = self.nothingView.frame;
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        noting_rect.size.height = 768-56-64;
-    }
-    else
-    {
-        noting_rect.size.height = 1024-56-64;
-    }
-    [self.nothingView setFrame:noting_rect];
 }
 
 #pragma mark 当用户切换图片是，视图选择项也发生变化
@@ -3685,6 +3628,18 @@ noDirSend:
     if (![title isEqualToString:@""]) {
         [self searchWithTitle:title];
         [searchBar endEditing:YES];
+        self.listArray=nil;
+        [self.tableView reloadData];
+        if (!self.nothingView) {
+            [self createNothingView];
+        }
+        [self.tableView bringSubviewToFront:self.nothingView];
+        [self.nothingView notHiddenView];
+        [self.nothingView.notingLabel setText:@"搜索中..."];
     }
+}
+- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
+{
+    
 }
 @end

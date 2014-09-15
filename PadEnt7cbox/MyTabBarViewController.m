@@ -228,7 +228,7 @@
             num = num + dept.dept_number;
         }
     }
-    abList.title = [NSString stringWithFormat:@"%@(%d人)",list.dept_name,num];
+    abList.title = [NSString stringWithFormat:@"%@",list.dept_name];
     abList.select_dept_id = list.dept_id;
     abList.isShowRecent = YES;
     abList.isSendMessage = NO;
@@ -339,9 +339,10 @@
 //用户信息
 -(void)requestSuccessAddressBookUser:(NSDictionary *)dictionary
 {
-    if([dictionary isKindOfClass:[NSArray class]])
+    NSArray *list=[dictionary objectForKey:@"list"];
+    if([list isKindOfClass:[NSArray class]])
     {
-        NSDictionary *diction = [(NSArray *)dictionary firstObject];
+        NSDictionary *diction = [list firstObject];
         NSMutableArray *userArray = [diction objectForKey:@"user"];
         AddressBookUser *user = [[AddressBookUser alloc] init];
         [user deleteAddressBookList];

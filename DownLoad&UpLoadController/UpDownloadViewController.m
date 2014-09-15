@@ -20,6 +20,7 @@
 #import "PartitionViewController.h"
 #import "MySplitViewController.h"
 #import "MyTabBarViewController.h"
+#import "CutomNothingView.h"
 
 #define UpTabBarHeight (49+20+44)
 #define kActionSheetTagDelete 77
@@ -27,11 +28,11 @@
 #define kActionSheetTagUpload 79
 
 @interface UpDownloadViewController ()
-
+@property (strong,nonatomic) CutomNothingView *nothingView;
 @end
 
 @implementation UpDownloadViewController
-@synthesize table_view,upLoading_array,upLoaded_array,downLoading_array,downLoaded_array,customSelectButton,isShowUpload,deleteObject,menuView,editView,rightItem,hud,btnStart,selectAllIds,notingLabel,btn_del,selectTableViewFid;
+@synthesize table_view,upLoading_array,upLoaded_array,downLoading_array,downLoaded_array,customSelectButton,isShowUpload,deleteObject,menuView,editView,rightItem,hud,btnStart,selectAllIds,btn_del,selectTableViewFid;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -701,7 +702,6 @@
 //显示数据正在加载中....
 -(void)showLoadData
 {
-    [notingLabel setText:@""];
     if (self.hud) {
         [self.hud removeFromSuperview];
     }
@@ -716,7 +716,20 @@
     self.hud.margin=10.f;
     [self.hud show:YES];
 }
-
+-(void)createNothingView
+{
+    if (!self.nothingView) {
+        float boderHeigth = 20;
+        float labelHeight = 40;
+        float imageHeight = 100;
+        CGRect nothingRect = CGRectMake(0, 0, 320, 768-164);
+        self.nothingView = [[CutomNothingView alloc] initWithFrame:nothingRect boderHeigth:boderHeigth labelHeight:labelHeight imageHeight:imageHeight];
+        [self.table_view addSubview:self.nothingView];
+        [self.table_view bringSubviewToFront:self.nothingView];
+        [self.nothingView hiddenView];
+        [self.nothingView.notingLabel setText:@"加载中,请稍等……"];
+    }
+}
 #pragma mark CustomSelectButtonDelegate -------------------
 
 -(void)isSelectedLeft:(BOOL)bl
@@ -781,43 +794,37 @@
     [self.table_view reloadData];
     [self updateLoadData];
     
-    if(notingLabel == nil)
-    {
-        CGRect notingRect = CGRectMake(0, (self.view.frame.size.height-40)/2, 320, 40);
-        notingLabel = [[UILabel alloc] initWithFrame:notingRect];
-        [notingLabel setTextColor:[UIColor grayColor]];
-        [notingLabel setFont:[UIFont systemFontOfSize:18]];
-        [notingLabel setTextAlignment:NSTextAlignmentCenter];
-        [self.view addSubview:notingLabel];
-        [notingLabel setHidden:YES];
-    }
     
     if(isShowUpload)
     {
-        [notingLabel setText:@"暂无上传任务"];
         if([self.upLoading_array count] == 0 && [self.upLoaded_array count] == 0)
         {
-            self.table_view.separatorStyle = UITableViewCellSeparatorStyleNone;
-            [notingLabel setHidden:NO];
+            if (!self.nothingView) {
+                [self createNothingView];
+            }
+            [self.table_view bringSubviewToFront:self.nothingView];
+            [self.nothingView notHiddenView];
+            [self.nothingView.notingLabel setText:@"暂无上传任务"];
         }
         else
         {
-            self.table_view.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-            [notingLabel setHidden:YES];
+            [self.nothingView hiddenView];
         }
     }
     else
     {
-        [notingLabel setText:@"暂无下载任务"];
         if([self.downLoaded_array count] == 0 && [self.downLoading_array count] == 0)
         {
-            self.table_view.separatorStyle = UITableViewCellSeparatorStyleNone;
-            [notingLabel setHidden:NO];
+            if (!self.nothingView) {
+                [self createNothingView];
+            }
+            [self.table_view bringSubviewToFront:self.nothingView];
+            [self.nothingView notHiddenView];
+            [self.nothingView.notingLabel setText:@"暂无下载任务"];
         }
         else
         {
-            self.table_view.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-            [notingLabel setHidden:YES];
+            [self.nothingView hiddenView];
         }
     }
 //    [self performSelector:@selector(updateSelected) withObject:Nil afterDelay:1.0];

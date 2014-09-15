@@ -15,6 +15,7 @@
 #import "CustomSelectButton.h"
 #import "MyTabBarViewController.h"
 #import "AppDelegate.h"
+#import "CutomNothingView.h"
 
 enum{
     kActionSheetTagDeleteOne,
@@ -25,8 +26,7 @@ enum{
 @property (strong,nonatomic) SCBEmailManager *em;
 @property(strong,nonatomic) MBProgressHUD *hud;
 @property (strong,nonatomic) UIToolbar *moreEditBar;
-@property (strong,nonatomic) UILabel * notingLabel;
-@property (strong,nonatomic) UIView *nothingView;
+@property (strong,nonatomic) CutomNothingView *nothingView;
 @end
 
 @implementation EmailListViewController
@@ -194,6 +194,32 @@ enum{
 #pragma mark - 操作方法
 - (void)updateEmailList
 {
+    if (isShowEmail) {
+        if (self.inArray.count<=0) {
+            if (!self.nothingView) {
+                [self createNothingView];
+            }
+            [self.tableView bringSubviewToFront:self.nothingView];
+            [self.nothingView notHiddenView];
+            [self.nothingView.notingLabel setText:@"加载中,请稍等……"];
+        }else
+        {
+            [self.nothingView hiddenView];
+        }
+    }else
+    {
+        if (self.outArray.count<=0) {
+            if (!self.nothingView) {
+                [self createNothingView];
+            }
+            [self.tableView bringSubviewToFront:self.nothingView];
+            [self.nothingView notHiddenView];
+            [self.nothingView.notingLabel setText:@"加载中,请稍等……"];
+        }else
+        {
+            [self.nothingView hiddenView];
+        }
+    }
     [self.em cancelAllTask];
     self.em=nil;
     self.em=[[SCBEmailManager alloc] init];
@@ -548,6 +574,21 @@ enum{
     }
     [self.moreEditBar setHidden:!isHideTabBar];
 }
+
+-(void)createNothingView
+{
+    if (!self.nothingView) {
+        float boderHeigth = 20;
+        float labelHeight = 40;
+        float imageHeight = 100;
+        CGRect nothingRect = CGRectMake(0, 0, 320, 768-164);
+        self.nothingView = [[CutomNothingView alloc] initWithFrame:nothingRect boderHeigth:boderHeigth labelHeight:labelHeight imageHeight:imageHeight];
+        [self.tableView addSubview:self.nothingView];
+        [self.tableView bringSubviewToFront:self.nothingView];
+        [self.nothingView hiddenView];
+        [self.nothingView.notingLabel setText:@"加载中,请稍等……"];
+    }
+}
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -881,6 +922,33 @@ enum{
             }
         }
     }
+    if (isShowEmail) {
+        if (self.inArray.count<=0) {
+            if (!self.nothingView) {
+                [self createNothingView];
+            }
+            [self.tableView bringSubviewToFront:self.nothingView];
+            [self.nothingView notHiddenView];
+            [self.nothingView.notingLabel setText:@"暂无内容"];
+        }else
+        {
+            [self.nothingView hiddenView];
+        }
+    }else
+    {
+        if (self.outArray.count<=0) {
+            if (!self.nothingView) {
+                [self createNothingView];
+            }
+            [self.tableView bringSubviewToFront:self.nothingView];
+            [self.nothingView notHiddenView];
+            [self.nothingView.notingLabel setText:@"暂无内容"];
+        }else
+        {
+            [self.nothingView hiddenView];
+        }
+    }
+
 }
 -(void)sendListSucceed:(NSDictionary *)datadic
 {
@@ -890,6 +958,33 @@ enum{
         self.outArray=(NSArray *)[self.dataDic objectForKey:@"list"];
         [self.tableView reloadData];
     }
+    if (isShowEmail) {
+        if (self.inArray.count<=0) {
+            if (!self.nothingView) {
+                [self createNothingView];
+            }
+            [self.tableView bringSubviewToFront:self.nothingView];
+            [self.nothingView notHiddenView];
+            [self.nothingView.notingLabel setText:@"暂无内容"];
+        }else
+        {
+            [self.nothingView hiddenView];
+        }
+    }else
+    {
+        if (self.outArray.count<=0) {
+            if (!self.nothingView) {
+                [self createNothingView];
+            }
+            [self.tableView bringSubviewToFront:self.nothingView];
+            [self.nothingView notHiddenView];
+            [self.nothingView.notingLabel setText:@"暂无内容"];
+        }else
+        {
+            [self.nothingView hiddenView];
+        }
+    }
+
 }
 -(void)listEmailSucceed:(NSDictionary *)datadic
 {
@@ -933,6 +1028,7 @@ enum{
     {
         [self updateEmailList];
     }
+
     NSLog(@"openFinderSucess:");
 }
 #pragma mark - UIActionSheetDelegate
@@ -1060,27 +1156,5 @@ enum{
         }
     }
     [self.tableView setFrame:self_rect];
-    
-    CGRect notLabel_rect = self.notingLabel.frame;
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        notLabel_rect.origin.y = (768-56-64-40)/2;
-    }
-    else
-    {
-        notLabel_rect.origin.y = (1024-56-64-40)/2;
-    }
-    [self.notingLabel setFrame:notLabel_rect];
-    
-    CGRect noting_rect = self.nothingView.frame;
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        noting_rect.size.height = 768-56-64;
-    }
-    else
-    {
-        noting_rect.size.height = 1024-56-64;
-    }
-    [self.nothingView setFrame:noting_rect];
 }
 @end

@@ -14,6 +14,7 @@
 #import "PhotoLookViewController.h"
 #import "DownManager.h"
 #import "MBProgressHUD.h"
+#import "NothingViewController.h"
 
 @interface MySplitViewController ()<UISplitViewControllerDelegate>
 @property (strong,nonatomic) MBProgressHUD *hud;
@@ -42,7 +43,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     MyTabBarViewController *myTabVC=[[MyTabBarViewController alloc] init];
-    DetailViewController *detailVC=[[DetailViewController alloc] init];
+    NothingViewController *detailVC=[[NothingViewController alloc] init];
     UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:detailVC];
     [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
     [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];

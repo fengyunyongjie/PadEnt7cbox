@@ -16,7 +16,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
-        CGRect imageViewRect = CGRectMake((320-imageHeight)/2, (frame.size.height-imageHeight-labelHeight-boderHeigth)/2, imageHeight, imageHeight);
+        CGRect imageViewRect = CGRectMake((frame.size.width-imageHeight)/2, (frame.size.height-imageHeight-labelHeight-boderHeigth)/2, imageHeight, imageHeight);
         self.notingImageView = [[UIImageView alloc] initWithFrame:imageViewRect];
         [self.notingImageView setImage:[UIImage imageNamed:@"address_upload_bg.png"]];
         [self addSubview:self.notingImageView];

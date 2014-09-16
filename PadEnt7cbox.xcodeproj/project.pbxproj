@@ -446,6 +446,7 @@
 		299CFC88186810E90060855B /* PasswordList.m in Sources */ = {isa = PBXBuildFile; fileRef = 299CFC87186810E90060855B /* PasswordList.m */; };
 		299CFC8B186811380060855B /* PasswordManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 299CFC8A186811380060855B /* PasswordManager.m */; };
 		299CFC8E186811680060855B /* PasswordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 299CFC8D186811680060855B /* PasswordButton.m */; };
+		29A2137E19C7BFDC00D5C670 /* NothingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29A2137D19C7BFDC00D5C670 /* NothingViewController.m */; };
 		29AF89B8188E142F00A71A0E /* bt_save_nor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29AF89B6188E142F00A71A0E /* bt_save_nor@2x.png */; };
 		29AF89B9188E142F00A71A0E /* bt_save_se@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29AF89B7188E142F00A71A0E /* bt_save_se@2x.png */; };
 		29B3543218B2F8130079184B /* BackgroundRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B3543118B2F8130079184B /* BackgroundRunner.m */; };
@@ -1043,6 +1044,8 @@
 		299CFC8A186811380060855B /* PasswordManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordManager.m; sourceTree = "<group>"; };
 		299CFC8C186811680060855B /* PasswordButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasswordButton.h; sourceTree = "<group>"; };
 		299CFC8D186811680060855B /* PasswordButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasswordButton.m; sourceTree = "<group>"; };
+		29A2137C19C7BFDC00D5C670 /* NothingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NothingViewController.h; sourceTree = "<group>"; };
+		29A2137D19C7BFDC00D5C670 /* NothingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NothingViewController.m; sourceTree = "<group>"; };
 		29AF89B6188E142F00A71A0E /* bt_save_nor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bt_save_nor@2x.png"; sourceTree = "<group>"; };
 		29AF89B7188E142F00A71A0E /* bt_save_se@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bt_save_se@2x.png"; sourceTree = "<group>"; };
 		29B3543018B2F8130079184B /* BackgroundRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundRunner.h; sourceTree = "<group>"; };
@@ -1826,6 +1829,8 @@
 				2982DFCF18614F0C009CB82D /* MyTabBarViewController.m */,
 				2982E0C41861536C009CB82D /* WelcomeViewController.h */,
 				2982E0C51861536C009CB82D /* WelcomeViewController.m */,
+				29A2137C19C7BFDC00D5C670 /* NothingViewController.h */,
+				29A2137D19C7BFDC00D5C670 /* NothingViewController.m */,
 				298423DC185ECE1F002AC1D0 /* Images.xcassets */,
 				298423D1185ECE1F002AC1D0 /* Supporting Files */,
 				2984240F185ED500002AC1D0 /* API */,
@@ -2567,6 +2572,7 @@
 				2982E0BB1861532B009CB82D /* LTHPasscodeViewController.m in Sources */,
 				2982E0AD186152FE009CB82D /* QBImagePickerVideoInfoView.m in Sources */,
 				2982E0FF186154A3009CB82D /* PhotoFile.m in Sources */,
+				29A2137E19C7BFDC00D5C670 /* NothingViewController.m in Sources */,
 				298423DB185ECE1F002AC1D0 /* AppDelegate.m in Sources */,
 				2982E052186152A8009CB82D /* UploadViewCell.m in Sources */,
 				2995583E19863D5E0010CF8F /* ShareToSubjectViewController.m in Sources */,

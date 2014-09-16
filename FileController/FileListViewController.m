@@ -190,13 +190,14 @@ typedef enum{
     {
         NSMutableArray *items=[NSMutableArray array];
         UIBarButtonItem *searchBarItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(activeSearch)];
-        [items addObject:searchBarItem];
+        
         UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,20,40)];
         [rightButton1 setImage:[UIImage imageNamed:@"title_more.png"] forState:UIControlStateNormal];
         [rightButton1 setBackgroundImage:[UIImage imageNamed:@"title_more_se.png"] forState:UIControlStateHighlighted];
         [rightButton1 addTarget:self action:@selector(menuAction:) forControlEvents:UIControlEventTouchUpInside];
         UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
         [items addObject:rightItem1];
+        [items addObject:searchBarItem];
         self.rightItems=items;
         self.navigationItem.rightBarButtonItems = items;
     }

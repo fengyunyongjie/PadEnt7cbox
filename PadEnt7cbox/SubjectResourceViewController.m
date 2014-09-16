@@ -24,6 +24,7 @@
 #import "IconDownloader.h"
 #import "AppDelegate.h"
 #import "SCBSession.h"
+#import "CutomNothingView.h"
 
 @interface SubjectResourceViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate>
 @property (nonatomic,strong) UITableView *tableView;
@@ -33,9 +34,8 @@
 @property (nonatomic,strong) MBProgressHUD *hud;
 @property (nonatomic,strong) SCBFileManager *fm_move;
 @property (nonatomic,strong) NSArray *selectids;
-@property (strong,nonatomic) UILabel * notingLabel;
-@property (strong,nonatomic) UIView *nothingView;
 @property (strong,nonatomic) NSMutableDictionary *imageDownloadsInProgress;
+@property (strong,nonatomic) CutomNothingView *nothingView;
 @end
 
 @implementation SubjectResourceViewController
@@ -148,6 +148,21 @@
         iconDownloader.delegate = self;
         [self.imageDownloadsInProgress setObject:iconDownloader forKey:indexPath];
         [iconDownloader startDownload];
+    }
+}
+
+-(void)createNothingView
+{
+    if (!self.nothingView) {
+        float boderHeigth = 20;
+        float labelHeight = 40;
+        float imageHeight = 100;
+        CGRect nothingRect = self.tableView.bounds;
+        self.nothingView = [[CutomNothingView alloc] initWithFrame:nothingRect boderHeigth:boderHeigth labelHeight:labelHeight imageHeight:imageHeight];
+        [self.tableView addSubview:self.nothingView];
+        [self.tableView bringSubviewToFront:self.nothingView];
+        [self.nothingView hiddenView];
+        [self.nothingView.notingLabel setText:@""];
     }
 }
 
@@ -437,26 +452,17 @@
 {
     self.dataDic=datadic;
     self.listArray=[datadic objectForKey:@"list"];
-    if (self.listArray.count>0) {
-        [self.nothingView setHidden:YES];
-        [self.tableView reloadData];
+    [self.tableView reloadData];
+    if (self.listArray.count<=0) {
+        if (!self.nothingView) {
+            [self createNothingView];
+        }
+        [self.tableView bringSubviewToFront:self.nothingView];
+        [self.nothingView notHiddenView];
+        [self.nothingView.notingLabel setText:@"暂无文件"];
     }else
     {
-        if (!self.nothingView) {
-            self.nothingView=[[UIView alloc] initWithFrame:self.tableView.frame];
-            [self.nothingView setBackgroundColor:[UIColor whiteColor]];
-            [self.view addSubview:self.nothingView];
-            
-            CGRect notingRect = CGRectMake(0, (self.view.frame.size.height-40)/2, self.nothingView.bounds.size.width, 40);
-            self.notingLabel = [[UILabel alloc] initWithFrame:notingRect];
-            [self.notingLabel setTextColor:[UIColor grayColor]];
-            [self.notingLabel setFont:[UIFont systemFontOfSize:18]];
-            [self.notingLabel setTextAlignment:NSTextAlignmentCenter];
-            [self.nothingView addSubview:self.notingLabel];
-        }
-        [self.view bringSubviewToFront:self.nothingView];
-        [self.nothingView setHidden:NO];
-        [self.notingLabel setText:@"暂无文件"];
+        [self.nothingView hiddenView];
     }
 }
 

@@ -49,6 +49,9 @@ enum{
     [UIView animateWithDuration:0.2 animations:^{} completion:^(BOOL bl){
         self.view.userInteractionEnabled = YES;
     }];
+    if (self.nothingView) {
+        [self.tableView bringSubviewToFront:self.nothingView];
+    }
 }
 - (void)viewDidLoad
 {

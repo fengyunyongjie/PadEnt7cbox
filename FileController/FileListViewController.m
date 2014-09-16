@@ -80,6 +80,8 @@ typedef enum{
 @property (strong,nonatomic) UISearchDisplayController *sdc;
 @property (strong,nonatomic) UISearchBar *searchBar;
 @property (assign,nonatomic) BOOL isSearch;
+@property (strong,nonatomic) UIBarButtonItem *moreItem;
+@property (strong,nonatomic) UIBarButtonItem *searchItem;
 @end
 
 @implementation FileListViewController
@@ -197,7 +199,9 @@ typedef enum{
         [rightButton1 addTarget:self action:@selector(menuAction:) forControlEvents:UIControlEventTouchUpInside];
         UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
         [items addObject:rightItem1];
-        [items addObject:searchBarItem];
+//        [items addObject:searchBarItem];
+        self.moreItem=rightItem1;
+        self.searchItem=searchBarItem;
         self.rightItems=items;
         self.navigationItem.rightBarButtonItems = items;
     }
@@ -300,9 +304,17 @@ typedef enum{
         [self.tableView bringSubviewToFront:self.nothingView];
         [self.nothingView notHiddenView];
         [self.nothingView.notingLabel setText:@"加载中,请稍等……"];
+        if (!self.isSearch&&!self.tableView.isEditing) {
+            self.rightItems=@[self.moreItem];
+            self.navigationItem.rightBarButtonItems=self.rightItems;
+        }
     }else
     {
         [self.nothingView hiddenView];
+        if (!self.isSearch&&!self.tableView.isEditing) {
+            self.rightItems=@[self.moreItem,self.searchItem];
+            self.navigationItem.rightBarButtonItems=self.rightItems;
+        }
     }
     
     [self.fm cancelAllTask];
@@ -2649,9 +2661,17 @@ noDirSend:
         [self.tableView bringSubviewToFront:self.nothingView];
         [self.nothingView notHiddenView];
         [self.nothingView.notingLabel setText:@"暂无文件"];
+        if (!self.isSearch&&!self.tableView.isEditing) {
+            self.rightItems=@[self.moreItem];
+            self.navigationItem.rightBarButtonItems=self.rightItems;
+        }
     }else
     {
         [self.nothingView hiddenView];
+        if (!self.isSearch&&!self.tableView.isEditing) {
+            self.rightItems=@[self.moreItem,self.searchItem];
+            self.navigationItem.rightBarButtonItems=self.rightItems;
+        }
     }
 }
 -(void)searchSucess:(NSDictionary *)datadic
@@ -3642,5 +3662,12 @@ noDirSend:
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
 {
     
+}
+- (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    //search text must less than 20
+        NSMutableString *strValue = [searchBar.text mutableCopy];
+        [strValue replaceCharactersInRange:range withString:text];
+        return [strValue length] <= 20;
 }
 @end

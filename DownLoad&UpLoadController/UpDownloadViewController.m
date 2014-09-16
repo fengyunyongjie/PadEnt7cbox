@@ -132,6 +132,9 @@
 {
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     [self updateViewToInterfaceOrientation:toInterfaceOrientation];
+    if (self.nothingView) {
+        [self.table_view bringSubviewToFront:self.nothingView];
+    }
 }
 
 -(void)menuAction:(id)sender
@@ -727,7 +730,7 @@
         [self.table_view addSubview:self.nothingView];
         [self.table_view bringSubviewToFront:self.nothingView];
         [self.nothingView hiddenView];
-        [self.nothingView.notingLabel setText:@"加载中,请稍等……"];
+        [self.nothingView.notingLabel setText:@""];
     }
 }
 #pragma mark CustomSelectButtonDelegate -------------------
@@ -804,7 +807,7 @@
             }
             [self.table_view bringSubviewToFront:self.nothingView];
             [self.nothingView notHiddenView];
-            [self.nothingView.notingLabel setText:@"暂无上传任务"];
+            [self.nothingView.notingLabel setText:@"上传到云端，数据更安全"];
         }
         else
         {
@@ -820,7 +823,7 @@
             }
             [self.table_view bringSubviewToFront:self.nothingView];
             [self.nothingView notHiddenView];
-            [self.nothingView.notingLabel setText:@"暂无下载任务"];
+            [self.nothingView.notingLabel setText:@"保存至本地，没有网络也可以查看"];
         }
         else
         {

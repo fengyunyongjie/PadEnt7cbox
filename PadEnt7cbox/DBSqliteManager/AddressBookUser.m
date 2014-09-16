@@ -19,6 +19,8 @@
 {
     NSMutableArray *tableArray = [[NSMutableArray alloc] init];
     NSMutableArray *stringArray = [[NSMutableArray alloc] init];
+    NSMutableArray *oldArray=[[NSMutableArray alloc] init];
+    NSMutableArray *byoldArray=[[NSMutableArray alloc] init];
     for(int i=0;i<array.count;i++)
     {
         NSDictionary *dictioinary = [array objectAtIndex:i];
@@ -47,22 +49,36 @@
         list.user_totalSize = [[dictioinary objectForKey:@"usr_totalsize"] intValue];
         list.user_trueName = [NSString formatNSStringForOjbect:[dictioinary objectForKey:@"usr_turename"]];
         list.user_userSize = [[dictioinary objectForKey:@"usr_usedsize"] intValue];
-        
-        for(int j=0;j<stringA.count;j++)
-        {
-            NSString *stringTrueName = [stringA objectAtIndex:j];
+        [oldArray addObject:list];
+//        for(int j=0;j<stringA.count;j++)
+//        {
+//            NSString *stringTrueName = [stringA objectAtIndex:j];
+//            if([list.user_trueName isEqualToString:stringTrueName])
+//            {
+//                BOOL bl = [list selectAddressBookUserListIsHave];
+//                if(!bl)
+//                {
+//                    [tableArray replaceObjectAtIndex:j withObject:list];
+//                }
+//            }
+//        }
+    }
+    //排序oldArray;
+    for (int i=0; i<stringA.count; i++) {
+        NSString *stringTrueName = [stringA objectAtIndex:i];
+        for (int j=0; j<oldArray.count; j++) {
+            AddressBookUser *list=[oldArray objectAtIndex:j];
             if([list.user_trueName isEqualToString:stringTrueName])
             {
-                BOOL bl = [list selectAddressBookUserListIsHave];
-                if(!bl)
-                {
-                    [tableArray replaceObjectAtIndex:j withObject:list];
-                }
+                [byoldArray addObject:list];
+                [oldArray removeObject:list];
+                break;
             }
         }
     }
+
     
-    return tableArray;
+    return byoldArray;
 }
 
 //添加数据

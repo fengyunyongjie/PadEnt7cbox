@@ -61,14 +61,14 @@
         UIColor *boderColor=[UIColor colorWithRed:18/255.0f green:108/255.0f blue:113/255.0f alpha:1];
         
         //添加左边视图
-        CGRect left_baceRect = CGRectMake(20, 0, rect.size.width/2-40, rect.size.height);
+        CGRect left_baceRect = CGRectMake(0, 0, rect.size.width/2, rect.size.height);
         self.left_backimage = [[UIImageView alloc] initWithFrame:left_baceRect];
         [self addSubview:self.left_backimage];
         
         self.left_button = [[UIButton alloc] initWithFrame:left_baceRect];
         [self.left_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.left_button.titleLabel setFont:[UIFont systemFontOfSize:16]];
-        [self.left_button setBackgroundColor:[UIColor clearColor]];
+        [self.left_button setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
         [self addSubview:self.left_button];
         
         CGRect left_buttonRect = CGRectMake(20, rect.size.height-2, rect.size.width/2-40, 2);
@@ -77,14 +77,14 @@
         [self addSubview:self.left_botton_image];
         
         //添加右边视图
-        CGRect right_baceRect = CGRectMake(rect.size.width/2+20, 0, rect.size.width/2-40, rect.size.height);
+        CGRect right_baceRect = CGRectMake(rect.size.width/2, 0, rect.size.width/2, rect.size.height);
         self.right_backimage = [[UIImageView alloc] initWithFrame:right_baceRect];
         [self addSubview:self.right_backimage];
         
         self.right_button = [[UIButton alloc] initWithFrame:right_baceRect];
         [self.right_button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.right_button.titleLabel setFont:[UIFont systemFontOfSize:16]];
-        [self.right_button setBackgroundColor:[UIColor clearColor]];
+        [self.right_button setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
         [self addSubview:self.right_button];
         
         CGRect right_buttonRect = CGRectMake(rect.size.width/2+20, rect.size.height-2, rect.size.width/2-40, 2);

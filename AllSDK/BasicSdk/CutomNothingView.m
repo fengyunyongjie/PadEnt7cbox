@@ -21,7 +21,7 @@
         [self.notingImageView setImage:[UIImage imageNamed:@"address_upload_bg.png"]];
         [self addSubview:self.notingImageView];
         
-        CGRect notingRect = CGRectMake(0, imageViewRect.origin.y+imageHeight+boderHeigth, 320, labelHeight);
+        CGRect notingRect = CGRectMake(0, imageViewRect.origin.y+imageHeight+boderHeigth, frame.size.width, labelHeight);
         self.notingLabel = [[UILabel alloc] initWithFrame:notingRect];
         [self.notingLabel setTextColor:[UIColor lightGrayColor]];
         [self.notingLabel setFont:[UIFont systemFontOfSize:18]];

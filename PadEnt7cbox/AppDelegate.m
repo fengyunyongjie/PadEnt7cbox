@@ -104,6 +104,12 @@ typedef enum{
     {
         [musicPlayer stopPlay];
     }
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    [self checkUpdate];
+    [musicPlayer stopPlay];
     UIViewController *viewController = self.window.rootViewController.presentedViewController;
     if([viewController isKindOfClass:[InputViewController class]])
     {
@@ -113,12 +119,6 @@ typedef enum{
     {
         [self showLoceView];
     }
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    [self checkUpdate];
-    [musicPlayer stopPlay];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

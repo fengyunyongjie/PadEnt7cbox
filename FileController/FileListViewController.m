@@ -82,6 +82,9 @@ typedef enum{
 @property (assign,nonatomic) BOOL isSearch;
 @property (strong,nonatomic) UIBarButtonItem *moreItem;
 @property (strong,nonatomic) UIBarButtonItem *searchItem;
+@property (strong,nonatomic) UIBarButtonItem *searchEditItem;
+@property (strong,nonatomic) UIView *searchView;
+@property (strong,nonatomic) UIButton *searchBtn;
 @end
 
 @implementation FileListViewController
@@ -311,7 +314,7 @@ typedef enum{
     }else
     {
         [self.nothingView hiddenView];
-        if (!self.isSearch&&!self.tableView.isEditing) {
+        if (!self.isSearch&&!self.tableView.isEditing&&!([self.roletype isEqualToString:@"1"]&&self.f_id.intValue == 0)) {
             self.rightItems=@[self.moreItem,self.searchItem];
             self.navigationItem.rightBarButtonItems=self.rightItems;
         }
@@ -381,7 +384,7 @@ typedef enum{
         [self.searchBar endEditing:YES];
         [UIView animateWithDuration:0.25f animations:^(){
             self.tableView.frame=CGRectMake(0, 0, 320, 648);
-            self.searchBar.hidden=YES;
+            self.searchView.hidden=YES;
             NSLog(@"tableView:%@",NSStringFromCGRect(self.tableView.frame));
         }];
         
@@ -393,7 +396,7 @@ typedef enum{
         NSLog(@"tableView:%@",NSStringFromCGRect(self.tableView.frame));
         [UIView animateWithDuration:0.25f animations:^(){
             self.tableView.frame=CGRectMake(0,44, 320, 604);
-            self.searchBar.hidden=NO;
+            self.searchView.hidden=NO;
             NSLog(@"tableView:%@",NSStringFromCGRect(self.tableView.frame));
         }];
         
@@ -417,14 +420,33 @@ typedef enum{
 {
     self.isSearch=YES;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(cancelSearch)];
-    self.navigationItem.rightBarButtonItems=@[[[UIBarButtonItem alloc] initWithTitle:@"多选" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)]];
-    if (!self.searchBar) {
+    if (!self.searchEditItem) {
+        UIButton*rightButton1 = [[UIButton alloc]initWithFrame:CGRectMake(0,0,40,40)];
+        [rightButton1 setImage:[UIImage imageNamed:@"address_more_topedit.png"] forState:UIControlStateNormal];
+        [rightButton1 addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithCustomView:rightButton1];
+        self.searchEditItem=rightItem1;
+    }
+    self.navigationItem.rightBarButtonItems=@[self.searchEditItem];
+    if (!self.searchView) {
+        self.searchView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+        [self.view addSubview:self.searchView];
+        self.view.backgroundColor=[UIColor groupTableViewBackgroundColor];
+        
         self.searchBar=[UISearchBar new];
         self.searchBar.delegate=self;
-        [self.searchBar setPlaceholder:@"搜索"];
 //        self.searchBar.showsCancelButton=YES;
-        self.searchBar.frame=CGRectMake(0, 0, self.view.frame.size.width, 44);
-        [self.view addSubview:self.searchBar];
+        self.searchBar.frame=CGRectMake(0, 0, 275, 44);
+        self.searchBar.backgroundColor=[UIColor groupTableViewBackgroundColor];
+        [self.searchBar setSearchBarStyle:UISearchBarStyleMinimal];
+        [self.searchView addSubview:self.searchBar];
+        
+        self.searchBtn = [[UIButton alloc] initWithFrame:CGRectMake(275, 0, 40, 44)];
+        [self.searchBtn setTitle:@"查询" forState:UIControlStateNormal];
+        [self.searchBtn setTitleColor:[UIColor colorWithRed:54.0/255.0 green:140.0/255.0 blue:210.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+        [self.searchBtn addTarget:self action:@selector(searchButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.searchView addSubview:self.searchBtn];
+        
     }
     [self setSearchBarHide:NO animated:YES];
     [_refreshHeaderView removeFromSuperview];
@@ -809,7 +831,7 @@ typedef enum{
         }
         if (self.isSearch) {
             self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(cancelSearch)];
-            self.navigationItem.rightBarButtonItems=@[[[UIBarButtonItem alloc] initWithTitle:@"多选" style:UIBarButtonItemStylePlain target:self action:@selector(editAction:)]];
+            self.navigationItem.rightBarButtonItems=@[self.searchEditItem];
             [self setSearchBarHide:NO animated:YES];
         }
     }
@@ -2615,7 +2637,9 @@ noDirSend:
 //        if ([self.f_id intValue]==0) {
 //            self.fcmd=[self.dataDic objectForKey:@"cmds"];
 //        }
-        self.fcmd=[self.dataDic objectForKey:@"cmds"];
+        if (!self.isSearch) {
+            self.fcmd=[self.dataDic objectForKey:@"cmds"];
+        }
         if (self.listArray) {
             [self.tableView reloadData];
         }
@@ -2668,7 +2692,7 @@ noDirSend:
     }else
     {
         [self.nothingView hiddenView];
-        if (!self.isSearch&&!self.tableView.isEditing) {
+        if (!self.isSearch&&!self.tableView.isEditing&&!([self.roletype isEqualToString:@"1"]&&self.f_id.intValue == 0)) {
             self.rightItems=@[self.moreItem,self.searchItem];
             self.navigationItem.rightBarButtonItems=self.rightItems;
         }
@@ -3643,6 +3667,23 @@ noDirSend:
     
 }
 
+- (void)searchButtonClicked
+{
+    NSString *title=self.searchBar.text;
+    if (![title isEqualToString:@""]) {
+        [self searchWithTitle:title];
+        [self.searchBar endEditing:YES];
+        self.listArray=nil;
+        [self.tableView reloadData];
+        if (!self.nothingView) {
+            [self createNothingView];
+        }
+        [self.tableView bringSubviewToFront:self.nothingView];
+        [self.nothingView notHiddenView];
+        [self.nothingView.notingLabel setText:@"搜索中..."];
+    }
+
+}
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
     NSString *title=searchBar.text;

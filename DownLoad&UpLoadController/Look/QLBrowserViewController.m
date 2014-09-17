@@ -35,10 +35,19 @@
 {
     return UIInterfaceOrientationMaskAll;
 }
+- (void)applicationDidEnterBackground:(NSNotification *)notification
+{
+    [self dismissViewControllerAnimated:NO completion:nil];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidEnterBackground:)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
 }
 
 - (void)didReceiveMemoryWarning

@@ -1697,9 +1697,10 @@
     imageScrollView.contentSize = CGSizeMake(currWidth*[tableArray count], currHeight);
     [imageScrollView setContentOffset:CGPointMake(currWidth*currPage, 0) animated:NO];
     
-    hud.labelText=@"删除成功";
-    hud.mode=MBProgressHUDModeText;
-    [hud hide:YES afterDelay:0.8f];
+//    hud.labelText=@"删除成功";
+//    hud.mode=MBProgressHUDModeText;
+//    [hud hide:YES afterDelay:0.8f];
+    [hud hide:YES];
     hud = nil;
     MyTabBarViewController *tabbar = [app.splitVC.viewControllers firstObject];
     UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];

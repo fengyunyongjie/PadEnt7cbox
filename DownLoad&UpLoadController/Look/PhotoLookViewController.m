@@ -67,11 +67,17 @@
     }
     return self;
 }
-
+- (void)applicationDidEnterBackground:(NSNotification *)notification
+{
+    [self backClick];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidEnterBackground:)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
     UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
@@ -1537,9 +1543,10 @@
     [imageScrollView setContentOffset:CGPointMake(currWidth*currPage, 0) animated:NO];
     [self handleOnceTap:nil];
     
-    hud.labelText=@"删除成功";
-    hud.mode=MBProgressHUDModeText;
-    [hud hide:YES afterDelay:0.8f];
+//    hud.labelText=@"删除成功";
+//    hud.mode=MBProgressHUDModeText;
+//    [hud hide:YES afterDelay:0.8f];
+    [hud hide:YES];
     hud = nil;
 }
 -(void)removeUnsucess

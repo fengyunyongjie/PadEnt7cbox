@@ -45,11 +45,19 @@
 {
     [self download:nil];
 }
-
+- (void)applicationDidEnterBackground:(NSNotification *)notification
+{
+    [self.downImage cancelDownload];
+    [self dismissViewControllerAnimated:NO completion:nil];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 //    [self.view setBackgroundColor:[UIColor colorWithWhite:1 alpha:1]];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidEnterBackground:)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
     self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(back:)];
     
     self.isFinished=NO;

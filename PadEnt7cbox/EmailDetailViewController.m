@@ -865,7 +865,7 @@
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
                 [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-                [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm"];
+                [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
                 NSDate *date2 = [dateFormatter dateFromString:time];
                 [dateFormatter setDateFormat:@"yyyy年M月d日"];
                 time = [dateFormatter stringFromDate:date2];

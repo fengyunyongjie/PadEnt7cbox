@@ -3383,52 +3383,78 @@ noDirSend:
         {
             if (buttonIndex==0)
             {
-                //拍照上传
-                UIImagePickerController *imagePicker=[[UIImagePickerController alloc] init];
-                imagePicker.sourceType=UIImagePickerControllerSourceTypeCamera;
-                
-                //imagePicker.mediaTypes=[NSArray arrayWithObject:@"public.photo"];
-                imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModePhoto;
-                
-                imagePicker.allowsEditing=NO;
-                imagePicker.showsCameraControls=YES;
-                imagePicker.cameraViewTransform=CGAffineTransformIdentity;
-                
-                // not all devices have two cameras or a flash so just check here
-                if ( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceRear] ) {
-                    imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
-                    if ( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceFront] ) {
-                        //                        cameraSelectionButton.alpha = 1.0;
-                        //                        showCameraSelection = YES;
+                //判断是否可以打开相机，模拟器此功能无法使用
+                AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+                if (authStatus == AVAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied)
+                {
+                    //无权限
+                    NSString *titleString = @"因iOS系统限制，开启相机服务才能拍照，传输过程严格加密，不会作其他用途。\n\n\t步骤：设置>隐私>相机>icoffer";
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:titleString delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+                    [alertView show];
+                }
+                else
+                {
+                    //拍照上传
+                    UIImagePickerController *imagePicker=[[UIImagePickerController alloc] init];
+                    imagePicker.sourceType=UIImagePickerControllerSourceTypeCamera;
+                    
+                    //imagePicker.mediaTypes=[NSArray arrayWithObject:@"public.photo"];
+                    imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModePhoto;
+                    
+                    imagePicker.allowsEditing=NO;
+                    imagePicker.showsCameraControls=YES;
+                    imagePicker.cameraViewTransform=CGAffineTransformIdentity;
+                    
+                    // not all devices have two cameras or a flash so just check here
+                    if ( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceRear] ) {
+                        imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
+                        if ( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceFront] ) {
+                            //                        cameraSelectionButton.alpha = 1.0;
+                            //                        showCameraSelection = YES;
+                        }
+                    } else {
+                        imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
                     }
-                } else {
-                    imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+                    if ( [UIImagePickerController isFlashAvailableForCameraDevice:imagePicker.cameraDevice] ) {
+                        imagePicker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
+                        //                    flashModeButton.alpha = 1.0;
+                        //                    showFlashMode = YES;
+                    }
+                    
+                    //                imagePicker.videoQuality = UIImagePickerControllerQualityType640x480;
+                    
+                    imagePicker.delegate = self;
+                    imagePicker.wantsFullScreenLayout = YES;
+                    [self presentViewController:imagePicker animated:YES completion:nil];
                 }
-                if ( [UIImagePickerController isFlashAvailableForCameraDevice:imagePicker.cameraDevice] ) {
-                    imagePicker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
-                    //                    flashModeButton.alpha = 1.0;
-                    //                    showFlashMode = YES;
-                }
-                
-                //                imagePicker.videoQuality = UIImagePickerControllerQualityType640x480;
-                
-                imagePicker.delegate = self;
-                imagePicker.wantsFullScreenLayout = YES;
-                [self presentViewController:imagePicker animated:YES completion:nil];
-            }else if(buttonIndex==1)
+            }
+            else if(buttonIndex==1)
             {
-                //本机相册
-                QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
-                AppDelegate *app_delegate = [[UIApplication sharedApplication] delegate];
-                app_delegate.file_url = [NSString formatNSStringForOjbect:app_delegate.old_file_url];
-                imagePickerController.delegate = self;
-                imagePickerController.allowsMultipleSelection = YES;
-                imagePickerController.f_id  = self.f_id;
-                imagePickerController.f_name = self.title;
-                imagePickerController.space_id = self.spid;
-                [imagePickerController requestFileDetail];
-                [imagePickerController setHidesBottomBarWhenPushed:YES];
-                [self.navigationController pushViewController:imagePickerController animated:NO];
+                __block BOOL isFirst = NO;
+                ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
+                [assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+                    if(!isFirst)
+                    {
+                        //本机相册
+                        QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
+                        AppDelegate *app_delegate = [[UIApplication sharedApplication] delegate];
+                        app_delegate.file_url = [NSString formatNSStringForOjbect:app_delegate.old_file_url];
+                        imagePickerController.delegate = self;
+                        imagePickerController.allowsMultipleSelection = YES;
+                        imagePickerController.f_id  = self.f_id;
+                        imagePickerController.f_name = self.title;
+                        imagePickerController.space_id = self.spid;
+                        [imagePickerController requestFileDetail];
+                        [imagePickerController setHidesBottomBarWhenPushed:YES];
+                        [self.navigationController pushViewController:imagePickerController animated:NO];
+                        isFirst = YES;
+                    }
+                } failureBlock:^(NSError *error) {
+                    //无权限
+                    NSString *titleString = @"因iOS系统限制，开启照片服务才能上传，传输过程严格加密，不会作其他用途。\n\n\t步骤：设置>隐私>照片>icoffer";
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:titleString delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+                    [alertView show];
+                }];
             }
         }
             break;

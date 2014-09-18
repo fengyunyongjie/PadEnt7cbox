@@ -609,8 +609,33 @@
     {
         [delegate upFinish:dictionary];
     }
+    else if([[dictionary objectForKey:@"code"] intValue] == 7 )
+    {
+        [delegate upNotUpload];
+    }
+    else if([[dictionary objectForKey:@"code"] intValue] == 3 )
+    {
+        //上传文件大小大于1G
+        [delegate upNotSizeTooBig];
+    }
+    else if([[dictionary objectForKey:@"code"] intValue] == 5 )
+    {
+        //空间不足
+        [delegate upUserSpaceLass];
+    }
+    else if([[dictionary objectForKey:@"code"] intValue] == 6 )
+    {
+        //文件名存在特殊字符
+        [delegate upNotHaveXNSString];
+    }
+    else if([[dictionary objectForKey:@"code"] intValue] == 2 )
+    {
+        //文件名过长
+        [delegate upNotNameTooTheigth];
+    }
     else
     {
+        //失败
         [self updateNetWork];
     }
 }

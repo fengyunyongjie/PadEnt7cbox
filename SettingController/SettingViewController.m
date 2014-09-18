@@ -215,8 +215,8 @@ typedef enum{
         case 0:
         {
             UISwitch *theSwith = (UISwitch *)sender;
-            NSString *onStr = [NSString stringWithFormat:@"%d",theSwith.on];
-            if ([YNFunctions isOnlyWifi]) {
+            NSString *onStr = [NSString stringWithFormat:@"%d",theSwith.isOn];
+            if ([YNFunctions isOnlyWifi] && !theSwith.isOn) {
                 //                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
                 //                                                                    message:@"这可能会产生流量费用，您是否要继续？"
                 //                                                                   delegate:self
@@ -231,18 +231,18 @@ typedef enum{
                 [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
                 AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                 [app.action_array addObject:actionSheet];
-            }else
+            }else if(![YNFunctions isOnlyWifi] && theSwith.isOn)
             {
                 [YNFunctions setIsOnlyWifi:YES];
-//                if(![self isConnection])
-//                {
-//                    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//                    [appleDate.autoUpload setIsStopCurrUpload:YES];
-//                }
-//                
-//                if ([YNFunctions networkStatus]==ReachableViaWWAN) {
-//                    [[FavoritesData sharedFavoritesData] stopDownloading];
-//                }
+                //                if(![self isConnection])
+                //                {
+                //                    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                //                    [appleDate.autoUpload setIsStopCurrUpload:YES];
+                //                }
+                //
+                //                if ([YNFunctions networkStatus]==ReachableViaWWAN) {
+                //                    [[FavoritesData sharedFavoritesData] stopDownloading];
+                //                }
             }
             NSLog(@"打开或关闭仅Wifi:: %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"switch_flag"]);
         }
@@ -295,6 +295,8 @@ typedef enum{
                                                        delegate:self
                                               cancelButtonTitle:@"取消"
                                               otherButtonTitles:@"确定", nil];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.alertViewArray addObject:alertView];
     [alertView show];
     [alertView setTag:kAlertTypeClear];
 //    UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"清除缓存后下载或查看过的文件需要重新下载" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"确认清除",@"取消", nil];
@@ -991,7 +993,8 @@ typedef enum{
         default:
             break;
     }
-    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.alertViewArray removeObject:alertView];
 }
 -(void)sureClear
 {
@@ -1167,6 +1170,8 @@ typedef enum{
                                                                delegate:self
                                                       cancelButtonTitle:@"取消"
                                                       otherButtonTitles:@"确定", nil];
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            [app.alertViewArray addObject:alertView];
             alertView.tag=kAlertTypeNewVersion;
             [alertView show];
         }else if([BUILD_VERSION intValue]<isupdate)
@@ -1176,6 +1181,8 @@ typedef enum{
                                                                delegate:self
                                                       cancelButtonTitle:nil
                                                       otherButtonTitles:@"确定", nil];
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            [app.alertViewArray addObject:alertView];
             alertView.tag=kAlertTypeMustUpdate;
             [alertView show];
 

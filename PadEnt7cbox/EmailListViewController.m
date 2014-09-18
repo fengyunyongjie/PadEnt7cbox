@@ -338,6 +338,8 @@ enum{
         [actionSheet setTag:kActionSheetTagDeletaAll];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [app.action_array addObject:actionSheet];
     }
 }
 -(void)selectAllCell:(id)sender

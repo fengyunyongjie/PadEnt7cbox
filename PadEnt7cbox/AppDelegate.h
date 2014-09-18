@@ -38,6 +38,7 @@
 @property (nonatomic,strong) InputViewController *lockScreen;
 @property (nonatomic,strong) UIView *localV;
 @property (strong,nonatomic) NSMutableArray *action_array;
+@property (strong,nonatomic) NSMutableArray *alertViewArray;
 @property (strong, nonatomic) NSMutableArray *messageArray;
 @property (nonatomic, assign) BOOL notWriteUIViewController;
 

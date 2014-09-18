@@ -44,6 +44,7 @@ typedef enum{
     
     //初始化数据
     action_array = [[NSMutableArray alloc] init];
+    self.alertViewArray=[[NSMutableArray alloc] init];
     downmange = [[DownManager alloc] init];
     uploadmanage = [[UploadManager alloc] init];
     self.messageArray = [[NSMutableArray alloc] init];
@@ -104,6 +105,9 @@ typedef enum{
     {
         [musicPlayer stopPlay];
     }
+    [(UIAlertView *)self.alertViewArray.lastObject dismissWithClickedButtonIndex:-1 animated:YES];
+    
+    [(UIActionSheet *)self.action_array.lastObject dismissWithClickedButtonIndex:-1 animated:NO];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -246,6 +250,8 @@ typedef enum{
 -(void)deleteView
 {
     [self.window.rootViewController dismissViewControllerAnimated:NO completion:^{}];
+    [(UIAlertView *)self.alertViewArray.lastObject show];
+    [self.alertViewArray removeLastObject];
 //    if(self.lockScreen)
 //    {
 //        [self.lockScreen.view removeFromSuperview];

@@ -192,6 +192,8 @@
             UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"继续操作将退出当前账号" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"是否继续？", nil];
             [actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
             [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            [app.action_array addObject:actionSheet];
         }
             break;
         default:

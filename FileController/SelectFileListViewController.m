@@ -47,7 +47,7 @@
 {
     [super viewDidLayoutSubviews];
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-    self.view.backgroundColor=[UIColor grayColor];
+    self.view.backgroundColor=[UIColor groupTableViewBackgroundColor];
     self.tableView.backgroundColor=[UIColor whiteColor];
     
     if (self.type==kSelectTypeShare) {

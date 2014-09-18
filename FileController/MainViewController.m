@@ -50,7 +50,7 @@
 - (void)viewDidLayoutSubviews
 {
     if (self.tabBarController==nil) {
-        self.view.backgroundColor=[UIColor grayColor];
+        self.view.backgroundColor=[UIColor groupTableViewBackgroundColor];
         self.tableView.backgroundColor=[UIColor whiteColor];
     }
     if (self.type==kTypeShare) {

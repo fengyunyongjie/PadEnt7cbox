@@ -2306,6 +2306,9 @@ noDirSend:
             isSelectedDir=YES;
             [item_download setEnabled:NO];
         }
+        if (indexs.count==self.listArray.count) {
+            [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"取消全选" style:UIBarButtonItemStylePlain target:self action:@selector(deselectAllCell:)]];
+        }
         return;
     }
     tableViewSelectedTag = -1;
@@ -2538,6 +2541,9 @@ noDirSend:
             }
             isSelectedDir=NO;
             [item_download setEnabled:YES];
+        }
+        if (indexs.count!=self.listArray.count) {
+            [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitleStr:@"全选" style:UIBarButtonItemStylePlain target:self action:@selector(selectAllCell:)]];
         }
         return;
     }

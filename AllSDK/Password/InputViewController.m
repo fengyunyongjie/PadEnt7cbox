@@ -17,12 +17,17 @@
 #define TextFiledColor [UIColor colorWithRed:31.0/255.0 green:58.0/255.0 blue:125.0/255.0 alpha:1.0]
 #define TextViewColor [UIColor colorWithRed:238.0/255.0 green:238.0/255.0 blue:238.0/255.0 alpha:1.0]
 @interface InputViewController ()
-
+@property(strong,nonatomic) UIAlertView *alertView;
 @end
 
 @implementation InputViewController
 @synthesize passwordType,password_view,top_view,back_button,title_label,update_button,state_label,password_textfield1,password_textfield2,password_textfield3,password_textfield4,password_error,password_button1,password_button2,password_button3,password_button4,password_button5,password_button6,password_button7,password_button8,password_button9,password_button0,password_return,botton_view,one_password,second_password,old_password,news_password,localView,password_delete,bgView,passwordDelegate,isShowBackground;
 
+-(void)dealloc
+{
+    [self.alertView dismissWithClickedButtonIndex:0 animated:NO];
+    
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -453,6 +458,7 @@
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"你还可以尝试最后一次解锁，若依然错误，将会退回登录界面" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
     [alert show];
+    self.alertView=alert;
 }
 
 #pragma mark 修改提示信息 PasswordEditTypeClose --------------------
@@ -809,6 +815,7 @@
 {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"继续操作将退出当前账号，是否继续？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"继续", nil];
     [alert show];
+    self.alertView=alert;
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -831,6 +838,7 @@
         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [appDelegate finishLogout];
     }
+    self.alertView=nil;
 }
 
 -(void)deleteClicked

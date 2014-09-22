@@ -16,11 +16,13 @@
 #import "AppDelegate.h"
 #import "MySplitViewController.h"
 #import "MyTabBarViewController.h"
+#import "CutomNothingView.h"
 
 @interface SelectFileListViewController ()<SCBFileManagerDelegate,UIScrollViewDelegate,UIAlertViewDelegate,UITextFieldDelegate,UIActionSheetDelegate,QBImageFileViewDelegate>
 @property (strong,nonatomic) SCBFileManager *fm;
 @property(strong,nonatomic) MBProgressHUD *hud;
 @property(strong,nonatomic) SCBFileManager *fm_move;
+@property (strong,nonatomic) CutomNothingView *nothingView;
 @end
 
 @implementation SelectFileListViewController
@@ -48,6 +50,7 @@
     [super viewDidLayoutSubviews];
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     self.view.backgroundColor=[UIColor groupTableViewBackgroundColor];
+    [self createNothingView];
     self.tableView.backgroundColor=[UIColor whiteColor];
     
     if (self.type==kSelectTypeShare) {
@@ -517,6 +520,23 @@
         }
     }
     return NO;
+}
+-(void)createNothingView
+{
+    if (!self.nothingView) {
+        float boderHeigth = 20;
+        float labelHeight = 40;
+        float imageHeight = 100;
+        CGRect nothingRect = self.view.bounds;
+        nothingRect.origin.x=320;
+        nothingRect.size.width=1024-320;
+        self.nothingView = [[CutomNothingView alloc] initWithFrame:nothingRect boderHeigth:boderHeigth labelHeight:labelHeight imageHeight:imageHeight];
+        [self.view addSubview:self.nothingView];
+        [self.view bringSubviewToFront:self.nothingView];
+        [self.nothingView notHiddenView];
+        [self.nothingView.notingLabel setText:@""];
+        self.nothingView.backgroundColor=[UIColor groupTableViewBackgroundColor];
+    }
 }
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

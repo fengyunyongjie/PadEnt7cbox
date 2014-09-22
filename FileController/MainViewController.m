@@ -19,6 +19,7 @@
 #import "MySplitViewController.h"
 #import "CustomJinDu.h"
 #import "NSString+Format.h"
+#import "CutomNothingView.h"
 
 #define AUTHOR_MENU @"AuthorMenus"
 @interface MainViewController()<SCBFileManagerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
@@ -26,6 +27,7 @@
 @property (strong,nonatomic) NSArray *commitList;
 @property (strong,nonatomic) MBProgressHUD *hud;
 @property (strong,nonatomic) UIBarButtonItem *backBarButtonItem;
+@property (strong,nonatomic) CutomNothingView *nothingView;
 @end
 
 @implementation MainViewController
@@ -51,6 +53,7 @@
 {
     if (self.tabBarController==nil) {
         self.view.backgroundColor=[UIColor groupTableViewBackgroundColor];
+        [self createNothingView];
         self.tableView.backgroundColor=[UIColor whiteColor];
     }
     if (self.type==kTypeShare) {
@@ -229,6 +232,23 @@
 {
     [self dismissViewControllerAnimated:YES completion:Nil];
     [self.navigationController popViewControllerAnimated:YES];
+}
+-(void)createNothingView
+{
+    if (!self.nothingView) {
+        float boderHeigth = 20;
+        float labelHeight = 40;
+        float imageHeight = 100;
+        CGRect nothingRect = self.view.bounds;
+        nothingRect.origin.x=320;
+        nothingRect.size.width=1024-320;
+        self.nothingView = [[CutomNothingView alloc] initWithFrame:nothingRect boderHeigth:boderHeigth labelHeight:labelHeight imageHeight:imageHeight];
+        [self.view addSubview:self.nothingView];
+        [self.view bringSubviewToFront:self.nothingView];
+        [self.nothingView notHiddenView];
+        [self.nothingView.notingLabel setText:@""];
+        self.nothingView.backgroundColor=[UIColor groupTableViewBackgroundColor];
+    }
 }
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods

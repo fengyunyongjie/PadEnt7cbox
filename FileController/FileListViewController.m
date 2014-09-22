@@ -85,6 +85,7 @@ typedef enum{
 @property (strong,nonatomic) UIBarButtonItem *searchEditItem;
 @property (strong,nonatomic) UIView *searchView;
 @property (strong,nonatomic) UIButton *searchBtn;
+@property (strong,nonatomic) UIControl *searchBarBg;
 @end
 
 @implementation FileListViewController
@@ -429,6 +430,12 @@ typedef enum{
     }
     self.navigationItem.rightBarButtonItems=@[self.searchEditItem];
     if (!self.searchView) {
+        
+        self.searchBarBg=[[UIControl alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 768)];
+        [self.searchBarBg setBackgroundColor:[UIColor colorWithWhite:0.4 alpha:0.6]];
+        [self.view addSubview:self.searchBarBg];
+        self.searchBarBg.hidden=YES;
+        
         self.searchView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
         [self.view addSubview:self.searchView];
         self.view.backgroundColor=[UIColor groupTableViewBackgroundColor];
@@ -436,14 +443,16 @@ typedef enum{
         self.searchBar=[UISearchBar new];
         self.searchBar.delegate=self;
 //        self.searchBar.showsCancelButton=YES;
+        [self.searchBar setPlaceholder:@"搜索"];
         self.searchBar.frame=CGRectMake(0, 0, 275, 44);
         self.searchBar.backgroundColor=[UIColor groupTableViewBackgroundColor];
         [self.searchBar setSearchBarStyle:UISearchBarStyleMinimal];
         [self.searchView addSubview:self.searchBar];
         
-        self.searchBtn = [[UIButton alloc] initWithFrame:CGRectMake(275, 0, 40, 44)];
+        self.searchBtn = [[UIButton alloc] initWithFrame:CGRectMake(275, 0, 45, 44)];
         [self.searchBtn setTitle:@"查询" forState:UIControlStateNormal];
         [self.searchBtn setTitleColor:[UIColor colorWithRed:54.0/255.0 green:140.0/255.0 blue:210.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+        [self.searchBtn setBackgroundColor:[UIColor groupTableViewBackgroundColor]];
         [self.searchBtn addTarget:self action:@selector(searchButtonClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.searchView addSubview:self.searchBtn];
         
@@ -3739,8 +3748,20 @@ noDirSend:
 - (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     //search text must less than 20
-        NSMutableString *strValue = [searchBar.text mutableCopy];
-        [strValue replaceCharactersInRange:range withString:text];
-        return [strValue length] <= 20;
+    if ([text isEqualToString:@"\n"]) {
+        return YES;
+    }
+    
+    NSMutableString *strValue = [searchBar.text mutableCopy];
+    [strValue replaceCharactersInRange:range withString:text];
+    return [strValue length] <= 20;
+}
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    self.searchBarBg.hidden=NO;
+}
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
+{
+    self.searchBarBg.hidden=YES;
 }
 @end

@@ -297,7 +297,7 @@ static float imageHeight = 100;
      NSString *text = [searchText stringByReplacingOccurrencesOfString:@" " withString:@""];
     if (text.length == 0 || !text) {
         [self.searchBtn setTitle:@"取消" forState:UIControlStateNormal];
-        [self updateAddressList];
+//        [self updateAddressList];
     } else {
         [self.searchBtn setTitle:@"查询" forState:UIControlStateNormal];
     }

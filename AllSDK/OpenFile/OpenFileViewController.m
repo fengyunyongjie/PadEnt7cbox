@@ -262,10 +262,10 @@
     QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
     browser.dataSource=browser;
     browser.delegate=browser;
+    browser.currentPreviewItemIndex=0;
     browser.title=f_name;
     browser.filePath=savedPath;
     browser.fileName=f_name;
-    browser.currentPreviewItemIndex=0;
     CGRect self_rect = CGRectMake(0, 0, 0, 0);
     UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)

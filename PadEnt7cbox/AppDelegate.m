@@ -19,6 +19,7 @@
 #import <MessageUI/MessageUI.h>
 #import "SCBoxConfig.h"
 #import "MF_Base64Additions.h"
+#import "BackgroundRunner.h"
 
 typedef enum{
     kAlertTypeNewVersion,
@@ -28,7 +29,7 @@ typedef enum{
 }kAlertType;
 @implementation AppDelegate
 @synthesize lockScreen,localV;
-@synthesize downmange,myTabBarVC,loginVC,uploadmanage,isStopUpload,musicPlayer,file_url,isConnection,space_id,space_name,old_file_url,action_array,isFileShare,messageArray;
+@synthesize downmange,myTabBarVC,loginVC,uploadmanage,isStopUpload,file_url,isConnection,space_id,space_name,old_file_url,action_array,isFileShare,messageArray;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -58,9 +59,6 @@ typedef enum{
     [hostReach startNotifier];
     
     [[DBSqlite3 alloc] updateVersion];
-    
-    //设置背景音乐
-    musicPlayer = [[MusicPlayerViewController alloc] init];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.alpha = 1.0;
@@ -99,11 +97,11 @@ typedef enum{
 {
     if(self.downmange.isStart || self.uploadmanage.isStart)
     {
-        [musicPlayer startPlay];
+        [[BackgroundRunner shared] run];
     }
     else
     {
-        [musicPlayer stopPlay];
+        [[BackgroundRunner shared] stop];
     }
     [(UIAlertView *)self.alertViewArray.lastObject dismissWithClickedButtonIndex:-1 animated:YES];
     
@@ -113,7 +111,7 @@ typedef enum{
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [self checkUpdate];
-    [musicPlayer stopPlay];
+    [[BackgroundRunner shared] stop];
     UIViewController *viewController = self.window.rootViewController.presentedViewController;
     if([viewController isKindOfClass:[InputViewController class]])
     {
@@ -417,7 +415,7 @@ typedef enum{
 {
     if(!self.downmange.isStart && !self.uploadmanage.isStart)
     {
-        [musicPlayer stopPlay];
+        [[BackgroundRunner shared] stop];
     }
 }
 

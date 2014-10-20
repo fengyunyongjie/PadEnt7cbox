@@ -7,7 +7,7 @@
 //
 #import "DownManager.h"
 #import "UploadManager.h"
-#import "MusicPlayerViewController.h"
+#import <AVFoundation/AVFoundation.h>
 #import "Reachability.h"
 #import "InputViewController.h"
 #import <UIKit/UIKit.h>
@@ -28,7 +28,6 @@
 @property (strong, nonatomic) DownManager *downmange;
 @property (strong, nonatomic) UploadManager *uploadmanage;
 @property (assign, nonatomic) BOOL isStopUpload;
-@property (nonatomic, strong) MusicPlayerViewController *musicPlayer;
 @property (strong, nonatomic) NSString *file_url;
 @property (assign, nonatomic) BOOL isConnection;
 @property (strong, nonatomic) NSString *space_id;

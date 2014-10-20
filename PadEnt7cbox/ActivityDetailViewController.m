@@ -716,10 +716,10 @@ typedef enum{
                         QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
                         browser.dataSource=browser;
                         browser.delegate=browser;
+                        browser.currentPreviewItemIndex=0;
                         browser.title=fname;
                         browser.filePath=savedPath;
                         browser.fileName=fname;
-                        browser.currentPreviewItemIndex=0;
                         [self presentViewController:browser animated:YES completion:nil];
                     } else {
                         OtherBrowserViewController *otherBrowser=[[OtherBrowserViewController alloc] initWithNibName:@"OtherBrowser" bundle:nil];
@@ -888,10 +888,10 @@ typedef enum{
     QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
     browser.dataSource=browser;
     browser.delegate=browser;
+    browser.currentPreviewItemIndex=0;
     browser.title=name;
     browser.filePath=savedPath;
     browser.fileName=name;
-    browser.currentPreviewItemIndex=0;
     [self presentViewController:browser animated:NO completion:nil];
 }
 

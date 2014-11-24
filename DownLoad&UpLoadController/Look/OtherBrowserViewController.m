@@ -10,6 +10,7 @@
 #import "QLBrowserViewController.h"
 #import "YNFunctions.h"
 #import "AppDelegate.h"
+#import "FileListViewController.h"
 
 #define TabBarHeight 60
 #define ChangeTabWidth 90
@@ -58,52 +59,57 @@
                                              selector:@selector(applicationDidEnterBackground:)
                                                  name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
-    self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(back:)];
+    if([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+         self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(back:)];
+    } else {
+        
+        float topHeigth = 20;
+        if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
+        {
+            topHeigth = 0;
+        }
+        self.navigationController.navigationBarHidden = YES;
+        UIView *nbar=[[UIView alloc] initWithFrame:CGRectMake(0, topHeigth, self.view.frame.size.width, 44)];
+        UIImageView *niv=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Bk_Title.png"]];
+        niv.frame=nbar.frame;
+        [nbar addSubview:niv];
+        [self.view addSubview: nbar];
+        
+        //标题
+        self.titleLabel=[[UILabel alloc] init];
+        self.titleLabel.text=self.title;
+        self.titleLabel.font=[UIFont boldSystemFontOfSize:18];
+        self.titleLabel.textAlignment=NSTextAlignmentCenter;
+        self.titleLabel.backgroundColor=[UIColor clearColor];
+        self.titleLabel.frame=CGRectMake(80, topHeigth, 160, 44);
+        [nbar addSubview:self.titleLabel];
+        //把色值转换成图片
+        CGRect rect_image = CGRectMake(0, 0, ChangeTabWidth, 44);
+        UIGraphicsBeginImageContext(rect_image.size);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextSetFillColorWithColor(context,
+                                       [hilighted_color CGColor]);
+        CGContextFillRect(context, rect_image);
+        UIImage * imge = [[UIImage alloc] init];
+        imge = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        //返回按钮
+        if(1)
+        {
+            UIImage *back_image = [UIImage imageNamed:@"Bt_Back.png"];
+            UIButton *back_button = [[UIButton alloc] initWithFrame:CGRectMake(RightButtonBoderWidth, topHeigth+(44-back_image.size.height/2)/2, back_image.size.width/2, back_image.size.height/2)];
+            [back_button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+            [back_button setBackgroundImage:imge forState:UIControlStateHighlighted];
+            [back_button setImage:back_image forState:UIControlStateNormal];
+            [nbar addSubview:back_button];
+        }
+    }
+   
     
     self.isFinished=NO;
-    
     [self updateUI];
 //    [self showDoc];
     
-    float topHeigth = 20;
-    if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
-    {
-        topHeigth = 0;
-    }
-    UIView *nbar=[[UIView alloc] initWithFrame:CGRectMake(0, topHeigth, self.view.frame.size.width, 44)];
-    UIImageView *niv=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Bk_Title.png"]];
-    niv.frame=nbar.frame;
-    [nbar addSubview:niv];
-    [self.view addSubview: nbar];
-    //标题
-    self.titleLabel=[[UILabel alloc] init];
-    self.titleLabel.text=self.title;
-    self.titleLabel.font=[UIFont boldSystemFontOfSize:18];
-    self.titleLabel.textAlignment=NSTextAlignmentCenter;
-    self.titleLabel.backgroundColor=[UIColor clearColor];
-    self.titleLabel.frame=CGRectMake(80, topHeigth, 160, 44);
-    [nbar addSubview:self.titleLabel];
-    //把色值转换成图片
-    CGRect rect_image = CGRectMake(0, 0, ChangeTabWidth, 44);
-    UIGraphicsBeginImageContext(rect_image.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context,
-                                   [hilighted_color CGColor]);
-    CGContextFillRect(context, rect_image);
-    UIImage * imge = [[UIImage alloc] init];
-    imge = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    //返回按钮
-    if(1)
-    {
-        UIImage *back_image = [UIImage imageNamed:@"Bt_Back.png"];
-        UIButton *back_button = [[UIButton alloc] initWithFrame:CGRectMake(RightButtonBoderWidth, topHeigth+(44-back_image.size.height/2)/2, back_image.size.width/2, back_image.size.height/2)];
-        [back_button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-        [back_button setBackgroundImage:imge forState:UIControlStateHighlighted];
-        [back_button setImage:back_image forState:UIControlStateNormal];
-        [nbar addSubview:back_button];
-    }
-
 }
 
 - (void)updateUI

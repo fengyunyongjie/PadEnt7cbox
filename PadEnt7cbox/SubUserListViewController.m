@@ -219,6 +219,9 @@
     }
     //返回用户id和用户名
     [self.listViewDelegate didSelectUserIDS:ids Names:names];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]!=UIUserInterfaceIdiomPad) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 //取消
 -(void)cancel:(id)sender

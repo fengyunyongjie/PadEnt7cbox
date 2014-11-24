@@ -39,7 +39,13 @@
         [self.view addSubview:tabBarView];
         self.tabBarView=tabBarView;
         UISegmentedControl *segmentedControl=[[UISegmentedControl alloc] initWithItems:@[@"动态",@"资源",@"信息"]];
-        segmentedControl.frame=CGRectMake(0, 0, 360, 36);
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            segmentedControl.frame=CGRectMake(0, 0, 360, 36);
+        }else
+        {
+            segmentedControl.frame=CGRectMake(0, 0, 200, 36);
+        }
+        
         NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:16],NSFontAttributeName, nil];
         [segmentedControl setTitleTextAttributes:dic forState:UIControlStateNormal];
         segmentedControl.tintColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bk_ti.png"]];
@@ -52,6 +58,12 @@
         [addButton setFrame:CGRectMake(0, 0, 120, 36)];
         [addButton addTarget:self action:@selector(publishResource:) forControlEvents:UIControlEventTouchUpInside];
         UIBarButtonItem *itemAdd=[[UIBarButtonItem alloc] initWithCustomView:addButton];
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        }else
+        {
+            itemAdd=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(publishResource:)];
+            [itemAdd setTintColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"title_bk_ti.png"]]];
+        }
         //target:self action:@selector(publishResource:)];
         if (self.isPublish) {
             [self.tabBarView setItems:@[itemFlexible,itemSegment,itemFlexible,itemAdd]];
@@ -119,7 +131,9 @@
 {
     PublishResourceViewController *publishResourceViewController=[PublishResourceViewController new];
     publishResourceViewController.subjectID=self.subjectId;
-    publishResourceViewController.modalPresentationStyle=UIModalPresentationPageSheet;
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        publishResourceViewController.modalPresentationStyle=UIModalPresentationPageSheet;
+    }
     [self presentViewController:publishResourceViewController animated:YES completion:nil];
 }
 

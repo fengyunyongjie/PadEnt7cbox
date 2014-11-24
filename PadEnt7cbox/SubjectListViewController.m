@@ -197,7 +197,13 @@
     detailController.subjectId=subjectId;
     detailController.subjectTitle=subjectTitle;
     detailController.isPublish=(isMaster||isPublish);
-    self.splitViewController.viewControllers=@[viewControllers.firstObject,detailController];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        self.splitViewController.viewControllers=@[viewControllers.firstObject,detailController];
+    }else
+    {
+        [self presentViewController:detailController animated:YES completion:nil];
+    }
+    
     
     if (activitySum>0) {
         NSMutableDictionary *mDic=[NSMutableDictionary dictionaryWithDictionary:dic];

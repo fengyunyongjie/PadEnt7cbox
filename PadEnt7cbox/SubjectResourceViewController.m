@@ -69,6 +69,14 @@
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
     
+    if ([[UIDevice currentDevice] userInterfaceIdiom]!=UIUserInterfaceIdiomPad) {
+        UIButton *backButton=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 35, 29)];
+        [backButton setImage:[UIImage imageNamed:@"title_back.png"] forState:UIControlStateNormal];
+        [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *backItem=[[UIBarButtonItem alloc] initWithCustomView:backButton];
+        self.navigationItem.leftBarButtonItem=backItem;
+    }
+    
     UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
     temporaryBarButtonItem.title = @"";
     self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
@@ -97,6 +105,13 @@
 */
 
 #pragma mark - 操作方法
+- (void)back
+{
+    if ([[UIDevice currentDevice] userInterfaceIdiom]!=UIUserInterfaceIdiomPad) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
 - (void)updateList
 {
     self.sm_list=[SCBSubjectManager new];

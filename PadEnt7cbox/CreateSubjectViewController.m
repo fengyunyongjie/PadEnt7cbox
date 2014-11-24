@@ -110,8 +110,14 @@
     userView.listViewDelegate=self;
     userView.selectedItems=[NSMutableArray arrayWithArray:self.selectedIds];
     UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:userView];
-    self.usersPopoverController=[[UIPopoverController alloc] initWithContentViewController:nav];
-    [self.usersPopoverController presentPopoverFromRect:sender.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight animated:YES];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        self.usersPopoverController=[[UIPopoverController alloc] initWithContentViewController:nav];
+        [self.usersPopoverController presentPopoverFromRect:sender.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionRight animated:YES];
+    }else
+    {
+        [self presentViewController:nav animated:YES completion:nil];
+    }
+    
 }
 -(void)showMessage:(NSString *)message
 {
@@ -145,7 +151,10 @@
         }
     }
     self.numbersTextField.text = tableString;
-    [self.usersPopoverController dismissPopoverAnimated:YES];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        [self.usersPopoverController dismissPopoverAnimated:YES];
+    }
+    
 }
 #pragma mark - SCBSubjectManagerDelegate
 //创建主题成功

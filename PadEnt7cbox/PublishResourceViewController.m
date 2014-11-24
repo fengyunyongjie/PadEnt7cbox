@@ -28,6 +28,9 @@
 @interface PublishResourceViewController ()<UITableViewDataSource,UITableViewDelegate,SCBSubjectManagerDelegate,ChangeFileOrFolderDelegate,UITextViewDelegate,UITextFieldDelegate,UIActionSheetDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
+@property (weak, nonatomic) IBOutlet UIButton *btnCamera;
+@property (weak, nonatomic) IBOutlet UIButton *btnFile;
+@property (weak, nonatomic) IBOutlet UIButton *btnUrl;
 @property (strong,nonatomic) NSMutableArray *listArray;
 @property (strong,nonatomic) MBProgressHUD *hud;
 @property (strong,nonatomic) UIPopoverController *filePopoverController;
@@ -52,6 +55,17 @@
     [super viewDidLoad];
     self.listArray=[NSMutableArray array];
     // Do any additional setup after loading the view from its nib.
+    if ([[UIDevice currentDevice] userInterfaceIdiom]!=UIUserInterfaceIdiomPad) {
+//        [self.menuView removeConstraints:self.menuView.constraints];
+        for (NSLayoutConstraint *constraint in self.menuView.constraints) {
+            if(constraint.constant==500)
+            constraint.constant=320;
+        }
+        
+//        self.menuView.frame=CGRectMake(0, 0, self.view.frame.size.width, 78);
+//        self.btnFile.frame=CGRectMake(20, 4, 70, 70);
+//        self.btnUrl.frame=CGRectMake(self.view.frame.size.width-70-20, 4, 70, 70);
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -60,6 +74,9 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)viewDidLayoutSubviews
+{
+}
 #pragma mark - 操作方法
 -(IBAction)cancel:(id)sender
 {
@@ -209,10 +226,17 @@
     flvc.isHasSelectFile=YES;
     flvc.isFirstView = YES;
     flvc.publishDelegate=self;
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:flvc];
+        self.filePopoverController=[[UIPopoverController alloc] initWithContentViewController:nav];
+        [self.filePopoverController presentPopoverFromRect:sender.frame inView:sender.superview permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+    }else
+    {
+        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:flvc];
+        [self presentViewController:nav animated:YES completion:nil];
+    }
 
-    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:flvc];
-    self.filePopoverController=[[UIPopoverController alloc] initWithContentViewController:nav];
-    [self.filePopoverController presentPopoverFromRect:sender.frame inView:sender.superview permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
 }
 
 - (IBAction)openLinkView:(id)sender {

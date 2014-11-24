@@ -818,12 +818,18 @@ enum{
         edvc.eid=eid;
         edvc.etype=etype;
         edvc.title=@"";
-        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:edvc];
-        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
-        [nav.navigationBar setTintColor:[UIColor whiteColor]];
-        NSArray * viewControllers=self.splitViewController.viewControllers;
-        self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:edvc];
+            [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+            [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+            [nav.navigationBar setTintColor:[UIColor whiteColor]];
+            NSArray * viewControllers=self.splitViewController.viewControllers;
+            self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
+        }else
+        {
+            [self.navigationController pushViewController:edvc animated:YES];
+        }
+        
     }
 }
 

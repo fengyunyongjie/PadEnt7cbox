@@ -15,6 +15,9 @@
 @end
 
 @interface OtherBrowserViewController : UIViewController<UIDocumentInteractionControllerDelegate,QLPreviewControllerDataSource,QLPreviewControllerDelegate,DownloaderDelegate>
+{
+    BOOL isBack;
+}
 @property (strong,nonatomic) id<DownloadProgressDelegate> dpDelegate;
 
 @property (strong,nonatomic) IBOutlet UIProgressView *downloadProgress;
@@ -23,6 +26,9 @@
 @property (assign,nonatomic) BOOL isFinished;
 @property (strong,nonatomic) NSDictionary *dataDic;
 @property (strong,nonatomic) NSString *savePath;
+
+@property (strong,nonatomic) UILabel *titleLabel;
+
 
 -(IBAction)openWithOthersApp:(id)sender;
 -(IBAction)shared:(id)sender;

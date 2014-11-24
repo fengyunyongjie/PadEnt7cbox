@@ -64,6 +64,46 @@
     
     [self updateUI];
 //    [self showDoc];
+    
+    float topHeigth = 20;
+    if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
+    {
+        topHeigth = 0;
+    }
+    UIView *nbar=[[UIView alloc] initWithFrame:CGRectMake(0, topHeigth, self.view.frame.size.width, 44)];
+    UIImageView *niv=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Bk_Title.png"]];
+    niv.frame=nbar.frame;
+    [nbar addSubview:niv];
+    [self.view addSubview: nbar];
+    //标题
+    self.titleLabel=[[UILabel alloc] init];
+    self.titleLabel.text=self.title;
+    self.titleLabel.font=[UIFont boldSystemFontOfSize:18];
+    self.titleLabel.textAlignment=NSTextAlignmentCenter;
+    self.titleLabel.backgroundColor=[UIColor clearColor];
+    self.titleLabel.frame=CGRectMake(80, topHeigth, 160, 44);
+    [nbar addSubview:self.titleLabel];
+    //把色值转换成图片
+    CGRect rect_image = CGRectMake(0, 0, ChangeTabWidth, 44);
+    UIGraphicsBeginImageContext(rect_image.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context,
+                                   [hilighted_color CGColor]);
+    CGContextFillRect(context, rect_image);
+    UIImage * imge = [[UIImage alloc] init];
+    imge = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    //返回按钮
+    if(1)
+    {
+        UIImage *back_image = [UIImage imageNamed:@"Bt_Back.png"];
+        UIButton *back_button = [[UIButton alloc] initWithFrame:CGRectMake(RightButtonBoderWidth, topHeigth+(44-back_image.size.height/2)/2, back_image.size.width/2, back_image.size.height/2)];
+        [back_button addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+        [back_button setBackgroundImage:imge forState:UIControlStateHighlighted];
+        [back_button setImage:back_image forState:UIControlStateNormal];
+        [nbar addSubview:back_button];
+    }
+
 }
 
 - (void)updateUI
@@ -174,9 +214,75 @@
 
 - (void)downFinish:(NSString *)baseUrl
 {
-//    [self showDoc];
-    [self finished];
+    if([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        [self finished];
+
+    } else {
+        [self showDoc];
+
+    }
 }
+
+-(void)showDoc
+{
+    NSString *file_id=[self.dataDic objectForKey:@"fid"];
+    NSString *f_name=[self.dataDic objectForKey:@"fname"];
+    NSString *documentDir = [YNFunctions getFMCachePath];
+    NSArray *array=[f_name componentsSeparatedByString:@"/"];
+    NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
+    [NSString CreatePath:createPath];
+    self.savePath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:self.savePath]) {
+        [self performSelector:@selector(showNewView) withObject:self afterDelay:1.0f];
+    }
+}
+
+-(void)showNewView
+{
+    NSLog(@"显示新的视图");
+    QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
+    browser.dataSource=browser;
+    browser.delegate=browser;
+    browser.title=[self.dataDic objectForKey:@"fname"];
+    browser.filePath=self.savePath;
+    browser.fileName=[self.dataDic objectForKey:@"fname"];
+    //[self dismissViewControllerAnimated:NO completion:nil];
+    if(isBack)
+    {
+        return;
+    }
+    browser.currentPreviewItemIndex=0;
+    [self presentViewController:browser animated:YES completion:^(void){
+        [self.downloadProgress setHidden:YES];
+        [self.downloadLabel setText:@""];
+        [self.downloadLabel setHidden:NO];
+    }];
+    NSLog(@"显示成功");
+}
+
+#pragma mark - UIDocumentInteractionControllerDelegate
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)interactionController
+{
+    return self;
+}
+#pragma mark - QLPreviewControllerDataSource
+// Returns the number of items that the preview controller should preview
+- (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)previewController
+{
+    return 1;
+}
+- (void)previewControllerDidDismiss:(QLPreviewController *)controller
+{
+    
+}
+// returns the item that the preview controller should preview
+- (id)previewController:(QLPreviewController *)previewController previewItemAtIndex:(NSInteger)idx
+{
+    NSURL *fileURL = nil;
+    fileURL=[NSURL fileURLWithPath:self.savePath];
+    return fileURL;
+}
+
 
 -(void)didFailWithError
 {

@@ -17,12 +17,12 @@ __strong static WelcomeViewController *_welcommeVC;
 //<ios 6.0
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    return YES;
+    return NO;
 }
 
 //>ios 6.0
 - (BOOL)shouldAutorotate{
-    return YES;
+    return NO;
 }
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -34,22 +34,36 @@ __strong static WelcomeViewController *_welcommeVC;
     
     if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
     {
-        imageWidth = 1024;
-        imageHeigth = 768;
-        CGRect hidden_rect = CGRectMake(imageWidth*2+(imageWidth-201)/2-10, imageHeigth-200, 201, 52);
-        hidden_rect.origin.y = imageHeigth-120;
-        [hidden_button setFrame:hidden_rect];
-//        [pageCtrl setFrame:CGRectMake((768-200)/2, imageHeigth-60, 200, 49)];
-        [pageCtrl setFrame:CGRectMake((1024-200)/2, imageHeigth-60, 200, 49)];
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            imageWidth = 1024;
+            imageHeigth = 768;
+            CGRect hidden_rect = CGRectMake(imageWidth*2+(imageWidth-201)/2-10, imageHeigth-200, 201, 52);
+            hidden_rect.origin.y = imageHeigth-120;
+            [hidden_button setFrame:hidden_rect];
+            [pageCtrl setFrame:CGRectMake((1024-200)/2, imageHeigth-60, 200, 49)];
+        }
     }
     else
     {
-        imageWidth = 768;
-        imageHeigth = 1024;
-        CGRect hidden_rect = CGRectMake(imageWidth*2+(imageWidth-201)/2+5, imageHeigth-200, 201, 52);
-        hidden_rect.origin.y = imageHeigth-180;
-        [hidden_button setFrame:hidden_rect];
-        [pageCtrl setFrame:CGRectMake((1024-200)/2, imageHeigth-60, 200, 49)];
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            imageWidth = 768;
+            imageHeigth = 1024;
+            CGRect hidden_rect = CGRectMake(imageWidth*2+(imageWidth-201)/2+5, imageHeigth-200, 201, 52);
+            hidden_rect.origin.y = imageHeigth-180;
+            [hidden_button setFrame:hidden_rect];
+            [pageCtrl setFrame:CGRectMake((1024-200)/2, imageHeigth-60, 200, 49)];
+        }else
+        {
+            CGRect bounds =[[UIScreen mainScreen] bounds];
+            NSLog(@"UIScreen bounds:%@",NSStringFromCGRect(bounds));
+            
+            imageWidth=bounds.size.width;
+            imageHeigth=bounds.size.height;
+            
+            CGRect hidden_rect = CGRectMake(imageWidth*2+(imageWidth-124)/2+5, imageHeigth-90, 124, 31);
+            [hidden_button setFrame:hidden_rect];
+            [pageCtrl setFrame:CGRectMake((imageHeigth-200)/2, imageHeigth-60, 200, 49)];
+        }
     }
     
     //加载图片
@@ -57,11 +71,27 @@ __strong static WelcomeViewController *_welcommeVC;
         NSString *fileName = nil;
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
         {
-            fileName=[NSString stringWithFormat:@"guide%i.png",i];
+            if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+                fileName=[NSString stringWithFormat:@"guide%i.png",i];
+            }
+            
         }
         else
         {
-            fileName=[NSString stringWithFormat:@"guide%i-.png",i];
+            if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+                fileName=[NSString stringWithFormat:@"guide%i-.png",i];
+            }else
+            {
+                if ([[UIScreen mainScreen] bounds].size.height>480) {
+                    fileName=[NSString stringWithFormat:@"guide_%i@iPhone5.png",i];
+                }else
+                {
+                    fileName=[NSString stringWithFormat:@"guide_%d.png",i];
+                }
+                [hidden_button setBackgroundImage:[UIImage imageNamed:@"guide_bt_nor~iPhone.png"] forState:UIControlStateNormal];
+                [hidden_button setBackgroundImage:[UIImage imageNamed:@"guide_bt_se~iPhone.png"] forState:UIControlStateHighlighted];
+            }
+            
         }
         if(i==1)
         {

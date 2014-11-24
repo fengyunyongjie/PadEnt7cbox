@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
@@ -62,8 +62,7 @@
                     <state key="normal" image="xuanze01.png"/>
                     <state key="selected" image="xuanze02.png"/>
                     <connections>
-                        <action selector="showPassword:" destination="-2" eventType="touchUpInside" id="48f-eF-GGf"/>
-                        <action selector="showPassword:" destination="-1" eventType="touchUpInside" id="rTa-sq-58W"/>
+                        <action selector="showPassword:" destination="-1" eventType="touchUpInside" id="iZr-ID-acS"/>
                     </connections>
                 </button>
             </subviews>

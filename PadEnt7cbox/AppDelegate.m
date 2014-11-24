@@ -80,8 +80,8 @@ typedef enum{
     
     NSString *vinfo=[[NSUserDefaults standardUserDefaults]objectForKey:VERSION];
     if (!vinfo) {
-//        WelcomeViewController *welcomeView = [[WelcomeViewController alloc] init];
-//        [self.window.rootViewController presentViewController:welcomeView animated:NO completion:nil];
+        WelcomeViewController *welcomeView = [[WelcomeViewController alloc] init];
+        [self.window.rootViewController presentViewController:welcomeView animated:NO completion:nil];
     }
     [self checkUpdate];
     return YES;

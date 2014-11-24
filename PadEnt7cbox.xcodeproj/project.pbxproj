@@ -478,6 +478,14 @@
 		29CE22351862E5BB0030EC86 /* InputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29CE22341862E5BB0030EC86 /* InputViewController.m */; };
 		29F13E1C1964F06600482D3D /* SubjectListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F13E1B1964F06600482D3D /* SubjectListViewController.m */; };
 		29F1DDB7186BC467001CC8B1 /* PartitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F1DDB6186BC467001CC8B1 /* PartitionViewController.m */; };
+		29FB7E961A22C67100920A00 /* guide_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FB7E901A22C67100920A00 /* guide_1.png */; };
+		29FB7E971A22C67100920A00 /* guide_1@iPhone5.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FB7E911A22C67100920A00 /* guide_1@iPhone5.png */; };
+		29FB7E981A22C67100920A00 /* guide_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FB7E921A22C67100920A00 /* guide_2.png */; };
+		29FB7E991A22C67100920A00 /* guide_2@iPhone5.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FB7E931A22C67100920A00 /* guide_2@iPhone5.png */; };
+		29FB7E9A1A22C67100920A00 /* guide_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FB7E941A22C67100920A00 /* guide_3.png */; };
+		29FB7E9B1A22C67100920A00 /* guide_3@iPhone5.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FB7E951A22C67100920A00 /* guide_3@iPhone5.png */; };
+		29FB7E9E1A22C8EE00920A00 /* guide_bt_nor~iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FB7E9C1A22C8EE00920A00 /* guide_bt_nor~iPhone@2x.png */; };
+		29FB7E9F1A22C8EE00920A00 /* guide_bt_se~iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FB7E9D1A22C8EE00920A00 /* guide_bt_se~iPhone@2x.png */; };
 		29FBD5FF1863D27A005F03AC /* login_bt.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5F71863D27A005F03AC /* login_bt.png */; };
 		5FCBABCC1A22C7640005DF05 /* menu_only_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCBABCB1A22C7640005DF05 /* menu_only_1.png */; };
 /* End PBXBuildFile section */
@@ -1090,6 +1098,14 @@
 		29F13E1B1964F06600482D3D /* SubjectListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubjectListViewController.m; sourceTree = "<group>"; };
 		29F1DDB5186BC467001CC8B1 /* PartitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PartitionViewController.h; sourceTree = "<group>"; };
 		29F1DDB6186BC467001CC8B1 /* PartitionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PartitionViewController.m; sourceTree = "<group>"; };
+		29FB7E901A22C67100920A00 /* guide_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = guide_1.png; sourceTree = "<group>"; };
+		29FB7E911A22C67100920A00 /* guide_1@iPhone5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guide_1@iPhone5.png"; sourceTree = "<group>"; };
+		29FB7E921A22C67100920A00 /* guide_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = guide_2.png; sourceTree = "<group>"; };
+		29FB7E931A22C67100920A00 /* guide_2@iPhone5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guide_2@iPhone5.png"; sourceTree = "<group>"; };
+		29FB7E941A22C67100920A00 /* guide_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = guide_3.png; sourceTree = "<group>"; };
+		29FB7E951A22C67100920A00 /* guide_3@iPhone5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guide_3@iPhone5.png"; sourceTree = "<group>"; };
+		29FB7E9C1A22C8EE00920A00 /* guide_bt_nor~iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guide_bt_nor~iPhone@2x.png"; sourceTree = "<group>"; };
+		29FB7E9D1A22C8EE00920A00 /* guide_bt_se~iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guide_bt_se~iPhone@2x.png"; sourceTree = "<group>"; };
 		29FBD5F71863D27A005F03AC /* login_bt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_bt.png; sourceTree = "<group>"; };
 		5FCBABCB1A22C7640005DF05 /* menu_only_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_only_1.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1257,6 +1273,12 @@
 				29135E13188CF35800A951CE /* file_txt@2x.png */,
 				29135E14188CF35800A951CE /* file_word@2x.png */,
 				29135E15188CF35800A951CE /* grayArrow@2x.png */,
+				29FB7E901A22C67100920A00 /* guide_1.png */,
+				29FB7E911A22C67100920A00 /* guide_1@iPhone5.png */,
+				29FB7E921A22C67100920A00 /* guide_2.png */,
+				29FB7E931A22C67100920A00 /* guide_2@iPhone5.png */,
+				29FB7E941A22C67100920A00 /* guide_3.png */,
+				29FB7E951A22C67100920A00 /* guide_3@iPhone5.png */,
 				29135E16188CF35800A951CE /* guide1-.png */,
 				29135E18188CF35800A951CE /* guide1.png */,
 				29135E1A188CF35800A951CE /* guide2-.png */,
@@ -1265,6 +1287,8 @@
 				29135E20188CF35800A951CE /* guide3.png */,
 				29135E23188CF35800A951CE /* guide_bt_nor@2x.png */,
 				29135E24188CF35800A951CE /* guide_bt_se@2x.png */,
+				29FB7E9C1A22C8EE00920A00 /* guide_bt_nor~iPhone@2x.png */,
+				29FB7E9D1A22C8EE00920A00 /* guide_bt_se~iPhone@2x.png */,
 				29135E25188CF35800A951CE /* guide_gray.png */,
 				29135E26188CF35800A951CE /* Ico_CoverF@2x.png */,
 				29FBD5F71863D27A005F03AC /* login_bt.png */,
@@ -2196,6 +2220,7 @@
 				29955811198208C10010CF8F /* sub_voiceInput_down.png in Resources */,
 				29135EBB188CF35900A951CE /* guide3-.png in Resources */,
 				29AF89B8188E142F00A71A0E /* bt_save_nor@2x.png in Resources */,
+				29FB7E981A22C67100920A00 /* guide_2.png in Resources */,
 				29135EE1188CF35900A951CE /* nav_set_nor@2x.png in Resources */,
 				2995580C198208C10010CF8F /* sub_jianpan_up.png in Resources */,
 				294EB51918604FB1006E6E96 /* whiteArrow.png in Resources */,
@@ -2260,6 +2285,7 @@
 				295ACA9F19873ACD00031826 /* ResourceCommentCell.xib in Resources */,
 				29135F0B188CF35900A951CE /* title_bt_edit_se@2x.png in Resources */,
 				295C38E01987A79B0068AB52 /* 44.gif in Resources */,
+				29FB7E961A22C67100920A00 /* guide_1.png in Resources */,
 				29955812198208C10010CF8F /* sub_voiceInput_up.png in Resources */,
 				2982E099186152FE009CB82D /* Bk_Title.png in Resources */,
 				29135F0A188CF35900A951CE /* title_bt_edit_nor@2x.png in Resources */,
@@ -2289,9 +2315,11 @@
 				29955804198208C10010CF8F /* sub_bt_copy_nor.png in Resources */,
 				29955830198260720010CF8F /* SubjectInfoCell.xib in Resources */,
 				29135F1B188CF35900A951CE /* title_more@2x.png in Resources */,
+				29FB7E991A22C67100920A00 /* guide_2@iPhone5.png in Resources */,
 				295C38FF1987A79B0068AB52 /* 75.gif in Resources */,
 				29135F05188CF35900A951CE /* title_allpasue@2x.png in Resources */,
 				29135E96188CF35900A951CE /* blackArrow@2x.png in Resources */,
+				29FB7E9B1A22C67100920A00 /* guide_3@iPhone5.png in Resources */,
 				295C38CF1987A79B0068AB52 /* 27.gif in Resources */,
 				2933E47F19C1A665000C6589 /* address_arrow.png in Resources */,
 				295C38EE1987A79B0068AB52 /* 58.gif in Resources */,
@@ -2326,6 +2354,7 @@
 				2982E0A0186152FE009CB82D /* overlay.png in Resources */,
 				29C0D54A18CDB70400056CB9 /* resend_se@2x.png in Resources */,
 				2982E09E186152FE009CB82D /* minus.png in Resources */,
+				29FB7E9F1A22C8EE00920A00 /* guide_bt_se~iPhone@2x.png in Resources */,
 				29135F1A188CF35900A951CE /* title_menu@2x.png in Resources */,
 				295C38F01987A79B0068AB52 /* 60.gif in Resources */,
 				29135E8D188CF35900A951CE /* bizlib@2x.png in Resources */,
@@ -2359,6 +2388,7 @@
 				295C38E81987A79B0068AB52 /* 52.gif in Resources */,
 				29135ED8188CF35900A951CE /* move_se@2x.png in Resources */,
 				298423D5185ECE1F002AC1D0 /* InfoPlist.strings in Resources */,
+				29FB7E9A1A22C67100920A00 /* guide_3.png in Resources */,
 				29135F27188CF35900A951CE /* zc_nor@2x.png in Resources */,
 				29955803198208C10010CF8F /* sub_bt_comment_sel.png in Resources */,
 				295C38EB1987A79B0068AB52 /* 55.gif in Resources */,
@@ -2412,6 +2442,7 @@
 				29135EFD188CF35900A951CE /* set_quit_se@2x.png in Resources */,
 				295C38DC1987A79B0068AB52 /* 40.gif in Resources */,
 				29135EB3188CF35900A951CE /* guide1-.png in Resources */,
+				29FB7E9E1A22C8EE00920A00 /* guide_bt_nor~iPhone@2x.png in Resources */,
 				295C385D1987A5DA0068AB52 /* yellow-38.png in Resources */,
 				29955814198208C10010CF8F /* bottom_file.png in Resources */,
 				29135EB7188CF35900A951CE /* guide2-.png in Resources */,
@@ -2497,6 +2528,7 @@
 				29135F21188CF35900A951CE /* title_upload_nor@2x.png in Resources */,
 				29135EF0188CF35900A951CE /* sel_se@2x.png in Resources */,
 				295C385F1987A5DA0068AB52 /* ToolViewEmotion@2x.png in Resources */,
+				29FB7E971A22C67100920A00 /* guide_1@iPhone5.png in Resources */,
 				29955815198208C10010CF8F /* bottom_link.png in Resources */,
 				2982E0B0186152FE009CB82D /* Bt_UploadOk.png in Resources */,
 				29135F0D188CF35900A951CE /* title_bt_new_se@2x.png in Resources */,

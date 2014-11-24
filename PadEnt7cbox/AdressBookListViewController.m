@@ -789,7 +789,9 @@ static float imageHeight = 100;
                 obj = [self.tableArray objectAtIndex:indexPath.row];
             }
             AddressBookUser *user = (AddressBookUser *)obj;
-//            [self showOpenHone:user];
+            if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+                [self showOpenHone:user];
+            }
         } else {
             //部门
             if(indexPath.row < self.tableArray.count)

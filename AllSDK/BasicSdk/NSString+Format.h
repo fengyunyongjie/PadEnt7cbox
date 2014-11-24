@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+#define subject_detaiTableview_color [UIColor colorWithRed:237.0/255.0 green:237.0/255.0 blue:237.0/255.0 alpha:1.0]
+#define subject_color [UIColor colorWithRed:54.0/255.0 green:116.0/255.0 blue:176.0/255.0 alpha:1.0]
+#define subject_tableviewcell_color [UIColor colorWithRed:247.0/255.0 green:247.0/255.0 blue:247.0/255.0 alpha:1.0]
+
 @interface NSString (Format)
 
 +(NSString *)formatNSStringForChar:(const char *)temp;

@@ -125,6 +125,33 @@
 		29135F26188CF35900A951CE /* whiteArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29135E89188CF35900A951CE /* whiteArrow@2x.png */; };
 		29135F27188CF35900A951CE /* zc_nor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29135E8A188CF35900A951CE /* zc_nor@2x.png */; };
 		29135F28188CF35900A951CE /* zc_se@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29135E8B188CF35900A951CE /* zc_se@2x.png */; };
+		291755DE1A232AD900F0FC61 /* IPNewSubJectViewControlller.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755B41A232AD900F0FC61 /* IPNewSubJectViewControlller.m */; };
+		291755DF1A232AD900F0FC61 /* IPNewSubJectViewControlller.xib in Resources */ = {isa = PBXBuildFile; fileRef = 291755B51A232AD900F0FC61 /* IPNewSubJectViewControlller.xib */; };
+		291755E01A232AD900F0FC61 /* IPSubjectListForChooseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755B71A232AD900F0FC61 /* IPSubjectListForChooseViewController.m */; };
+		291755E11A232AD900F0FC61 /* IPSubjectListForChooseViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 291755B81A232AD900F0FC61 /* IPSubjectListForChooseViewController.xib */; };
+		291755E21A232AD900F0FC61 /* IPSendToSubJectViewFromFileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755BA1A232AD900F0FC61 /* IPSendToSubJectViewFromFileController.m */; };
+		291755E31A232AD900F0FC61 /* IPSendToSubJectViewFromFileController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 291755BB1A232AD900F0FC61 /* IPSendToSubJectViewFromFileController.xib */; };
+		291755E41A232AD900F0FC61 /* IPSubjectUserListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755BD1A232AD900F0FC61 /* IPSubjectUserListViewController.m */; };
+		291755E51A232AD900F0FC61 /* IPSubjectUserListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 291755BE1A232AD900F0FC61 /* IPSubjectUserListViewController.xib */; };
+		291755E61A232AD900F0FC61 /* IPSendToSubJectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755C01A232AD900F0FC61 /* IPSendToSubJectViewController.m */; };
+		291755E71A232AD900F0FC61 /* IPSubjectDetailDynamicTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755C21A232AD900F0FC61 /* IPSubjectDetailDynamicTableViewCell.m */; };
+		291755E81A232AD900F0FC61 /* IPSubJectDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755C41A232AD900F0FC61 /* IPSubJectDetailViewController.m */; };
+		291755E91A232AD900F0FC61 /* IPSubJectFileListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755C61A232AD900F0FC61 /* IPSubJectFileListViewController.m */; };
+		291755EA1A232AD900F0FC61 /* IPSubJectFileListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 291755C71A232AD900F0FC61 /* IPSubJectFileListViewController.xib */; };
+		291755EB1A232AD900F0FC61 /* IPSubJectListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755C91A232AD900F0FC61 /* IPSubJectListTableViewCell.m */; };
+		291755EC1A232AD900F0FC61 /* IPSubJectListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755CB1A232AD900F0FC61 /* IPSubJectListViewController.m */; };
+		291755ED1A232AD900F0FC61 /* IPSubJectNewDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755CD1A232AD900F0FC61 /* IPSubJectNewDetailViewController.m */; };
+		291755EE1A232AD900F0FC61 /* IPSubJectDetailCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755CF1A232AD900F0FC61 /* IPSubJectDetailCommentViewController.m */; };
+		291755EF1A232AD900F0FC61 /* IPSubJectDetailCommentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 291755D01A232AD900F0FC61 /* IPSubJectDetailCommentViewController.xib */; };
+		291755F01A232AD900F0FC61 /* IPSujectUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755D21A232AD900F0FC61 /* IPSujectUpload.m */; };
+		291755F11A232AD900F0FC61 /* IPUnderLineLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755D41A232AD900F0FC61 /* IPUnderLineLabel.m */; };
+		291755F21A232AD900F0FC61 /* IPCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755D61A232AD900F0FC61 /* IPCommentCell.m */; };
+		291755F31A232AD900F0FC61 /* IPCommentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 291755D71A232AD900F0FC61 /* IPCommentCell.xib */; };
+		291755F41A232AD900F0FC61 /* IPDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755D91A232AD900F0FC61 /* IPDetailCell.m */; };
+		291755F51A232AD900F0FC61 /* IPDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 291755DA1A232AD900F0FC61 /* IPDetailCell.xib */; };
+		291755F61A232AD900F0FC61 /* IPResourceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755DC1A232AD900F0FC61 /* IPResourceCell.m */; };
+		291755F71A232AD900F0FC61 /* IPResourceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 291755DD1A232AD900F0FC61 /* IPResourceCell.xib */; };
+		291755FA1A232AEA00F0FC61 /* IPSCBSubJectManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 291755F91A232AEA00F0FC61 /* IPSCBSubJectManager.m */; };
 		2918784F187D01B900577921 /* OpenFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2918784E187D01B900577921 /* OpenFileViewController.m */; };
 		29187851187D295C00577921 /* icon_checked_gridIpad.png in Resources */ = {isa = PBXBuildFile; fileRef = 29187850187D295C00577921 /* icon_checked_gridIpad.png */; };
 		29187854187D5A6F00577921 /* nothing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 29187853187D5A6F00577921 /* nothing.mp3 */; };
@@ -619,6 +646,51 @@
 		29135E89188CF35900A951CE /* whiteArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "whiteArrow@2x.png"; sourceTree = "<group>"; };
 		29135E8A188CF35900A951CE /* zc_nor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zc_nor@2x.png"; sourceTree = "<group>"; };
 		29135E8B188CF35900A951CE /* zc_se@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zc_se@2x.png"; sourceTree = "<group>"; };
+		291755B31A232AD900F0FC61 /* IPNewSubJectViewControlller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPNewSubJectViewControlller.h; sourceTree = "<group>"; };
+		291755B41A232AD900F0FC61 /* IPNewSubJectViewControlller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPNewSubJectViewControlller.m; sourceTree = "<group>"; };
+		291755B51A232AD900F0FC61 /* IPNewSubJectViewControlller.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IPNewSubJectViewControlller.xib; sourceTree = "<group>"; };
+		291755B61A232AD900F0FC61 /* IPSubjectListForChooseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSubjectListForChooseViewController.h; sourceTree = "<group>"; };
+		291755B71A232AD900F0FC61 /* IPSubjectListForChooseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSubjectListForChooseViewController.m; sourceTree = "<group>"; };
+		291755B81A232AD900F0FC61 /* IPSubjectListForChooseViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IPSubjectListForChooseViewController.xib; sourceTree = "<group>"; };
+		291755B91A232AD900F0FC61 /* IPSendToSubJectViewFromFileController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSendToSubJectViewFromFileController.h; sourceTree = "<group>"; };
+		291755BA1A232AD900F0FC61 /* IPSendToSubJectViewFromFileController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSendToSubJectViewFromFileController.m; sourceTree = "<group>"; };
+		291755BB1A232AD900F0FC61 /* IPSendToSubJectViewFromFileController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IPSendToSubJectViewFromFileController.xib; sourceTree = "<group>"; };
+		291755BC1A232AD900F0FC61 /* IPSubjectUserListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSubjectUserListViewController.h; sourceTree = "<group>"; };
+		291755BD1A232AD900F0FC61 /* IPSubjectUserListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSubjectUserListViewController.m; sourceTree = "<group>"; };
+		291755BE1A232AD900F0FC61 /* IPSubjectUserListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IPSubjectUserListViewController.xib; sourceTree = "<group>"; };
+		291755BF1A232AD900F0FC61 /* IPSendToSubJectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSendToSubJectViewController.h; sourceTree = "<group>"; };
+		291755C01A232AD900F0FC61 /* IPSendToSubJectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSendToSubJectViewController.m; sourceTree = "<group>"; };
+		291755C11A232AD900F0FC61 /* IPSubjectDetailDynamicTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSubjectDetailDynamicTableViewCell.h; sourceTree = "<group>"; };
+		291755C21A232AD900F0FC61 /* IPSubjectDetailDynamicTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSubjectDetailDynamicTableViewCell.m; sourceTree = "<group>"; };
+		291755C31A232AD900F0FC61 /* IPSubJectDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSubJectDetailViewController.h; sourceTree = "<group>"; };
+		291755C41A232AD900F0FC61 /* IPSubJectDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSubJectDetailViewController.m; sourceTree = "<group>"; };
+		291755C51A232AD900F0FC61 /* IPSubJectFileListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSubJectFileListViewController.h; sourceTree = "<group>"; };
+		291755C61A232AD900F0FC61 /* IPSubJectFileListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSubJectFileListViewController.m; sourceTree = "<group>"; };
+		291755C71A232AD900F0FC61 /* IPSubJectFileListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IPSubJectFileListViewController.xib; sourceTree = "<group>"; };
+		291755C81A232AD900F0FC61 /* IPSubJectListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSubJectListTableViewCell.h; sourceTree = "<group>"; };
+		291755C91A232AD900F0FC61 /* IPSubJectListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSubJectListTableViewCell.m; sourceTree = "<group>"; };
+		291755CA1A232AD900F0FC61 /* IPSubJectListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSubJectListViewController.h; sourceTree = "<group>"; };
+		291755CB1A232AD900F0FC61 /* IPSubJectListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSubJectListViewController.m; sourceTree = "<group>"; };
+		291755CC1A232AD900F0FC61 /* IPSubJectNewDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSubJectNewDetailViewController.h; sourceTree = "<group>"; };
+		291755CD1A232AD900F0FC61 /* IPSubJectNewDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSubJectNewDetailViewController.m; sourceTree = "<group>"; };
+		291755CE1A232AD900F0FC61 /* IPSubJectDetailCommentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSubJectDetailCommentViewController.h; sourceTree = "<group>"; };
+		291755CF1A232AD900F0FC61 /* IPSubJectDetailCommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSubJectDetailCommentViewController.m; sourceTree = "<group>"; };
+		291755D01A232AD900F0FC61 /* IPSubJectDetailCommentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IPSubJectDetailCommentViewController.xib; sourceTree = "<group>"; };
+		291755D11A232AD900F0FC61 /* IPSujectUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSujectUpload.h; sourceTree = "<group>"; };
+		291755D21A232AD900F0FC61 /* IPSujectUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSujectUpload.m; sourceTree = "<group>"; };
+		291755D31A232AD900F0FC61 /* IPUnderLineLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPUnderLineLabel.h; sourceTree = "<group>"; };
+		291755D41A232AD900F0FC61 /* IPUnderLineLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPUnderLineLabel.m; sourceTree = "<group>"; };
+		291755D51A232AD900F0FC61 /* IPCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPCommentCell.h; sourceTree = "<group>"; };
+		291755D61A232AD900F0FC61 /* IPCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPCommentCell.m; sourceTree = "<group>"; };
+		291755D71A232AD900F0FC61 /* IPCommentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IPCommentCell.xib; sourceTree = "<group>"; };
+		291755D81A232AD900F0FC61 /* IPDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPDetailCell.h; sourceTree = "<group>"; };
+		291755D91A232AD900F0FC61 /* IPDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPDetailCell.m; sourceTree = "<group>"; };
+		291755DA1A232AD900F0FC61 /* IPDetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IPDetailCell.xib; sourceTree = "<group>"; };
+		291755DB1A232AD900F0FC61 /* IPResourceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPResourceCell.h; sourceTree = "<group>"; };
+		291755DC1A232AD900F0FC61 /* IPResourceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPResourceCell.m; sourceTree = "<group>"; };
+		291755DD1A232AD900F0FC61 /* IPResourceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IPResourceCell.xib; sourceTree = "<group>"; };
+		291755F81A232AEA00F0FC61 /* IPSCBSubJectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPSCBSubJectManager.h; sourceTree = "<group>"; };
+		291755F91A232AEA00F0FC61 /* IPSCBSubJectManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPSCBSubJectManager.m; sourceTree = "<group>"; };
 		2918784D187D01B900577921 /* OpenFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenFileViewController.h; sourceTree = "<group>"; };
 		2918784E187D01B900577921 /* OpenFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenFileViewController.m; sourceTree = "<group>"; };
 		29187850187D295C00577921 /* icon_checked_gridIpad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_checked_gridIpad.png; sourceTree = "<group>"; };
@@ -1961,6 +2033,8 @@
 				294EB4E918604E68006E6E96 /* SCBLinkManager.m */,
 				2981E930196E6163003E346B /* SCBSubjectManager.h */,
 				2981E931196E6163003E346B /* SCBSubjectManager.m */,
+				291755F81A232AEA00F0FC61 /* IPSCBSubJectManager.h */,
+				291755F91A232AEA00F0FC61 /* IPSCBSubJectManager.m */,
 				294EB4EA18604E68006E6E96 /* SCBoxConfig.h */,
 				294EB4EB18604E68006E6E96 /* SCBSession.h */,
 				294EB4EC18604E68006E6E96 /* SCBSession.m */,
@@ -2059,6 +2133,56 @@
 			path = ../SettingController;
 			sourceTree = "<group>";
 		};
+		299756C41A23269A00EA1490 /* iPhone */ = {
+			isa = PBXGroup;
+			children = (
+				291755B31A232AD900F0FC61 /* IPNewSubJectViewControlller.h */,
+				291755B41A232AD900F0FC61 /* IPNewSubJectViewControlller.m */,
+				291755B51A232AD900F0FC61 /* IPNewSubJectViewControlller.xib */,
+				291755B61A232AD900F0FC61 /* IPSubjectListForChooseViewController.h */,
+				291755B71A232AD900F0FC61 /* IPSubjectListForChooseViewController.m */,
+				291755B81A232AD900F0FC61 /* IPSubjectListForChooseViewController.xib */,
+				291755B91A232AD900F0FC61 /* IPSendToSubJectViewFromFileController.h */,
+				291755BA1A232AD900F0FC61 /* IPSendToSubJectViewFromFileController.m */,
+				291755BB1A232AD900F0FC61 /* IPSendToSubJectViewFromFileController.xib */,
+				291755BC1A232AD900F0FC61 /* IPSubjectUserListViewController.h */,
+				291755BD1A232AD900F0FC61 /* IPSubjectUserListViewController.m */,
+				291755BE1A232AD900F0FC61 /* IPSubjectUserListViewController.xib */,
+				291755BF1A232AD900F0FC61 /* IPSendToSubJectViewController.h */,
+				291755C01A232AD900F0FC61 /* IPSendToSubJectViewController.m */,
+				291755C11A232AD900F0FC61 /* IPSubjectDetailDynamicTableViewCell.h */,
+				291755C21A232AD900F0FC61 /* IPSubjectDetailDynamicTableViewCell.m */,
+				291755C31A232AD900F0FC61 /* IPSubJectDetailViewController.h */,
+				291755C41A232AD900F0FC61 /* IPSubJectDetailViewController.m */,
+				291755C51A232AD900F0FC61 /* IPSubJectFileListViewController.h */,
+				291755C61A232AD900F0FC61 /* IPSubJectFileListViewController.m */,
+				291755C71A232AD900F0FC61 /* IPSubJectFileListViewController.xib */,
+				291755C81A232AD900F0FC61 /* IPSubJectListTableViewCell.h */,
+				291755C91A232AD900F0FC61 /* IPSubJectListTableViewCell.m */,
+				291755CA1A232AD900F0FC61 /* IPSubJectListViewController.h */,
+				291755CB1A232AD900F0FC61 /* IPSubJectListViewController.m */,
+				291755CC1A232AD900F0FC61 /* IPSubJectNewDetailViewController.h */,
+				291755CD1A232AD900F0FC61 /* IPSubJectNewDetailViewController.m */,
+				291755CE1A232AD900F0FC61 /* IPSubJectDetailCommentViewController.h */,
+				291755CF1A232AD900F0FC61 /* IPSubJectDetailCommentViewController.m */,
+				291755D01A232AD900F0FC61 /* IPSubJectDetailCommentViewController.xib */,
+				291755D11A232AD900F0FC61 /* IPSujectUpload.h */,
+				291755D21A232AD900F0FC61 /* IPSujectUpload.m */,
+				291755D31A232AD900F0FC61 /* IPUnderLineLabel.h */,
+				291755D41A232AD900F0FC61 /* IPUnderLineLabel.m */,
+				291755D51A232AD900F0FC61 /* IPCommentCell.h */,
+				291755D61A232AD900F0FC61 /* IPCommentCell.m */,
+				291755D71A232AD900F0FC61 /* IPCommentCell.xib */,
+				291755D81A232AD900F0FC61 /* IPDetailCell.h */,
+				291755D91A232AD900F0FC61 /* IPDetailCell.m */,
+				291755DA1A232AD900F0FC61 /* IPDetailCell.xib */,
+				291755DB1A232AD900F0FC61 /* IPResourceCell.h */,
+				291755DC1A232AD900F0FC61 /* IPResourceCell.m */,
+				291755DD1A232AD900F0FC61 /* IPResourceCell.xib */,
+			);
+			name = iPhone;
+			sourceTree = "<group>";
+		};
 		29B3542F18B2F8130079184B /* BackgroundRunner */ = {
 			isa = PBXGroup;
 			children = (
@@ -2071,6 +2195,7 @@
 		29F13E191964EE4000482D3D /* Subject */ = {
 			isa = PBXGroup;
 			children = (
+				299756C41A23269A00EA1490 /* iPhone */,
 				295C38621987A7640068AB52 /* EmotionView */,
 				295C38371987A57C0068AB52 /* Mp3_convert */,
 				29F13E1A1964F06600482D3D /* SubjectListViewController.h */,
@@ -2214,8 +2339,10 @@
 				295C38FC1987A79B0068AB52 /* 72.gif in Resources */,
 				295C38D51987A79B0068AB52 /* 33.gif in Resources */,
 				295C3904198874EC0068AB52 /* ActivityDetailViewController.xib in Resources */,
+				291755EF1A232AD900F0FC61 /* IPSubJectDetailCommentViewController.xib in Resources */,
 				295C38C61987A79B0068AB52 /* 18.gif in Resources */,
 				2995583A19862C550010CF8F /* ResourceCommentViewController.xib in Resources */,
+				291755EA1A232AD900F0FC61 /* IPSubJectFileListViewController.xib in Resources */,
 				295C38F61987A79B0068AB52 /* 66.gif in Resources */,
 				29955811198208C10010CF8F /* sub_voiceInput_down.png in Resources */,
 				29135EBB188CF35900A951CE /* guide3-.png in Resources */,
@@ -2246,6 +2373,7 @@
 				295C38ED1987A79B0068AB52 /* 57.gif in Resources */,
 				295C38F21987A79B0068AB52 /* 62.gif in Resources */,
 				295C3909198875320068AB52 /* ResourceFinderViewController.xib in Resources */,
+				291755DF1A232AD900F0FC61 /* IPNewSubJectViewControlller.xib in Resources */,
 				295C38B91987A79B0068AB52 /* 5.gif in Resources */,
 				29135ED2188CF35900A951CE /* menu_2@2x.png in Resources */,
 				29955800198208C10010CF8F /* del_ico_sel.png in Resources */,
@@ -2255,6 +2383,7 @@
 				29C0D54718CDB70400056CB9 /* read_nor@2x.png in Resources */,
 				29879C101A145F4200DF34D6 /* nav_bk_iphone@2x.png in Resources */,
 				29955817198208C10010CF8F /* mycreate.png in Resources */,
+				291755E51A232AD900F0FC61 /* IPSubjectUserListViewController.xib in Resources */,
 				29135F06188CF35900A951CE /* title_allstart@2x.png in Resources */,
 				29135ED1188CF35900A951CE /* menu_1@2x.png in Resources */,
 				29135EB5188CF35900A951CE /* guide1.png in Resources */,
@@ -2278,6 +2407,7 @@
 				295C38E21987A79B0068AB52 /* 46.gif in Resources */,
 				29135F01188CF35900A951CE /* startpage-.png in Resources */,
 				299557FF198208C10010CF8F /* del_ico_nor.png in Resources */,
+				291755F71A232AD900F0FC61 /* IPResourceCell.xib in Resources */,
 				29135EA3188CF35900A951CE /* del_nor@2x.png in Resources */,
 				295C38C81987A79B0068AB52 /* 20.gif in Resources */,
 				5FCBABCC1A22C7640005DF05 /* menu_only_1.png in Resources */,
@@ -2299,6 +2429,7 @@
 				295C38D91987A79B0068AB52 /* 37.gif in Resources */,
 				2933E48419C1A665000C6589 /* address_green_tel.png in Resources */,
 				295C38D81987A79B0068AB52 /* 36.gif in Resources */,
+				291755E11A232AD900F0FC61 /* IPSubjectListForChooseViewController.xib in Resources */,
 				29135EE0188CF35900A951CE /* nav_send_se@2x.png in Resources */,
 				295C38591987A5DA0068AB52 /* mic_normal_358x358@2x.png in Resources */,
 				29135F10188CF35900A951CE /* title_bt_sort_nor@2x.png in Resources */,
@@ -2327,6 +2458,7 @@
 				29955818198208C10010CF8F /* closed.png in Resources */,
 				29C0D54F18CDB70400056CB9 /* title_alldel@2x.png in Resources */,
 				29135F15188CF35900A951CE /* title_bt_upload_se@2x.png in Resources */,
+				291755F51A232AD900F0FC61 /* IPDetailCell.xib in Resources */,
 				295C38BB1987A79B0068AB52 /* 7.gif in Resources */,
 				29518FB21A0B49F40086C950 /* Bt_LoginNor.png in Resources */,
 				29135EDC188CF35900A951CE /* nav_more_nor@2x.png in Resources */,
@@ -2401,6 +2533,7 @@
 				298D28FE195274D2002EC6AC /* unFileShareSelected@2x.png in Resources */,
 				29135EE3188CF35900A951CE /* nav_trans_nor@2x.png in Resources */,
 				29135EE6188CF35900A951CE /* oper_bt_nor.png in Resources */,
+				291755E31A232AD900F0FC61 /* IPSendToSubJectViewFromFileController.xib in Resources */,
 				2933E48719C1A665000C6589 /* address_more_top_search.png in Resources */,
 				2933E48C19C1A665000C6589 /* address_searchBtn.png in Resources */,
 				299558351985E6670010CF8F /* PublishResourceCell.xib in Resources */,
@@ -2477,6 +2610,7 @@
 				29955809198208C10010CF8F /* sub_commentBtn_down.png in Resources */,
 				29135EE5188CF35900A951CE /* oper_bk@2x.png in Resources */,
 				29518FAD1A0B49CE0086C950 /* Bk_Login.png in Resources */,
+				291755F31A232AD900F0FC61 /* IPCommentCell.xib in Resources */,
 				29135EDD188CF35900A951CE /* nav_more_se@2x.png in Resources */,
 				29187854187D5A6F00577921 /* nothing.mp3 in Resources */,
 				29C0D54E18CDB70400056CB9 /* icon_hasnew_tag@2x.png in Resources */,
@@ -2587,7 +2721,9 @@
 				295C384C1987A5920068AB52 /* MLAudioMeterObserver.m in Sources */,
 				295ACA9E19873ACD00031826 /* ResourceCommentCell.m in Sources */,
 				299CFC8E186811680060855B /* PasswordButton.m in Sources */,
+				291755F21A232AD900F0FC61 /* IPCommentCell.m in Sources */,
 				294EB4FC18604F40006E6E96 /* YNNavigationController.m in Sources */,
+				291755F11A232AD900F0FC61 /* IPUnderLineLabel.m in Sources */,
 				295C38471987A5920068AB52 /* MessageCacheFileUtil.m in Sources */,
 				2982E100186154A3009CB82D /* SqlliteManager.m in Sources */,
 				2918784F187D01B900577921 /* OpenFileViewController.m in Sources */,
@@ -2595,6 +2731,7 @@
 				295C38681987A7730068AB52 /* EmotionView.m in Sources */,
 				2995581B198223B10010CF8F /* SubUserListViewController.m in Sources */,
 				2982DFD9186150C8009CB82D /* FileListViewController.m in Sources */,
+				291755E91A232AD900F0FC61 /* IPSubJectFileListViewController.m in Sources */,
 				29842424185ED680002AC1D0 /* Configuratioin.m in Sources */,
 				295C384B1987A5920068AB52 /* MLAudioRecorder.m in Sources */,
 				2995583919862C550010CF8F /* ResourceCommentViewController.m in Sources */,
@@ -2611,8 +2748,10 @@
 				2933E44D19C18D79000C6589 /* ContactDetailView.m in Sources */,
 				296B7636197CE5FA008D0C9C /* SubjectResourceCell.m in Sources */,
 				294EB4F118604E68006E6E96 /* SCBEmailManager.m in Sources */,
+				291755DE1A232AD900F0FC61 /* IPNewSubJectViewControlller.m in Sources */,
 				2981E92F196D35FD003E346B /* SubjectInfoViewController.m in Sources */,
 				2982E102186154A3009CB82D /* UserInfo.m in Sources */,
+				291755FA1A232AEA00F0FC61 /* IPSCBSubJectManager.m in Sources */,
 				2982E061186152F5009CB82D /* QLBrowserViewController.m in Sources */,
 				2982DFF81861518D009CB82D /* UserListViewController.m in Sources */,
 				2982E0AB186152FE009CB82D /* QBImagePickerFooterView.m in Sources */,
@@ -2624,6 +2763,8 @@
 				299558341985E6670010CF8F /* PublishResourceCell.m in Sources */,
 				2982E0E2186153C6009CB82D /* CustomViewController.m in Sources */,
 				295C38461987A5920068AB52 /* LCVoiceHud.m in Sources */,
+				291755EB1A232AD900F0FC61 /* IPSubJectListTableViewCell.m in Sources */,
+				291755E71A232AD900F0FC61 /* IPSubjectDetailDynamicTableViewCell.m in Sources */,
 				2982DFBD18614507009CB82D /* LoginViewController.m in Sources */,
 				294EB4ED18604E68006E6E96 /* SCBAccountManager.m in Sources */,
 				2982DFCC18614DE7009CB82D /* MySplitViewController.m in Sources */,
@@ -2635,6 +2776,8 @@
 				29A2137E19C7BFDC00D5C670 /* NothingViewController.m in Sources */,
 				298423DB185ECE1F002AC1D0 /* AppDelegate.m in Sources */,
 				2982E052186152A8009CB82D /* UploadViewCell.m in Sources */,
+				291755E41A232AD900F0FC61 /* IPSubjectUserListViewController.m in Sources */,
+				291755E21A232AD900F0FC61 /* IPSendToSubJectViewFromFileController.m in Sources */,
 				2995583E19863D5E0010CF8F /* ShareToSubjectViewController.m in Sources */,
 				295C390D198888BA0068AB52 /* ResourceFileCell.m in Sources */,
 				298423D7185ECE1F002AC1D0 /* main.m in Sources */,
@@ -2645,25 +2788,32 @@
 				295C38491987A5920068AB52 /* CafRecordWriter.m in Sources */,
 				2933E45119C18D79000C6589 /* AdressBookListViewController.m in Sources */,
 				29F13E1C1964F06600482D3D /* SubjectListViewController.m in Sources */,
+				291755ED1A232AD900F0FC61 /* IPSubJectNewDetailViewController.m in Sources */,
 				2982E095186152FE009CB82D /* DownManager.m in Sources */,
 				2982E0C318615351009CB82D /* SettingViewController.m in Sources */,
 				294EB4F618604F32006E6E96 /* YNFunctions.m in Sources */,
+				291755F61A232AD900F0FC61 /* IPResourceCell.m in Sources */,
 				2933E45B19C190E5000C6589 /* CutomNothingView.m in Sources */,
 				2933E44B19C18D79000C6589 /* ChineseString.m in Sources */,
 				2982DFF518615188009CB82D /* SharedEmailViewController.m in Sources */,
 				299CFC8B186811380060855B /* PasswordManager.m in Sources */,
+				291755E01A232AD900F0FC61 /* IPSubjectListForChooseViewController.m in Sources */,
 				2982E0BC1861532B009CB82D /* SFHFKeychainUtils.m in Sources */,
 				2982DFE918615169009CB82D /* TITokenField.m in Sources */,
 				294EB4FF18604F64006E6E96 /* MF_Base64Additions.m in Sources */,
 				2982E10818618089009CB82D /* DetailViewController.m in Sources */,
+				291755F41A232AD900F0FC61 /* IPDetailCell.m in Sources */,
 				2982DFF218615183009CB82D /* SendEmailViewController.m in Sources */,
+				291755E81A232AD900F0FC61 /* IPSubJectDetailViewController.m in Sources */,
 				29F1DDB7186BC467001CC8B1 /* PartitionViewController.m in Sources */,
 				295C3903198874EC0068AB52 /* ActivityDetailViewController.m in Sources */,
 				294EB4EE18604E68006E6E96 /* SCBDownloader.m in Sources */,
 				294EB4F018604E68006E6E96 /* SCBFileManager.m in Sources */,
+				291755F01A232AD900F0FC61 /* IPSujectUpload.m in Sources */,
 				2982E0EB186153C6009CB82D /* NSString+Format.m in Sources */,
 				29955843198656C60010CF8F /* SubjectListForChooseViewController.m in Sources */,
 				2982E10718618089009CB82D /* MasterViewController.m in Sources */,
+				291755EC1A232AD900F0FC61 /* IPSubJectListViewController.m in Sources */,
 				2933E45E19C19115000C6589 /* SCBAddressBookManager.m in Sources */,
 				2933E44F19C18D79000C6589 /* contactTableViewCell.m in Sources */,
 				2982E0AA186152FE009CB82D /* QBImagePickerController.m in Sources */,
@@ -2690,9 +2840,11 @@
 				2933E45819C18F60000C6589 /* AddressBookDept.m in Sources */,
 				2982E0A6186152FE009CB82D /* QBAssetCollectionViewController.m in Sources */,
 				2982E0A7186152FE009CB82D /* QBImageFileViewController.m in Sources */,
+				291755E61A232AD900F0FC61 /* IPSendToSubJectViewController.m in Sources */,
 				2982DFDC186150CF009CB82D /* SelectFileListViewController.m in Sources */,
 				2982E097186152FE009CB82D /* MusicPlayerViewController.m in Sources */,
 				2982DFEC18615178009CB82D /* EmailListViewController.m in Sources */,
+				291755EE1A232AD900F0FC61 /* IPSubJectDetailCommentViewController.m in Sources */,
 				2981E932196E6163003E346B /* SCBSubjectManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

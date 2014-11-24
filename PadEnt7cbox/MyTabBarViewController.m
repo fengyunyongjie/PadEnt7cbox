@@ -12,6 +12,7 @@
 #import "UpDownloadViewController.h"
 #import "EmailListViewController.h"
 #import "SubjectListViewController.h"
+#import "IPSubJectListViewController.h"
 #import "SCBEmailManager.h"
 #import "SCBSubjectManager.h"
 #import "AdressBookListViewController.h"
@@ -145,10 +146,29 @@
     [more.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemNorColor forKey:UITextAttributeTextColor] forState:UIControlStateNormal];
     
     
+    
+    UINavigationController *vc6=[[UINavigationController alloc] init];
+    [vc6.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+    [vc6.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
+    //    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+    [vc6.navigationBar setTintColor:[UIColor whiteColor]];
+    IPSubJectListViewController * vc66=[[IPSubJectListViewController alloc] init];
+    [vc6 pushViewController:vc66 animated:YES];
+    vc66.title=@"专题";
+    vc6.title=@"专题";
+    //vc1.tabBarItem=[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemBookmarks tag:0];
+    [vc6.tabBarItem setFinishedSelectedImage:[UIImage imageNamed:@"nav_subject_se.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"nav_subject_nor.png"]];
+    
     //[vc1.tabBarItem setImage:[UIImage imageNamed: @"nav_selected.png"]];
     
     //2013年10月29日，隐掉“文件收发”模块; by FengYN
-    self.viewControllers=@[vc1,vc3,vc5,vc2,more];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+        self.viewControllers=@[vc1,vc3,vc6,vc2,more];
+    }else
+    {
+        self.viewControllers=@[vc1,vc3,vc5,vc2,more];
+    }
+    
     self.selectedIndex=0;
     if([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad)
     {

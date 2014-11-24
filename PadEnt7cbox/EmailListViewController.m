@@ -586,7 +586,8 @@ enum{
         float boderHeigth = 20;
         float labelHeight = 40;
         float imageHeight = 100;
-        CGRect nothingRect = CGRectMake(0, 0, 320, 768-164);
+        CGFloat h = [UIScreen mainScreen].bounds.size.height;
+        CGRect nothingRect = CGRectMake(0, 0, 320, h-164);
         self.nothingView = [[CutomNothingView alloc] initWithFrame:nothingRect boderHeigth:boderHeigth labelHeight:labelHeight imageHeight:imageHeight];
         [self.tableView addSubview:self.nothingView];
         [self.tableView bringSubviewToFront:self.nothingView];

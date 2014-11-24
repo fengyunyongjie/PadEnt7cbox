@@ -171,6 +171,14 @@ typedef enum{
 }
 - (void)viewDidLayoutSubviews
 {
+    NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
+    if (self.isSearch&&!self.tableView.isEditing)
+    {
+        self.tableView.frame=CGRectMake(0, 44, 320, self.view.frame.size.height-44);
+    }else
+    {
+        self.tableView.frame=CGRectMake(0, 0, 320, self.view.frame.size.height);
+    }
     if (self.shareType==kShareTypeShare) {
         int tabBarOffset = self.tabBarController == nil ?  0 : self.tabBarController.tabBar.frame.size.height;
         [self.tableView setFrame:self.view.frame];
@@ -384,7 +392,7 @@ typedef enum{
         NSLog(@"tableView:%@",NSStringFromCGRect(self.tableView.frame));
         [self.searchBar endEditing:YES];
         [UIView animateWithDuration:0.25f animations:^(){
-            self.tableView.frame=CGRectMake(0, 0, 320, 648);
+            self.tableView.frame=CGRectMake(0, 0, 320, self.self.view.bounds.size.height);
             self.searchView.hidden=YES;
             NSLog(@"tableView:%@",NSStringFromCGRect(self.tableView.frame));
         }];
@@ -396,7 +404,7 @@ typedef enum{
 //        }
         NSLog(@"tableView:%@",NSStringFromCGRect(self.tableView.frame));
         [UIView animateWithDuration:0.25f animations:^(){
-            self.tableView.frame=CGRectMake(0,44, 320, 604);
+            self.tableView.frame=CGRectMake(0, 44, 320, self.self.view.bounds.size.height-44);
             self.searchView.hidden=NO;
             NSLog(@"tableView:%@",NSStringFromCGRect(self.tableView.frame));
         }];
@@ -790,9 +798,9 @@ typedef enum{
         return;
     }
     
-    CGRect r=self.view.frame;
-    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
-    self.view.frame=r;
+//    CGRect r=self.view.frame;
+//    r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
+//    self.view.frame=r;
     
     NSLog(@"self.view.frame:%@",NSStringFromCGRect(self.view.frame));
     NSLog(@"self.tableview.frame:%@",NSStringFromCGRect(self.tableView.frame));
@@ -846,7 +854,7 @@ typedef enum{
     }
     
     if (!self.moreEditBar) {
-        self.moreEditBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-56, 320, 56)];
+        self.moreEditBar=[[UIToolbar alloc] initWithFrame:CGRectMake(0, self.tabBarController.view.frame.size.height-56, 320, 56)];
         [self.moreEditBar setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
         if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
             [self.moreEditBar setBarTintColor:[UIColor blueColor]];
@@ -2367,20 +2375,23 @@ noDirSend:
                 }
                 tableViewSelectedFid = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
                 if (![self hasCmdInFcmd:@"preview"]) {
-                    OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
-                    openFileView.isNotLook = YES;
-                    DetailViewController *viewCon=[[DetailViewController alloc] init];
-                    viewCon.isFileManager = YES;
-                    [viewCon removeAllView];
-                    [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
-                    [viewCon.view addSubview:openFileView.view];
-                    [viewCon addChildViewController:openFileView];
-                    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
-                    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-                    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
-                    [nav.navigationBar setTintColor:[UIColor whiteColor]];
-                    NSArray * viewControllers=self.splitViewController.viewControllers;
-                    self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
+                    if([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad)
+                    {
+                        OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
+                        openFileView.isNotLook = YES;
+                        DetailViewController *viewCon=[[DetailViewController alloc] init];
+                        viewCon.isFileManager = YES;
+                        [viewCon removeAllView];
+                        [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
+                        [viewCon.view addSubview:openFileView.view];
+                        [viewCon addChildViewController:openFileView];
+                        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+                        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+                        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+                        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+                        NSArray * viewControllers=self.splitViewController.viewControllers;
+                        self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
+                    }
                     return;
                 }
                 int row = 0;
@@ -2416,28 +2427,47 @@ noDirSend:
                     }
                     if([tableArray count]>0)
                     {
-                        PartitionViewController *look = [[PartitionViewController alloc] init];
-                        [look setCurrPage:row];
-                        [look setTableArray:tableArray];
-                        if ([self.roletype isEqualToString:@"2"]) {
-                            look.isHaveDelete = YES;
-                            look.isHaveDownload=YES;
-                        }else{
-                            look.isHaveDelete=[self hasCmdInFcmd:@"del"];
-                            look.isHaveDownload=[self hasCmdInFcmd:@"download"];
+                        if([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad)
+                        {
+                            PartitionViewController *look = [[PartitionViewController alloc] init];
+                            [look setCurrPage:row];
+                            [look setTableArray:tableArray];
+                            if ([self.roletype isEqualToString:@"2"]) {
+                                look.isHaveDelete = YES;
+                                look.isHaveDownload=YES;
+                            }else{
+                                look.isHaveDelete=[self hasCmdInFcmd:@"del"];
+                                look.isHaveDownload=[self hasCmdInFcmd:@"download"];
+                            }
+                            DetailViewController *viewCon=[[DetailViewController alloc] init];
+                            viewCon.isFileManager = YES;
+                            [viewCon removeAllView];
+                            [viewCon showPhotoView:fname withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
+                            [viewCon.view addSubview:look.view];
+                            [viewCon addChildViewController:look];
+                            UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+                            [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+                            [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+                            [nav.navigationBar setTintColor:[UIColor whiteColor]];
+                            NSArray * viewControllers=self.splitViewController.viewControllers;
+                            self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
+                        }else
+                        {
+                            PhotoLookViewController *look = [[PhotoLookViewController alloc] init];
+                            [look setCurrPage:row];
+                            [look setTableArray:tableArray];
+                            if ([self.roletype isEqualToString:@"2"]) {
+                                look.isHaveDelete = YES;
+//                                look.isHaveDownload=YES;
+                            }else{
+                                look.isHaveDelete=[self hasCmdInFcmd:@"del"];
+//                                look.isHaveDownload=[self hasCmdInFcmd:@"download"];
+                            }
+                            [self presentViewController:look animated:YES completion:^{
+//                                [[UIApplication sharedApplication] setStatusBarHidden:YES];
+                            }];
+
                         }
-                        DetailViewController *viewCon=[[DetailViewController alloc] init];
-                        viewCon.isFileManager = YES;
-                        [viewCon removeAllView];
-                        [viewCon showPhotoView:fname withIsHave:look.isHaveDelete withIsHaveDown:look.isHaveDownload];
-                        [viewCon.view addSubview:look.view];
-                        [viewCon addChildViewController:look];
-                        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
-                        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-                        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
-                        [nav.navigationBar setTintColor:[UIColor whiteColor]];
-                        NSArray * viewControllers=self.splitViewController.viewControllers;
-                        self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
                     }
                 }
             }
@@ -2451,22 +2481,24 @@ noDirSend:
                 }
                 tableViewSelectedFid = [NSString formatNSStringForOjbect:[dic objectForKey:@"fid"]];
                 if (![self hasCmdInFcmd:@"preview"]) {
-                    OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
-                    openFileView.isNotLook = YES;
-                    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-
-                    DetailViewController *viewCon=[[DetailViewController alloc] init];
-                    viewCon.isFileManager = YES;
-                    [viewCon removeAllView];
-                    [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
-                    [viewCon.view addSubview:openFileView.view];
-                    [viewCon addChildViewController:openFileView];
-                    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
-                    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-                    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
-                    [nav.navigationBar setTintColor:[UIColor whiteColor]];
-                    NSArray * viewControllers=self.splitViewController.viewControllers;
-                    self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
+                    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+                        OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
+                        openFileView.isNotLook = YES;
+                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                        
+                        DetailViewController *viewCon=[[DetailViewController alloc] init];
+                        viewCon.isFileManager = YES;
+                        [viewCon removeAllView];
+                        [viewCon showOtherView:openFileView.title withIsHave:NO withIsHaveDown:NO];
+                        [viewCon.view addSubview:openFileView.view];
+                        [viewCon addChildViewController:openFileView];
+                        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+                        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+                        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+                        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+                        NSArray * viewControllers=self.splitViewController.viewControllers;
+                        self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
+                    }
                     return;
                 }
                 NSString *file_id=[dic objectForKey:@"fid"];
@@ -2482,23 +2514,52 @@ noDirSend:
                     isHaveDelete=[self hasCmdInFcmd:@"del"];
                     isHaveDownload=[self hasCmdInFcmd:@"download"];
                 }
-                OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
-                openFileView.dataDic = dic;
-                openFileView.title = f_name;
-                
-                DetailViewController *viewCon=[[DetailViewController alloc] init];
-                viewCon.isFileManager = YES;
-                [viewCon removeAllView];
-                viewCon.dataDic=dic;
-                [viewCon showOtherView:openFileView.title withIsHave:isHaveDelete withIsHaveDown:NO];
-                [viewCon.view addSubview:openFileView.view];
-                [viewCon addChildViewController:openFileView];
-                UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
-                [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-                [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
-                [nav.navigationBar setTintColor:[UIColor whiteColor]];
-                NSArray * viewControllers=self.splitViewController.viewControllers;
-                self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
+                if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+                    OpenFileViewController *openFileView = [[OpenFileViewController alloc] init];
+                    openFileView.dataDic = dic;
+                    openFileView.title = f_name;
+                    
+                    DetailViewController *viewCon=[[DetailViewController alloc] init];
+                    viewCon.isFileManager = YES;
+                    [viewCon removeAllView];
+                    viewCon.dataDic=dic;
+                    [viewCon showOtherView:openFileView.title withIsHave:isHaveDelete withIsHaveDown:NO];
+                    [viewCon.view addSubview:openFileView.view];
+                    [viewCon addChildViewController:openFileView];
+                    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+                    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+                    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+                    [nav.navigationBar setTintColor:[UIColor whiteColor]];
+                    NSArray * viewControllers=self.splitViewController.viewControllers;
+                    self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
+                }else
+                {
+                    NSString *file_id=[dic objectForKey:@"fid"];
+                    NSString *f_name=[dic objectForKey:@"fname"];
+                    NSString *documentDir = [YNFunctions getFMCachePath];
+                    NSArray *array=[f_name componentsSeparatedByString:@"/"];
+                    NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
+                    [NSString CreatePath:createPath];
+                    NSString *savedPath = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
+                    if ([[NSFileManager defaultManager] fileExistsAtPath:savedPath]) {
+                        QLBrowserViewController *browser=[[QLBrowserViewController alloc] init];
+                        browser.dataSource=browser;
+                        browser.delegate=browser;
+                        browser.title=f_name;
+                        browser.filePath=savedPath;
+                        browser.fileName=f_name;
+                        browser.currentPreviewItemIndex=0;
+                        [self presentViewController:browser animated:YES completion:nil];
+                    }else
+                    {
+                        OtherBrowserViewController *otherBrowser=[[OtherBrowserViewController alloc] initWithNibName:@"OtherBrowser" bundle:nil];
+                        otherBrowser.dataDic=dic;
+                        NSString *f_name=[dic objectForKey:@"fname"];
+                        otherBrowser.title=f_name;
+                        [self presentViewController:otherBrowser animated:YES completion:nil];
+                    }
+
+                }
             }
         }
     }
@@ -3584,58 +3645,61 @@ noDirSend:
     if (self.shareType==kShareTypeShare) {
         return;
     }
-    CGRect view_rect = self.view.frame;
-    view_rect.size.width = 320;
-    [self.view setFrame:view_rect];
-    CGRect editView_rect = self.moreEditBar.frame;
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            editView_rect.origin.y = 768-56;
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        CGRect view_rect = self.view.frame;
+        view_rect.size.width = 320;
+        [self.view setFrame:view_rect];
+        CGRect editView_rect = self.moreEditBar.frame;
+        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+        {
+            if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+                editView_rect.origin.y = 768-56;
+            }
+            else
+            {
+                editView_rect.origin.y = 768-56;
+            }
         }
         else
         {
-            editView_rect.origin.y = 768-56;
+            if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+                editView_rect.origin.y = 1024-56;
+            }
+            else
+            {
+                editView_rect.origin.y = 1024-56;
+            }
         }
-    }
-    else
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            editView_rect.origin.y = 1024-56;
+        [self.moreEditBar setFrame:editView_rect];
+        
+        
+        CGRect self_rect = self.tableView.frame;
+        self_rect.size.width = 320;
+        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+        {
+            if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+                self_rect.size.height = 768-56-64;
+            }
+            else
+            {
+                self_rect.size.height = 768-56-64;
+            }
         }
         else
         {
-            editView_rect.origin.y = 1024-56;
+            if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+                self_rect.size.height = 1024-56-64;
+            }
+            else
+            {
+                self_rect.size.height = 1024-56-64;
+            }
+        }
+        if (!self.isSearch) {
+            [self.tableView setFrame:self_rect];
         }
     }
-    [self.moreEditBar setFrame:editView_rect];
-    
-    
-    CGRect self_rect = self.tableView.frame;
-    self_rect.size.width = 320;
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self_rect.size.height = 768-56-64;
-        }
-        else
-        {
-            self_rect.size.height = 768-56-64;
-        }
-    }
-    else
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self_rect.size.height = 1024-56-64;
-        }
-        else
-        {
-            self_rect.size.height = 1024-56-64;
-        }
-    }
-    if (!self.isSearch) {
-        [self.tableView setFrame:self_rect];
-    }
+
 }
 
 #pragma mark 当用户切换图片是，视图选择项也发生变化

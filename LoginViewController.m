@@ -466,39 +466,39 @@ enum{
      Animate the resize so that it's in sync with the appearance of the keyboard.
      */
     
-    [UIView beginAnimations:@"MoveUp" context:nil];
-    [UIView setAnimationDuration:0.2f];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    CGRect r=self.view.frame;
-    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
-    switch (toInterfaceOrientation) {
-        case UIInterfaceOrientationLandscapeRight:
-            r.origin.x=100;
-            break;
-        case UIInterfaceOrientationLandscapeLeft:
-            r.origin.x=-100;
-            break;
-        case UIInterfaceOrientationPortrait:
-            r.origin.y=-100;
-            break;
-        case UIInterfaceOrientationPortraitUpsideDown:
-            r.origin.y=100;
-            break;
-        default:
-            break;
-    }
-    [self.view setFrame:r];
-    [UIView commitAnimations];
+//    [UIView beginAnimations:@"MoveUp" context:nil];
+//    [UIView setAnimationDuration:0.2f];
+//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//    CGRect r=self.view.frame;
+//    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
+//    switch (toInterfaceOrientation) {
+//        case UIInterfaceOrientationLandscapeRight:
+//            r.origin.x=100;
+//            break;
+//        case UIInterfaceOrientationLandscapeLeft:
+//            r.origin.x=-100;
+//            break;
+//        case UIInterfaceOrientationPortrait:
+//            r.origin.y=-100;
+//            break;
+//        case UIInterfaceOrientationPortraitUpsideDown:
+//            r.origin.y=100;
+//            break;
+//        default:
+//            break;
+//    }
+//    [self.view setFrame:r];
+//    [UIView commitAnimations];
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
-    [UIView beginAnimations:@"MoveDown" context:nil];
-    [UIView setAnimationDuration:0.2f];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    CGRect r=self.view.frame;
-    r.origin.y=0;
-    r.origin.x=0;
-    [self.view setFrame:r];
-    [UIView commitAnimations];
+//    [UIView beginAnimations:@"MoveDown" context:nil];
+//    [UIView setAnimationDuration:0.2f];
+//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//    CGRect r=self.view.frame;
+//    r.origin.y=0;
+//    r.origin.x=0;
+//    [self.view setFrame:r];
+//    [UIView commitAnimations];
 }
 @end

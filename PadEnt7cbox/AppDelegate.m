@@ -20,6 +20,7 @@
 #import "SCBoxConfig.h"
 #import "MF_Base64Additions.h"
 #import "BackgroundRunner.h"
+#import "MyTabBarViewController.h"
 
 typedef enum{
     kAlertTypeNewVersion,
@@ -79,10 +80,8 @@ typedef enum{
     
     NSString *vinfo=[[NSUserDefaults standardUserDefaults]objectForKey:VERSION];
     if (!vinfo) {
-        WelcomeViewController *welcomeView = [[WelcomeViewController alloc] init];
-        [self.window.rootViewController presentViewController:welcomeView animated:NO completion:nil];
-//        [[WelcomeViewController sharedUser] showWelCome];
-        //        [[NSUserDefaults standardUserDefaults] setObject:VERSION forKey:VERSION];
+//        WelcomeViewController *welcomeView = [[WelcomeViewController alloc] init];
+//        [self.window.rootViewController presentViewController:welcomeView animated:NO completion:nil];
     }
     [self checkUpdate];
     return YES;
@@ -194,8 +193,13 @@ typedef enum{
 }
 -(void)finishLogin
 {
-    self.splitVC=[[MySplitViewController alloc] initWithNibName:@"MySplitViewController" bundle:nil];
-    self.window.rootViewController=self.splitVC;
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        self.splitVC=[[MySplitViewController alloc] initWithNibName:@"MySplitViewController" bundle:nil];
+        self.window.rootViewController=self.splitVC;
+    }else{
+        self.myTabBarVC=[[MyTabBarViewController alloc] init];
+        self.window.rootViewController=self.myTabBarVC;
+    }
 }
 -(void)finishLogout
 {

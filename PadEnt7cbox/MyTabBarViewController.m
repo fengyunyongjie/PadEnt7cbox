@@ -70,18 +70,18 @@
     UINavigationController *vc1=[[UINavigationController alloc] init];
     [vc1.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
     [vc1.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:UITextAttributeTextColor]];
-//    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
+    [vc1.navigationBar setBackgroundColor:[UIColor colorWithRed:102/255.0f green:163/255.0f blue:222/255.0f alpha:1]];
     [vc1.navigationBar setTintColor:[UIColor whiteColor]];
-    MainViewController * vc11=[[MainViewController alloc] init];
+    MainViewController *vc11=[[MainViewController alloc] init];
     [vc1 pushViewController:vc11 animated:YES];
     vc11.title=@"文件管理";
     vc1.title=@"文件管理";
-    //vc1.tabBarItem=[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemBookmarks tag:0];
     [vc1.tabBarItem setFinishedSelectedImage:[UIImage imageNamed:@"nav_file_se.png"] withFinishedUnselectedImage:[UIImage imageNamed:@"nav_file_nor.png"]];
-//    [vc1.tabBarItem setSelectedImage:[UIImage imageNamed:@"nav_selected.png"]];
     [vc1.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemSeColor forKey:UITextAttributeTextColor] forState:UIControlStateSelected];
     [vc1.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObject:itemNorColor forKey:UITextAttributeTextColor] forState:UIControlStateNormal];
-    //[vc1.tabBarItem setImage:[UIImage imageNamed: @"nav_selected.png"]];
+    
+
+    
     UINavigationController *vc2=[[UINavigationController alloc] init];
     UpDownloadViewController *vc22=[[UpDownloadViewController alloc] init];
     vc22.title=@"文件传输";
@@ -150,8 +150,12 @@
     //2013年10月29日，隐掉“文件收发”模块; by FengYN
     self.viewControllers=@[vc1,vc3,vc5,vc2,more];
     self.selectedIndex=0;
-    
-    [self.tabBar setBackgroundImage:[UIImage imageNamed:@"nav_bk.png"]];
+    if([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad)
+    {
+        [self.tabBar setBackgroundImage:[UIImage imageNamed:@"nav_bk.png"]];
+    }else{
+        [self.tabBar setBackgroundImage:[UIImage imageNamed:@"nav_bk_iphone.png"]];
+    }
     NSLog(@"self.tabbar:%@",NSStringFromCGRect(self.tabBar.frame));
     //[self.tabBar setBarStyle:UIBarStyleBlack];
     //[self.tabBar setAlpha:0.65f];

@@ -1036,15 +1036,17 @@ typedef enum{
     [[LTHPasscodeViewController sharedUser] hiddenPassword];
     [appDelegate finishLogout];
     
-    DetailViewController *viewCon = [[DetailViewController alloc] init];
-    viewCon.isFileManager = YES;
-    [viewCon removeAllView];
-    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
-    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
-    [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
-    [nav.navigationBar setTintColor:[UIColor whiteColor]];
-    NSArray * viewControllers=self.splitViewController.viewControllers;
-    self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        DetailViewController *viewCon = [[DetailViewController alloc] init];
+        viewCon.isFileManager = YES;
+        [viewCon removeAllView];
+        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:viewCon];
+        [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bk_ti.png"] forBarMetrics:UIBarMetricsDefault];
+        [nav.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName]];
+        [nav.navigationBar setTintColor:[UIColor whiteColor]];
+        NSArray * viewControllers=self.splitViewController.viewControllers;
+        self.splitViewController.viewControllers=@[viewControllers.firstObject,nav];
+    }
 }
 #pragma mark - UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex

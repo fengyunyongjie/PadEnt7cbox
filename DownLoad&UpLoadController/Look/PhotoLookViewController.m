@@ -22,7 +22,7 @@
 #define kAlertTagMailAddr 72
 #define kActionSheetTagShare 74
 #define kActionSheetTagDelete 77
-#define iPadWidth 768
+#define iPadWidth self.view.frame.size.width
 
 @interface PhotoLookViewController ()
 @property float scale_;

@@ -779,26 +779,29 @@
     if (self.type==kTypeShare) {
         return;
     }
-    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-    
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49);
-        }else
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        
+        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
         {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49);
+            if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+                self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49);
+            }else
+            {
+                self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 768-49);
+            }
         }
-    }
-    else
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49);
-        }else
+        else
         {
-            self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49);
+            if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
+                self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49);
+            }else
+            {
+                self.tableView.frame=CGRectMake(0, 0, tabbar.view.frame.size.width, 1024-49);
+            }
         }
+
     }
 }
 

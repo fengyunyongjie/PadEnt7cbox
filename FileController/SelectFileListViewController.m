@@ -48,50 +48,31 @@
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    UIInterfaceOrientation toInterfaceOrientation=[self interfaceOrientation];
     self.view.backgroundColor=[UIColor groupTableViewBackgroundColor];
     [self createNothingView];
     self.tableView.backgroundColor=[UIColor whiteColor];
     
+    if (self.tabBarController!=nil) {
+        CGRect r=self.view.frame;
+        r.size.height=self.tabBarController.view.frame.size.height-r.origin.y;
+        r.size.width=320;
+        self.view.frame=r;
+    }
+    
     if (self.type==kSelectTypeShare) {
         [self.toolbar setHidden:YES];
-        self.tableView.frame=self.view.frame;
+        self.tableView.frame=CGRectMake(0, 0, 320, self.view.frame.size.height);
         return;
     }
     if (self.type==kSelectTypeFloderChange||self.type==kSelectTypePublishSubject) {
         [self.toolbar setHidden:YES];
-        self.view.frame=self.view.bounds;
-        self.tableView.frame=self.view.frame;
+//        self.view.frame=self.view.bounds;
+        self.tableView.frame=CGRectMake(0, 0, 320, self.view.frame.size.height);
         return;
     }
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            if (self.tabBarController!=nil) {
-                CGRect r=self.view.frame;
-                r.size.height=768-r.origin.y;
-                r.size.width=320;
-                self.view.frame=r;
-//                self.view.frame=CGRectMake(0, 64, 320, 768-49);
-            }
-            self.tableView.frame=CGRectMake(0, 0, 320, 768-49-64);
-            self.toolbar.frame=CGRectMake(0, 768-49-64, 320, 49);
-        }
-    }
-    else
-    {
-        if ([YNFunctions systemIsLaterThanString:@"7.0"]) {
-            if (self.tabBarController!=nil) {
-                CGRect r=self.view.frame;
-                r.size.height=1024-r.origin.y;
-                r.size.width=320;
-                self.view.frame=r;
-//                self.view.frame=CGRectMake(0, 64, 320, 1024-49);
-            }
-            self.tableView.frame=CGRectMake(0, 0, 320, 1024-49-64);
-            self.toolbar.frame=CGRectMake(0, 1024-49-64, 320, 49);
-        }
-    }
+    
+    self.tableView.frame=CGRectMake(0, 0, 320, self.view.frame.size.height-49);
+    self.toolbar.frame=CGRectMake(0, self.view.frame.size.height-49, 320, 49);
 }
 - (void)viewWillAppear:(BOOL)animated
 {

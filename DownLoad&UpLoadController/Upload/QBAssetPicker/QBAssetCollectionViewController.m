@@ -192,45 +192,14 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    CGRect rect = CGRectMake(0, 0, 320, TableViewHeight);
-    [self.tableView setFrame:rect];
     
-//    CGRect more_rect = self.moreEditBar.frame;
-//    more_rect.origin.y = self.view.frame.size.height-TabBarHeight;
-//    [self.moreEditBar setFrame:more_rect];
-//    //添加底部视图
-//    float bottonHeigth = BottonViewHeight;
-//    bottonView = [[UIView alloc] initWithFrame:CGRectMake(0, bottonHeigth, 320, TabBarHeight)];
-//    UIImageView *botton_image = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, bottonView.frame.size.width, bottonView.frame.size.height)];
-//    [botton_image setImage:[UIImage imageNamed:@"bk_nabottom.png"]];
-//    [bottonView addSubview:botton_image];
-//    
-//    //添加选择文件
-//    CGRect change_rect = CGRectMake(2, 5, 316, 35);
-//    change_myFile_button = [[UIButton alloc] initWithFrame:change_rect];
-//    [change_myFile_button setBackgroundImage:[UIImage imageNamed:@"Bt_SelectFolder.png"] forState:UIControlStateNormal];
-//    [change_myFile_button.titleLabel setTextAlignment:NSTextAlignmentLeft];
-//    [change_myFile_button setTitle:device_name forState:UIControlStateNormal];
-//    [change_myFile_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    [change_myFile_button addTarget:self action:@selector(clicked_changeMyFile:) forControlEvents:UIControlEventTouchUpInside];
-//    [bottonView addSubview:change_myFile_button];
-//    
-//    //添加选定按钮
-//    UIButton *upload_button = [[UIButton alloc] initWithFrame:CGRectMake((320/2-29)/2, 45+(TabBarButtonHeight-29)/2, 29, 29)];
-//    [upload_button setBackgroundImage:[UIImage imageNamed:@"Bt_UploadOk.png"] forState:UIControlStateNormal];
-//    [upload_button setBackgroundImage:[UIImage imageNamed:@"Bt_UploadOkCh.png"] forState:UIControlStateHighlighted];
-//    [upload_button addTarget:self action:@selector(clicked_startUpload:) forControlEvents:UIControlEventTouchUpInside];
-//    [bottonView addSubview:upload_button];
-//    
-//    UIButton *upload_back_button = [[UIButton alloc] initWithFrame:CGRectMake(320/2+(320/2-29)/2, 45+(TabBarButtonHeight-29)/2, 29, 29)];
-//    [upload_back_button setBackgroundImage:[UIImage imageNamed:@"Bt_UploadCancle.png"] forState:UIControlStateNormal];
-//    [upload_back_button setBackgroundImage:[UIImage imageNamed:@"Bt_UploadCancleCh.png"] forState:UIControlStateHighlighted];
-//    [upload_back_button addTarget:self action:@selector(clicked_uploadStop:) forControlEvents:UIControlEventTouchUpInside];
-//    [bottonView addSubview:upload_back_button];
-//    
-//    [self.view addSubview:bottonView];
 }
 
+-(void)viewDidLayoutSubviews
+{
+    [self.moreEditBar setFrame:CGRectMake(0, self.view.frame.size.height-TabBarHeight, 320, TabBarHeight)];
+    [self.tableView setFrame:CGRectMake(0, 0, 320, TableViewHeight)];
+}
 
 -(void)clicked_back
 {
@@ -778,8 +747,8 @@
     {
         moreEditBar_rect.origin.y = moreEditBar_rect.origin.y+20;
     }
-    [self.moreEditBar setFrame:moreEditBar_rect];
-    [self.tableView setFrame:self_rect];
+//    [self.moreEditBar setFrame:moreEditBar_rect];
+//    [self.tableView setFrame:self_rect];
 }
 
 @end

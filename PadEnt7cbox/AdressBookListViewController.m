@@ -1274,10 +1274,20 @@ static float imageHeight = 100;
     deptArray = [dept getDeptArray:deptArray];
     [dept insertAllAddressBookDeptList:deptArray];
     [self isSelectedLeft:isShowRecent];
+    
     if (self.hud) {
         [self.hud removeFromSuperview];
-        self.hud=nil;
     }
+    self.hud=nil;
+    self.hud=[[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:self.hud];
+    [self.hud show:NO];
+    self.hud.labelText=@"通讯录刷新成功";
+    self.hud.mode=MBProgressHUDModeText;
+    self.hud.margin=10.f;
+    [self.hud show:YES];
+    [self.hud hide:YES afterDelay:1.0f];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 -(void)requestFailAddressBookUser:(NSDictionary *)dictionary

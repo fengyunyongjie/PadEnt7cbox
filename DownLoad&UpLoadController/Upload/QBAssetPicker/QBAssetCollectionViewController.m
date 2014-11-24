@@ -711,7 +711,11 @@
         
         // Set done button state
         [self updateDoneButton];
-        
+        if (self.selectedAssets.count < self.assets.count) {
+            [more_button setTitle:@"全选" forState:UIControlStateNormal];
+        } else {
+            [more_button setTitle:@"取消" forState:UIControlStateNormal];
+        }
         // Update header text
         if (self.showsHeaderButton) {
             if ((selected && self.selectedAssets.count == self.assets.count) ||

@@ -479,6 +479,7 @@
 		29F13E1C1964F06600482D3D /* SubjectListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F13E1B1964F06600482D3D /* SubjectListViewController.m */; };
 		29F1DDB7186BC467001CC8B1 /* PartitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F1DDB6186BC467001CC8B1 /* PartitionViewController.m */; };
 		29FBD5FF1863D27A005F03AC /* login_bt.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5F71863D27A005F03AC /* login_bt.png */; };
+		5FCBABCC1A22C7640005DF05 /* menu_only_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCBABCB1A22C7640005DF05 /* menu_only_1.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1090,6 +1091,7 @@
 		29F1DDB5186BC467001CC8B1 /* PartitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PartitionViewController.h; sourceTree = "<group>"; };
 		29F1DDB6186BC467001CC8B1 /* PartitionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PartitionViewController.m; sourceTree = "<group>"; };
 		29FBD5F71863D27A005F03AC /* login_bt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_bt.png; sourceTree = "<group>"; };
+		5FCBABCB1A22C7640005DF05 /* menu_only_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_only_1.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1138,6 +1140,7 @@
 		29135DEE188CF35800A951CE /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				5FCBABCB1A22C7640005DF05 /* menu_only_1.png */,
 				2933E45F19C1A665000C6589 /* address_white_tel.png */,
 				2933E46019C1A665000C6589 /* address_thumb_default.png */,
 				2933E46119C1A665000C6589 /* address_more_top_edit.png */,
@@ -2252,6 +2255,7 @@
 				299557FF198208C10010CF8F /* del_ico_nor.png in Resources */,
 				29135EA3188CF35900A951CE /* del_nor@2x.png in Resources */,
 				295C38C81987A79B0068AB52 /* 20.gif in Resources */,
+				5FCBABCC1A22C7640005DF05 /* menu_only_1.png in Resources */,
 				29135F1C188CF35900A951CE /* title_more_se@2x.png in Resources */,
 				295ACA9F19873ACD00031826 /* ResourceCommentCell.xib in Resources */,
 				29135F0B188CF35900A951CE /* title_bt_edit_se@2x.png in Resources */,

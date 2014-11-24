@@ -542,20 +542,29 @@ typedef enum{
             [array addObject:btnEdit];
         }
         [array addObject:btnSort];
-        for (int i=0; i<array.count; i++) {
-            UIButton *btn=[array objectAtIndex:i];
-            btn.frame= CGRectMake(0, i*btnSize.height+64, btnSize.width, btnSize.height);
-            if (i==0) {
-                [btn setBackgroundImage:[UIImage imageNamed:@"menu_1.png"] forState:UIControlStateNormal];
-            }else if(i==array.count-1)
-            {
-                [btn setBackgroundImage:[UIImage imageNamed:@"menu_3.png"] forState:UIControlStateNormal];
-            }else
-            {
-                [btn setBackgroundImage:[UIImage imageNamed:@"menu_2.png"] forState:UIControlStateNormal];
+        
+        if (array.count == 1) {
+            UIButton *btn=[array objectAtIndex:0];
+            btn.frame= CGRectMake(0, 64, btnSize.width, btnSize.height);
+            [btn setBackgroundImage:[UIImage imageNamed:@"menu_only_1.png"] forState:UIControlStateNormal];
+             [self.menuView addSubview:btn];
+        } else {
+            for (int i=0; i<array.count; i++) {
+                UIButton *btn=[array objectAtIndex:i];
+                btn.frame= CGRectMake(0, i*btnSize.height+64, btnSize.width, btnSize.height);
+                if (i==0) {
+                    [btn setBackgroundImage:[UIImage imageNamed:@"menu_1.png"] forState:UIControlStateNormal];
+                }else if(i==array.count-1)
+                {
+                    [btn setBackgroundImage:[UIImage imageNamed:@"menu_3.png"] forState:UIControlStateNormal];
+                }else
+                {
+                    [btn setBackgroundImage:[UIImage imageNamed:@"menu_2.png"] forState:UIControlStateNormal];
+                }
+                [self.menuView addSubview:btn];
             }
-            [self.menuView addSubview:btn];
         }
+       
 //        [self.menuView addSubview:btnUpload];
 //        [self.menuView addSubview:btnNewFinder];
 //        [self.menuView addSubview:btnEdit];

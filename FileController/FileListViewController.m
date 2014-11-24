@@ -2468,13 +2468,13 @@ noDirSend:
                             [look setTableArray:tableArray];
                             if ([self.roletype isEqualToString:@"2"]) {
                                 look.isHaveDelete = YES;
-//                                look.isHaveDownload=YES;
+                                look.isHaveDownload=YES;
                             }else{
                                 look.isHaveDelete=[self hasCmdInFcmd:@"del"];
-//                                look.isHaveDownload=[self hasCmdInFcmd:@"download"];
+                                look.isHaveDownload=[self hasCmdInFcmd:@"download"];
                             }
                             [self presentViewController:look animated:YES completion:^{
-//                                [[UIApplication sharedApplication] setStatusBarHidden:YES];
+                                [[UIApplication sharedApplication] setStatusBarHidden:YES];
                             }];
 
                         }

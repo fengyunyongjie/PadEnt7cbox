@@ -33,6 +33,7 @@
 @synthesize scale_,tableArray;
 @synthesize currPage;
 @synthesize isHaveDelete;
+@synthesize isHaveDownload;
 @synthesize linkManager;
 @synthesize selected_id;
 @synthesize hud;
@@ -229,7 +230,7 @@
     self.bottonToolBar = [[UIToolbar alloc] initWithFrame:bottonRect];
     [self.bottonToolBar setBarStyle:UIBarStyleBlackTranslucent];
     
-    if(isHaveDelete)
+    if(isHaveDelete&&isHaveDownload)
     {
         int width = (currWidth-36*3)/2;
         
@@ -255,7 +256,7 @@
         self.rightButton.showsTouchWhenHighlighted = YES;
         [self.bottonToolBar addSubview:self.rightButton];
     }
-    else
+    else if(isHaveDownload)
     {
         int width = currWidth-36*2;
         
@@ -269,6 +270,20 @@
         [self.leftButton setBackgroundColor:[UIColor clearColor]];
         [self.bottonToolBar addSubview:self.leftButton];
         self.leftButton.showsTouchWhenHighlighted = YES;
+    }else if(isHaveDelete)
+    {
+        int width = currWidth-36*2;
+        
+        CGRect rightRect = CGRectMake(36, 5, width, 33);
+        self.rightButton = [[UIButton alloc] initWithFrame:rightRect];
+        [self.rightButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
+        [self.rightButton.titleLabel setTextColor:[UIColor blackColor]];
+        [self.rightButton setTitle:@"删除" forState:UIControlStateNormal];
+        [self.rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.rightButton addTarget:self action:@selector(deleteClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self.rightButton setBackgroundColor:[UIColor clearColor]];
+        self.rightButton.showsTouchWhenHighlighted = YES;
+        [self.bottonToolBar addSubview:self.rightButton];
     }
     [self.view addSubview:self.bottonToolBar];
     
@@ -856,45 +871,49 @@
 }
 
 -(void)handleOnceTap:(UIGestureRecognizer *)gesture{
-//    //单击头部和底部出现
-//    if(self.bottonToolBar.hidden)
-//    {
-//        CGFloat x = imageScrollView.contentOffset.x;
-//        self.page = x/currWidth;
-//        currPage = self.page;
-//        self.topTitleLabel.text = [NSString stringWithFormat:@"%i/%i",self.page+1,[self.tableArray count]];
-//        [self.topToolBar setHidden:NO];
-//        [self.bottonToolBar setHidden:NO];
-//    }
-//    else
-//    {
-//        [self.topToolBar setHidden:YES];
-//        [self.bottonToolBar setHidden:YES];
-//    }
-    CGFloat x = imageScrollView.contentOffset.x;
-    self.page = x/currWidth;
-    [self.photoDelegate updateCurrpage:self.page];
-    [self backClick];
-    if(tableArray)
-    {
-        if([tableArray count]>self.page)
+    if([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        CGFloat x = imageScrollView.contentOffset.x;
+        self.page = x/currWidth;
+        [self.photoDelegate updateCurrpage:self.page];
+        [self backClick];
+        if(tableArray)
         {
-            DownList *demo = [tableArray objectAtIndex:self.page];
-            AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
-            UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
-            for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
+            if([tableArray count]>self.page)
             {
-                FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
-                if([fileList isKindOfClass:[FileListViewController class]])
+                DownList *demo = [tableArray objectAtIndex:self.page];
+                AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+                UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
+                for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
                 {
-                    fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:demo.d_file_id];
-                    [fileList updateSelected];
-                    break;
+                    FileListViewController *fileList = [NavigationController2.viewControllers objectAtIndex:i];
+                    if([fileList isKindOfClass:[FileListViewController class]])
+                    {
+                        fileList.tableViewSelectedFid = [NSString formatNSStringForOjbect:demo.d_file_id];
+                        [fileList updateSelected];
+                        break;
+                    }
                 }
             }
         }
+    } else {
+            //单击头部和底部出现
+            if(self.bottonToolBar.hidden)
+            {
+                CGFloat x = imageScrollView.contentOffset.x;
+                self.page = x/currWidth;
+                currPage = self.page;
+                self.topTitleLabel.text = [NSString stringWithFormat:@"%i/%i",self.page+1,[self.tableArray count]];
+                [self.topToolBar setHidden:NO];
+                [self.bottonToolBar setHidden:NO];
+            }
+            else
+            {
+                [self.topToolBar setHidden:YES];
+                [self.bottonToolBar setHidden:YES];
+            }
     }
+    
 }
 
 -(void)handleOnceTap2:(UIGestureRecognizer *)gesture

@@ -228,7 +228,17 @@ typedef enum{
                 UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"这可能会产生流量费用，您是否要继续？" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"继续" otherButtonTitles: nil];
                 [actionSheet setTag:kActionSheetTypeWiFi];
                 [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-                [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+                if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+                    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+                }else
+                {
+                    if (self.splitViewController) {
+                        [actionSheet showInView:self.splitViewController.view];
+                    }else
+                    {
+                        [actionSheet showInView:self.view];
+                    }
+                }
                 AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                 [app.action_array addObject:actionSheet];
             }else if(![YNFunctions isOnlyWifi] && theSwith.isOn)
@@ -318,7 +328,17 @@ typedef enum{
     UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"是否注销" delegate:self cancelButtonTitle:@"否" destructiveButtonTitle:@"是" otherButtonTitles: nil];
     [actionSheet setTag:kActionSheetTypeExit];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }else
+    {
+        if (self.splitViewController) {
+            [actionSheet showInView:self.splitViewController.view];
+        }else
+        {
+            [actionSheet showInView:self.view];
+        }
+    }
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array addObject:actionSheet];
 }
@@ -885,7 +905,17 @@ typedef enum{
                     UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"导入企业通讯录到本机" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"确定",nil];
                     [actionSheet setTag:kActionSheetTypeInContent];
                     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-                    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+                    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+                        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+                    }else
+                    {
+                        if (self.splitViewController) {
+                            [actionSheet showInView:self.splitViewController.view];
+                        }else
+                        {
+                            [actionSheet showInView:self.view];
+                        }
+                    }
                     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                     [app.action_array addObject:actionSheet];
                 }

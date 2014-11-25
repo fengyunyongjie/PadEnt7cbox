@@ -426,7 +426,17 @@
     FileView *fv=(FileView *)sender;
     UIActionSheet *as=[[UIActionSheet alloc] initWithTitle:fv.nameLabel.text delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"删除" otherButtonTitles:nil, nil];
     [as setTag:fv.index];
-    [as showInView:[[UIApplication sharedApplication] keyWindow]];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+        [as showInView:[[UIApplication sharedApplication] keyWindow]];
+    }else
+    {
+        if (self.splitViewController) {
+            [as showInView:self.splitViewController.view];
+        }else
+        {
+            [as showInView:self.view];
+        }
+    }
 }
 - (void)didReceiveMemoryWarning
 {
@@ -731,7 +741,7 @@
     
 }
 #pragma mark - UIActionSheetDelegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     int tag=actionSheet.tag;
     if (tag>=0) {
@@ -739,7 +749,17 @@
             if (self.fileArray.count==1) {
                 UIActionSheet *as=[[UIActionSheet alloc] initWithTitle:@"至少要分享一个文件" delegate:nil cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"确定", nil];
                 [as setTag:-1];
-                [as showInView:[[UIApplication sharedApplication] keyWindow]];
+                if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+                    [as showInView:[[UIApplication sharedApplication] keyWindow]];
+                }else
+                {
+                    if (self.splitViewController) {
+                        [as showInView:self.splitViewController.view];
+                    }else
+                    {
+                        [as showInView:self.view];
+                    }
+                }
                 return;
             }
             //删除选中文件！

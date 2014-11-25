@@ -106,7 +106,17 @@
     UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍摄照片并上传",@"从本机相册选择", nil];
     [actionSheet setTag:kActionSheetTagUpload];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }else
+    {
+        if (self.splitViewController) {
+            [actionSheet showInView:self.splitViewController.view];
+        }else
+        {
+            [actionSheet showInView:self.view];
+        }
+    }
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array addObject:actionSheet];
 //    QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
@@ -406,7 +416,17 @@
             UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"是否要删除选中的内容" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil, nil];
             [actionSheet setTag:kActionSheetTagAllDelete];
             [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+            if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+                [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+            }else
+            {
+                if (self.splitViewController) {
+                    [actionSheet showInView:self.splitViewController.view];
+                }else
+                {
+                    [actionSheet showInView:self.view];
+                }
+            }
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             [app.action_array addObject:actionSheet];
         }
@@ -1550,7 +1570,7 @@
 
 #pragma makr UIActionSheetDelegate
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+-(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array removeAllObjects];

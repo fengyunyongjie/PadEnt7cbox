@@ -654,6 +654,17 @@ typedef enum{
     UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍摄照片并上传",@"从本机相册选择", nil];
     [actionSheet setTag:kActionSheetTagUpload];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }else
+    {
+        if (self.splitViewController) {
+            [actionSheet showInView:self.splitViewController.view];
+        }else
+        {
+            [actionSheet showInView:self.view];
+        }
+    }
     [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array addObject:actionSheet];
@@ -996,7 +1007,17 @@ typedef enum{
     UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"排序" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"按时间排序",@"按名称排序",@"按大小排序", nil];
     [actionSheet setTag:kActionSheetTagSort];
     [actionSheet setActionSheetStyle:UIActionSheetStyleDefault];
-    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }else
+    {
+        if (self.splitViewController) {
+            [actionSheet showInView:self.splitViewController.view];
+        }else
+        {
+            [actionSheet showInView:self.view];
+        }
+    }
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array addObject:actionSheet];
 }
@@ -1008,7 +1029,17 @@ typedef enum{
         UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"更多" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"复制",@"移动",@"重命名", nil];
         [actionSheet setTag:kActionSheetTagMore];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        }else
+        {
+            if (self.splitViewController) {
+                [actionSheet showInView:self.splitViewController.view];
+            }else
+            {
+                [actionSheet showInView:self.view];
+            }
+        }
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [app.action_array addObject:actionSheet];
     }else
@@ -1017,7 +1048,17 @@ typedef enum{
         UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"更多" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"复制",@"移动",@"重命名", nil];
         [actionSheet setTag:kActionSheetTagMore];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        }else
+        {
+            if (self.splitViewController) {
+                [actionSheet showInView:self.splitViewController.view];
+            }else
+            {
+                [actionSheet showInView:self.view];
+            }
+        }
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [app.action_array addObject:actionSheet];
     }
@@ -1064,7 +1105,17 @@ typedef enum{
     UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"是否要删除选中的内容" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles: nil];
     [actionSheet setTag:kActionSheetTagDeleteOne];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }else
+    {
+        if (self.splitViewController) {
+            [actionSheet showInView:self.splitViewController.view];
+        }else
+        {
+            [actionSheet showInView:self.view];
+        }
+    }
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array addObject:actionSheet];
 }
@@ -1267,7 +1318,17 @@ hasDirSend:
         }
         
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        }else
+        {
+            if (self.splitViewController) {
+                [actionSheet showInView:self.splitViewController.view];
+            }else
+            {
+                [actionSheet showInView:self.view];
+            }
+        }
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [app.action_array addObject:actionSheet];
         return;
@@ -1282,7 +1343,17 @@ noDirSend:
             [actionSheet setTag:kActionSheetTagSendSubject];
         }
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        }else
+        {
+            if (self.splitViewController) {
+                [actionSheet showInView:self.splitViewController.view];
+            }else
+            {
+                [actionSheet showInView:self.view];
+            }
+        }
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [app.action_array addObject:actionSheet];
         return;
@@ -3203,7 +3274,7 @@ noDirSend:
     }
 }
 #pragma mark - UIActionSheetDelegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array removeAllObjects];

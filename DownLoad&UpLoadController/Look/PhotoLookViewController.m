@@ -973,13 +973,23 @@
     [actionSheet setTitle:l_url];
     [actionSheet setTag:kActionSheetTagShare];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }else
+    {
+        if (self.splitViewController) {
+            [actionSheet showInView:self.splitViewController.view];
+        }else
+        {
+            [actionSheet showInView:self.view];
+        }
+    }
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array addObject:actionSheet];
 }
 
 #pragma mark UIActionSheetDelegate
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+-(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array removeAllObjects];

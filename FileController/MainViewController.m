@@ -136,7 +136,17 @@
     UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍摄照片并上传",@"从本机相册选择", nil];
     [actionSheet setTag:1];
     [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-    [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+    }else
+    {
+        if (self.splitViewController) {
+            [actionSheet showInView:self.splitViewController.view];
+        }else
+        {
+            [actionSheet showInView:self.view];
+        }
+    }
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array addObject:actionSheet];
     //    QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
@@ -657,7 +667,7 @@
     [self doneLoadingTableViewData];
 }
 #pragma mark - UIActionSheetDelegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array removeAllObjects];

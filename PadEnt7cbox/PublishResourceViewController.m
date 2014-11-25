@@ -453,7 +453,17 @@
         self.selectIndexPath=indexPath;
         UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:@"是否要删除选中的内容" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles: nil];
         [actionSheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
+        }else
+        {
+            if (self.splitViewController) {
+                [actionSheet showInView:self.splitViewController.view];
+            }else
+            {
+                [actionSheet showInView:self.view];
+            }
+        }
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [app.action_array addObject:actionSheet];
     }
@@ -743,7 +753,7 @@
 
 #pragma mark - UIActionSheetDelegate
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if(buttonIndex==0)
     {

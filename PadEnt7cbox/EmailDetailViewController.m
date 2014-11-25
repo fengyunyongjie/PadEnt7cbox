@@ -642,7 +642,17 @@
     FileVieww *fv=(FileVieww *)sender;
     UIActionSheet *as=[[UIActionSheet alloc] initWithTitle:fv.nameLabel.text delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"预览",@"下载",@"转存", nil];
     [as setTag:fv.index];
-    [as showInView:[[UIApplication sharedApplication] keyWindow]];
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+        [as showInView:[[UIApplication sharedApplication] keyWindow]];
+    }else
+    {
+        if (self.splitViewController) {
+            [as showInView:self.splitViewController.view];
+        }else
+        {
+            [as showInView:self.view];
+        }
+    }
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.action_array addObject:as];
 }
@@ -1200,7 +1210,7 @@
     [self moveSucess];
 }
 #pragma mark - UIActionSheetDelegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     int tag=actionSheet.tag;
     if (tag>=0) {

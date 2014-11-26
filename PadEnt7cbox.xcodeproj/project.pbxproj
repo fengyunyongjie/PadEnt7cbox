@@ -514,6 +514,12 @@
 		29FB7E9E1A22C8EE00920A00 /* guide_bt_nor~iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FB7E9C1A22C8EE00920A00 /* guide_bt_nor~iPhone@2x.png */; };
 		29FB7E9F1A22C8EE00920A00 /* guide_bt_se~iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FB7E9D1A22C8EE00920A00 /* guide_bt_se~iPhone@2x.png */; };
 		29FBD5FF1863D27A005F03AC /* login_bt.png in Resources */ = {isa = PBXBuildFile; fileRef = 29FBD5F71863D27A005F03AC /* login_bt.png */; };
+		5F9568141A2419FC005C9CDC /* DownSessionBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9568091A2419FC005C9CDC /* DownSessionBackground.m */; };
+		5F9568151A2419FC005C9CDC /* SeesionConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F95680B1A2419FC005C9CDC /* SeesionConnection.m */; };
+		5F9568161A2419FC005C9CDC /* SessionBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F95680D1A2419FC005C9CDC /* SessionBackground.m */; };
+		5F9568171A2419FC005C9CDC /* SessionVerifyBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F95680F1A2419FC005C9CDC /* SessionVerifyBackground.m */; };
+		5F9568181A2419FC005C9CDC /* UploadSessionBackgound.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9568111A2419FC005C9CDC /* UploadSessionBackgound.m */; };
+		5F9568191A2419FC005C9CDC /* SessionUploadState.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9568131A2419FC005C9CDC /* SessionUploadState.m */; };
 		5FCBABCC1A22C7640005DF05 /* menu_only_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCBABCB1A22C7640005DF05 /* menu_only_1.png */; };
 /* End PBXBuildFile section */
 
@@ -1179,6 +1185,18 @@
 		29FB7E9C1A22C8EE00920A00 /* guide_bt_nor~iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guide_bt_nor~iPhone@2x.png"; sourceTree = "<group>"; };
 		29FB7E9D1A22C8EE00920A00 /* guide_bt_se~iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guide_bt_se~iPhone@2x.png"; sourceTree = "<group>"; };
 		29FBD5F71863D27A005F03AC /* login_bt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_bt.png; sourceTree = "<group>"; };
+		5F9568081A2419FC005C9CDC /* DownSessionBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownSessionBackground.h; sourceTree = "<group>"; };
+		5F9568091A2419FC005C9CDC /* DownSessionBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownSessionBackground.m; sourceTree = "<group>"; };
+		5F95680A1A2419FC005C9CDC /* SeesionConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeesionConnection.h; sourceTree = "<group>"; };
+		5F95680B1A2419FC005C9CDC /* SeesionConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeesionConnection.m; sourceTree = "<group>"; };
+		5F95680C1A2419FC005C9CDC /* SessionBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionBackground.h; sourceTree = "<group>"; };
+		5F95680D1A2419FC005C9CDC /* SessionBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionBackground.m; sourceTree = "<group>"; };
+		5F95680E1A2419FC005C9CDC /* SessionVerifyBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionVerifyBackground.h; sourceTree = "<group>"; };
+		5F95680F1A2419FC005C9CDC /* SessionVerifyBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionVerifyBackground.m; sourceTree = "<group>"; };
+		5F9568101A2419FC005C9CDC /* UploadSessionBackgound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadSessionBackgound.h; sourceTree = "<group>"; };
+		5F9568111A2419FC005C9CDC /* UploadSessionBackgound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadSessionBackgound.m; sourceTree = "<group>"; };
+		5F9568121A2419FC005C9CDC /* SessionUploadState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionUploadState.h; sourceTree = "<group>"; };
+		5F9568131A2419FC005C9CDC /* SessionUploadState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionUploadState.m; sourceTree = "<group>"; };
 		5FCBABCB1A22C7640005DF05 /* menu_only_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_only_1.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1999,6 +2017,7 @@
 		2984240E185ED500002AC1D0 /* AllSDK */ = {
 			isa = PBXGroup;
 			children = (
+				5F9568071A2419EE005C9CDC /* Background */,
 				29B3542F18B2F8130079184B /* BackgroundRunner */,
 				2918784C187D014100577921 /* OpenFile */,
 				290216D11862CE2300D7D2C7 /* Password */,
@@ -2258,6 +2277,25 @@
 			name = Subject;
 			sourceTree = "<group>";
 		};
+		5F9568071A2419EE005C9CDC /* Background */ = {
+			isa = PBXGroup;
+			children = (
+				5F9568081A2419FC005C9CDC /* DownSessionBackground.h */,
+				5F9568091A2419FC005C9CDC /* DownSessionBackground.m */,
+				5F95680A1A2419FC005C9CDC /* SeesionConnection.h */,
+				5F95680B1A2419FC005C9CDC /* SeesionConnection.m */,
+				5F95680C1A2419FC005C9CDC /* SessionBackground.h */,
+				5F95680D1A2419FC005C9CDC /* SessionBackground.m */,
+				5F95680E1A2419FC005C9CDC /* SessionVerifyBackground.h */,
+				5F95680F1A2419FC005C9CDC /* SessionVerifyBackground.m */,
+				5F9568101A2419FC005C9CDC /* UploadSessionBackgound.h */,
+				5F9568111A2419FC005C9CDC /* UploadSessionBackgound.m */,
+				5F9568121A2419FC005C9CDC /* SessionUploadState.h */,
+				5F9568131A2419FC005C9CDC /* SessionUploadState.m */,
+			);
+			name = Background;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2307,6 +2345,11 @@
 				TargetAttributes = {
 					298423C6185ECE1F002AC1D0 = {
 						DevelopmentTeam = 3N53M83M5K;
+						SystemCapabilities = {
+							com.apple.DataProtection = {
+								enabled = 1;
+							};
+						};
 					};
 					298423E1185ECE1F002AC1D0 = {
 						TestTargetID = 298423C6185ECE1F002AC1D0;
@@ -2740,11 +2783,13 @@
 				2982DFDF186150D6009CB82D /* FileItemTableCell.m in Sources */,
 				2982E0E1186153C6009CB82D /* CustomSelectButton.m in Sources */,
 				2933E45219C18D79000C6589 /* MoreViewController.m in Sources */,
+				5F9568191A2419FC005C9CDC /* SessionUploadState.m in Sources */,
 				2995582F198260720010CF8F /* SubjectInfoCell.m in Sources */,
 				294EB4F318604E68006E6E96 /* SCBSession.m in Sources */,
 				2982E0B2186152FE009CB82D /* UploadFile.m in Sources */,
 				29C2E45C1978FCE2000227DB /* CreateSubjectViewController.m in Sources */,
 				294EB4F218604E68006E6E96 /* SCBLinkManager.m in Sources */,
+				5F9568181A2419FC005C9CDC /* UploadSessionBackgound.m in Sources */,
 				2933E44D19C18D79000C6589 /* ContactDetailView.m in Sources */,
 				296B7636197CE5FA008D0C9C /* SubjectResourceCell.m in Sources */,
 				294EB4F118604E68006E6E96 /* SCBEmailManager.m in Sources */,
@@ -2756,6 +2801,7 @@
 				2982DFF81861518D009CB82D /* UserListViewController.m in Sources */,
 				2982E0AB186152FE009CB82D /* QBImagePickerFooterView.m in Sources */,
 				2982E05D186152F5009CB82D /* LookDownFile.m in Sources */,
+				5F9568171A2419FC005C9CDC /* SessionVerifyBackground.m in Sources */,
 				296B763B197F3FBF008D0C9C /* SubjectTitleCell.m in Sources */,
 				295C384A1987A5920068AB52 /* Mp3RecordWriter.m in Sources */,
 				29CE22351862E5BB0030EC86 /* InputViewController.m in Sources */,
@@ -2797,6 +2843,7 @@
 				2933E44B19C18D79000C6589 /* ChineseString.m in Sources */,
 				2982DFF518615188009CB82D /* SharedEmailViewController.m in Sources */,
 				299CFC8B186811380060855B /* PasswordManager.m in Sources */,
+				5F9568161A2419FC005C9CDC /* SessionBackground.m in Sources */,
 				291755E01A232AD900F0FC61 /* IPSubjectListForChooseViewController.m in Sources */,
 				2982E0BC1861532B009CB82D /* SFHFKeychainUtils.m in Sources */,
 				2982DFE918615169009CB82D /* TITokenField.m in Sources */,
@@ -2826,6 +2873,7 @@
 				29496BBD196630A6005485F8 /* SubjectDetailTabBarController.m in Sources */,
 				2982E0FD186154A3009CB82D /* DBSqlite3.m in Sources */,
 				2982E0AC186152FE009CB82D /* QBImagePickerGroupCell.m in Sources */,
+				5F9568151A2419FC005C9CDC /* SeesionConnection.m in Sources */,
 				2981E92C196D35DF003E346B /* SubjectResourceViewController.m in Sources */,
 				294EB50318604F7A006E6E96 /* MBProgressHUD.m in Sources */,
 				2982E0FE186154A3009CB82D /* DownList.m in Sources */,
@@ -2845,6 +2893,7 @@
 				2982E097186152FE009CB82D /* MusicPlayerViewController.m in Sources */,
 				2982DFEC18615178009CB82D /* EmailListViewController.m in Sources */,
 				291755EE1A232AD900F0FC61 /* IPSubJectDetailCommentViewController.m in Sources */,
+				5F9568141A2419FC005C9CDC /* DownSessionBackground.m in Sources */,
 				2981E932196E6163003E346B /* SCBSubjectManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2904,8 +2953,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: yunfei ma (2838Z979QM)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: yunfei ma (2838Z979QM)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2923,8 +2972,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "9853acba-9628-414c-a879-7502e6a0f12a";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9853acba-9628-414c-a879-7502e6a0f12a";
 				SDKROOT = iphoneos7.0;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -2947,8 +2996,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: yunfei ma (2838Z979QM)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2960,8 +3009,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "9853acba-9628-414c-a879-7502e6a0f12a";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9853acba-9628-414c-a879-7502e6a0f12a";
 				SDKROOT = iphoneos7.0;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;

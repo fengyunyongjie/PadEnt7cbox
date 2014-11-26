@@ -791,7 +791,12 @@
     }
     if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        MyTabBarViewController *tabbar;
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        tabbar = [appleDate.splitVC.viewControllers firstObject];
+    }else{
+        tabbar = appleDate.myTabBarVC;
+    }
         
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
         {

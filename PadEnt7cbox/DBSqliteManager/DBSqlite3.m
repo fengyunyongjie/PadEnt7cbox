@@ -9,6 +9,8 @@
 #import "DBSqlite3.h"
 #import "YNFunctions.h"
 #import "LTHPasscodeViewController.h"
+#import "UpLoadList.h"
+
 
 @implementation DBSqlite3
 @synthesize databasePath;
@@ -21,6 +23,25 @@
     if(![self isHaveTable:@"UploadList"])
     {
         [[LTHPasscodeViewController sharedUser] hiddenPassword];
+    }
+
+    //新版本更新数据库
+    if(![self isHaveTableAndColoumName:@"UploadList" coloumName:@"sname"])
+    {
+        UpLoadList *list = [[UpLoadList alloc] init];
+        NSMutableArray *insertsUploadList = [list SelectAllUploadList];
+        //删除数据表
+        [self deleteUploadList:DropTableUploadlist];
+        if (sqlite3_open([self.databasePath fileSystemRepresentation], &contactDB)==SQLITE_OK)
+        {
+            char *errMsg;
+            //新代码
+            if (sqlite3_exec(contactDB, (const char *)[CreateUploadList UTF8String], NULL, NULL, &errMsg)!=SQLITE_OK) {
+            }
+            sqlite3_close(contactDB);
+        }
+        //添加数据
+        [list insertsUploadList:insertsUploadList];
     }
 }
 
@@ -35,7 +56,6 @@
 
 -(id)init
 {
-    [self updateVersion];
     self.databasePath=[YNFunctions getDBCachePath];
     self.databasePath=[self.databasePath stringByAppendingPathComponent:@"hongPanShangYe.sqlite"];
     if (sqlite3_open([self.databasePath fileSystemRepresentation], &contactDB)==SQLITE_OK)
@@ -159,4 +179,27 @@
     sqlite3_close(contactDB);
     return bl;
 }
+
+-(BOOL)isHaveTableAndColoumName:(NSString *)tableName coloumName:(NSString *)coloumName
+{
+    sqlite3_stmt *statement;
+    const char *dbpath = [self.databasePath UTF8String];
+    __block BOOL bl = FALSE;
+    if (sqlite3_open(dbpath, &contactDB)==SQLITE_OK) {
+        const char *insert_stmt = [SelectIsHaveTableAndColoumName UTF8String];
+        sqlite3_prepare_v2(contactDB, insert_stmt, -1, &statement, NULL);
+        while (sqlite3_step(statement)==SQLITE_ROW) {
+            NSString *name = [NSString formatNSStringForChar:(const char *)sqlite3_column_text(statement, 1)];
+            if([name isEqualToString:coloumName])
+            {
+                bl = TRUE;
+                break;
+            }
+        }
+        sqlite3_finalize(statement);
+        sqlite3_close(contactDB);
+    }
+    return bl;
+}
+
 @end

@@ -30,7 +30,7 @@ typedef enum{
 }kAlertType;
 @implementation AppDelegate
 @synthesize lockScreen,localV;
-@synthesize downmange,myTabBarVC,loginVC,uploadmanage,isStopUpload,file_url,isConnection,space_id,space_name,old_file_url,action_array,isFileShare,messageArray;
+@synthesize downmange,myTabBarVC,loginVC,uploadmanage,isStopUpload,file_url,isConnection,space_id,space_name,old_file_url,action_array,isFileShare,messageArray,isBackground;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -66,6 +66,9 @@ typedef enum{
     [self.window setAutoresizesSubviews:YES];
     [self.window makeKeyAndVisible];
     
+    //创建url链接
+    [self createUrlSession];
+    
     if ([self isLogin]) {
         [self finishLogin];
     }else
@@ -87,6 +90,34 @@ typedef enum{
     return YES;
 }
 
+//创建可使用的urlseseion路径
+-(void)createUrlSession
+{
+    NSString *theFMCachePath=nil;
+    NSArray *pathes = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    theFMCachePath = [pathes objectAtIndex:0];
+    if([YNFunctions systemIsLaterThanString:@"8.0"])
+    {
+        theFMCachePath = [theFMCachePath stringByAppendingString:UrlsessionDownload];
+        theFMCachePath = [theFMCachePath stringByAppendingString:[NSString stringWithFormat:@"%@/",BundleIdentifier]];
+    }
+    else
+    {
+        theFMCachePath = [theFMCachePath stringByAppendingString:UrlsessionDownload7];
+    }
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if(![fileManager isExecutableFileAtPath:theFMCachePath])
+    {
+        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone
+                                                               forKey:NSFileProtectionKey];
+        [fileManager createDirectoryAtPath:theFMCachePath
+               withIntermediateDirectories:YES
+                                attributes:attributes
+                                     error:nil];
+    }
+}
+
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     [self checkUpdate];
@@ -96,10 +127,15 @@ typedef enum{
 {
     if(self.downmange.isStart || self.uploadmanage.isStart)
     {
+        if([YNFunctions systemIsLaterThanString:@"8.0"])
+        {
+            self.isBackground = YES;
+        }
         [[BackgroundRunner shared] run];
     }
     else
     {
+        self.isBackground = NO;
         [[BackgroundRunner shared] stop];
     }
     [(UIAlertView *)self.alertViewArray.lastObject dismissWithClickedButtonIndex:-1 animated:YES];
@@ -111,6 +147,8 @@ typedef enum{
 {
     [self checkUpdate];
     [[BackgroundRunner shared] stop];
+    self.isBackground = NO;
+
     UIViewController *viewController = self.window.rootViewController.presentedViewController;
     if([viewController isKindOfClass:[InputViewController class]])
     {

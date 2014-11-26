@@ -77,9 +77,11 @@
 {
     if (![[NSFileManager defaultManager] fileExistsAtPath:urlPath])
     {
+        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone
+                                                               forKey:NSFileProtectionKey];
         [[NSFileManager defaultManager] createDirectoryAtPath:urlPath
                                   withIntermediateDirectories:YES
-                                                   attributes:nil
+                                                   attributes:attributes
                                                         error:nil];
     }
 }
@@ -332,6 +334,37 @@
     [dateFormatter setDateFormat:@"MM月dd日 HH:mm"];
     formatString = [dateFormatter stringFromDate:date];
     return formatString;
+}
+
++(NSString *)getFormatSudu:(double)endTime lenght:(double)lenght
+{
+    NSString *sudu;
+    if(endTime<0.0001)
+    {
+        endTime = 0.0001;
+    }
+    endTime = lenght/endTime;
+    if(endTime/1024.0<1024)
+    {
+        endTime = endTime/1024.0;
+        sudu = [NSString stringWithFormat:@"%fKb/s",endTime];
+    }
+    else if(endTime/(1024.0*1024.0)<1024)
+    {
+        endTime = endTime/(1024.0*1024.0);
+        sudu = [NSString stringWithFormat:@"%fMb/s",endTime];
+    }
+    else if(endTime/(1024.0*1024.0*1024.0)<1024)
+    {
+        endTime = endTime/(1024.0*1024.0*1024.0);
+        sudu = [NSString stringWithFormat:@"%fGb/s",endTime];
+    }
+    else if(endTime/(1024.0*1024.0*1024.0*1024.0)<1024)
+    {
+        endTime = endTime/(1024.0*1024.0*1024.0*1024.0);
+        sudu = [NSString stringWithFormat:@"%ftb/s",endTime];
+    }
+    return sudu;
 }
 
 @end

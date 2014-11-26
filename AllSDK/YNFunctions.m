@@ -62,9 +62,11 @@ static BOOL h_f=NO;
     theFMCachePath=[theFMCachePath stringByAppendingPathComponent:@"/FMCache/"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:theFMCachePath])
     {
+        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone
+                                                               forKey:NSFileProtectionKey];
         [[NSFileManager defaultManager] createDirectoryAtPath:theFMCachePath
                                   withIntermediateDirectories:YES
-                                                   attributes:nil
+                                                   attributes:attributes
                                                         error:nil];
     }
     return theFMCachePath;
@@ -77,9 +79,11 @@ static BOOL h_f=NO;
     theFMCachePath=[theFMCachePath stringByAppendingPathComponent:@"/IconCache/"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:theFMCachePath])
     {
+        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone
+                                                               forKey:NSFileProtectionKey];
         [[NSFileManager defaultManager] createDirectoryAtPath:theFMCachePath
                                   withIntermediateDirectories:YES
-                                                   attributes:nil
+                                                   attributes:attributes
                                                         error:nil];
     }
     return theFMCachePath;
@@ -93,9 +97,11 @@ static BOOL h_f=NO;
     theFMCachePath=[theFMCachePath stringByAppendingPathComponent:@"/ProviewCache/"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:theFMCachePath])
     {
+        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone
+                                                               forKey:NSFileProtectionKey];
         [[NSFileManager defaultManager] createDirectoryAtPath:theFMCachePath
                                   withIntermediateDirectories:YES
-                                                   attributes:nil
+                                                   attributes:attributes
                                                         error:nil];
     }
     return theFMCachePath;
@@ -109,9 +115,11 @@ static BOOL h_f=NO;
     theFMCachePath=[theFMCachePath stringByAppendingPathComponent:@"/KeepCache/"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:theFMCachePath])
     {
+        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone
+                                                               forKey:NSFileProtectionKey];
         [[NSFileManager defaultManager] createDirectoryAtPath:theFMCachePath
                                   withIntermediateDirectories:YES
-                                                   attributes:nil
+                                                   attributes:attributes
                                                         error:nil];
     }
     return theFMCachePath;
@@ -124,9 +132,11 @@ static BOOL h_f=NO;
     theFMCachePath=[theFMCachePath stringByAppendingPathComponent:@"/TempCache/"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:theFMCachePath])
     {
+        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone
+                                                               forKey:NSFileProtectionKey];
         [[NSFileManager defaultManager] createDirectoryAtPath:theFMCachePath
                                   withIntermediateDirectories:YES
-                                                   attributes:nil
+                                                   attributes:attributes
                                                         error:nil];
     }
     return theFMCachePath;
@@ -142,9 +152,11 @@ static BOOL h_f=NO;
     theFMCachePath=[theFMCachePath stringByAppendingPathComponent:@"/"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:theFMCachePath])
     {
+        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone
+                                                               forKey:NSFileProtectionKey];
         [[NSFileManager defaultManager] createDirectoryAtPath:theFMCachePath
                                   withIntermediateDirectories:YES
-                                                   attributes:nil
+                                                   attributes:attributes
                                                         error:nil];
     }
     return theFMCachePath;
@@ -157,9 +169,11 @@ static BOOL h_f=NO;
     theFMCachePath=[theFMCachePath stringByAppendingPathComponent:@"/DBCache/"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:theFMCachePath])
     {
+        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone
+                                                               forKey:NSFileProtectionKey];
         [[NSFileManager defaultManager] createDirectoryAtPath:theFMCachePath
                                   withIntermediateDirectories:YES
-                                                   attributes:nil
+                                                   attributes:attributes
                                                         error:nil];
     }
     return theFMCachePath;
@@ -175,9 +189,11 @@ static BOOL h_f=NO;
     theFMCachePath=[theFMCachePath stringByAppendingPathComponent:@"/"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:theFMCachePath])
     {
+        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone
+                                                               forKey:NSFileProtectionKey];
         [[NSFileManager defaultManager] createDirectoryAtPath:theFMCachePath
                                   withIntermediateDirectories:YES
-                                                   attributes:nil
+                                                   attributes:attributes
                                                         error:nil];
     }
     theFMCachePath=[theFMCachePath stringByAppendingPathComponent:@"/favoritesData.plist"];

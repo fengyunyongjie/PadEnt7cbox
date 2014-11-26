@@ -8,16 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import "DBSqlite3.h"
-#define InsertUploadList @"INSERT INTO UploadList(t_name,t_lenght,t_date,t_state,t_fileUrl,t_url_pid,t_url_name,t_file_type,User_id,File_id,Upload_size,Is_autoUpload,Is_share,Space_id,Is_Onece) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-#define InsertUploadLists @"INSERT INTO UploadList(t_name,t_lenght,t_date,t_state,t_fileUrl,t_url_pid,t_url_name,t_file_type,User_id,File_id,Upload_size,Is_autoUpload,Is_share,Space_id,Is_Onece) VALUES ('%@',%i,'%@',%i,'%@','%@','%@',%i,'%@','%@',%i,%i,%i,'%@',%i);"
+#define InsertUploadList @"INSERT INTO UploadList(t_name,t_lenght,t_date,t_state,t_fileUrl,t_url_pid,t_url_name,t_file_type,User_id,File_id,Upload_size,Is_autoUpload,Is_share,Space_id,Is_Onece,sname,md5String) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+#define InsertUploadLists @"INSERT INTO UploadList(t_name,t_lenght,t_date,t_state,t_fileUrl,t_url_pid,t_url_name,t_file_type,User_id,File_id,Upload_size,Is_autoUpload,Is_share,Space_id,Is_Onece,sname,md5String) VALUES ('%@',%i,'%@',%i,'%@','%@','%@',%i,'%@','%@',%i,%i,%i,'%@',%i,'%@','%@');"
 #define DeleteUploadList @"DELETE FROM UploadList WHERE t_id=? and User_id=?"
 #define DeleteUploadLists @"DELETE FROM UploadList WHERE t_id=%i and User_id='%@';"
 #define DeleteAutoUploadListAllAndNotUpload @"DELETE FROM UploadList WHERE Is_autoUpload=1 and t_state <>1 and User_id=?"
 #define DeleteMoveUploadListAllAndNotUpload @"DELETE FROM UploadList WHERE Is_autoUpload=0 and t_state <>1 and User_id=?"
 #define DeleteUploadListAndUpload @"DELETE FROM UploadList WHERE t_state=1 and User_id=?"
 #define SelectUploadListIsHaveName @"SELECT * FROM UploadList WHERE t_name=? and User_id=? and Is_autoUpload=?"
-#define UpdateUploadListForName @"UPDATE UploadList SET File_id=?,Upload_size=?,t_date=?,t_state=? WHERE t_name=? and User_id=?"
-
+#define UpdateUploadListForName @"UPDATE UploadList SET File_id=?,Upload_size=?,t_date=?,t_state=?,sname=?,md5String=? WHERE t_name=? and User_id=?"
+#define SelectAllUpload @"SELECT * FROM UploadList"
 #define SelectAutoUploadListAllAndNotUpload @"SELECT * FROM UploadList WHERE Is_autoUpload=1 and t_state=0 and t_id>? and User_id=?"
 #define SelectMoveUploadListAllAndNotUpload @"SELECT * FROM UploadList WHERE Is_autoUpload=0 and t_state<>1 and t_id>? and User_id=?"
 #define SelectUploadListAllAndUploaded @"SELECT * FROM UploadList WHERE t_state=1 and User_id=? and t_id>? ORDER BY t_id desc"
@@ -45,6 +45,8 @@
 @property(nonatomic,assign) NSInteger sudu;
 @property(nonatomic,assign) BOOL is_Onece;
 @property(nonatomic,assign) BOOL is_Fail;
+@property(nonatomic,retain) NSString *sname; //服务器临时文件名称
+@property(nonatomic,retain) NSString *md5String; //md5字段
 
 //添加数据
 -(BOOL)insertUploadList;
@@ -72,5 +74,6 @@
 -(BOOL)insertsUploadList:(NSMutableArray *)tableArray;
 //批量处理删除
 -(BOOL)deletesUploadList:(NSMutableArray *)tableArray;
+-(NSMutableArray *)SelectAllUploadList;
 
 @end

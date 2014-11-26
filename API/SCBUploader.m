@@ -10,6 +10,8 @@
 #import "SCBoxConfig.h"
 #import "SCBSession.h"
 #import "YNFunctions.h"
+#import "AppDelegate.h"
+#import "UploadSessionBackgound.h"
 
 @implementation SCBUploader
 @synthesize upLoadDelegate;
@@ -66,26 +68,43 @@
 }
 
 //上传
--(NSURLConnection *)requestUploadFile:(NSString *)s_name startSkip:(NSString *)startSkip skip:(NSString *)skip Image:(NSData *)image
+-(NSURLConnection *)requestUploadFile:(NSString *)s_name startSkip:(NSString *)startSkip skip:(NSString *)skip Image:(NSData *)image spaceId:(NSString *)space_id
 {
     currSize = 0;
     endSudu = 0;
     self.matableData = [NSMutableData data];
-    NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,FM_UPLOAD_NEW]];
+    NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,FM_UPLOAD_New_CLIENTCOMMIT]];
     NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
     macTimeOut = CONNECT_TIMEOUT;
-    url_string = FM_UPLOAD_NEW;
+    url_string = FM_UPLOAD_New_CLIENTCOMMIT;
 //    [request setValue:[[SCBSession sharedSession] userId] forHTTPHeaderField:@"usr_id"];
 //    [request setValue:CLIENT_TAG forHTTPHeaderField:@"client_tag"];
 //    [request setValue:[[SCBSession sharedSession] userToken] forHTTPHeaderField:@"usr_token"];
-    [request setValue:s_name forHTTPHeaderField:@"s_name"];
+    
+    [request setValue:[[SCBSession sharedSession] userToken] forHTTPHeaderField:@"ent_utoken"];
+    [request setValue:[[SCBSession sharedSession] userId] forHTTPHeaderField:@"ent_uid"];
+    [request setValue:CLIENT_TAG forHTTPHeaderField:@"ent_uclient"];
+    [request setValue:[[SCBSession sharedSession] ent_utype] forHTTPHeaderField:@"ent_utype"];
+    
+    [request setValue:s_name forHTTPHeaderField:@"sname"];
     [request setValue:[NSString stringWithFormat:@"bytes=%@-%@",startSkip,skip] forHTTPHeaderField:@"Range"];
+    [request setValue:@"3" forHTTPHeaderField:@"step"];
+    [request setValue:space_id forHTTPHeaderField:@"space_id"];
     [request setHTTPBody:image];
     [request setHTTPMethod:@"PUT"];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    if(appDelegate.isBackground)
+    {
+        UploadSessionBackgound *sessionBackground = [[UploadSessionBackgound alloc] init];
+        [sessionBackground setSessioinDelegate:self];
+        [sessionBackground startBackground:request];
+        return nil;
+    }
     NSLog(@"上传请求：%@,%@",[[SCBSession sharedSession] userId],[[SCBSession sharedSession] userToken]);
     NSURLConnection *con = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     return con;
 }
+
 
 
 //上传提交
@@ -206,7 +225,7 @@
             [upLoadDelegate uploadVerify:diction];
         }
     }
-    else if([type_string isEqualToString:[[FM_UPLOAD_NEW componentsSeparatedByString:@"/"] lastObject]])
+    else if([type_string isEqualToString:[[FM_UPLOAD_New_CLIENTCOMMIT componentsSeparatedByString:@"/"] lastObject]])
     {
         if([upLoadDelegate respondsToSelector:@selector(uploadFinish:)])
         {

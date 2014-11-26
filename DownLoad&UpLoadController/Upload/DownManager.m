@@ -40,7 +40,12 @@ NSString *const DownloaderDidNotFinishDownloadingNotification=@"DownloaderDidNot
 {
     [self updateDownList];
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    MyTabBarViewController *tabbar;
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        tabbar = [appleDate.splitVC.viewControllers firstObject];
+    }else{
+        tabbar = appleDate.myTabBarVC;
+    }
     UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
     UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
     if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -73,7 +78,12 @@ NSString *const DownloaderDidNotFinishDownloadingNotification=@"DownloaderDidNot
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        MyTabBarViewController *tabbar;
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            tabbar = [appleDate.splitVC.viewControllers firstObject];
+        }else{
+            tabbar = appleDate.myTabBarVC;
+        }
         UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -86,7 +96,12 @@ NSString *const DownloaderDidNotFinishDownloadingNotification=@"DownloaderDidNot
     [list insertsDownList:tableArray];
     
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    MyTabBarViewController *tabbar;
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        tabbar = [appleDate.splitVC.viewControllers firstObject];
+    }else{
+        tabbar = appleDate.myTabBarVC;
+    }
     UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
     UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
     if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -221,7 +236,12 @@ NSString *const DownloaderDidNotFinishDownloadingNotification=@"DownloaderDidNot
 - (void)downFinish:(NSString *)baseUrl
 {
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    MyTabBarViewController *tabbar;
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        tabbar = [appleDate.splitVC.viewControllers firstObject];
+    }else{
+        tabbar = appleDate.myTabBarVC;
+    }
     UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
     for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
     {
@@ -263,7 +283,12 @@ NSString *const DownloaderDidNotFinishDownloadingNotification=@"DownloaderDidNot
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        MyTabBarViewController *tabbar;
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            tabbar = [appleDate.splitVC.viewControllers firstObject];
+        }else{
+            tabbar = appleDate.myTabBarVC;
+        }
         UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -332,7 +357,12 @@ NSString *const DownloaderDidNotFinishDownloadingNotification=@"DownloaderDidNot
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        MyTabBarViewController *tabbar;
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            tabbar = [appleDate.splitVC.viewControllers firstObject];
+        }else{
+            tabbar = appleDate.myTabBarVC;
+        }
         UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])

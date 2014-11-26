@@ -36,6 +36,8 @@
 -(void)upNotSizeTooBig;
 //文件名存在特殊字符
 -(void)upNotHaveXNSString;
+//上传文件不存在
+-(void)upNotFile;
 @end
 
 @interface UploadFile : NSObject<UpLoadDelegate>
@@ -47,6 +49,7 @@
 @property(nonatomic,retain) NSArray *urlNameArray;
 @property(nonatomic,assign) NSInteger urlIndex;
 @property(nonatomic,retain) __block NSData *file_data;
+@property(nonatomic,strong) __block NSData *total_data;
 @property(nonatomic,retain) NSString *md5String;
 @property(nonatomic,assign) NSInteger total;
 

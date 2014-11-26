@@ -231,7 +231,7 @@
         if([file_data length]>0)
         {
             dispatch_async(dispatch_get_main_queue(), ^{
-                connection = [uploderDemo requestUploadFile:finishName startSkip:[NSString stringWithFormat:@"%i",list.upload_size] skip:[NSString stringWithFormat:@"%i",total] Image:file_data];
+                connection = [uploderDemo requestUploadFile:finishName startSkip:[NSString stringWithFormat:@"%i",list.upload_size] skip:[NSString stringWithFormat:@"%i",total] Image:file_data spaceId:list.spaceId];
             });
         }
     }
@@ -249,7 +249,7 @@
                  [result.defaultRepresentation getBytes:byte_data fromOffset:list.upload_size length:SomeDataSize error:&error];
                  file_data = [NSData dataWithBytesNoCopy:byte_data length:SomeDataSize];
                  dispatch_async(dispatch_get_main_queue(), ^{
-                     connection = [uploderDemo requestUploadFile:finishName startSkip:[NSString stringWithFormat:@"%i",list.upload_size] skip:[NSString stringWithFormat:@"%i",SomeDataSize] Image:file_data];
+                     connection = [uploderDemo requestUploadFile:finishName startSkip:[NSString stringWithFormat:@"%i",list.upload_size] skip:[NSString stringWithFormat:@"%i",SomeDataSize] Image:file_data spaceId:list.spaceId];
                  });
              }
              else
@@ -260,7 +260,7 @@
                  file_data = [NSData dataWithBytesNoCopy:byte_data length:list.t_lenght-list.upload_size];
             
                  dispatch_async(dispatch_get_main_queue(), ^{
-                     connection = [uploderDemo requestUploadFile:finishName startSkip:[NSString stringWithFormat:@"%i",list.upload_size] skip:[NSString stringWithFormat:@"%i",list.t_lenght-list.upload_size] Image:file_data];
+                     connection = [uploderDemo requestUploadFile:finishName startSkip:[NSString stringWithFormat:@"%i",list.upload_size] skip:[NSString stringWithFormat:@"%i",list.t_lenght-list.upload_size] Image:file_data spaceId:list.spaceId];
                  });
              }
          } failureBlock:^(NSError *error)

@@ -37,7 +37,9 @@ static MessageCacheFileUtil *sharedInstance;
     }
        NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![fileManager fileExistsAtPath:userFolderPathh]) {
-        [fileManager createDirectoryAtPath:userFolderPathh withIntermediateDirectories:YES attributes:nil error:nil];
+        NSDictionary *attributes = [NSDictionary dictionaryWithObject:NSFileProtectionNone
+                                                               forKey:NSFileProtectionKey];
+        [fileManager createDirectoryAtPath:userFolderPathh withIntermediateDirectories:YES attributes:attributes error:nil];
     }
     return userFolderPathh;
 }

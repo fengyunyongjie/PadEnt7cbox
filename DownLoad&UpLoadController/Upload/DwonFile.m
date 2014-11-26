@@ -13,6 +13,8 @@
 #import "MF_Base64Additions.h"
 #import "Reachability.h"
 #import "NSString+Format.h"
+#import "DownSessionBackground.h"
+#import "AppDelegate.h"
 @implementation DwonFile
 @synthesize delegate,downsize,imageConnection,imageViewIndex,file_id,index,showType,indexPath,isStop,macTimeOut,fileSize,fileName,file_path;
 
@@ -49,7 +51,8 @@
     endSudu = 0;
     NSString *documentDir = [YNFunctions getFMCachePath];
     NSArray *array=[fileName componentsSeparatedByString:@"/"];
-    NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
+    //NSString *createPath = [NSString stringWithFormat:@"%@/%@",documentDir,file_id];
+    NSString *createPath = [NSString stringWithFormat:@"%@",documentDir];
     [NSString CreatePath:createPath];
     file_path = [NSString stringWithFormat:@"%@/%@",createPath,[array lastObject]];
     //查询本地是否已经有该图片
@@ -66,18 +69,27 @@
     }
     else
     {
-        file_path = [NSString stringWithFormat:@"%@.data",file_path];
-        assert(file_path!=nil);
-        self.fileStream=[NSOutputStream outputStreamToFileAtPath:file_path append:NO];
-        assert(self.fileStream!=nil);
-        [self.fileStream open];
+//        file_path = [NSString stringWithFormat:@"%@.data",file_path];
+//        assert(file_path!=nil);
+//        self.fileStream=[NSOutputStream outputStreamToFileAtPath:file_path append:NO];
+//        assert(self.fileStream!=nil);
+//        [self.fileStream open];
+        
         NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@?ent_uid=%@&fids[]=%@",SERVER_URL,FM_DOWNLOAD_URI,[NSString formatNSStringForOjbect:[[SCBSession sharedSession] userId]],file_id]];
         NSLog(@"url:%@",s_url);
         NSMutableURLRequest *request=[[NSMutableURLRequest alloc] initWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
         
         [request setHTTPMethod:@"GET"];
+
         dispatch_async(dispatch_get_main_queue(), ^{
-            imageConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+            //后台
+      
+            DownSessionBackground *sessionBackground = [[DownSessionBackground alloc] init];
+            sessionBackground.file_path = file_path;
+            sessionBackground.sessionDelegate = self;
+            [sessionBackground startDownBackground:request];
+            //imageConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+          
         });
     }
 }
@@ -165,6 +177,28 @@
     if(delegate && [delegate respondsToSelector:@selector(upError)])
     {
         [delegate upError];
+    }
+}
+
+- (void)requestDownloadFinishDictionary:(NSDictionary *)dictionary  {
+    //下载完成
+    if(file_path)
+    {
+        NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:file_path];
+        BOOL bl = fileSize==[[handle availableData] length];
+        if(bl)
+        {
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            NSString *resource = [file_path substringToIndex:file_path.length-5];
+            [fileManager moveItemAtPath:file_path
+                                 toPath:resource
+                                  error:nil];
+            [delegate downFinish:resource];
+        }
+        else
+        {
+            [delegate didFailWithError];
+        }
     }
 }
 

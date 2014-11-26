@@ -54,7 +54,12 @@
     list.user_id = [NSString formatNSStringForOjbect:[[SCBSession sharedSession] userId]];
     [uploadArray addObjectsFromArray:[list selectMoveUploadListAllAndNotUpload]];
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    MyTabBarViewController *tabbar;
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        tabbar = [appleDate.splitVC.viewControllers firstObject];
+    }else{
+        tabbar = appleDate.myTabBarVC;
+    }
     UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
     UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
     if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -88,7 +93,12 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+            MyTabBarViewController *tabbar;
+            if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+                tabbar = [appleDate.splitVC.viewControllers firstObject];
+            }else{
+                tabbar = appleDate.myTabBarVC;
+            }
             UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
             UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
             if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -121,7 +131,13 @@
         [tableArray addObject:list];
         [inserList insertsUploadList:tableArray];
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        MyTabBarViewController *tabbar;
+
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+       tabbar = [appleDate.splitVC.viewControllers firstObject];
+        }else{
+            tabbar = appleDate.myTabBarVC;
+        }
         UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -148,7 +164,12 @@
         {
             dispatch_async(dispatch_get_main_queue(), ^{
                 AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+                MyTabBarViewController *tabbar;
+                if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+                    tabbar = [appleDate.splitVC.viewControllers firstObject];
+                }else{
+                    tabbar = appleDate.myTabBarVC;
+                }
                 UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
                 UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
                 if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -185,7 +206,12 @@
             [inserList insertsUploadList:tableArray];
         }
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        MyTabBarViewController *tabbar;
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            tabbar = [appleDate.splitVC.viewControllers firstObject];
+        }else{
+            tabbar = appleDate.myTabBarVC;
+        }
         UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -322,7 +348,12 @@
         NSLog(@"上传进度:%f",f);
         dispatch_async(dispatch_get_main_queue(), ^{
             AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+            MyTabBarViewController *tabbar;
+            if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+                tabbar = [appleDate.splitVC.viewControllers firstObject];
+            }else{
+                tabbar = appleDate.myTabBarVC;
+            }
             UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
             UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
             if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -340,7 +371,12 @@
     //调用ui
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        MyTabBarViewController *tabbar;
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            tabbar = [appleDate.splitVC.viewControllers firstObject];
+        }else{
+            tabbar = appleDate.myTabBarVC;
+        }
         UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -356,7 +392,12 @@
     //调用ui
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        MyTabBarViewController *tabbar;
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            tabbar = [appleDate.splitVC.viewControllers firstObject];
+        }else{
+            tabbar = appleDate.myTabBarVC;
+        }
         UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -384,7 +425,12 @@
     //调用ui
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        MyTabBarViewController *tabbar;
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            tabbar = [appleDate.splitVC.viewControllers firstObject];
+        }else{
+            tabbar = appleDate.myTabBarVC;
+        }
         UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -427,7 +473,12 @@
     //调用ui
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        MyTabBarViewController *tabbar;
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        tabbar = [appleDate.splitVC.viewControllers firstObject];
+        }else{
+            tabbar = appleDate.myTabBarVC;
+        }
         UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -444,7 +495,12 @@
     //调用ui
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        MyTabBarViewController *tabbar;
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            tabbar = [appleDate.splitVC.viewControllers firstObject];
+        }else{
+            tabbar = appleDate.myTabBarVC;
+        }
         UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
@@ -532,9 +588,15 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+        MyTabBarViewController *tabbar;
+        if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+            tabbar = [appleDate.splitVC.viewControllers firstObject];
+        }else{
+            tabbar = appleDate.myTabBarVC;
+        }
         UINavigationController *NavigationController = [[tabbar viewControllers] objectAtIndex:3];
         UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
+        
         if([uploadView isKindOfClass:[UpDownloadViewController class]])
         {
             //更新UI
@@ -546,7 +608,8 @@
         {
             app.applicationIconBadgeNumber = 0;
         }
-        [tabbar addUploadNumber:app.applicationIconBadgeNumber];
+       [tabbar addUploadNumber:app.applicationIconBadgeNumber];
+
     });
 }
 
@@ -653,6 +716,31 @@
             [self updateTable];
         }
     }
+}
+
+-(void)upNotFile
+{
+    //调用ui
+    dispatch_async(dispatch_get_main_queue(), ^{
+        AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        UINavigationController *NavigationController = [[appleDate.myTabBarVC viewControllers] objectAtIndex:1];
+        UpDownloadViewController *uploadView = (UpDownloadViewController *)[NavigationController.viewControllers objectAtIndex:0];
+        if([uploadView isKindOfClass:[UpDownloadViewController class]])
+        {
+            [uploadView showFloderNot:@"上传失败，此文件已经不存在"];
+        }
+    });
+    isStopCurrUpload = YES;
+    if([uploadArray count]>0 && isOpenedUpload)
+    {
+        UpLoadList *list = [uploadArray objectAtIndex:0];
+        list.t_state = 7;
+        list.is_Onece = YES;
+        [list deleteUploadList];
+        [uploadArray removeObjectAtIndex:0];
+        [self updateTable];
+    }
+    [self startUpload];
 }
 
 @end

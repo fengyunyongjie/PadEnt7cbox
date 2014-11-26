@@ -39,4 +39,33 @@ static SCBSession * _sharedSession;
 //    }
 //    return self;
 //}
+
+
+-(NSString *)userId
+{
+    return (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_id"];
+}
+-(NSString *)userToken
+{
+    return (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_token"];
+}
+-(NSString *)homeID
+{
+    return (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"home_id"];
+}
+-(NSString *)userTag
+{
+    return (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"usr_tag"];
+}
+-(NSString *)ent_utype
+{
+    return (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"ent_utype"];
+}
+-(NSString *)entjpush
+{
+    return (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"entjpush"];
+}
+
+
+
 @end

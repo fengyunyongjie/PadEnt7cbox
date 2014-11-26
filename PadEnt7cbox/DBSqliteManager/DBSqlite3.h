@@ -11,7 +11,7 @@
 #define CreatePhotoFileTable @"CREATE TABLE IF NOT EXISTS PhotoFile(F_ID INTEGER PRIMARY KEY,F_DATE TEXT,F_TIME double)"
 #define CreateUserinfoTable @"CREATE TABLE IF NOT EXISTS Userinfo(U_ID INTEGER PRIMARY KEY AUTOINCREMENT,Auto_url TEXT,User_name TEXT,F_ID INTEGER,Space_id TEXT,Is_autoUpload BLOB,IS_OneWiFi BLOB)"
 //新代码
-#define CreateUploadList @"CREATE TABLE IF NOT EXISTS UploadList(t_id INTEGER PRIMARY KEY AUTOINCREMENT,t_name TEXT,t_lenght INTEGER,t_date TEXT,t_state INTEGER,t_fileUrl TEXT,t_url_pid TEXT,t_url_name TEXT,t_file_type INTEGER,User_id TEXT,File_id TEXT,Upload_size INTEGER,Is_autoUpload BLOB,Is_share BLOB,Space_id TEXT,Is_Onece BLOB)"
+#define CreateUploadList @"CREATE TABLE IF NOT EXISTS UploadList(t_id INTEGER PRIMARY KEY AUTOINCREMENT,t_name TEXT,t_lenght INTEGER,t_date TEXT,t_state INTEGER,t_fileUrl TEXT,t_url_pid TEXT,t_url_name TEXT,t_file_type INTEGER,User_id TEXT,File_id TEXT,Upload_size INTEGER,Is_autoUpload BLOB,Is_share BLOB,Space_id TEXT,Is_Onece BLOB,sname TEXT,md5String TEXT)"
 #define CreateAutoUploadList @"CREATE TABLE IF NOT EXISTS AutoUploadList(a_id INTEGER PRIMARY KEY AUTOINCREMENT,a_name TEXT,a_user_id TEXT,a_state INTEGER)"
 #define SelectTableIsHave @"SELECT COUNT(*)  as CNT FROM sqlite_master where type='table' and name=?"
 //商业版新代码
@@ -29,6 +29,11 @@
 //删除通讯录信息
 #define DeleteUserListSql @"DELETE FROM AddressBookUserList;"
 #define DeleteDeptListSql @"DELETE FROM AddressBookDeptList;"
+
+//查询字段是否存在
+#define SelectIsHaveTableAndColoumName @"PRAGMA table_info([UploadList])"
+//删除上传表
+#define DropTableUploadlist @"DROP TABLE UploadList"
 
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>

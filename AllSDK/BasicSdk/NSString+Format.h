@@ -32,4 +32,6 @@
 +(CGFloat)getTitleWidth:(NSString *)text andFont:(UIFont *)font;
 +(CGFloat)getNameWidth:(NSString *)text andFont:(UIFont *)font;
 +(CGFloat)getTextHeigth:(NSString *)text andFont:(UIFont *)font;
+//计算速度
++(NSString *)getFormatSudu:(double)time lenght:(double)lenght;
 @end

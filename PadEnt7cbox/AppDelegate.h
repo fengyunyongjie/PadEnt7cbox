@@ -40,7 +40,7 @@
 @property (strong,nonatomic) NSMutableArray *alertViewArray;
 @property (strong, nonatomic) NSMutableArray *messageArray;
 @property (nonatomic, assign) BOOL notWriteUIViewController;
-
+@property (assign, nonatomic) BOOL isBackground; //判读是否是后台运行
 
 -(void)finishLogin;
 -(void)finishLogout;

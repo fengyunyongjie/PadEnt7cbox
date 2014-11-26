@@ -80,7 +80,12 @@
                                                  name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+    MyTabBarViewController *tabbar;
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        tabbar = [appleDate.splitVC.viewControllers firstObject];
+    }else{
+        tabbar = appleDate.myTabBarVC;
+    }
     UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
     for(int i=NavigationController2.viewControllers.count-1;i>=0;i--)
     {
@@ -108,6 +113,7 @@
     self.view.backgroundColor = [UIColor blackColor];
     self.offset = 0.0;
     scale_ = 1.0;
+    NSLog(@"self.view.frame.size.width:%@",NSStringFromCGRect(appleDate.window.frame));
     if([[[UIDevice currentDevice] systemVersion] floatValue]<7.0)
     {
         ScollviewHeight = self.view.frame.size.height+20;
@@ -340,6 +346,7 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    NSLog(@"self.view.frame.size.width:%f",self.view.frame.size.width);
     int imagePage = imageScrollView.contentOffset.x/currWidth;
     if(self.page != imagePage)
     {
@@ -882,7 +889,12 @@
             {
                 DownList *demo = [tableArray objectAtIndex:self.page];
                 AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                MyTabBarViewController *tabbar = [appleDate.splitVC.viewControllers firstObject];
+                MyTabBarViewController *tabbar;
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        tabbar = [appleDate.splitVC.viewControllers firstObject];
+    }else{
+        tabbar = appleDate.myTabBarVC;
+    }
                 UINavigationController *NavigationController2 = [[tabbar viewControllers] objectAtIndex:0];
                 for(int i=NavigationController2.viewControllers.count-1;i>0;i--)
                 {
@@ -1672,7 +1684,11 @@
     {
         currWidth = ScollviewHeight;
         currHeight = ScollviewWidth;
-        
+        if([YNFunctions systemIsLaterThanString:@"8.0"])
+        {
+            currWidth = ScollviewWidth;
+            currHeight = ScollviewHeight;
+        }
         //整个视图大小调整
         [imageScrollView setFrame:CGRectMake(0, 0, currWidth, currHeight)];
         [imageScrollView setContentSize:CGSizeMake(currWidth*[self.tableArray count], currHeight)];

@@ -14,10 +14,10 @@
 
 @end
 
-@interface DownSessionBackground : NSObject<NSURLSessionDownloadDelegate>
+@interface DownSessionBackground : NSObject<NSURLSessionDownloadDelegate,NSURLSessionDelegate>
 
 @property(nonatomic, assign) BOOL isBackGround;
-@property(nonatomic, strong, readonly) NSURLSession *urlSession;
+@property(nonatomic, strong) NSURLSession *urlSession;
 @property(nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
 @property (nonatomic, weak) id<DownSessionBackgroundDelegate> sessionDelegate;
 @property(nonatomic, assign) double startTime;

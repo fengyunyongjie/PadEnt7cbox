@@ -15,9 +15,9 @@
 #define CONNECT_MAX 60*3
 //商业版URL
 //#define HOST_URL @"http://192.168.1.9/"
-#define HOST_URL @"http://b.7cbox.cn/"
+//#define HOST_URL @"http://b.7cbox.cn/"
 //#define HOST_URL @"http://192.168.1.51:8080/"
-//#define HOST_URL @"http://192.168.1.25:8080/"
+#define HOST_URL @"http://192.168.1.25:8080/"
 //#define HOST_URL @"http://192.168.1.41:8080/"
 //#define HOST_URL @"http://192.168.1.62:8080/"
 //#define HOST_URL @"http://xianzhouhe.eicp.net:81/"
@@ -249,6 +249,8 @@
 #define FM_UPLOAD_CLIENT_VERIFY @"/file/upload/clientVerifyIOS"
 //专题上传 新上传提交 /file/upload/clientCommit
 #define FM_UPLOAD_CLIENTCOMMIT @"/file/upload/clientCommitIOS"
+//统一上传
+#define FM_UPLOAD_New_CLIENTCOMMIT @"/file/upload/clientUpload"
 #pragma mark - 7.分享链接
 //发布公开外链
 #define LINK_RELEASE_PUB_URI @"/link/release_pub"

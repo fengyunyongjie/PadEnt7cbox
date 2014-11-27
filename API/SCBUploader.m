@@ -247,4 +247,18 @@
         }
     }
 }
+
+-(void)requestUploadFinishDictionary:(NSDictionary *)dictionary
+{
+//    NSLog(@"上传片段成功:%@",dictionary);
+//    double endTime = [[NSDate date] timeIntervalSince1970];
+//    endTime = fabs(endTime-self.startTime);
+//    double length = self.startLenght;
+//    NSString *sudu = [NSString getFormatSudu:endTime lenght:length];
+//    NSLog(@"上传速度为:%@",sudu);
+    if([upLoadDelegate respondsToSelector:@selector(uploadFinish:)])
+    {
+        [upLoadDelegate uploadFinish:dictionary];
+    }
+}
 @end

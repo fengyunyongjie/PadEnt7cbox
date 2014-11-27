@@ -101,6 +101,17 @@
     [self.view addSubview:self.table_view];
 }
 
+- (void)viewDidLayoutSubviews {
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone) {
+        CGRect r=self.view.frame;
+        r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
+        self.view.frame=r;
+        CGRect customRect = customSelectButton.frame;
+        CGRect table_rect = CGRectMake(0, customRect.origin.y+customRect.size.height, 320, self.view.frame.size.height-(customRect.origin.y+customRect.size.height)-TabBarHeight+15);
+        [self.table_view setFrame:table_rect];
+    }
+}
+
 -(void)uploadAction:(id)sender
 {
     UIActionSheet *actionSheet=[[UIActionSheet alloc]  initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍摄照片并上传",@"从本机相册选择", nil];
@@ -311,7 +322,7 @@
     
     if(self.editView == nil)
     {
-        self.editView = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-49, 320, 49)];
+        self.editView = [[UIButton alloc] initWithFrame:CGRectMake(0, self.tabBarController.view.frame.size.height-49, 320, 49)];
         [self.editView setBackgroundImage:[UIImage imageNamed:@"oper_bk.png"] forState:UIControlStateNormal];
         [self.editView addTarget:self action:@selector(deleteAll:) forControlEvents:UIControlEventTouchUpInside];
         [self.tabBarController.view addSubview:self.editView];
@@ -1912,22 +1923,24 @@
 
 -(void)updateViewToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    CGRect table_rect = self.table_view.frame;
-    
-    CGRect editView_rect = self.editView.frame;
-    editView_rect.size.height = 49;
-    if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-    {
-        editView_rect.origin.y = 768-49;
-        table_rect.size.height = 768-self.customSelectButton.frame.size.height-TabBarHeight-49;
+    if ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad) {
+        CGRect table_rect = self.table_view.frame;
+        
+        CGRect editView_rect = self.editView.frame;
+        editView_rect.size.height = 49;
+        if(toInterfaceOrientation == UIInterfaceOrientationLandscapeRight || toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+        {
+            editView_rect.origin.y = 768-49;
+            table_rect.size.height = 768-self.customSelectButton.frame.size.height-TabBarHeight-49;
+        }
+        else
+        {
+            editView_rect.origin.y = 1024-49;
+            table_rect.size.height = 1024-self.customSelectButton.frame.size.height-TabBarHeight-49;
+        }
+        [self.editView setFrame:editView_rect];
+        [self.table_view setFrame:table_rect];
     }
-    else
-    {
-        editView_rect.origin.y = 1024-49;
-        table_rect.size.height = 1024-self.customSelectButton.frame.size.height-TabBarHeight-49;
-    }
-    [self.editView setFrame:editView_rect];
-    [self.table_view setFrame:table_rect];
 }
 
 #pragma mark 当用户切换图片是，视图选择项也发生变化

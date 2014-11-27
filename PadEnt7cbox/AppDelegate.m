@@ -127,10 +127,11 @@ typedef enum{
 {
     if(self.downmange.isStart || self.uploadmanage.isStart)
     {
-        if([YNFunctions systemIsLaterThanString:@"8.0"])
-        {
-            self.isBackground = YES;
-        }
+//        if([YNFunctions systemIsLaterThanString:@"8.0"])
+//        {
+//            self.isBackground = YES;
+//        }
+        self.isBackground = YES;
         [[BackgroundRunner shared] run];
     }
     else

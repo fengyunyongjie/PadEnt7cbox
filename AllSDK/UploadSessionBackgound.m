@@ -16,7 +16,7 @@
     static NSURLSession *session;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSURLSessionConfiguration *backgroundConfigObject = [NSURLSessionConfiguration backgroundSessionConfiguration: @"com.zhou-he.PadEnt7cbox.UploadSessionBackgound"];
+        NSURLSessionConfiguration *backgroundConfigObject = [NSURLSessionConfiguration backgroundSessionConfiguration: @"com.zhou-he.PadEnt7cbox.BackgroundSession"];
         session = [NSURLSession sessionWithConfiguration:backgroundConfigObject delegate:self delegateQueue:nil];
     });
     return session;

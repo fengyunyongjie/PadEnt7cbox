@@ -502,21 +502,43 @@
     }
     else
     {
-        [self requestConnection];
-        ALAssetsLibrary *libary = [[ALAssetsLibrary alloc] init];
-        [libary assetForURL:[NSURL URLWithString:list.t_fileUrl] resultBlock:^(ALAsset *result)
-         {
-             NSError *error = nil;
-             Byte *byte_data = malloc((int)result.defaultRepresentation.size);
-             [result.defaultRepresentation getBytes:byte_data fromOffset:0 length:(int)result.defaultRepresentation.size error:&error];
-             NSData *data = [NSData dataWithBytesNoCopy:byte_data length:(int)result.defaultRepresentation.size];
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 total_data = [[NSData alloc] initWithData:data];
-                 self.md5String = [NSString stringWithFormat:@"%@",[self md5:data]];
-             });
-         } failureBlock:^(NSError *error)
-         {
-         }];
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        if(appDelegate.isBackground)
+        {
+            [self requestConnection];
+            ALAssetsLibrary *libary = [[ALAssetsLibrary alloc] init];
+            [libary assetForURL:[NSURL URLWithString:list.t_fileUrl] resultBlock:^(ALAsset *result)
+             {
+                 NSError *error = nil;
+                 Byte *byte_data = malloc((int)result.defaultRepresentation.size);
+                 [result.defaultRepresentation getBytes:byte_data fromOffset:0 length:(int)result.defaultRepresentation.size error:&error];
+                 NSData *data = [NSData dataWithBytesNoCopy:byte_data length:(int)result.defaultRepresentation.size];
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     total_data = [[NSData alloc] initWithData:data];
+                     self.md5String = [NSString stringWithFormat:@"%@",[self md5:data]];
+                 });
+             } failureBlock:^(NSError *error)
+             {
+             }];
+        }
+        else
+        {
+            ALAssetsLibrary *libary = [[ALAssetsLibrary alloc] init];
+            [libary assetForURL:[NSURL URLWithString:list.t_fileUrl] resultBlock:^(ALAsset *result)
+             {
+                 NSError *error = nil;
+                 Byte *byte_data = malloc((int)result.defaultRepresentation.size);
+                 [result.defaultRepresentation getBytes:byte_data fromOffset:0 length:(int)result.defaultRepresentation.size error:&error];
+                 NSData *data = [NSData dataWithBytesNoCopy:byte_data length:(int)result.defaultRepresentation.size];
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     total_data = [[NSData alloc] initWithData:data];
+                     self.md5String = [NSString stringWithFormat:@"%@",[self md5:data]];
+                     [self requestSeesionConnectionDictionary:nil];
+                 });
+             } failureBlock:^(NSError *error)
+             {
+             }];
+        }
     }
 }
 

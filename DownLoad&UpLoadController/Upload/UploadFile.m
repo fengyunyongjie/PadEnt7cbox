@@ -557,8 +557,7 @@
     }
     else
     {
-        //[self requestConnection];
-        [self getUploadFileMd5];
+        [self requestConnection];
     }
 }
 

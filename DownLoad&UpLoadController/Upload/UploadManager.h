@@ -17,6 +17,7 @@
 @property(nonatomic,assign) BOOL isOpenedUpload;
 @property(nonatomic,assign) BOOL isAutoStart;
 @property(nonatomic,assign) BOOL isJoin;
+@property(nonatomic,strong) UploadFile *neeUpload;
 
 -(id)init;
 -(void)updateLoad;

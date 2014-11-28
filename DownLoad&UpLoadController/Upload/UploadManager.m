@@ -19,12 +19,13 @@
 #import "LoginViewController.h"
 
 @implementation UploadManager
-@synthesize uploadArray,isStopCurrUpload,isStart,isOpenedUpload,isAutoStart,isJoin;
+@synthesize uploadArray,isStopCurrUpload,isStart,isOpenedUpload,isAutoStart,isJoin,neeUpload;
 
 -(id)init
 {
     self = [super init];
     [self selectUploadList];
+    neeUpload = [[UploadFile alloc] init];
     return self;
 }
 
@@ -275,15 +276,14 @@
     if([uploadArray count]>0 && isStart)
     {
         isStopCurrUpload = NO;
-        UploadFile *newUpload = [[UploadFile alloc] init];
-        newUpload.list = [uploadArray objectAtIndex:0];
-        [newUpload setDelegate:self];
-        if(newUpload.list.t_state == 0 || !newUpload.list.is_Onece)
+        neeUpload.list = [uploadArray objectAtIndex:0];
+        [neeUpload setDelegate:self];
+        if(neeUpload.list.t_state == 0 || !neeUpload.list.is_Onece)
         {
-            newUpload.list.t_state = 0;
-            [newUpload startUpload];
+            neeUpload.list.t_state = 0;
+            [neeUpload startUpload];
         }
-        else if(newUpload.list.is_Onece)
+        else if(neeUpload.list.is_Onece)
         {
             [self upNetworkStop];
         }

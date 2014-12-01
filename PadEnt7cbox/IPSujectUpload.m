@@ -17,7 +17,7 @@
 #define SomeDataSize 1024*200
 
 @implementation IPSujectUpload
-@synthesize finishName,connection,list,urlNameArray,urlIndex,file_data,md5String,total,uploadType,delegate,isStop,uploderDemo;
+@synthesize finishName,connection,list,urlNameArray,urlIndex,file_data,md5String,total,uploadType,delegate,isStop,uploderDemo,total_data;
 
 -(id)init
 {
@@ -39,13 +39,15 @@
     if([self isConnection] == ReachableViaWiFi)
     {
         //WiFi 状态
-        [self newRequestVerify];
+        //[self newRequestVerify];
+        [self getUploadFileMd5];
     }
     else if([self isConnection] == ReachableViaWWAN)
     {
         if(![YNFunctions isOnlyWifi])
         {
-            [self newRequestVerify];
+            //[self newRequestVerify];
+            [self getUploadFileMd5];
         }
         else
         {
@@ -64,7 +66,7 @@
 
 -(void)newRequestVerify
 {
-    NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,FM_UPLOAD_CLIENT_VERIFY]];
+    NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,FM_UPLOAD_New_CLIENTCOMMIT]];
     NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:s_url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:CONNECT_TIMEOUT];
     NSMutableString *body=[[NSMutableString alloc] init];
     NSString *uploadStirng;
@@ -76,7 +78,7 @@
     {
         uploadStirng = @"mp3";
     }
-    [body appendFormat:@"f_pid=%@&filename=%@&fsize=%@&space_id=%@&FileType=%@",list.t_url_pid,list.t_name,[NSString stringWithFormat:@"%i",list.t_lenght],list.spaceId,uploadStirng];
+    [body appendFormat:@"f_pid=%@&f_name=%@&f_size=%@&space_id=%@&fileType=%@&step=1",list.t_url_pid,list.t_name,[NSString stringWithFormat:@"%i",list.t_lenght],list.spaceId,uploadStirng];
     NSLog(@"body:%@",body);
     NSLog(@"1:开始专题校验");
     NSMutableData *myRequestData=[NSMutableData data];
@@ -114,8 +116,9 @@
         {
             list.t_url_pid = [NSString stringWithFormat:@"%@",[dictionary objectForKey:@"msg"]];
         }
-        
-        [self nomalRequestVerify];
+        finishName = [dictionary objectForKey:@"s_name"];
+        //[self nomalRequestVerify];
+        [self newUploadSomeFile];
     }
     else if([[dictionary objectForKey:@"code"] intValue] == 2 )
     {
@@ -215,6 +218,48 @@
     }
 }
 
+//新分段上传
+-(void)newUploadSomeFile
+{
+    if(list.t_file_type == 5)
+    {
+        total = list.t_lenght;
+        file_data = [NSData dataWithContentsOfFile:list.t_fileUrl];
+        if([file_data length]>0)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                connection = [uploderDemo requestUploadFile:finishName startSkip:[NSString stringWithFormat:@"%i",list.upload_size] skip:[NSString stringWithFormat:@"%i",total] Image:file_data spaceId:list.spaceId];
+            });
+        }
+    }
+    else
+    {
+        if(SomeDataSize<list.t_lenght-list.upload_size)
+        {
+            total = SomeDataSize;
+            NSRange range = NSMakeRange(list.upload_size, total);
+            file_data = [total_data subdataWithRange:range];
+        
+            dispatch_async(dispatch_get_main_queue(), ^{
+                connection = [uploderDemo requestUploadFile:finishName startSkip:[NSString stringWithFormat:@"%i",list.upload_size] skip:[NSString stringWithFormat:@"%i",SomeDataSize] Image:file_data spaceId:list.spaceId];
+            });
+            
+        }
+        else
+        {
+            total = list.t_lenght-list.upload_size;
+            NSRange range = NSMakeRange(list.upload_size, total);
+            file_data = [total_data subdataWithRange:range];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                connection = [uploderDemo requestUploadFile:finishName startSkip:[NSString stringWithFormat:@"%i",list.upload_size] skip:[NSString stringWithFormat:@"%i",list.t_lenght-list.upload_size] Image:file_data spaceId:list.spaceId];
+            });
+            
+        }
+    }
+}
+
+
 //分段上传
 -(void)uploadSomeFile
 {
@@ -310,7 +355,7 @@
         [delegate upError];
         return;
     }
-    NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,FM_UPLOAD_CLIENTCOMMIT]];
+    NSURL *s_url=[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",SERVER_URL,FM_UPLOAD_New_CLIENTCOMMIT]];
     
     NSData *returnData;
     NSError *error;
@@ -333,12 +378,13 @@
     {
         uploadStirng = @"mp3";
     }
-    [body appendString:[NSString stringWithFormat:@"FileType=%@",uploadStirng]];
-    [body appendString:[NSString stringWithFormat:@"&fpid=%@",fPid]];
-    [body appendString:[NSString stringWithFormat:@"&fname=%@",f_name]];
+    [body appendString:[NSString stringWithFormat:@"fileType=%@",uploadStirng]];
+    [body appendString:[NSString stringWithFormat:@"&f_pid=%@",fPid]];
+    [body appendString:[NSString stringWithFormat:@"&f_name=%@",f_name]];
     [body appendString:[NSString stringWithFormat:@"&sname=%@",s_name]];
-    [body appendString:[NSString stringWithFormat:@"&spaceid=%@",list.spaceId]];
     [body appendString:[NSString stringWithFormat:@"&f_md5=%@",[self md5:file_data]]];
+    [body appendFormat:@"&step=4"];
+    [body appendString:[NSString stringWithFormat:@"&space_id=%@",list.spaceId]];
     NSLog(@"body:%@",body);
     NSMutableData *myRequestData=[NSMutableData data];
     [myRequestData appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
@@ -400,7 +446,7 @@
         }
         else
         {
-            [self uploadSomeFile];
+            [self newUploadSomeFile];
         }
     });
 }
@@ -434,6 +480,45 @@
 {
     [self updateAutoUploadState];
     [self updateNetWork];
+}
+
+//获取上传数据的md5
+-(void)getUploadFileMd5
+{
+    NSLog(@"list.length:%i;list.upload_size:%i",list.t_lenght,list.upload_size);
+    if(list.t_file_type == 5)
+    {
+        total = list.t_lenght;
+        file_data = [NSData dataWithContentsOfFile:list.t_fileUrl];
+        if([file_data length]>0)
+        {
+            self.md5String = [NSString stringWithFormat:@"%@",[self md5:file_data]];
+            [self newRequestVerify];
+        }
+        else
+        {
+            [self updateAutoUploadState];
+            [delegate upNotFile];
+        }
+    }
+    else
+    {
+        ALAssetsLibrary *libary = [[ALAssetsLibrary alloc] init];
+        [libary assetForURL:[NSURL URLWithString:list.t_fileUrl] resultBlock:^(ALAsset *result)
+         {
+             NSError *error = nil;
+             Byte *byte_data = malloc((int)result.defaultRepresentation.size);
+             [result.defaultRepresentation getBytes:byte_data fromOffset:0 length:(int)result.defaultRepresentation.size error:&error];
+             NSData *data = [NSData dataWithBytesNoCopy:byte_data length:(int)result.defaultRepresentation.size];
+             dispatch_async(dispatch_get_main_queue(), ^{
+                 //total_data = [[NSData alloc] initWithData:data];
+                 self.md5String = [NSString stringWithFormat:@"%@",[self md5:data]];
+                 [self newRequestVerify];
+             });
+         } failureBlock:^(NSError *error)
+         {
+         }];
+    }
 }
 
 -(NSString *)md5:(NSData *)concat {

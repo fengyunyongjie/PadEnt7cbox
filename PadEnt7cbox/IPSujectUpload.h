@@ -41,7 +41,8 @@ typedef enum {
 -(void)upNotSizeTooBig;
 //文件名存在特殊字符
 -(void)upNotHaveXNSString;
-
+//文件不存在
+-(void)upNotFile;
 @end
 
 @interface IPSujectUpload : NSObject<UpLoadDelegate>
@@ -58,6 +59,7 @@ typedef enum {
 @property(nonatomic, assign) SJUploadType uploadType;
 @property(nonatomic, strong) id<SubjectUploadDelegate> delegate;
 @property(nonatomic, assign) BOOL isStop;
+@property(nonatomic,strong) __block NSData *total_data;
 
 -(void)isNetWork;
 

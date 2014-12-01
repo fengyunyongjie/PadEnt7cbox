@@ -148,6 +148,8 @@
 {
     AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 //    [appleDate.myTabBarVC setHidesTabBarWithAnimate:isHideTabBar];
+    appleDate.myTabBarVC.imageView.hidden = YES;
+    [self.tabBarController.tabBar setHidden:isHideTabBar];
 }
 
 -(void)addClicked

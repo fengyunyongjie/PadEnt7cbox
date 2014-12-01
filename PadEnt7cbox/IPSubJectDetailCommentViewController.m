@@ -26,6 +26,8 @@
 #import "AppDelegate.h"
 #import "SCBSession.h"
 
+#import "MyTabBarViewController.h"
+
 @interface IPSubJectDetailCommentViewController () {
     EmotionView    *emotionView;
     NSMutableArray *listArray;
@@ -78,7 +80,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+    [self viewDidNewLoad:YES];
     emotionView = [[EmotionView alloc] initWithFrame:CGRectMake(0, 0, 320, 172+44)];
     self.longTapBtn.hidden = YES;
     self.faceBtn.selected = NO;
@@ -103,6 +105,19 @@
     r.size.height=[[UIScreen mainScreen] bounds].size.height-r.origin.y;
     self.view.frame=r;
     self.tableview.frame=CGRectMake(0, 78, self.view.frame.size.width, self.view.frame.size.height-112);
+
+}
+
+-(void)viewDidNewLoad:(BOOL)isHideTabBar
+{
+    AppDelegate *appleDate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    appleDate.myTabBarVC.imageView.hidden = YES;
+    [self.tabBarController.tabBar setHidden:isHideTabBar];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self viewDidNewLoad:NO];
 }
 
 
